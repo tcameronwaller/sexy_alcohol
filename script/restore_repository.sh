@@ -18,13 +18,14 @@ set -x
 # Remove previous version of program.
 
 echo "remove previous version of the repository..."
+cd $path_home
 rm -r $path_repository
 
 # Access current version of the program.
 
-#echo "access current version of the program..."
-#cd $path_temporary
-#wget https://github.com/tcameronwaller/sexy_alcohol/archive/main.zip
-#unzip main.zip
-#rm main.zip
-#mv sexy_alcohol-main $path_repository
+echo "access current version of the program..."
+cd $path_temporary
+wget https://github.com/tcameronwaller/sexy_alcohol/archive/main.zip
+unzip main.zip
+rm main.zip
+mv sexy_alcohol-main $path_repository
