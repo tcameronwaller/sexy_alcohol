@@ -11,7 +11,7 @@ echo $path_repository
 echo $path_temporary
 
 # Echo each command to console.
-#set -x
+set -x
 
 # Remove previous version of program.
 
@@ -22,7 +22,7 @@ echo "remove previous version of the repository..."
 
 echo "access current version of the program..."
 cd $path_temporary
-#wget https://github.com/tcameronwaller/sexy_alcohol/archive/main.zip
-#unzip sexy_alcohol.zip
-#mv sexy_alcohol-main $path_repository
+wget https://github.com/tcameronwaller/sexy_alcohol/archive/main.zip
+unzip main.zip
 #rm main.zip
+mv sexy_alcohol-main $path_repository
