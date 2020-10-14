@@ -6,6 +6,7 @@
 echo "read private file path variables..."
 cd ~/path
 path_temporary=$(<"./process_temporary.txt")
+path_out="$path_temporary/waller_test"
 path_project=$(<"./project_sexy_alcohol.txt")
 path_ukbiobank_scripts=$(<"./ukbiobank_scripts.txt")
 path_pull_ukbiobank="$path_ukbiobank_scripts/pullUKBclinical.sh"
@@ -23,4 +24,4 @@ echo "1558 1568 1578 1588" | tr -s " " "\n" > $path_variables
 
 # Access phenotype variables from UKBiobank using script from Anthony Batzler.
 
-/usr/bin/bash $path_pull_ukbiobank $path_variables $path_temporary
+/usr/bin/bash $path_pull_ukbiobank waller_test $path_variables $path_out
