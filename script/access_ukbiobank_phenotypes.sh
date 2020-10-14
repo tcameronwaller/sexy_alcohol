@@ -3,25 +3,32 @@
 #chmod u+x script.sh
 
 # Read in private file paths.
-echo "read private file path variables..."
+echo "read private file path variables and organize paths..."
 cd ~/path
 path_temporary=$(<"./process_temporary.txt")
-path_out="$path_temporary/waller_test"
+path_process="$path_temporary/waller_albumin"
+path_variables="$path_process/variables.txt"
 path_project=$(<"./project_sexy_alcohol.txt")
+path_dock="$path_project/dock"
+path_dock_albumin="$path_dock/albumin"
 path_ukbiobank_scripts=$(<"./ukbiobank_scripts.txt")
 path_pull_ukbiobank="$path_ukbiobank_scripts/pullUKBclinical.sh"
-path_variables="$path_temporary/waller_variables.txt"
-echo $path_temporary
+echo $path_process
 
 # Echo each command to console.
 set -x
 
-# Remove previous version of program.
+# Organize directories.
+rm -r $path_process
+rm -r $path_dock_albumin
 
+# Specify UKBiobank phenotype variables of interest.
 echo "specify phenotype variables to access from UKBiobank"
-cd $path_temporary
-echo "1558 1568 1578 1588" | tr -s " " "\n" > $path_variables
+echo "31 22001 21022 30600 30500 30850 30830" | tr -s " " "\n" > $path_variables
 
 # Access phenotype variables from UKBiobank using script from Anthony Batzler.
+/usr/bin/bash $path_pull_ukbiobank waller_albumin $path_variables $path_process
 
-/usr/bin/bash $path_pull_ukbiobank waller_test $path_variables $path_out
+# Organize information.
+
+mv $path_process $path_dock_albumin
