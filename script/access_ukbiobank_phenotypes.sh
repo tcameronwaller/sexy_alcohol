@@ -19,4 +19,4 @@ set -x
 
 echo "specify phenotype variables to access from UKBiobank"
 cd $path_temporary
-echo "1558 1568 1578 1588" | tr -s " " "/n" > waller_variables.txt
+echo "1558 1568 1578 1588" | tr -s " " "\n" > waller_variables.txt
