@@ -12,7 +12,7 @@ path_project=$(<"./project_sexy_alcohol.txt")
 path_dock="$path_project/dock"
 path_dock_albumin="$path_dock/albumin"
 path_ukbiobank_scripts=$(<"./ukbiobank_scripts.txt")
-path_pull_ukbiobank="$path_project/script/pullUKBclinical.sh"
+path_pull_ukbiobank="$path_project/script/pullUKBclinical_edit.sh"
 echo $path_process
 
 # Echo each command to console.
