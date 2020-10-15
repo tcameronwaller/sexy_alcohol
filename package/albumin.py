@@ -51,6 +51,261 @@ import utility
 ###############################################################################
 # Functionality
 
+
+
+def define_font_properties():
+    """
+    Defines font properties.
+
+    arguments:
+
+    raises:
+
+    returns:
+        (dict<object>): references to definitions of font properties
+
+    """
+
+    # Define font values.
+    values_one = {
+        "family": "sans-serif",
+        "style": "normal",
+        "variant": "normal",
+        "stretch": 1000,
+        "weight": 1000,
+        "size": 30
+    }
+    values_two = {
+        "family": "sans-serif",
+        "style": "normal",
+        "variant": "normal",
+        "stretch": 900,
+        "weight": 1000,
+        "size": 25
+    }
+    values_three = {
+        "family": "sans-serif",
+        "style": "normal",
+        "variant": "normal",
+        "stretch": 750,
+        "weight": 1000,
+        "size": 20
+    }
+    values_four = {
+        "family": "sans-serif",
+        "style": "normal",
+        "variant": "normal",
+        "stretch": 500,
+        "weight": 500,
+        "size": 17
+    }
+    values_five = {
+        "family": "sans-serif",
+        "style": "normal",
+        "variant": "normal",
+        "stretch": 400,
+        "weight": 400,
+        "size": 15
+    }
+    values_six = {
+        "family": "sans-serif",
+        "style": "normal",
+        "variant": "normal",
+        "stretch": 300,
+        "weight": 300,
+        "size": 13
+    }
+    values_seven = {
+        "family": "sans-serif",
+        "style": "normal",
+        "variant": "normal",
+        "stretch": 300,
+        "weight": 300,
+        "size": 10
+    }
+    values_eight = {
+        "family": "sans-serif",
+        "style": "normal",
+        "variant": "normal",
+        "stretch": 200,
+        "weight": 200,
+        "size": 7
+    }
+    values_nine = {
+        "family": "sans-serif",
+        "style": "normal",
+        "variant": "normal",
+        "stretch": 150,
+        "weight": 150,
+        "size": 5
+    }
+    values_ten = {
+        "family": "sans-serif",
+        "style": "normal",
+        "variant": "normal",
+        "stretch": 100,
+        "weight": 100,
+        "size": 3
+    }
+    # Define font properties.
+    properties_one = matplotlib.font_manager.FontProperties(
+        family=values_one["family"],
+        style=values_one["style"],
+        variant=values_one["variant"],
+        stretch=values_one["stretch"],
+        weight=values_one["weight"],
+        size=values_one["size"]
+    )
+    properties_two = matplotlib.font_manager.FontProperties(
+        family=values_two["family"],
+        style=values_two["style"],
+        variant=values_two["variant"],
+        stretch=values_two["stretch"],
+        weight=values_two["weight"],
+        size=values_two["size"]
+    )
+    properties_three = matplotlib.font_manager.FontProperties(
+        family=values_three["family"],
+        style=values_three["style"],
+        variant=values_three["variant"],
+        stretch=values_three["stretch"],
+        weight=values_three["weight"],
+        size=values_three["size"]
+    )
+    properties_four = matplotlib.font_manager.FontProperties(
+        family=values_four["family"],
+        style=values_four["style"],
+        variant=values_four["variant"],
+        stretch=values_four["stretch"],
+        weight=values_four["weight"],
+        size=values_four["size"]
+    )
+    properties_five = matplotlib.font_manager.FontProperties(
+        family=values_five["family"],
+        style=values_five["style"],
+        variant=values_five["variant"],
+        stretch=values_five["stretch"],
+        weight=values_five["weight"],
+        size=values_five["size"]
+    )
+    properties_six = matplotlib.font_manager.FontProperties(
+        family=values_six["family"],
+        style=values_six["style"],
+        variant=values_six["variant"],
+        stretch=values_six["stretch"],
+        weight=values_six["weight"],
+        size=values_six["size"]
+    )
+    properties_seven = matplotlib.font_manager.FontProperties(
+        family=values_seven["family"],
+        style=values_seven["style"],
+        variant=values_seven["variant"],
+        stretch=values_seven["stretch"],
+        weight=values_seven["weight"],
+        size=values_seven["size"]
+    )
+    properties_eight = matplotlib.font_manager.FontProperties(
+        family=values_eight["family"],
+        style=values_eight["style"],
+        variant=values_eight["variant"],
+        stretch=values_eight["stretch"],
+        weight=values_eight["weight"],
+        size=values_eight["size"]
+    )
+    properties_nine = matplotlib.font_manager.FontProperties(
+        family=values_nine["family"],
+        style=values_nine["style"],
+        variant=values_nine["variant"],
+        stretch=values_nine["stretch"],
+        weight=values_nine["weight"],
+        size=values_nine["size"]
+    )
+    properties_ten = matplotlib.font_manager.FontProperties(
+        family=values_ten["family"],
+        style=values_ten["style"],
+        variant=values_ten["variant"],
+        stretch=values_ten["stretch"],
+        weight=values_ten["weight"],
+        size=values_ten["size"]
+    )
+    # Compile and return references.
+    return {
+        "values": {
+            "one": values_one,
+            "two": values_two,
+            "three": values_three,
+            "four": values_four,
+            "five": values_five,
+            "six": values_six,
+            "seven": values_seven,
+            "eight": values_eight,
+            "nine": values_nine,
+            "ten": values_ten,
+        },
+        "properties": {
+            "one": properties_one,
+            "two": properties_two,
+            "three": properties_three,
+            "four": properties_four,
+            "five": properties_five,
+            "six": properties_six,
+            "seven": properties_seven,
+            "eight": properties_eight,
+            "nine": properties_nine,
+            "ten": properties_ten,
+        }
+    }
+
+
+def define_color_properties():
+    """
+    Defines color properties.
+
+    arguments:
+
+    raises:
+
+    returns:
+        (dict<tuple>): references to definitions of color properties
+
+    """
+
+    # Black.
+    black = (0.0, 0.0, 0.0, 1.0)
+    # Gray.
+    gray = (0.7, 0.7, 0.7, 1.0)
+    # White.
+    white = (1.0, 1.0, 1.0, 1.0)
+    white_faint = (1.0, 1.0, 1.0, 0.75)
+    # Clear.
+    clear = (1.0, 1.0, 1.0, 0.0)
+    clear_faint = (1.0, 1.0, 1.0, 0.25)
+    # Blue.
+    blue = (0.0, 0.2, 0.5, 1.0)
+    blue_faint = (0.0, 0.2, 0.5, 0.75)
+    # Orange.
+    orange = (1.0, 0.6, 0.2, 1.0)
+    orange_faint = (1.0, 0.6, 0.2, 0.75)
+    # Compile and return references.
+    return {
+        "black": black,
+        "gray": gray,
+        "white": white,
+        "white_faint": white_faint,
+        "clear": clear,
+        "clear_faint": clear_faint,
+        "blue": blue,
+        "blue_faint": blue_faint,
+        "orange": orange,
+        "orange_faint": orange_faint
+    }
+
+
+
+
+
+
+
 # Utility...
 
 
