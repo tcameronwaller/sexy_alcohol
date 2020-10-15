@@ -32,6 +32,9 @@ import itertools
 import numpy
 import pandas
 import scipy.stats
+import statsmodels.api
+import statsmodels.stats.outliers_influence
+
 
 # Custom
 
