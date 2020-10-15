@@ -301,6 +301,32 @@ def define_color_properties():
 
 
 
+def write_figure_png(path=None, figure=None):
+    """
+    Writes figure to file.
+
+    arguments:
+        path (str): path to directory and file
+        figure (object): figure object
+
+    raises:
+
+    returns:
+
+    """
+
+    # Write information to file.
+    figure.savefig(
+        path,
+        format="png",
+        dpi=300,
+        facecolor="w",
+        edgecolor="w",
+        transparent=False
+    )
+    pass
+
+
 
 
 
