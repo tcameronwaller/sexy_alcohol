@@ -18,6 +18,7 @@
 # Standard
 
 import sys
+#print(sys.path)
 import os
 import math
 import statistics
@@ -167,9 +168,8 @@ def execute_procedure(
 
     """
 
-    print("hello world!")
-    print(sys.path)
-
+    source = read_source(dock=dock)
+    print(source["data_raw"])
 
     pass
 
