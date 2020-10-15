@@ -454,7 +454,7 @@ def organize_plot_person_sets(
         variable="age",
         variable_grade="age_grade",
         bins=[[0.0, 0.33], [0.33, 0.67], [0.67, 1.0]],
-        data_persons_properties=data_raw,
+        data_persons_properties=data,
         report=True,
     )
     # Organize sets of persons by their properties.
