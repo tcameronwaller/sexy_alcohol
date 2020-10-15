@@ -1257,7 +1257,7 @@ def plot_chart_persons_sex_age_albumin(
         title_ordinate="blood albumin in g/L",
         fonts=fonts,
         colors=colors,
-        size=7,
+        size=3,
     )
     # Write figure.
     write_figure_png(
