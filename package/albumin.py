@@ -426,6 +426,363 @@ def organize_persons_properties_sets(
     return bin
 
 
+def organize_plot_person_sets(
+    data=None,
+    temporary=None,
+    dock=None,
+):
+    """
+    Function to execute module's main behavior.
+
+    arguments:
+        data (object): Pandas data frame of persons' properties
+        temporary (str): path to temporary directory for source and product
+            directories and files
+        dock (str): path to dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy data.
+    data = data.copy(deep=True)
+    # Determine bins of persons by age.
+    data_age = stratify_persons_continuous_variable_ordinal(
+        variable="age",
+        variable_grade="age_grade",
+        bins=[[0.0, 0.33], [0.33, 0.67], [0.67, 1.0]],
+        data_persons_properties=data_raw,
+        report=True,
+    )
+    # Organize sets of persons by their properties.
+    sets_persons = organize_persons_properties_sets(
+        data_persons_properties=data_age,
+        report=True,
+    )
+
+    # T-tests
+
+    # bar charts
+
+    # histograms
+
+
+
+
+    pass
+
+
+# Regression
+
+
+def standardize_scale_variables(
+    variables=None,
+    data_persons_properties=None,
+):
+    """
+    Standardizes variables' values to z-score scale.
+
+    arguments:
+        variables (list<str>): names of numerical variables
+        data_persons_properties_raw (object): Pandas data frame of persons'
+            properties
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of information about persons
+
+    """
+
+    # Copy data.
+    data = data_persons_properties.copy(deep=True)
+    # Iterate on variables.
+    for variable in variables:
+        variable_scale = str(variable + ("_scale"))
+        data[variable] = data[variable].astype(numpy.float32)
+        data[variable_scale] = data[variable].pipe(
+            lambda series: scipy.stats.zscore(
+                series.to_numpy(),
+                axis=0,
+                ddof=1, # Sample standard deviation.
+                nan_policy="omit",
+            ),
+        )
+        pass
+    # Return information.
+    return data
+
+
+def regress_signal_ordinary_residuals(
+    dependence=None,
+    independence=None,
+    proportion=None,
+    data=None,
+):
+    """
+    Regresses a quantitative continuous dependent variable against multiple
+    independent variables and returns relevant parameters and statistics.
+
+    Data format must have observations across rows and dependent and
+    independent variables (features) across columns.
+
+    Description of formats for StatsModels...
+
+    Format of dependent variable is a vector of scalar values.
+    [1.3, 1.5, 1.2, 1.0, 1.7, 1.5, 1.9, 1.1, 1.3, 1.4]
+
+    Format of independent variable(s) is a matrix: a first dimension vector of
+    observations and for each observation a second dimension vector of scalar
+    values.
+    StatsModels also requires a constant for the intercept.
+    [
+        [1.3, 5.2, 1.0],
+        [1.5, 5.1, 1.0],
+        [1.2, 5.5, 1.0],
+        ...
+    ]
+
+    Description of formats for SKLearn...
+
+    Format of dependent variable is an array of observations, and each
+    observation is an array of features.
+    [
+        [1.3],
+        [1.5],
+        [1.2],
+        ...
+    ]
+
+    arguments:
+        dependence (str): name of dependent variable
+        independence (list<str>): names of independent variables
+        proportion (float): minimal proportion of total observations that must
+            have nonmissing values
+        data (object): Pandas data frame of values and associations between
+            dependent and independent variables
+
+    raises:
+
+    returns:
+        (dict): collection of residuals for regression summary of information
+            about regression model
+
+
+    """
+
+    # Organize data.
+    data = data.copy(deep=True)
+    # Determine minimal count of observations.
+    count = data.shape[0]
+    threshold = proportion * count
+    # Remove observations with any missing values.
+    columns = copy.deepcopy(independence)
+    columns.insert(0, dependence)
+    data = data.loc[
+        :, data.columns.isin(columns)
+    ]
+    data.dropna(
+        axis="index",
+        how="any",
+        #subset=[dependence],
+        inplace=True,
+    )
+    data = data[[*columns]]
+
+    # Note
+    # It is very important to keep track of the order of independent variables
+    # in order to match parameters and probabilities to the correct variables.
+
+    # Determine whether data have sufficient observations for regression.
+    if data.shape[0] > threshold:
+        # Extract values of dependent and independent variables.
+        values_dependence = data[dependence].to_numpy()
+        #values_independence = data.loc[ :, independence].to_numpy()
+        data_independence = data.loc[ :, independence]
+        # Introduce constant value for intercept.
+        # If any column in the independent variables already has constant
+        # values, then the function skips it by default.
+        # It is necessary to change parameter "has_constant" to avoid this
+        # conditional behavior.
+        data_independence_intercept = statsmodels.api.add_constant(
+            data_independence,
+            prepend=True, # insert intercept constant first
+            has_constant="add", # Introduce new intercept constant regardless
+        )
+        # Define model.
+        model = statsmodels.api.OLS(
+            values_dependence,
+            data_independence_intercept,
+            missing="drop",
+        )
+        report = model.fit()
+        utility.print_terminal_partition(level=2)
+        #print(data)
+        #print(independence)
+        #print(values_independence)
+        print(report.summary())
+        utility.print_terminal_partition(level=3)
+        #print(dir(report))
+        #print(report.params)
+        #print(report.pvalues)
+
+        # Organize residuals.
+        residuals = report.resid
+        # Collect parameters, probabilities, and statistics.
+        report_parameters = pandas.Series(data=report.params)
+        report_probabilities = pandas.Series(data=report.pvalues)
+        parameters = dict()
+        probabilities = dict()
+        inflations = dict()
+        if ("const" in report_parameters.index):
+            #parameters["intercept_parameter"] = report.params[0]
+            parameters["intercept_parameter"] = report_parameters["const"]
+        else:
+            parameters["intercept_parameter"] = float("nan")
+            utility.print_terminal_partition(level=4)
+            print("Warning: regression data does not have constant intercept.")
+            print(dependence)
+            utility.print_terminal_partition(level=4)
+        if ("const" in report_probabilities.index):
+            #probabilities["intercept_probability"] = report.pvalues[0]
+            probabilities["intercept_probability"] = (
+                report_probabilities["const"]
+            )
+        else:
+            probabilities["intercept_probability"] = float("nan")
+            utility.print_terminal_partition(level=4)
+            print("Warning: regression data does not have constant intercept.")
+            print(dependence)
+            utility.print_terminal_partition(level=4)
+        inflations["intercept_inflation"] = float("nan")
+        # Iterate on each independent variable.
+        # Initiate counter at 1 to assume that intercept is at index 0.
+        counter = 1
+        # Accommodate index for intercept.
+        for variable in independence:
+            # Coefficient or parameter.
+            parameter = str(variable + ("_parameter"))
+            #parameters[parameter] = report.params[counter]
+            parameters[parameter] = report_parameters[variable]
+            # Probability.
+            probability = str(variable + ("_probability"))
+            #probabilities[probability] = report.pvalues[counter]
+            probabilities[probability] = report_probabilities[variable]
+            # Variance Inflation Factor (VIF).
+            inflation = str(variable + ("_inflation"))
+            inflation_value = (
+                statsmodels.stats.outliers_influence.variance_inflation_factor(
+                    data_independence_intercept.to_numpy(),
+                    counter
+                )
+            )
+            inflations[inflation] = round(inflation_value, 2)
+            # Increment index.
+            counter += 1
+            pass
+        summary = {
+            "freedom": report.df_model,
+            "observations": report.nobs,
+            "r_square": report.rsquared,
+            "r_square_adjust": report.rsquared_adj,
+            "log_likelihood": report.llf,
+            "akaike": report.aic,
+            "bayes": report.bic,
+            "condition": report.condition_number,
+        }
+        summary.update(parameters)
+        summary.update(probabilities)
+        summary.update(inflations)
+    else:
+        # Compile information.
+        #probabilities = list(
+        #    itertools.repeat(float("nan"), len(values_independence_intercept))
+        #)
+        parameters = dict()
+        probabilities = dict()
+        inflations = dict()
+        parameters["intercept_parameter"] = float("nan")
+        probabilities["intercept_probability"] = float("nan")
+        inflations["intercept_inflation"] = float("nan")
+        for variable in independence:
+            parameter = str(variable + ("_parameter"))
+            parameters[parameter] = float("nan")
+            probability = str(variable + ("_probability"))
+            probabilities[probability] = float("nan")
+            inflation = str(variable + ("_inflation"))
+            inflations[inflation] = float("nan")
+            pass
+        summary = {
+            "freedom": float("nan"),
+            "observations": float("nan"),
+            "r_square": float("nan"),
+            "r_square_adjust": float("nan"),
+            "log_likelihood": float("nan"),
+            "akaike": float("nan"),
+            "bayes": float("nan"),
+            "condition": float("nan"),
+        }
+        summary.update(parameters)
+        summary.update(probabilities)
+        summary.update(inflations)
+        residuals = numpy.empty(0)
+    # Compile information.
+    bin = dict()
+    bin["report"] = summary
+    bin["residuals"] = residuals
+    # Return information.
+    return bin
+
+
+
+
+def organize_regression_persons_properties(
+    data=None,
+    temporary=None,
+    dock=None,
+):
+    """
+    Function to execute module's main behavior.
+
+    arguments:
+        data (object): Pandas data frame of persons' properties
+        temporary (str): path to temporary directory for source and product
+            directories and files
+        dock (str): path to dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy data.
+    data = data.copy(deep=True)
+    # Scale age and albumin.
+    data_scale = standardize_scale_variables(
+        variables=["age", "albumin"],
+        data_persons_properties=data,
+    )
+    # Select relevant varialbes.
+    data_variables = data_scale.loc[
+        :, data_scale.columns.isin(["sex", "age_scale", "albumin_scale"])
+    ]
+    # Regress.
+    bin_case = regress_signal_ordinary_residuals(
+        dependence="albumin_scale",
+        independence=["sex", "age_scale"],
+        proportion=0.5,
+        data=data_variables,
+    )
+
+
+
+
+    pass
 
 
 
@@ -477,21 +834,20 @@ def execute_procedure(
         inplace=True,
     )
 
-    # Determine bins of persons by age.
-    data_age = stratify_persons_continuous_variable_ordinal(
-        variable="age",
-        variable_grade="age_grade",
-        bins=[[0.0, 0.33], [0.33, 0.67], [0.67, 1.0]],
-        data_persons_properties=data_raw,
-        report=True,
-    )
-    # Organize sets of persons by their properties.
-    sets_persons = organize_persons_properties_sets(
-        data_persons_properties=data_age,
-        report=True,
+    # Organize plot person sets.
+    organize_plot_person_sets(
+        data=data_raw,
+        temporary=temporary,
+        dock=dock,
     )
 
-    print(data_age)
+    # Organize regression persons properties.
+    organize_regression_persons_properties(
+        data=data_raw,
+        temporary=temporary,
+        dock=dock,
+    )
+
     pass
 
 
