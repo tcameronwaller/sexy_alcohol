@@ -19,8 +19,8 @@ echo $path_process
 set -x
 
 # Organize directories.
-rm -r $path_process_one
-mkdir $path_process_one
+rm -r $path_process
+mkdir -p $path_process
 #rm -r $path_dock_albumin
 
 # Specify UKBiobank phenotype variables of interest.
