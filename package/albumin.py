@@ -842,6 +842,8 @@ def execute_procedure(
         dock=dock,
     )
 
+    print("version check: 3")
+
     # Organize regression persons properties.
     organize_regression_persons_properties(
         data=data_raw,
