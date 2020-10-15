@@ -1249,7 +1249,7 @@ def plot_chart_persons_sex_age_albumin(
     colors = define_color_properties()
 
     # Create figure.
-    plot_scatter(
+    figure = plot_scatter(
         data=data,
         abscissa="age",
         ordinate="albumin",
