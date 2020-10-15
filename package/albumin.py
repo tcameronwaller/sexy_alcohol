@@ -740,8 +740,6 @@ def regress_signal_ordinary_residuals(
     return bin
 
 
-
-
 def organize_regression_persons_properties(
     data=None,
     temporary=None,
@@ -776,7 +774,7 @@ def organize_regression_persons_properties(
     ]
     # Regress.
     bin_case = regress_signal_ordinary_residuals(
-        dependence="albumin_scale",
+        dependence="albumin",
         independence=["sex", "age_scale"],
         proportion=0.5,
         data=data_variables,
