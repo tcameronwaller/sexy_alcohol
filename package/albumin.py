@@ -34,6 +34,12 @@ import pandas
 import scipy.stats
 import statsmodels.api
 import statsmodels.stats.outliers_influence
+import matplotlib
+matplotlib.use("agg")
+matplotlib.rcParams.update({'figure.max_open_warning': 0})
+import matplotlib.pyplot
+import matplotlib.lines
+import matplotlib_venn
 
 
 # Custom
@@ -554,6 +560,298 @@ def organize_person_two_groups_signal_comparisons(
     return comparisons
 
 
+
+
+##########
+# Box plots for genes' signals between groups of persons
+# Status: in progress
+
+
+
+def plot_boxes(
+    arrays=None,
+    labels_groups=None,
+    label_vertical=None,
+    label_horizontal=None,
+    label_top_center=None,
+    label_top_left=None,
+    label_top_right=None,
+    orientation=None,
+    fonts=None,
+    colors=None,
+):
+    """
+    Creates a figure of a chart of type histogram to represent the frequency
+    distribution of a single series of values.
+
+    arguments:
+        arrays (list<array>): NumPy arrays of values for each group
+        labels_groups (list<str>): labels for each group
+        label_vertical (str): label for vertical axis
+        label_horizontal (str): label for horizontal axis
+        label_top_center (str): label for top center of plot area
+        label_top_left (str): label for top left of plot area
+        label_top_right (str): label for top right of plot area
+        orientation (str): orientation of figure, either "portrait" or
+            "landscape"
+        fonts (dict<object>): references to definitions of font properties
+        colors (dict<tuple>): references to definitions of color properties
+
+    raises:
+
+    returns:
+        (object): figure object
+
+    """
+
+    # Define colors.
+    color_count = len(arrays)
+    if color_count == 1:
+        colors_series = [colors["blue"]]
+    elif color_count == 2:
+        colors_series = [colors["gray"], colors["blue"]]
+    elif color_count == 3:
+        colors_series = [colors["gray"], colors["blue"], colors["orange"]]
+    elif color_count > 3:
+        colors_series = list(
+            seaborn.color_palette("hls", n_colors=color_count)
+        )
+    # Create figure.
+    if orientation == "portrait":
+        figure = matplotlib.pyplot.figure(
+            figsize=(11.811, 15.748),
+            tight_layout=True
+        )
+    elif orientation == "landscape":
+        figure = matplotlib.pyplot.figure(
+            figsize=(15.748, 11.811),
+            tight_layout=True
+        )
+    # Create axes.
+    axes = matplotlib.pyplot.axes()
+    # Create boxes.
+    handle = axes.boxplot(
+        arrays,
+        notch=False,
+        vert=True,
+        widths=0.7,
+        patch_artist=True,
+        labels=labels_groups,
+        manage_ticks=True,
+    )
+    # Fill boxes with colors.
+    for box_patch, color_box in zip(handle["boxes"], colors_series):
+        box_patch.set_facecolor(color_box)
+        pass
+    # Label axes.
+    axes.set_ylabel(
+        ylabel=label_vertical,
+        labelpad=20,
+        alpha=1.0,
+        backgroundcolor=colors["white"],
+        color=colors["black"],
+        fontproperties=fonts["properties"]["two"]
+    )
+    if len(label_horizontal) > 0:
+        axes.set_xlabel(
+            xlabel=label_horizontal,
+            labelpad=20,
+            alpha=1.0,
+            backgroundcolor=colors["white"],
+            color=colors["black"],
+            fontproperties=fonts["properties"]["one"],
+            rotation="horizontal",
+        )
+    axes.tick_params(
+        axis="both",
+        which="both",
+        direction="out",
+        length=5.0,
+        width=3.0,
+        color=colors["black"],
+        pad=5,
+        labelsize=fonts["values"]["two"]["size"],
+        labelcolor=colors["black"]
+    )
+    if len(label_top_center) > 0:
+        axes.text(
+            0.5,
+            0.9,
+            label_top_center,
+            horizontalalignment="center",
+            verticalalignment="top",
+            transform=axes.transAxes,
+            backgroundcolor=colors["white"],
+            color=colors["black"],
+            fontproperties=fonts["properties"]["one"]
+        )
+    if len(label_top_left) > 0:
+        axes.text(
+            0.25,
+            0.9,
+            label_top_left,
+            horizontalalignment="center",
+            verticalalignment="top",
+            transform=axes.transAxes,
+            backgroundcolor=colors["white"],
+            color=colors["black"],
+            fontproperties=fonts["properties"]["two"]
+        )
+    if len(label_top_right) > 0:
+        axes.text(
+            0.75,
+            0.9,
+            label_top_right,
+            horizontalalignment="center",
+            verticalalignment="top",
+            transform=axes.transAxes,
+            backgroundcolor=colors["white"],
+            color=colors["black"],
+            fontproperties=fonts["properties"]["two"]
+        )
+    return figure
+
+
+def plot_chart_genes_signals_persons_two_groups_comparison(
+    comparison=None,
+    path_directory=None,
+):
+    """
+    Plots charts from the analysis process.
+
+    arguments:
+        comparison (dict): information for chart
+        path_directory (str): path for directory
+
+    raises:
+
+    returns:
+
+    """
+
+    # Specify path to directory and file.
+    path_file = os.path.join(
+        path_directory, str(comparison["title"] + ".png")
+    )
+    # Organize group labels.
+    label_1 = str(
+        comparison["group_1_label"] +
+        " (" + str(comparison["group_1_valids"]) + ")"
+    )
+    label_2 = str(
+        comparison["group_2_label"] +
+        " (" + str(comparison["group_2_valids"]) + ")"
+    )
+    labels_groups = [label_1, label_2]
+
+    # Define fonts.
+    fonts = define_font_properties()
+    # Define colors.
+    colors = define_color_properties()
+
+    # Create figure.
+    figure = plot_boxes(
+        arrays=[comparison["group_1_values"], comparison["group_2_values"]],
+        labels_groups=labels_groups,
+        label_vertical=str(comparison["variable_name"] + " in blood"),
+        label_horizontal="",
+        label_top_center=str("p: " + numpy.format_float_scientific(
+            comparison["probability"], precision=3
+        )),
+        label_top_left="",
+        label_top_right="",
+        orientation="portrait",
+        fonts=fonts,
+        colors=colors,
+    )
+    # Write figure.
+    write_figure_png(
+        path=path_file,
+        figure=figure
+    )
+
+    pass
+
+
+def prepare_charts_genes_signals_persons_groups(
+    comparisons=None,
+    dock=None,
+):
+    """
+    Plots charts from the analysis process.
+
+    arguments:
+        comparisons (object): info
+        dock (str): path to root or dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_plot = os.path.join(dock, "plot")
+    utility.create_directory(path_plot)
+    path_directory = os.path.join(path_plot, "sets")
+    utility.remove_directory(path=path_directory)
+    utility.create_directories(path=path_directory)
+    # Create figures.
+    for comparison in comparisons:
+        plot_chart_genes_signals_persons_two_groups_comparison(
+            comparison=comparison,
+            path_directory=path_directory,
+        )
+        pass
+    pass
+
+
+def organize_plot_persons_sets_boxes(
+    sets_persons=None,
+    data=None,
+    temporary=None,
+    dock=None,
+):
+    """
+    Function to execute module's main behavior.
+
+    arguments:
+        sets_persons (dict<list<str>>): identifiers of persons in groups by
+            their properties
+        data (object): Pandas data frame of persons' properties
+        temporary (str): path to temporary directory for source and product
+            directories and files
+        dock (str): path to dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+
+    """
+
+    comparisons_two = organize_person_two_groups_signal_comparisons(
+        sets_persons=sets_persons,
+        data_persons_properties=data,
+        report=True,
+    )
+    prepare_charts_genes_signals_persons_groups(
+        comparisons=comparisons_two,
+        dock=dock,
+    )
+
+    pass
+
+
+
+
+
+
+
+
+
+
 def organize_plot_person_sets(
     data=None,
     temporary=None,
@@ -591,15 +889,14 @@ def organize_plot_person_sets(
         report=True,
     )
 
-    comparisons_two = organize_person_two_groups_signal_comparisons(
+    # Organize and plot boxes.
+    organize_plot_persons_sets_boxes(
         sets_persons=sets_persons,
-        data_persons_properties=data_age,
-        report=True,
+        data=data_age,
+        temporary=temporary,
+        dock=dock,
     )
 
-    # T-tests
-
-    # bar charts
 
     # histograms
 
