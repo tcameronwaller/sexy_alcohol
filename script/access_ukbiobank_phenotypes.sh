@@ -15,6 +15,10 @@ path_ukbiobank_scripts=$(<"./ukbiobank_scripts.txt")
 path_pull_ukbiobank="$path_project/script/pullUKBclinical_edit.sh"
 echo $path_process
 
+# TODO: eventually edit the pullUKBclinical_edit.sh further
+# TODO: introduce column headers within this script?
+
+
 # Echo each command to console.
 set -x
 
@@ -25,7 +29,7 @@ mkdir -p $path_process
 
 # Specify UKBiobank phenotype variables of interest.
 echo "specify phenotype variables to access from UKBiobank"
-echo "31 22001 21022 30600 30500 30850 30830" | tr -s " " "\n" > $path_variables
+echo "31 21022 30600" | tr -s " " "\n" > $path_variables
 
 # Access phenotype variables from UKBiobank using script from Anthony Batzler.
 /usr/bin/bash $path_pull_ukbiobank waller_albumin $path_variables $path_process
