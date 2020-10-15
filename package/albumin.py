@@ -36,7 +36,7 @@ import scipy.stats
 # Custom
 
 #import plot
-#import utility
+import utility
 
 
 ###############################################################################
