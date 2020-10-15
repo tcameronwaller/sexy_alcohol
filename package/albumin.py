@@ -843,9 +843,7 @@ def organize_person_two_groups_signal_comparisons(
 
 
 ##########
-# Box plots for genes' signals between groups of persons
-# Status: in progress
-
+# Box plots
 
 
 def plot_boxes(
@@ -1124,8 +1122,229 @@ def organize_plot_persons_sets_boxes(
     pass
 
 
+##########
+# Scatter plots
 
 
+
+def plot_scatter(
+    data=None,
+    abscissa=None,
+    ordinate=None,
+    title_abscissa=None,
+    title_ordinate=None,
+    fonts=None,
+    colors=None,
+    size=None,
+):
+    """
+    Creates a figure of a chart of type scatter.
+
+    arguments:
+        data (object): Pandas data frame of groups, series, and values
+        abscissa (str): name of data column with variable for horizontal (x)
+            axis
+        ordinate (str): name of data column with variable for vertical (y) axis
+        title_abscissa (str): title for abscissa on horizontal axis
+        title_ordinate (str): title for ordinate on vertical axis
+        factor (str): name of data column with groups or factors of samples
+        fonts (dict<object>): references to definitions of font properties
+        colors (dict<tuple>): references to definitions of color properties
+        size (int): size of marker
+
+    raises:
+
+    returns:
+        (object): figure object
+
+    """
+
+    # Organize data.
+    data_copy = data.copy(deep=True)
+    data_selection = data_copy.loc[:, [abscissa, ordinate]]
+    data_selection.dropna(
+        axis="index",
+        how="any",
+        inplace=True,
+    )
+    values_abscissa = data_selection[abscissa].values
+    values_ordinate = data_selection[ordinate].values
+
+    ##########
+    # Create figure.
+    figure = matplotlib.pyplot.figure(
+        figsize=(15.748, 11.811),
+        tight_layout=True
+    )
+    # Create axes.
+    axes = matplotlib.pyplot.axes()
+    axes.set_xlabel(
+        xlabel=title_abscissa,
+        labelpad=20,
+        alpha=1.0,
+        backgroundcolor=colors["white"],
+        color=colors["black"],
+        fontproperties=fonts["properties"]["one"]
+    )
+    axes.set_ylabel(
+        ylabel=title_ordinate,
+        labelpad=20,
+        alpha=1.0,
+        backgroundcolor=colors["white"],
+        color=colors["black"],
+        fontproperties=fonts["properties"]["one"]
+    )
+    axes.tick_params(
+        axis="both",
+        which="both",
+        direction="out",
+        length=5.0,
+        width=3.0,
+        color=colors["black"],
+        pad=5,
+        labelsize=fonts["values"]["one"]["size"],
+        labelcolor=colors["black"]
+    )
+    # Plot points for values from each group.
+    handle = axes.plot(
+        values_abscissa,
+        values_ordinate,
+        linestyle="",
+        marker="o",
+        markersize=size, # 5, 15
+        markeredgecolor=colors["blue"],
+        markerfacecolor=colors["blue"]
+    )
+
+    # Return figure.
+    return figure
+
+
+def plot_chart_persons_sex_age_albumin(
+    data=None,
+    file=None,
+    path_directory=None,
+):
+    """
+    Plots charts from the analysis process.
+
+    arguments:
+        comparison (dict): information for chart
+        path_directory (str): path for directory
+
+    raises:
+
+    returns:
+
+    """
+
+    # Specify path to directory and file.
+    path_file = os.path.join(
+        path_directory, file
+    )
+
+    # Define fonts.
+    fonts = define_font_properties()
+    # Define colors.
+    colors = define_color_properties()
+
+    # Create figure.
+    plot_scatter(
+        data=data,
+        abscissa="age",
+        ordinate="albumin",
+        title_abscissa="age in years",
+        title_ordinate="blood albumin in g/L",
+        fonts=fonts,
+        colors=colors,
+        size=7,
+    )
+    # Write figure.
+    write_figure_png(
+        path=path_file,
+        figure=figure
+    )
+
+    pass
+
+
+def prepare_charts_persons_sex_age_albumin(
+    data_female=None,
+    data_male=None,
+    dock=None,
+):
+    """
+    Plots charts from the analysis process.
+
+    arguments:
+        comparisons (object): info
+        dock (str): path to root or dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_plot = os.path.join(dock, "plot")
+    utility.create_directory(path_plot)
+    path_directory = os.path.join(path_plot, "scatter")
+    utility.remove_directory(path=path_directory)
+    utility.create_directories(path=path_directory)
+    # Create figures.
+    plot_chart_persons_sex_age_albumin(
+        data=data_female,
+        file="female_age_albumin.png",
+        path_directory=path_directory,
+    )
+    plot_chart_persons_sex_age_albumin(
+        data=data_male,
+        file="male_age_albumin.png",
+        path_directory=path_directory,
+    )
+    pass
+
+
+def organize_plot_persons_sets_scatter(
+    sets_persons=None,
+    data=None,
+    temporary=None,
+    dock=None,
+):
+    """
+    Function to execute module's main behavior.
+
+    arguments:
+        sets_persons (dict<list<str>>): identifiers of persons in groups by
+            their properties
+        data (object): Pandas data frame of persons' properties
+        temporary (str): path to temporary directory for source and product
+            directories and files
+        dock (str): path to dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+
+    """
+
+    # Select data for persons in groups.
+    data_female = data.loc[
+        data.index.isin(sets_persons["female"]), :
+    ]
+    data_male = data.loc[
+        data.index.isin(sets_persons["male"]), :
+    ]
+    prepare_charts_persons_sex_age_albumin(
+        data_female=data_female,
+        data_male=data_male,
+        dock=dock,
+    )
+
+    pass
 
 
 
@@ -1177,6 +1396,13 @@ def organize_plot_person_sets(
         dock=dock,
     )
 
+    # Organize and plot scatters.
+    organize_plot_persons_sets_scatter(
+        sets_persons=sets_persons,
+        data=data_age,
+        temporary=temporary,
+        dock=dock,
+    )
 
     # histograms
 
