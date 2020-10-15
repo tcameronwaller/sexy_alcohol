@@ -1347,7 +1347,283 @@ def organize_plot_persons_sets_scatter(
     pass
 
 
+def plot_distribution_histogram(
+    series=None,
+    name=None,
+    bin_method=None,
+    bin_count=None,
+    label_bins=None,
+    label_counts=None,
+    fonts=None,
+    colors=None,
+    line=None,
+    position=None,
+    text=None,
+):
+    """
+    Creates a figure of a chart of type histogram to represent the frequency
+    distribution of a single series of values.
 
+    arguments:
+        series (list<float>): series of counts
+        name (str): name of series
+        bin_method (str): method to define bins
+        bin_count (int): count of bins to define and populate
+        label_bins (str): label for bins
+        label_counts (str): label for counts
+        fonts (dict<object>): references to definitions of font properties
+        colors (dict<tuple>): references to definitions of color properties
+        line (bool): whether to draw a vertical line
+        position (float): position for vertical line
+        text (str): text to include on figure
+
+    raises:
+
+    returns:
+        (object): figure object
+
+    """
+
+    # Define and populate bins.
+    # Bin method "auto" is useful.
+    #values, edges = numpy.histogram(series, bins=count_bins)
+    if bin_method == "count":
+        bin_edges = numpy.histogram_bin_edges(series, bins=bin_count)
+    else:
+        bin_edges = numpy.histogram_bin_edges(series, bins=bin_method)
+
+    # Create figure.
+    figure = matplotlib.pyplot.figure(
+        figsize=(15.748, 11.811),
+        tight_layout=True
+    )
+    axes = matplotlib.pyplot.axes()
+    values, bins, patches = axes.hist(
+        series,
+        bins=bin_edges,
+        histtype="bar",
+        align="left",
+        orientation="vertical",
+        rwidth=0.35,
+        log=False,
+        color=colors["blue"],
+        label=name,
+        stacked=False
+    )
+    if False:
+        axes.set_title(
+            name,
+            #fontdict=fonts["properties"]["one"],
+            loc="center",
+        )
+        axes.legend(
+            loc="upper right",
+            markerscale=2.5,
+            markerfirst=True,
+            prop=fonts["properties"]["one"],
+            edgecolor=colors["black"]
+        )
+    axes.set_xlabel(
+        xlabel=label_bins,
+        labelpad=20,
+        alpha=1.0,
+        backgroundcolor=colors["white"],
+        color=colors["black"],
+        fontproperties=fonts["properties"]["one"]
+    )
+    axes.set_ylabel(
+        ylabel=label_counts,
+        labelpad=20,
+        alpha=1.0,
+        backgroundcolor=colors["white"],
+        color=colors["black"],
+        fontproperties=fonts["properties"]["two"]
+    )
+    axes.tick_params(
+        axis="both",
+        which="both",
+        direction="out",
+        length=5.0,
+        width=3.0,
+        color=colors["black"],
+        pad=5,
+        labelsize=fonts["values"]["two"]["size"],
+        labelcolor=colors["black"]
+    )
+    if line:
+        axes.axvline(
+            x=position,
+            ymin=0,
+            ymax=1,
+            alpha=1.0,
+            color=colors["orange"],
+            linestyle="--",
+            linewidth=5.0, # 3.0, 7.5
+        )
+    if len(text) > 0:
+        matplotlib.pyplot.text(
+            1,
+            1,
+            text,
+            horizontalalignment="right",
+            verticalalignment="top",
+            transform=axes.transAxes,
+            backgroundcolor=colors["white"],
+            color=colors["black"],
+            fontproperties=fonts["properties"]["one"]
+        )
+    return figure
+
+
+def plot_chart_persons_sex_age_albumin_histogram(
+    data=None,
+    file=None,
+    path_directory=None,
+):
+    """
+    Plots charts from the analysis process.
+
+    arguments:
+        comparison (dict): information for chart
+        path_directory (str): path for directory
+
+    raises:
+
+    returns:
+
+    """
+
+    # Specify path to directory and file.
+    path_file = os.path.join(
+        path_directory, file
+    )
+
+    # Define fonts.
+    fonts = define_font_properties()
+    # Define colors.
+    colors = define_color_properties()
+
+    # Create figure.
+    figure = plot_distribution_histogram(
+        series=data["albumin"].to_list(),
+        name="",
+        bin_method="count",
+        bin_count=30,
+        label_bins="blood albumin in g/L",
+        label_counts="counts of persons per bin",
+        fonts=fonts,
+        colors=colors,
+        line=False,
+        position=1,
+        text="",
+    )
+    # Write figure.
+    write_figure_png(
+        path=path_file,
+        figure=figure
+    )
+
+    pass
+
+
+
+def prepare_charts_persons_sex_age_albumin_histograms(
+    data_female=None,
+    data_male=None,
+    data_young=None,
+    data_old=None,
+    dock=None,
+):
+    """
+    Plots charts from the analysis process.
+
+    arguments:
+        comparisons (object): info
+        dock (str): path to root or dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_plot = os.path.join(dock, "plot")
+    utility.create_directory(path_plot)
+    path_directory = os.path.join(path_plot, "histogram")
+    utility.remove_directory(path=path_directory)
+    utility.create_directories(path=path_directory)
+    # Create figures.
+    plot_chart_persons_sex_age_albumin_histogram(
+        data=data_female,
+        file="histogram_female_albumin.png",
+        path_directory=path_directory,
+    )
+    plot_chart_persons_sex_age_albumin_histogram(
+        data=data_male,
+        file="histogram_male_albumin.png",
+        path_directory=path_directory,
+    )
+    plot_chart_persons_sex_age_albumin_histogram(
+        data=data_young,
+        file="histogram_young_albumin.png",
+        path_directory=path_directory,
+    )
+    plot_chart_persons_sex_age_albumin_histogram(
+        data=data_old,
+        file="histogram_old_albumin.png",
+        path_directory=path_directory,
+    )
+    pass
+
+
+def organize_plot_persons_sets_histograms(
+    sets_persons=None,
+    data=None,
+    temporary=None,
+    dock=None,
+):
+    """
+    Function to execute module's main behavior.
+
+    arguments:
+        sets_persons (dict<list<str>>): identifiers of persons in groups by
+            their properties
+        data (object): Pandas data frame of persons' properties
+        temporary (str): path to temporary directory for source and product
+            directories and files
+        dock (str): path to dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+
+    """
+
+    # Select data for persons in groups.
+    data_female = data.loc[
+        data.index.isin(sets_persons["female"]), :
+    ]
+    data_male = data.loc[
+        data.index.isin(sets_persons["male"]), :
+    ]
+    data_young = data.loc[
+        data.index.isin(sets_persons["young"]), :
+    ]
+    data_old = data.loc[
+        data.index.isin(sets_persons["old"]), :
+    ]
+    prepare_charts_persons_sex_age_albumin_histograms(
+        data_female=data_female,
+        data_male=data_male,
+        data_young=data_young,
+        data_old=data_old,
+        dock=dock,
+    )
+
+    pass
 
 
 
@@ -1403,12 +1679,13 @@ def organize_plot_person_sets(
         temporary=temporary,
         dock=dock,
     )
-
     # histograms
-
-
-
-
+    organize_plot_persons_sets_histograms(
+        sets_persons=sets_persons,
+        data=data_age,
+        temporary=temporary,
+        dock=dock,
+    )
     pass
 
 
