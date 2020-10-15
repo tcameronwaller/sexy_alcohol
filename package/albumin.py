@@ -429,6 +429,127 @@ def organize_persons_properties_sets(
     return bin
 
 
+def compare_signals_persons_groups_two(
+    comparison=None,
+    group_1_persons=None,
+    group_2_persons=None,
+    group_1_label=None,
+    group_2_label=None,
+    data_persons_properties=None,
+    report=None,
+):
+    """
+    Organizes and combines information about dependent and independent
+    variables for regression.
+
+    arguments:
+        comparison (str): name for comparison
+        group_1_persons (list<str>): identifiers of persons in first group
+        group_2_persons (list<str>): identifiers of persons in second group
+        group_1_label (str): name of first group of persons
+        group_2_label (str): name of first group of persons
+        data_persons_properties (object): Pandas data frame of pan-tissue
+            signals across genes and persons
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): information about comparison
+
+    """
+
+    # Compile information.
+    bin = dict()
+    bin["variable_identifier"] = "albumin"
+    bin["variable_name"] = "albumin"
+    bin["comparison"] = comparison
+    bin["title"] = str(bin["variable_name"] + "_" + comparison)
+    bin["group_1_persons"] = len(group_1_persons)
+    bin["group_2_persons"] = len(group_2_persons)
+    bin["group_1_label"] = group_1_label
+    bin["group_2_label"] = group_2_label
+    # Copy data.
+    data_signals = data_persons_properties.copy(deep=True)
+    # Select data for persons in groups.
+    data_group_1 = data_signals.loc[
+        data_signals.index.isin(group_1_persons), :
+    ]
+    data_group_2 = data_signals.loc[
+        data_signals.index.isin(group_2_persons), :
+    ]
+    # Select gene's signals for each group.
+    bin["group_1_values"] = data_group_1[gene_identifier].dropna().to_numpy()
+    bin["group_2_values"] = data_group_2[gene_identifier].dropna().to_numpy()
+    bin["group_1_valids"] = bin["group_1_values"].size
+    bin["group_2_valids"] = bin["group_2_values"].size
+    # Calculate probability by t test.
+    t_statistic, p_value = scipy.stats.ttest_ind(
+        bin["group_1_values"],
+        bin["group_2_values"],
+        equal_var=True,
+        nan_policy="omit",
+    )
+    bin["probability"] = p_value
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("variable: " + bin["variable_name"])
+        print("comparison: " + bin["comparison"])
+        print(
+            bin["group_1_label"] + " (" + str(bin["group_1_valids"]) + ")" +
+            " versus " +
+            bin["group_2_label"] + " (" + str(bin["group_2_valids"]) + ")"
+        )
+        print("t test p-value: " + str(bin["probability"]))
+    # Return information.
+    return bin
+
+
+def organize_person_two_groups_signal_comparisons(
+    sets_persons=None,
+    data_persons_properties=None,
+    report=None,
+):
+    """
+    Organizes and comparisons between two groups across multiple genes.
+
+    arguments:
+        sets_persons (dict<list<str>>): identifiers of persons in groups by
+            their properties
+        data_persons_properties (object): Pandas data frame of pan-tissue
+            signals across genes and persons
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (list<dict>): information about comparisons
+
+    """
+
+    comparisons = list()
+    comparisons.append(compare_signals_persons_groups_two(
+        comparison="sex",
+        group_1_persons=sets_persons["female"],
+        group_2_persons=sets_persons["male"],
+        group_1_label="female",
+        group_2_label="male",
+        data_persons_properties=data_persons_properties,
+        report=report,
+    ))
+    comparisons.append(compare_signals_persons_groups_two(
+        comparison="age",
+        group_1_persons=sets_persons["young"],
+        group_2_persons=sets_persons["old"],
+        group_1_label="young",
+        group_2_label="old",
+        data_persons_properties=data_persons_properties,
+        report=report,
+    ))
+    return comparisons
+
+
 def organize_plot_person_sets(
     data=None,
     temporary=None,
@@ -462,6 +583,12 @@ def organize_plot_person_sets(
     )
     # Organize sets of persons by their properties.
     sets_persons = organize_persons_properties_sets(
+        data_persons_properties=data_age,
+        report=True,
+    )
+
+    comparisons_two = organize_person_two_groups_signal_comparisons(
+        sets_persons=sets_persons,
         data_persons_properties=data_age,
         report=True,
     )
@@ -837,6 +964,13 @@ def execute_procedure(
         inplace=True,
     )
 
+    # Organize regression persons properties.
+    organize_regression_persons_properties(
+        data=data_raw,
+        temporary=temporary,
+        dock=dock,
+    )
+
     # Organize plot person sets.
     organize_plot_person_sets(
         data=data_raw,
@@ -845,13 +979,6 @@ def execute_procedure(
     )
 
     print("version check: 3")
-
-    # Organize regression persons properties.
-    organize_regression_persons_properties(
-        data=data_raw,
-        temporary=temporary,
-        dock=dock,
-    )
 
     pass
 
