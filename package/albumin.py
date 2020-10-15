@@ -101,6 +101,9 @@ def read_file_text_list(
 
 # This stuff
 
+# TODO: currently uses hard-coded column names... not good
+# TODO: read in column names from last row
+# TODO: also need to handle multi-instance columns, either taking the mean or only the most recent one...
 def read_source(dock=None):
     """
     Reads and organizes source information from file
@@ -145,6 +148,227 @@ def read_source(dock=None):
         "variables": variables_sort,
         "data_raw": data_raw,
     }
+
+
+
+
+
+# Stratification
+
+def determine_stratification_bin_thresholds(
+    bin=None,
+    values_sort=None,
+    indices=None,
+    thresholds=None,
+    report=None,
+):
+    """
+    Determine values of thresholds for three stratification bins.
+    Lower and upper thresholds for a bin cannot be identical.
+
+    arguments:
+        bin (list<float>): proportions for one stratification bin
+        values_sort (list<float>): values of continuous variable in ascending
+            sort order
+        indices (list<list<int>>): indices for each low and high threshold
+        thresholds (list<list<float>>): thresholds for bins
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (list<list<int>>, list<list<float>>): indices, thresholds
+
+    """
+
+    # Count total values.
+    count_total = len(values_sort)
+
+    # Low threshold.
+    count_low = round(bin[0] * count_total)
+    if (count_low == 0):
+        index_low = 0
+    else:
+        index_low = (count_low - 1)
+    value_low = values_sort[index_low]
+    # Ensure that low threshold is at least as great as the previous bin's high
+    # threshold.
+    if len(thresholds) > 0:
+        if (value_low < thresholds[-1][1]):
+            value_low = thresholds[-1][1]
+
+    # High threshold.
+    count_high = round(bin[1] * count_total)
+    index_high = (count_high - 1)
+    value_high = values_sort[index_high]
+    # Ensure that high threshold is greater than low threshold.
+    if value_low == value_high:
+        # Iterate on values until finding the next greater value.
+        while values_sort[index_high] == value_low:
+            index_high += 1
+        value_high = values_sort[index_high]
+
+    # Collect indices.
+    indices_bin = list()
+    indices_bin.append(index_low)
+    indices_bin.append(index_high)
+    indices.append(indices_bin)
+    # Collect thresholds.
+    thresholds_bin = list()
+    thresholds_bin.append(value_low)
+    thresholds_bin.append(value_high)
+    thresholds.append(thresholds_bin)
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=4)
+        print("count_low: " + str(count_low))
+        print("index_low: " + str(index_low))
+        print("value_low: " + str(value_low))
+        print("count_high: " + str(count_high))
+        print("index_high: " + str(index_high))
+        print("value_high: " + str(value_high))
+    # Return information.
+    return indices, thresholds
+
+
+def collect_stratification_bins_thresholds(
+    values=None,
+    bins=None,
+    report=None,
+):
+    """
+    Determine values of thresholds for three stratification bins.
+    Lower and upper thresholds for a bin cannot be identical.
+
+    arguments:
+        values (list<float>): values of continuous variable
+        bins (list<list<float>>): proportions for three stratification bins
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (list<list<int>>): values of thresholds for each stratification bin
+
+    """
+
+    # Organize values.
+    values = copy.deepcopy(values)
+    values_sort = sorted(values, reverse=False)
+    # Collect thresholds.
+    indices = list()
+    thresholds = list()
+    for bin in bins:
+        # Determine low and high thresholds for bin.
+        indices, thresholds = determine_stratification_bin_thresholds(
+            bin=bin,
+            values_sort=values_sort,
+            indices=indices,
+            thresholds=thresholds,
+            report=report,
+        )
+    # Return information.
+    return thresholds
+
+
+def determine_stratification_bin(
+    value=None,
+    thresholds=None,
+):
+    """
+    Stratify persons to ordinal bins by their values of continuous variables.
+
+    arguments:
+        value (float): value of continuous variable
+        thresholds (list<list<int>>): values of thresholds for each
+            stratification bin
+
+    raises:
+
+    returns:
+        (int): integer bin
+
+    """
+
+    if not math.isnan(value):
+        if (thresholds[0][0] <= value and value < thresholds[0][1]):
+            return 0
+        elif (thresholds[1][0] <= value and value < thresholds[1][1]):
+            return 1
+        elif len(thresholds) > 2:
+            if (thresholds[2][0] <= value and value <= thresholds[2][1]):
+                return 2
+            else:
+                return float("nan")
+        else:
+            return float("nan")
+    else:
+        return float("nan")
+
+
+def stratify_persons_continuous_variable_ordinal(
+    variable=None,
+    variable_grade=None,
+    bins=None,
+    data_persons_properties=None,
+    report=None,
+):
+    """
+    Stratify persons to ordinal bins by their values of continuous variables.
+
+    arguments:
+        variable (str): name of continuous variable for stratification
+        variable_grade (str): name for new ordinal variable
+        bins (list<list<float>>): proportions for three stratification bins
+        data_persons_properties (object): Pandas data frame of persons'
+            properties
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of information about persons
+
+    """
+
+    # Copy data.
+    data = data_persons_properties.copy(deep=True)
+    # Determine whether variable qualifies for stratification.
+    series, values_unique = pandas.factorize(
+        data[variable],
+        sort=True
+    )
+    if len(values_unique) < 2:
+        data[variable_grade] = float("nan")
+    else:
+        # Report.
+        if report:
+            utility.print_terminal_partition(level=2)
+            print("variable: " + str(variable))
+            utility.print_terminal_partition(level=2)
+        # Determine thresholds for stratification bins.
+        thresholds = collect_stratification_bins_thresholds(
+            values=data[variable].to_list(),
+            bins=bins,
+            report=report,
+        )
+        # Determine bins.
+        data[variable_grade] = data[variable].apply(
+            lambda value:
+                determine_stratification_bin(
+                    value=value,
+                    thresholds=thresholds,
+                )
+        )
+        # Report.
+        if report:
+            utility.print_terminal_partition(level=2)
+            for threshold in thresholds:
+                print("low threshold: " + str(threshold[0]))
+                print("high threshold: " + str(threshold[1]))
+                utility.print_terminal_partition(level=3)
+    # Return information.
+    return data
 
 
 
@@ -196,8 +420,18 @@ def execute_procedure(
         inplace=True,
     )
 
+    # Determine bins of persons by age.
+    data_age = stratify_persons_continuous_variable_ordinal(
+        variable="age",
+        variable_grade="age_grade",
+        bins=[[0.0, 0.33], [0.33, 0.67], [0.67, 1.0]],
+        data_persons_properties=data_raw,
+        report=True,
+    )
 
-    print(data_raw)
+    # Determine sets of persons by sex and age.
+
+    print(data_age)
     pass
 
 
