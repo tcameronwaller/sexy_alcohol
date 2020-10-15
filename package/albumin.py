@@ -177,6 +177,18 @@ def execute_procedure(
 
     # Organize data.
     data_raw = source["data_raw"].copy(deep=True)
+    data_raw.drop(
+        labels=[
+            "albumin_extra", "person_extra",
+        ],
+        axis="columns",
+        inplace=True
+    )
+    data_raw.set_index(
+        "person",
+        drop=True,
+        inplace=True,
+    )
     # Remove observations with missing values for either feature.
     data_raw.dropna(
         axis="index",
@@ -185,6 +197,7 @@ def execute_procedure(
     )
 
 
+    print(data_raw)
     pass
 
 
