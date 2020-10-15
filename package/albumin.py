@@ -1508,7 +1508,7 @@ def plot_chart_persons_sex_age_albumin_histogram(
         series=data["albumin"].to_list(),
         name="",
         bin_method="count",
-        bin_count=30,
+        bin_count=70,
         label_bins="blood albumin in g/L",
         label_counts="counts of persons per bin",
         fonts=fonts,
