@@ -17,7 +17,7 @@ echo $path_process
 
 # TODO: eventually edit the pullUKBclinical_edit.sh further
 # TODO: introduce column headers within this script?
-
+# TODO: the UKBiobank converter tool seems to sort the variables by their field identifiers (ex: 31 before 21022)
 
 # Echo each command to console.
 set -x
