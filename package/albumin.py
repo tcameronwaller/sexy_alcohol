@@ -15,6 +15,29 @@
 # https://stackoverflow.com/questions/67631/how-to-import-a-module-given-the-full-path
 
 
+# Standard
+
+import sys
+import os
+import math
+import statistics
+import pickle
+import copy
+import random
+import itertools
+
+# Relevant
+
+import numpy
+import pandas
+import scipy.stats
+
+# Custom
+
+#import plot
+#import utility
+
+
 ###############################################################################
 # Functionality
 
@@ -145,6 +168,7 @@ def execute_procedure(
     """
 
     print("hello world!")
+    print(sys.path)
 
 
     pass
