@@ -130,9 +130,11 @@ def read_source(dock=None):
     )
     variables_sort = sorted(variables, reverse=False)
     variables_sort.insert(0, "person")
+    variables_sort.append("unknown")
+    variables_sort.append("person_extra")
     data_raw = pandas.read_csv(
         path_data_raw,
-        sep="\t",
+        sep=",", # ",", "\t"
         header=None,
         names=variables_sort,
     )
@@ -168,8 +170,19 @@ def execute_procedure(
 
     """
 
+    # Read source information from file.
     source = read_source(dock=dock)
     print(source["data_raw"])
+
+    # Organize data.
+    data_raw = source["data_raw"].copy(deep=True)
+    # Remove observations with missing values for either feature.
+    data_raw.dropna(
+        axis="index",
+        how="any",
+        inplace=True,
+    )
+
 
     pass
 
