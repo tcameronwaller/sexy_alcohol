@@ -371,6 +371,63 @@ def stratify_persons_continuous_variable_ordinal(
     return data
 
 
+# Sets of persons
+
+
+def organize_persons_properties_sets(
+    data_persons_properties=None,
+    report=None,
+):
+    """
+    Extracts identifiers of persons.
+
+    arguments:
+        data_persons_properties (object): Pandas data frame of persons'
+            properties
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict<list<str>>): identifiers of persons in groups by their properties
+
+    """
+
+    # Copy data.
+    data_persons_properties = data_persons_properties.copy(deep=True)
+    # Organize data.
+    bin = dict()
+    # Sex.
+    bin["female"] = data_persons_properties.loc[
+        data_persons_properties["sex"] == 0.0, :
+    ].index.to_list()
+    bin["male"] = data_persons_properties.loc[
+        data_persons_properties["sex"] == 1.0, :
+    ].index.to_list()
+    # Age.
+    bin["young"] = data_persons_properties.loc[
+        data_persons_properties["age_grade"] == 0, :
+    ].index.to_list()
+    bin["old"] = data_persons_properties.loc[
+        data_persons_properties["age_grade"] == 2, :
+    ].index.to_list()
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("Count of persons in each group...")
+        utility.print_terminal_partition(level=2)
+        for group in bin.keys():
+            #utility.print_terminal_partition(level=4)
+            print(group + " persons: " + str(len(bin[group])))
+            pass
+        utility.print_terminal_partition(level=2)
+        pass
+    # Return information.
+    return bin
+
+
+
+
 
 ###############################################################################
 # Procedure
@@ -428,8 +485,11 @@ def execute_procedure(
         data_persons_properties=data_raw,
         report=True,
     )
-
-    # Determine sets of persons by sex and age.
+    # Organize sets of persons by their properties.
+    sets_persons = organize_persons_properties_sets(
+        data_persons_properties=data_age,
+        report=True,
+    )
 
     print(data_age)
     pass
