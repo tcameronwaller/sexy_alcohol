@@ -430,6 +430,7 @@ def organize_persons_properties_sets(
 
 
 def compare_signals_persons_groups_two(
+    variable_identifier=None,
     comparison=None,
     group_1_persons=None,
     group_2_persons=None,
@@ -443,6 +444,7 @@ def compare_signals_persons_groups_two(
     variables for regression.
 
     arguments:
+        variable_identifier (str): identifier of variable for signal
         comparison (str): name for comparison
         group_1_persons (list<str>): identifiers of persons in first group
         group_2_persons (list<str>): identifiers of persons in second group
@@ -461,7 +463,7 @@ def compare_signals_persons_groups_two(
 
     # Compile information.
     bin = dict()
-    bin["variable_identifier"] = "albumin"
+    bin["variable_identifier"] = variable_identifier
     bin["variable_name"] = "albumin"
     bin["comparison"] = comparison
     bin["title"] = str(bin["variable_name"] + "_" + comparison)
@@ -479,8 +481,8 @@ def compare_signals_persons_groups_two(
         data_signals.index.isin(group_2_persons), :
     ]
     # Select gene's signals for each group.
-    bin["group_1_values"] = data_group_1[gene_identifier].dropna().to_numpy()
-    bin["group_2_values"] = data_group_2[gene_identifier].dropna().to_numpy()
+    bin["group_1_values"] = data_group_1[variable_identifier].dropna().to_numpy()
+    bin["group_2_values"] = data_group_2[variable_identifier].dropna().to_numpy()
     bin["group_1_valids"] = bin["group_1_values"].size
     bin["group_2_valids"] = bin["group_2_values"].size
     # Calculate probability by t test.
@@ -530,6 +532,7 @@ def organize_person_two_groups_signal_comparisons(
 
     comparisons = list()
     comparisons.append(compare_signals_persons_groups_two(
+        variable_identifier="albumin",
         comparison="sex",
         group_1_persons=sets_persons["female"],
         group_2_persons=sets_persons["male"],
@@ -539,6 +542,7 @@ def organize_person_two_groups_signal_comparisons(
         report=report,
     ))
     comparisons.append(compare_signals_persons_groups_two(
+        variable_identifier="albumin",
         comparison="age",
         group_1_persons=sets_persons["young"],
         group_2_persons=sets_persons["old"],
