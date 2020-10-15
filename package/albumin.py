@@ -770,7 +770,9 @@ def organize_regression_persons_properties(
     )
     # Select relevant varialbes.
     data_variables = data_scale.loc[
-        :, data_scale.columns.isin(["sex", "age_scale", "albumin_scale"])
+        :, data_scale.columns.isin([
+            "sex", "age_scale", "albumin", "albumin_scale"
+        ])
     ]
     # Regress.
     bin_case = regress_signal_ordinary_residuals(
