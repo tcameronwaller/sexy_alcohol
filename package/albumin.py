@@ -135,8 +135,9 @@ def read_source(dock=None):
     data_raw = pandas.read_csv(
         path_data_raw,
         sep=",", # ",", "\t"
-        header=502493,
-        names=None,
+        header=None,
+        names=["person", "sex", "age", "albumin", "albumin_extra", "person_extra"],
+        skipfooter=1,
     )
 
     # Compile and return information.
