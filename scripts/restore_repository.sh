@@ -27,6 +27,7 @@ wget https://github.com/tcameronwaller/sexy_alcohol/archive/main.zip
 unzip main.zip
 rm main.zip
 mv sexy_alcohol-main $path_sexy_alcohol
+mv "$path_sexy_alcohol/package" "$path_sexy_alcohol/sexy_alcohol"
 
 echo "access current version of the promiscuity repository..."
 cd $path_waller
@@ -34,7 +35,7 @@ wget https://github.com/tcameronwaller/promiscuity/archive/main.zip
 unzip main.zip
 rm main.zip
 mv promiscuity-main $path_promiscuity
+mv "$path_promiscuity/package" "$path_promiscuity/promiscuity"
 
 echo "organize promiscuity as a subpackage within sexy_alcohol..."
-cp -r "$path_promiscuity/package" "$path_sexy_alcohol/package/package"
-mv "$path_sexy_alcohol/package/package" "$path_sexy_alcohol/package/promiscuity"
+cp -r "$path_promiscuity/promiscuity" "$path_sexy_alcohol/sexy_alcohol/promiscuity"
