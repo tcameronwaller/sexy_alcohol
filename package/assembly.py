@@ -35,7 +35,7 @@ import scipy.stats
 
 
 # Custom
-import sexy_alcohol.promiscuity.utility as utility
+import promiscuity.utility as utility
 
 
 ###############################################################################

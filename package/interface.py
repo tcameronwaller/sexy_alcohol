@@ -16,7 +16,7 @@ import textwrap
 
 # Custom.
 
-import sexy_alcohol.assembly as assembly
+import assembly
 #import plot
 #import utility
 
