@@ -50,16 +50,17 @@ readarray -t names < "$path_play/names.txt"
 echo ${names[@]}
 count=${#names[@]}
 indices_maximum=$((count-1))
-indices={0..${count}..1}
 echo "count of names: "
 echo $count
 echo ${indices[@]}
 
 # Iterate on instances.
-#for name in "${names[@]:0:100}"
+#for name in "${names[@]}"; do
+#for name in "${names[@]:0:100}"; do
 for (( index=0; index<=$indices_maximum; index+=1 )); do
+    name=${names[$index]}
     echo "current name: "
-    echo $names[$index]
+    echo $name
 done
 
 # Execute procedure(s).
