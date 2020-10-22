@@ -52,14 +52,14 @@ count_names=${#names[@]}
 indices=$((count_names-1))
 echo "count of names: "
 echo $count_names
-echo $indices
+echo ${indices[@]}
 
 # Iterate on instances.
 #for name in "${names[@]:0:100}"
 for index in $indices
 do
     echo "current name: "
-    echo $names[index]
+    echo $names[$index]
 done
 
 # Execute procedure(s).
