@@ -9,7 +9,7 @@ path_temporary=$(<"./temporary_sexy_alcohol.txt")
 path_waller="$path_temporary/waller"
 path_dock="$path_waller/dock"
 path_sexy_alcohol="$path_waller/sexy_alcohol"
-path_package="$path_sexy_alcohol/package"
+path_package="$path_sexy_alcohol/sexy_alcohol"
 
 # Echo each command to console.
 set -x
