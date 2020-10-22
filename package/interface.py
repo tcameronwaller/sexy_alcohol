@@ -16,7 +16,7 @@ import textwrap
 
 # Custom.
 
-import albumin
+import sexy_alcohol.assembly as assembly
 #import plot
 #import utility
 
@@ -132,23 +132,16 @@ def define_main_subparser(subparsers=None):
     )
     # Define arguments.
     parser_main.add_argument(
-        "-temporary", "--temporary", dest="temporary", type=str, required=True,
-        help=(
-            "Path to temporary directory for source and product " +
-            "directories and files."
-        )
-    )
-    parser_main.add_argument(
-        "-dock", "--dock", dest="dock", type=str, required=True,
+        "-path_dock", "--path_dock", dest="path_dock", type=str, required=True,
         help=(
             "Path to dock directory for source and product " +
             "directories and files."
         )
     )
     parser_main.add_argument(
-        "-albumin", "--albumin", dest="albumin", action="store_true",
+        "-assembly", "--assembly", dest="assembly", action="store_true",
         help=(
-            "Prediction of blood or serum albumin."
+            "Organization of information for further analyses."
         )
     )
     # Define behavior.
@@ -229,13 +222,12 @@ def evaluate_main_parameters(arguments):
     print("--------------------------------------------------")
     print("... call to main routine ...")
     # Execute procedure.
-    if arguments.albumin:
+    if arguments.assembly:
         # Report status.
-        print("... executing albumin procedure ...")
+        print("... executing assembly procedure ...")
         # Execute procedure.
-        albumin.execute_procedure(
-            temporary=arguments.temporary,
-            dock=arguments.dock
+        assembly.execute_procedure(
+            path_dock=arguments.path_dock
         )
     pass
 
