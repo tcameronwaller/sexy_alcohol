@@ -2,7 +2,7 @@
 
 #chmod u+x script.sh
 
-# Read in private file paths.
+# Read private, local file paths.
 echo "read private file path variables and organize paths..."
 cd ~/path
 path_temporary=$(<"./process_temporary.txt")
