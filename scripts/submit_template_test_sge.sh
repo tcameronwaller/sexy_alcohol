@@ -48,16 +48,16 @@ fi
 echo "becky marissa amanda avianna bethany" | tr -s " " "\n" > "$path_play/names.txt"
 readarray -t names < "$path_play/names.txt"
 echo ${names[@]}
-count_names=${#names[@]}
-indices=$((count_names-1))
+count=${#names[@]}
+indices_maximum=$((count-1))
+indices={0..${count}..1}
 echo "count of names: "
-echo $count_names
+echo $count
 echo ${indices[@]}
 
 # Iterate on instances.
 #for name in "${names[@]:0:100}"
-for index in $indices
-do
+for (( index=0; index<=$indices_maximum; index+=1 )); do
     echo "current name: "
     echo $names[$index]
 done
