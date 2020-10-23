@@ -27,6 +27,7 @@
 #$ -pe threaded 16
 # Range of indices.
 # Specify as argument when calling qsub.
+# Array batch indices cannot start at zero.
 ### -t 1-100:1
 # Limit on concurrent processes.
 #$ -tc 10
