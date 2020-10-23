@@ -76,5 +76,5 @@ done
 echo "----------------------------------------------------------------------"
 echo "Submit array batch to Sun Grid Engine."
 echo "----------------------------------------------------------------------"
-qsub -t 1-$(index_maximum):1 -o "$path_product/out.txt" -e "$path_product/error.txt" \
+qsub -t 1-${index_maximum}:1 -o "$path_product/out.txt" -e "$path_product/error.txt" \
 $path_scripts/template_test_sge.sh $path_source $path_product $count
