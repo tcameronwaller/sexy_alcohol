@@ -55,6 +55,7 @@ echo "becky marissa amanda avianna bethany" | tr -s " " "\n" > "$path_source/nam
 readarray -t names < "$path_source/names.txt"
 echo ${names[@]}
 count=${#names[@]}
+# Adjust index for base zero.
 index_maximum=$((count-1))
 echo "count of names: "
 echo $count
@@ -76,5 +77,5 @@ done
 echo "----------------------------------------------------------------------"
 echo "Submit array batch to Sun Grid Engine."
 echo "----------------------------------------------------------------------"
-qsub -t 1-${index_maximum}:1 -o "$path_product/out.txt" -e "$path_product/error.txt" \
+qsub -t 0-${index_maximum}:1 -o "$path_product/out.txt" -e "$path_product/error.txt" \
 $path_scripts/template_test_sge.sh $path_source $path_product $count
