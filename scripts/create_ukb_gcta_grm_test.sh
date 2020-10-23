@@ -28,6 +28,7 @@ then
     # Create directory.
     mkdir -p $path_dock
     mkdir -p $path_relation
+    mkdir -p "$path_relation/chromosome_21"
 fi
 
 ###########################################################################
@@ -57,11 +58,11 @@ fi
 # Create Genetic Relationship Matrix in GCTA.
 chromosome=21
 
-$path_gcta --bgen $path_ukb_genotype/Chromosome/ukb_imp_chr${chr}_v3.bgen \
---sample $path_ukb_genotype/Chromosome/ukb46237_imp_chr${chr}_v3_s487320.sample \
+$path_gcta --bgen "$path_ukb_genotype/Chromosome/ukb_imp_chr${chromosome}_v3.bgen" \
+--sample "$path_ukb_genotype/Chromosome/ukb46237_imp_chr${chromosome}_v3_s487320.sample" \
 --maf 0.01 --make-grm-part 10 1 \
 --threads 16 \
---out $path_relation/test
+--out "$path_relation/chromosome_${chromosome}"
 
 
 ###########################################################################
