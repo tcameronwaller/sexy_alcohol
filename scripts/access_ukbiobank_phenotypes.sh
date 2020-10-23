@@ -4,7 +4,7 @@
 
 # Read private, local file paths.
 echo "read private file path variables and organize paths..."
-cd ~/path
+cd ~/paths
 path_temporary=$(<"./process_temporary.txt")
 path_process="$path_temporary/waller_albumin"
 path_variables="$path_process/variables.txt"
