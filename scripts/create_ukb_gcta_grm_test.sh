@@ -22,7 +22,7 @@ path_ukb_genotype=$(<"./ukbiobank_genotype.txt")
 set -x
 
 # Determine whether the temporary directory structure already exists.
-if [ ! -d $path_dock ]
+if [ ! -d $path_relation ]
 then
     # Directory does not already exist.
     # Create directory.
@@ -60,8 +60,8 @@ chromosome=21
 
 $path_gcta --bgen "$path_ukb_genotype/Chromosome/ukb_imp_chr${chromosome}_v3.bgen" \
 --sample "$path_ukb_genotype/Chromosome/ukb46237_imp_chr${chromosome}_v3_s487320.sample" \
---maf 0.01 --make-grm-part 20 1 \
---threads 16 \
+--maf 0.01 --make-grm-part 50 1 \
+--threads 8 \
 --out "$path_relation/chromosome_${chromosome}"
 
 
