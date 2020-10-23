@@ -45,7 +45,7 @@
 
 ###########################################################################
 # Organize variables.
-index=$SGE_TASK_ID
+index=$((SGE_TASK_ID-1))
 path_source=$1
 path_product=$2
 count=$3
