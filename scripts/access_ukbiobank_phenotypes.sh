@@ -41,36 +41,43 @@ path_phenotype_data=$4
 path_tools=$5
 path_destination=$6
 
+echo $path_variables
+echo $path_identifier_pairs
+echo $path_exclusion
+echo $path_phenotype_data
+echo $path_tools
+echo $path_destination
+
 ###########################################################################
 # Copy auxiliary files.
 
 # Copy UK Biobank phenotype variables to destination directory.
-cp $path_variables "$path_destination/uk_biobank_phenotype_variables.txt"
+#cp $path_variables "$path_destination/uk_biobank_phenotype_variables.txt"
 
 # Copy table of identifier pairs to destination directory.
-cp $path_identifier_pairs "$path_destination/table_identifier_pairs.csv"
+#cp $path_identifier_pairs "$path_destination/table_identifier_pairs.csv"
 
 # Copy table of exclusion identifiers to destination directory.
-cp $path_exclusion "$path_destination/table_exclusion_identifiers.csv"
+#cp $path_exclusion "$path_destination/table_exclusion_identifiers.csv"
 
 ###########################################################################
 # Access variables from each phenotype data release of UK Biobank.
 # Access names of all current phenotype data releases.
 # https://biobank.ctsu.ox.ac.uk/crystal/exinfo.cgi?src=accessing_data_guide
 # https://biobank.ctsu.ox.ac.uk/~bbdatan/Accessing_UKB_data_v2.3.pdf
-cd $path_destination
-accessions=($(ls -d $path_phenotype_data/ukb*))
-for i in "${accessions[@]}"; do
-    echo $i
-    dir=`basename $i`
-    # Remove log file to avoid error.
-    rm $path_phenotype_data/$dir/$dir.log
-    # Convert data to text file with comma ("csv") or tab ("txt") delimiters.
-    $path_tools/ukbconv $path_phenotype_data/$dir/$dir.enc_ukb txt \
-    -i $path_variables -o $path_destination/$dir.raw
-    # Remove log file to avoid error.
-    rm $path_phenotype_data/$dir/$dir.log
-done
+#cd $path_destination
+#accessions=($(ls -d $path_phenotype_data/ukb*))
+#for i in "${accessions[@]}"; do
+#    echo $i
+#    dir=`basename $i`
+#    # Remove log file to avoid error.
+#    rm $path_phenotype_data/$dir/$dir.log
+#    # Convert data to text file with comma ("csv") or tab ("txt") delimiters.
+#    $path_tools/ukbconv $path_phenotype_data/$dir/$dir.enc_ukb txt \
+#    -i $path_variables -o $path_destination/$dir.raw
+#    # Remove log file to avoid error.
+#    rm $path_phenotype_data/$dir/$dir.log
+#done
 
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
