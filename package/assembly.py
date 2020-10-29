@@ -124,22 +124,21 @@ def merge_data_variables_identifiers(
     """
 
     # Organize data.
-    if False:
-        data_identifier_pairs.set_index(
-            "eid",
-            drop=True,
-            inplace=True,
-        )
-        data_ukb_41826.set_index(
-            "eid",
-            drop=True,
-            inplace=True,
-        )
-        data_ukb_43878.set_index(
-            "eid",
-            drop=True,
-            inplace=True,
-        )
+    data_identifier_pairs.set_index(
+        "eid",
+        drop=True,
+        inplace=True,
+    )
+    data_ukb_41826.set_index(
+        "eid",
+        drop=True,
+        inplace=True,
+    )
+    data_ukb_43878.set_index(
+        "eid",
+        drop=True,
+        inplace=True,
+    )
     # Merge data tables using database-style join.
     # Alternative is to use DataFrame.join().
     data_merge = data_identifier_pairs.merge(
@@ -235,7 +234,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 3")
 
     # Read source information from file.
     # Exclusion identifiers are "eid".
