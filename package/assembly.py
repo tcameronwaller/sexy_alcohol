@@ -124,32 +124,33 @@ def merge_data_variables_identifiers(
     """
 
     # Organize data.
-    data_identifier_pairs.set_index(
-        "eid",
-        drop=True,
-        inplace=True,
-    )
-    data_ukb_41826.set_index(
-        "eid",
-        drop=True,
-        inplace=True,
-    )
-    data_ukb_43878.set_index(
-        "eid",
-        drop=True,
-        inplace=True,
-    )
+    if False:
+        data_identifier_pairs.set_index(
+            "eid",
+            drop=True,
+            inplace=True,
+        )
+        data_ukb_41826.set_index(
+            "eid",
+            drop=True,
+            inplace=True,
+        )
+        data_ukb_43878.set_index(
+            "eid",
+            drop=True,
+            inplace=True,
+        )
     # Merge data tables using database-style join.
     # Alternative is to use DataFrame.join().
     data_merge = data_identifier_pairs.copy(deep=True)
-    data_merge.join(
+    data_merge.merge(
         data_ukb_41826,
         how="outer",
         left_on="eid",
         right_on="eid",
         suffixes=("_pairs", "_41826"),
     )
-    data_merge.join(
+    data_merge.merge(
         data_ukb_43878,
         how="outer",
         left_on="eid",
