@@ -52,13 +52,13 @@ echo $path_destination
 # Copy auxiliary files.
 
 # Copy UK Biobank phenotype variables to destination directory.
-#cp $path_variables "$path_destination/uk_biobank_phenotype_variables.txt"
+cp $path_variables "$path_destination/uk_biobank_phenotype_variables.txt"
 
 # Copy table of identifier pairs to destination directory.
-#cp $path_identifier_pairs "$path_destination/table_identifier_pairs.csv"
+cp $path_identifier_pairs "$path_destination/table_identifier_pairs.csv"
 
 # Copy table of exclusion identifiers to destination directory.
-#cp $path_exclusion "$path_destination/table_exclusion_identifiers.csv"
+cp $path_exclusion "$path_destination/table_exclusion_identifiers.csv"
 
 ###########################################################################
 # Access variables from each phenotype data release of UK Biobank.
