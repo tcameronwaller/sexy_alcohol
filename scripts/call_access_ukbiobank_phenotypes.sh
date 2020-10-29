@@ -22,9 +22,9 @@ path_variables="$path_parameter/uk_biobank_phenotype_variables.txt"
 path_dock="$path_waller/dock"
 path_access="$path_dock/access"
 path_ukb_phenotype=$(<"./ukbiobank_phenotype.txt")
-path_exclusion="$ukb_phenotype/exclude.csv"
+path_exclusion="$path_ukb_phenotype/exclude.csv"
 path_ukb_parameter=$(<"./ukbiobank_parameter.txt")
-path_identifier_pairs="$ukb_parameter/link.file.csv"
+path_identifier_pairs="$path_ukb_parameter/link.file.csv"
 path_ukb_tools=$(<"./ukbiobank_tools.txt")
 
 # Echo each command to console.
