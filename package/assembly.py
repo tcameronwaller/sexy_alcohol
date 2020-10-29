@@ -71,20 +71,99 @@ def read_source(path_dock=None):
         path_dock, "access", "ukb43878.raw.tsv"
     )
     # Read information from file.
-    data_gene_annotation_gtex = pandas.read_pickle(
-        path_gene_annotation_gtex
+    exclusion_identifiers = utility.read_file_text_list(
+        delimiter="\n",
+        path_file=path_exclusion_identifiers
     )
-    data_gene_annotation_gencode = pandas.read_pickle(
-        path_gene_annotation_gencode
+    data_identifier_pairs = pandas.read_csv(
+        path_data_identifier_pairs,
+        sep=",",
+        header=0,
     )
-    with open(path_genes_gtex, "rb") as file_source:
-        genes_gtex = pickle.load(file_source)
+    data_ukb_41826 = pandas.read_csv(
+        path_data_ukb_41826,
+        sep="\t",
+        header=0,
+    )
+    data_ukb_43878 = pandas.read_csv(
+        path_data_ukb_43878,
+        sep="\t",
+        header=0,
+    )
     # Compile and return information.
     return {
-        "data_gene_annotation_gtex": data_gene_annotation_gtex,
-        "data_gene_annotation_gencode": data_gene_annotation_gencode,
-        "genes_gtex": genes_gtex,
+        "exclusion_identifiers": exclusion_identifiers,
+        "data_identifier_pairs": data_identifier_pairs,
+        "data_ukb_41826": data_ukb_41826,
+        "data_ukb_43878": data_ukb_43878,
     }
+
+
+def merge_data_variables_identifiers(
+    data_identifier_pairs=None,
+    data_ukb_41826=None,
+    data_ukb_43878=None,
+    report=None,
+):
+    """
+    Reads and organizes source information from file.
+
+    arguments:
+        data_identifier_pairs (object): Pandas data frame of associations
+            between "IID" and "eid"
+        data_ukb_41826 (object): Pandas data frame of variables from UK Biobank
+            phenotype accession 41826
+        data_ukb_43878 (object): Pandas data frame of variables from UK Biobank
+            phenotype accession 43878
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+
+    """
+
+    # Organize data.
+    data_identifier_pairs.set_index(
+        "eid",
+        drop=True,
+        inplace=True,
+    )
+    data_ukb_41826.set_index(
+        "eid",
+        drop=True,
+        inplace=True,
+    )
+    data_ukb_43878.set_index(
+        "eid",
+        drop=True,
+        inplace=True,
+    )
+    # Merge data tables using database-style join.
+    # Alternative is to use DataFrame.join().
+    data_merge = data_identifier_pairs.copy(deep=True)
+    data_merge.join(
+        data_ukb_41826,
+        how="outer",
+        left_on="eid",
+        right_on="eid",
+        suffixes=("_pairs", "_41826"),
+    )
+    data_merge.join(
+        data_ukb_43878,
+        how="outer",
+        left_on="eid",
+        right_on="eid",
+        suffixes=("_41826", "_43878"),
+    )
+    # Remove excess columns.
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print(data_merge)
+    # Return information.
+    return data_merge
 
 
 def calculate_alcohol_consumption_monthly(
@@ -130,9 +209,6 @@ def calculate_alcohol_consumption_monthly(
     return drinks_monthly
 
 
-
-
-
 ###############################################################################
 # Procedure
 
@@ -158,7 +234,22 @@ def execute_procedure(
     print("version check: 1")
 
     # Read source information from file.
+    # Exclusion identifiers are "eid".
     source = read_source(path_dock=path_dock)
+    # Merge tables.
+    data_raw = merge_data_variables_identifiers(
+        data_identifier_pairs=source["data_identifier_pairs"],
+        data_ukb_41826=source["data_ukb_41826"],
+        data_ukb_43878=source["data_ukb_43878"],
+        report=True,
+    )
+
+
+    # Organize general phenotypes.
+
+    # Organize genotype principal components.
+
+    # Organize alcohol phenotypes.
 
     pass
 
