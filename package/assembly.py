@@ -142,15 +142,14 @@ def merge_data_variables_identifiers(
         )
     # Merge data tables using database-style join.
     # Alternative is to use DataFrame.join().
-    data_merge = data_identifier_pairs.copy(deep=True)
-    data_merge.merge(
+    data_merge = data_identifier_pairs.merge(
         data_ukb_41826,
         how="outer",
         left_on="eid",
         right_on="eid",
         suffixes=("_pairs", "_41826"),
     )
-    data_merge.merge(
+    data_merge = data_merge.merge(
         data_ukb_43878,
         how="outer",
         left_on="eid",
@@ -161,6 +160,10 @@ def merge_data_variables_identifiers(
 
     # Report.
     if report:
+        utility.print_terminal_partition(level=2)
+        print(data_ukb_41826)
+        utility.print_terminal_partition(level=2)
+        print(data_ukb_43878)
         utility.print_terminal_partition(level=2)
         print(data_merge)
     # Return information.
@@ -232,7 +235,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
 
     # Read source information from file.
     # Exclusion identifiers are "eid".
