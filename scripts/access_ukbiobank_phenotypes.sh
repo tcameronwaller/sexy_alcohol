@@ -65,19 +65,19 @@ cp $path_exclusion "$path_destination/table_exclusion_identifiers.csv"
 # Access names of all current phenotype data releases.
 # https://biobank.ctsu.ox.ac.uk/crystal/exinfo.cgi?src=accessing_data_guide
 # https://biobank.ctsu.ox.ac.uk/~bbdatan/Accessing_UKB_data_v2.3.pdf
-#cd $path_destination
-#accessions=($(ls -d $path_phenotype_data/ukb*))
-#for i in "${accessions[@]}"; do
-#    echo $i
-#    dir=`basename $i`
-#    # Remove log file to avoid error.
-#    rm $path_phenotype_data/$dir/$dir.log
-#    # Convert data to text file with comma ("csv") or tab ("txt") delimiters.
-#    $path_tools/ukbconv $path_phenotype_data/$dir/$dir.enc_ukb txt \
-#    -i $path_variables -o $path_destination/$dir.raw
-#    # Remove log file to avoid error.
-#    rm $path_phenotype_data/$dir/$dir.log
-#done
+cd $path_destination
+accessions=($(ls -d $path_phenotype_data/ukb*))
+for i in "${accessions[@]}"; do
+    echo $i
+    dir=`basename $i`
+    # Remove log file to avoid error.
+    rm $path_phenotype_data/$dir/$dir.log
+    # Convert data to text file with comma ("csv") or tab ("txt") delimiters.
+    $path_tools/ukbconv $path_phenotype_data/$dir/$dir.enc_ukb txt \
+    -i $path_variables -o $path_destination/$dir.raw
+    # Remove log file to avoid error.
+    rm $path_phenotype_data/$dir/$dir.log
+done
 
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
