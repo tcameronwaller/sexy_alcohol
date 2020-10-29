@@ -29,7 +29,7 @@ echo "the UK Biobank."
 echo "----------"
 echo "Hooray! :)"
 echo "----------"
-echo "Version check: 7"
+echo "Version check: 3"
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
@@ -77,7 +77,7 @@ for i in "${accessions[@]}"; do
     # Remove log file to avoid error.
     rm $path_phenotype_data/$dir/$dir.log
     # Convert data to text file with comma ("csv") or tab ("txt") delimiters.
-    $path_tools/ukbconv $path_phenotype_data/$dir/$dir.enc_ukb txt -i ./variables.txt -o ./$dir.raw
+    $path_tools/ukbconv $path_phenotype_data/$dir/$dir.enc_ukb txt -i"./variables.txt" -o"./$dir.raw"
     # Remove log file to avoid error.
     rm $path_phenotype_data/$dir/$dir.log
 done
