@@ -74,7 +74,7 @@ for i in "${accessions[@]}"; do
     rm $path_phenotype_data/$dir/$dir.log
     # Convert data to text file with comma ("csv") or tab ("txt") delimiters.
     $path_tools/ukbconv $path_phenotype_data/$dir/$dir.enc_ukb txt \
-    -i $path_variables -o $path_destination/$dir.raw
+    -i$path_variables -o$path_destination/$dir.raw
     # Remove log file to avoid error.
     rm $path_phenotype_data/$dir/$dir.log
 done
