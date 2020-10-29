@@ -55,6 +55,7 @@ echo $path_destination
 
 # Copy UK Biobank phenotype variables to destination directory.
 cp $path_variables "$path_destination/uk_biobank_phenotype_variables.txt"
+cp $path_variables "$path_destination/variables.txt"
 
 # Copy table of identifier pairs to destination directory.
 cp $path_identifier_pairs "$path_destination/table_identifier_pairs.csv"
@@ -65,6 +66,7 @@ cp $path_exclusion "$path_destination/table_exclusion_identifiers.csv"
 ###########################################################################
 # Access variables from each phenotype data release of UK Biobank.
 # Access names of all current phenotype data releases.
+# UK Biobank conversion tool can only accommodate path strings 1-64 characters.
 # https://biobank.ctsu.ox.ac.uk/crystal/exinfo.cgi?src=accessing_data_guide
 # https://biobank.ctsu.ox.ac.uk/~bbdatan/Accessing_UKB_data_v2.3.pdf
 cd $path_destination
@@ -75,7 +77,7 @@ for i in "${accessions[@]}"; do
     # Remove log file to avoid error.
     rm $path_phenotype_data/$dir/$dir.log
     # Convert data to text file with comma ("csv") or tab ("txt") delimiters.
-    $path_tools/ukbconv $path_phenotype_data/$dir/$dir.enc_ukb txt -i$path_variables -o$path_destination/$dir.raw
+    $path_tools/ukbconv $path_phenotype_data/$dir/$dir.enc_ukb txt -i ./variables.txt -o ./$dir.raw
     # Remove log file to avoid error.
     rm $path_phenotype_data/$dir/$dir.log
 done
