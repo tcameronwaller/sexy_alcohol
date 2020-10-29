@@ -51,6 +51,17 @@ Journal: Cellular & Molecular Neuroscience
 Title: "Evaluating the genetic effects of sex hormone traits on the development of mental traits: a polygenic score analysis and genome-wide genetic interaction analysis in UK Biobank cohort"
 Link: https://www.researchsquare.com/article/rs-32855/v2
 
+
+--------------------------------------------------
+PubMed:26014426
+Date: February 2016
+Journal: European Journal of Human Genetics
+Authors: Ruth, ..., Perry
+Title: "Genome-wide association study with 1000 genomes imputation identifies signals for nine sex hormone-related phenotypes"
+Note:
+- 2913 persons from TwinsUK cohort
+- sex hormone GWAS
+
 --------------------------------------------------
 PubMed:26071488
 Date: 12 June 2015

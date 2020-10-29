@@ -22,8 +22,7 @@ path_ukb_genotype=$(<"./ukbiobank_genotype.txt")
 set -x
 
 # Determine whether the temporary directory structure already exists.
-if [ ! -d $path_relation ]
-then
+if [ ! -d $path_relation ]; then
     # Directory does not already exist.
     # Create directory.
     mkdir -p $path_dock
@@ -39,7 +38,6 @@ fi
 # 2. calculate chromosomal GRMs in 10 parts
 # 3. combine GRM parts for each chromosome
 # 4. merge chromosomal GRMs
-
 
 # Combine parts...
 # https://cnsgenomics.com/software/gcta/#MakingaGRM
