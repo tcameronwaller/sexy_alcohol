@@ -27,9 +27,6 @@ echo "----------------------------------------------------------------------"
 echo "The script accesses local information about persons and phenotypes in "
 echo "the UK Biobank."
 echo "----------"
-echo "Hooray! :)"
-echo "----------"
-echo "Version check: 1"
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
@@ -43,13 +40,6 @@ path_phenotype_data=$4
 path_tools=$5
 path_destination=$6
 
-echo $path_variables
-echo $path_identifier_pairs
-echo $path_exclusion
-echo $path_phenotype_data
-echo $path_tools
-echo $path_destination
-
 ###########################################################################
 # Copy auxiliary files.
 
@@ -61,7 +51,7 @@ cp $path_variables "$path_destination/variables.txt"
 cp $path_identifier_pairs "$path_destination/table_identifier_pairs.csv"
 
 # Copy table of exclusion identifiers to destination directory.
-cp $path_exclusion "$path_destination/table_exclusion_identifiers.csv"
+cp $path_exclusion "$path_destination/list_exclusion_identifiers.txt"
 
 ###########################################################################
 # Access variables from each phenotype data release of UK Biobank.
@@ -78,6 +68,8 @@ for i in "${accessions[@]}"; do
     rm $path_phenotype_data/$dir/$dir.log
     # Convert data to text file with comma ("csv") or tab ("txt") delimiters.
     $path_tools/ukbconv $path_phenotype_data/$dir/$dir.enc_ukb txt -i"./variables.txt" -o"./$dir.raw"
+    # Rename product file.
+    mv "./$dir.raw.txt" "./$dir.raw.tsv"
     # Remove log file to avoid error.
     rm $path_phenotype_data/$dir/$dir.log
 done
@@ -85,7 +77,7 @@ done
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
-echo "Now let us see whether that worked."
+echo "Done."
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"

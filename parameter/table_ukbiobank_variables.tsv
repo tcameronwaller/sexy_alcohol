@@ -1,0 +1,35 @@
+sort	field	instances_total	instances_keep	name	unit, code	coverage	scale	description	category	note
+1	31	0.0	0.0	sex	female: 0; male: 1	502492	nominal	Sex	Baseline characteristics	
+2	22001	0.0	0.0	sex_genotype	female: 0; male: 1	488251	nominal	Genetic sex	Genotyping process and sample QC	
+3	21022	0.0	0.0	age	years	502492	ratio	Age at recruitment	Baseline characteristics	
+4	21002	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	weight	kg	499809	ratio	Weight	Body size measures	
+5	50	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	height	cm	500031	ratio	Standing height	Body size measures	
+6	21001	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	body_mass_index	kg/m2	499494	ratio	Body mass index (BMI)	Body size measures	
+7	30600	0.0, 0.1	0.0, 0.1	albumin	g/L	432326	ratio	Albumin	Blood biochemistry	greater coverage than albumin_urine
+8	30830	0.0, 0.1	0.0, 0.1	steroid_globulin	nmol/L	428164	ratio	SHBG	Blood biochemistry	
+9	30850	0.0, 0.1	0.0, 0.1	testosterone	nmol/L	427051	ratio	Testosterone	Blood biochemistry	
+10	30800	0.0, 0.1	0.0, 0.1	oestradiol	pmol/L	77713	ratio	Oestradiol	Blood biochemistry	
+11	2724	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	menopause	yes or hysterectomy	272914	nominal	Had menopause	Female-specific factors	hysterectomy mimics menopause
+12	1588	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	alcohol_weekly_beer	count drinks	349120	ratio	Average weekly beer plus cider intake	Alcohol	calculate sum of total alcoholic drinks per week
+13	1568	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	alcohol_weekly_wine_red	count drinks	349121	ratio	Average weekly red wine intake	Alcohol	calculate sum of total alcoholic drinks per week
+14	1578	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	alcohol_weekly_wine_white	count drinks	349120	ratio	Average weekly champagne plus white wine intake	Alcohol	calculate sum of total alcoholic drinks per week
+15	1608	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	alcohol_weekly_port	count drinks	349120	ratio	Average weekly fortified wine intake	Alcohol	calculate sum of total alcoholic drinks per week
+16	1598	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	alcohol_weekly_liquor	count drinks	349120	ratio	Average weekly spirits intake	Alcohol	calculate sum of total alcoholic drinks per week
+17	5364	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	alcohol_weekly_other	count drinks	146883	ratio	Average weekly intake of other alcoholic drinks	Alcohol	calculate sum of total alcoholic drinks per week
+18	4429	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	alcohol_monthly_beer	count drinks	52045	ratio	Average monthly beer plus cider intake	Alcohol	calculate sum of total alcoholic drinks per week
+19	4407	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	alcohol_monthly_wine_red	count drinks	52045	ratio	Average monthly red wine intake	Alcohol	calculate sum of total alcoholic drinks per week
+20	4418	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	alcohol_monthly_wine_white	count drinks	52045	ratio	Average monthly champagne plus white wine intake	Alcohol	calculate sum of total alcoholic drinks per week
+21	4451	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	alcohol_monthly_port	count drinks	52045	ratio	Average monthly fortified wine intake	Alcohol	calculate sum of total alcoholic drinks per week
+22	4440	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	alcohol_monthly_liquor	count drinks	52045	ratio	Average monthly spirits intake	Alcohol	calculate sum of total alcoholic drinks per week
+23	4462	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	alcohol_monthly_other	count drinks	52045	ratio	Average monthly intake of other alcoholic drinks	Alcohol	calculate sum of total alcoholic drinks per week
+24	20117	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	alcohol_status	never: 0; previous: 1; current: 2	501612	ordinal	Alcohol drinker status	Alcohol	translate to ordinal
+25	20414	0.0	0.0	alcohol_frequency_auditc	category	157339	ordinal	Frequency of drinking alcohol	Alcohol use	AUDIT-C question 1
+26	20403	0.0	0.0	alcohol_drinks_auditc	ordinal	143658	ordinal	Amount of alcohol drunk on a typical drinking day	Alcohol use	AUDIT-C question 2
+27	20416	0.0	0.0	alcohol_binge_auditc	category	143658	ordinal	Frequency of consuming six of more units of alcohol	Alcohol use	AUDIT-C question 3
+28	1558	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	alcohol_frequency	category	501612	ordinal	Alcohol intake frequency	Alcohol	translate to ordinal
+29	1628	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	alcohol_trend	category	460892	ordinal	Alcohol intake versus 10 years previously	Alcohol	translate to ordinal
+30	1618	0.0, 0.1, 0.2, 0.3	0.0, 0.1, 0.2, 0.3	alcohol_meal	category	395102	nominal	Alcohol usually taken with meals	Alcohol	translate to ordinal
+31	20124	0.0	0.0	depression_moderate	category	15244	nominal	Probable recurrent major depression (moderate)	Mental health	
+32	20125	0.0	0.0	depression_severe	category	9398	nominal	Probable recurrent major depression (severe)	Mental health	
+33	20126	0.0	0.0	bipolar_or_depression	category	122973	nominal	Bipolar and major depression status	Mental health	
+34	22009	0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.10, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.20, 0.21, 0.22, 0.23, 0.24, 0.25, 0.26, 0.27, 0.28, 0.29, 0.30, 0.31, 0.32, 0.33, 0.34, 0.35, 0.36, 0.37, 0.38, 0.39, 0.40	0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.10, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16, 0.17, 0.18, 0.19, 0.20	genotype	unit	488251	ratio	Genetic principal components	Genotyping process and sample QC	
