@@ -203,21 +203,23 @@ def read_source(path_dock=None):
     )
     utility.print_terminal_partition(level=2)
     print(column_names)
+    print(len(column_names))
     utility.print_terminal_partition(level=2)
     print(row_values)
+    print(len(row_values))
     utility.print_terminal_partition(level=2)
 
     data_ukb_41826 = pandas.read_csv(
         path_data_ukb_41826,
         sep="\t",
         header=0,
-        dtype=variables_types,
+        #dtype=variables_types,
     )
     data_ukb_43878 = pandas.read_csv(
         path_data_ukb_43878,
         sep="\t",
         header=0,
-        dtype=variables_types,
+        #dtype=variables_types,
     )
     # Compile and return information.
     return {
@@ -397,30 +399,33 @@ def merge_data_variables_identifiers(
         drop=True,
         inplace=True,
     )
-    # Merge data tables using database-style join.
-    # Alternative is to use DataFrame.join().
-    data_merge = data_identifier_pairs.merge(
-        data_ukb_41826,
-        how="outer",
-        left_on="eid",
-        right_on="eid",
-        suffixes=("_pairs", "_41826"),
-    )
-    data_merge = data_merge.merge(
-        data_ukb_43878,
-        how="outer",
-        left_on="eid",
-        right_on="eid",
-        suffixes=("_41826", "_43878"),
-    )
-    # Remove excess columns.
 
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print(data_merge)
-    # Return information.
-    return data_merge
+    if False:
+        # Merge data tables using database-style join.
+        # Alternative is to use DataFrame.join().
+        data_merge = data_identifier_pairs.merge(
+            data_ukb_41826,
+            how="outer",
+            left_on="eid",
+            right_on="eid",
+            suffixes=("_pairs", "_41826"),
+        )
+        data_merge = data_merge.merge(
+            data_ukb_43878,
+            how="outer",
+            left_on="eid",
+            right_on="eid",
+            suffixes=("_41826", "_43878"),
+        )
+        # Remove excess columns.
+
+        # Report.
+        if report:
+            utility.print_terminal_partition(level=2)
+            print(data_merge)
+        # Return information.
+        return data_merge
+    pass
 
 
 def calculate_alcohol_consumption_monthly(
