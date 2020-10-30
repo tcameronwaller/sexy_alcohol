@@ -10,18 +10,18 @@ sort	field	type	instances_total	instances_keep	name	unit, code	coverage	scale	de
 9	30850	float32	0.0, 0.1	0.0,	testosterone	nmol/L	427051	ratio	Testosterone	Blood biochemistry	
 10	30800	float32	0.0, 0.1	0.0,	oestradiol	pmol/L	77713	ratio	Oestradiol	Blood biochemistry	
 11	2724	string	0.0, 0.1, 0.2, 0.3	0.0,	menopause	yes or hysterectomy	272914	nominal	Had menopause	Female-specific factors	hysterectomy mimics menopause
-12	1588	uint8	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_weekly_beer	count drinks	349120	ratio	Average weekly beer plus cider intake	Alcohol	calculate sum of total alcoholic drinks per week
-13	1568	uint8	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_weekly_wine_red	count drinks	349121	ratio	Average weekly red wine intake	Alcohol	calculate sum of total alcoholic drinks per week
-14	1578	uint8	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_weekly_wine_white	count drinks	349120	ratio	Average weekly champagne plus white wine intake	Alcohol	calculate sum of total alcoholic drinks per week
-15	1608	uint8	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_weekly_port	count drinks	349120	ratio	Average weekly fortified wine intake	Alcohol	calculate sum of total alcoholic drinks per week
-16	1598	uint8	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_weekly_liquor	count drinks	349120	ratio	Average weekly spirits intake	Alcohol	calculate sum of total alcoholic drinks per week
-17	5364	uint8	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_weekly_other	count drinks	146883	ratio	Average weekly intake of other alcoholic drinks	Alcohol	calculate sum of total alcoholic drinks per week
-18	4429	uint8	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_monthly_beer	count drinks	52045	ratio	Average monthly beer plus cider intake	Alcohol	calculate sum of total alcoholic drinks per week
-19	4407	uint8	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_monthly_wine_red	count drinks	52045	ratio	Average monthly red wine intake	Alcohol	calculate sum of total alcoholic drinks per week
-20	4418	uint8	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_monthly_wine_white	count drinks	52045	ratio	Average monthly champagne plus white wine intake	Alcohol	calculate sum of total alcoholic drinks per week
-21	4451	uint8	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_monthly_port	count drinks	52045	ratio	Average monthly fortified wine intake	Alcohol	calculate sum of total alcoholic drinks per week
-22	4440	uint8	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_monthly_liquor	count drinks	52045	ratio	Average monthly spirits intake	Alcohol	calculate sum of total alcoholic drinks per week
-23	4462	uint8	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_monthly_other	count drinks	52045	ratio	Average monthly intake of other alcoholic drinks	Alcohol	calculate sum of total alcoholic drinks per week
+12	1588	float32	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_weekly_beer	count drinks	349120	ratio	Average weekly beer plus cider intake	Alcohol	calculate sum of total alcoholic drinks per week
+13	1568	float32	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_weekly_wine_red	count drinks	349121	ratio	Average weekly red wine intake	Alcohol	calculate sum of total alcoholic drinks per week
+14	1578	float32	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_weekly_wine_white	count drinks	349120	ratio	Average weekly champagne plus white wine intake	Alcohol	calculate sum of total alcoholic drinks per week
+15	1608	float32	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_weekly_port	count drinks	349120	ratio	Average weekly fortified wine intake	Alcohol	calculate sum of total alcoholic drinks per week
+16	1598	float32	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_weekly_liquor	count drinks	349120	ratio	Average weekly spirits intake	Alcohol	calculate sum of total alcoholic drinks per week
+17	5364	float32	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_weekly_other	count drinks	146883	ratio	Average weekly intake of other alcoholic drinks	Alcohol	calculate sum of total alcoholic drinks per week
+18	4429	float32	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_monthly_beer	count drinks	52045	ratio	Average monthly beer plus cider intake	Alcohol	calculate sum of total alcoholic drinks per week
+19	4407	float32	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_monthly_wine_red	count drinks	52045	ratio	Average monthly red wine intake	Alcohol	calculate sum of total alcoholic drinks per week
+20	4418	float32	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_monthly_wine_white	count drinks	52045	ratio	Average monthly champagne plus white wine intake	Alcohol	calculate sum of total alcoholic drinks per week
+21	4451	float32	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_monthly_port	count drinks	52045	ratio	Average monthly fortified wine intake	Alcohol	calculate sum of total alcoholic drinks per week
+22	4440	float32	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_monthly_liquor	count drinks	52045	ratio	Average monthly spirits intake	Alcohol	calculate sum of total alcoholic drinks per week
+23	4462	float32	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_monthly_other	count drinks	52045	ratio	Average monthly intake of other alcoholic drinks	Alcohol	calculate sum of total alcoholic drinks per week
 24	20117	string	0.0, 0.1, 0.2, 0.3	0.0,	alcohol_status	never: 0; previous: 1; current: 2	501612	ordinal	Alcohol drinker status	Alcohol	translate to ordinal
 25	20414	string	0.0,	0.0,	alcohol_frequency_auditc	category	157339	ordinal	Frequency of drinking alcohol	Alcohol use	AUDIT-C question 1
 26	20403	string	0.0,	0.0,	alcohol_drinks_auditc	ordinal	143658	ordinal	Amount of alcohol drunk on a typical drinking day	Alcohol use	AUDIT-C question 2
