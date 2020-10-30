@@ -70,12 +70,12 @@ def extract_organize_variables_types(
     # Collect variables' names and types.
     variables_types = dict()
     for record in records:
-        field = record["field"]
-        type = record["type"]
+        field = str(record["field"])
+        type = str(record["type"])
         instances_total_raw = str(record["instances_total"])
         instances_raw = instances_total_raw.split(",")
         for instance_raw in instances_raw:
-            instance = instance_raw.strip()
+            instance = str(instance_raw).strip()
             if len(instance) > 0:
                 name = str(field + "-" + instance)
                 # Create entry for variable's name and type.
@@ -302,16 +302,25 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 4")
+    print("version check: 5")
 
     # Read source information from file.
     # Exclusion identifiers are "eid".
     source = read_source(path_dock=path_dock)
-    # Merge tables.
-    data_raw = merge_data_variables_identifiers(
-        data_identifier_pairs=source["data_identifier_pairs"],
+
+    # Remove data columns for irrelevant variable instances.
+    prune = remove_data_irrelevant_variable_instances(
+        data_ukbiobank_variables=source["data_ukbiobank_variables"],
         data_ukb_41826=source["data_ukb_41826"],
         data_ukb_43878=source["data_ukb_43878"],
+        report=True,
+    )
+
+    # Merge tables.
+    data_raw = merge_data_variables_identifiers(
+        data_identifier_pairs=prune["data_identifier_pairs"],
+        data_ukb_41826=prune["data_ukb_41826"],
+        data_ukb_43878=prune["data_ukb_43878"],
         report=True,
     )
 
