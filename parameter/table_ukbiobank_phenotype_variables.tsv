@@ -1,7 +1,7 @@
 sort	field	type	instances_total	instances_keep	name	unit, code	coverage	scale	description	category	note
 1	31	uint8	0.0,	0.0,	sex	female: 0; male: 1	502492	nominal	Sex	Baseline characteristics	
 2	22001	uint8	0.0,	0.0,	sex_genotype	female: 0; male: 1	488251	nominal	Genetic sex	Genotyping process and sample QC	
-3	21022	uint8	0.0,	0.0,	age	years	502492	ratio	Age at recruitment	Baseline characteristics	
+3	21022	float32	0.0,	0.0,	age	years	502492	ratio	Age at recruitment	Baseline characteristics	
 4	21002	float32	0.0, 0.1, 0.2, 0.3	0.0,	weight	kg	499809	ratio	Weight	Body size measures	
 5	50	float32	0.0, 0.1, 0.2, 0.3	0.0,	height	cm	500031	ratio	Standing height	Body size measures	
 6	21001	float32	0.0, 0.1, 0.2, 0.3	0.0,	body_mass_index	kg/m2	499494	ratio	Body mass index (BMI)	Body size measures	
