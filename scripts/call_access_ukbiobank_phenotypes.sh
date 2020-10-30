@@ -17,7 +17,7 @@ cd ~/paths
 path_temporary=$(<"./temporary_sexy_alcohol.txt")
 path_waller="$path_temporary/waller"
 path_scripts="$path_waller/sexy_alcohol/scripts"
-path_parameter="$path_waller/sexy_alcohol/parameter"
+path_parameter="$path_waller/sexy_alcohol/parameters"
 path_variables="$path_parameter/uk_biobank_phenotype_variables.txt"
 path_table_variables="$path_parameter/table_ukbiobank_phenotype_variables.tsv"
 path_dock="$path_waller/dock"
