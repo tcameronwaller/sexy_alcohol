@@ -160,10 +160,10 @@ def read_source(path_dock=None):
         path_dock, "access", "table_identifier_pairs.csv"
     )
     path_data_ukb_41826 = os.path.join(
-        path_dock, "access", "ukb41826.raw.tsv"
+        path_dock, "access", "ukb41826.raw.csv"
     )
     path_data_ukb_43878 = os.path.join(
-        path_dock, "access", "ukb43878.raw.tsv"
+        path_dock, "access", "ukb43878.raw.csv"
     )
     # Determine variable types.
     data_ukbiobank_variables = pandas.read_csv(
@@ -195,13 +195,13 @@ def read_source(path_dock=None):
     # Designate variable types to conserve memory.
     column_names = read_ukbiobank_data_column_names(
         path_file=path_data_ukb_41826,
-        delimiter="\t",
+        delimiter=",", # "," or "\t"
         start=0,
         stop=1,
     )
     row_values = read_ukbiobank_data_column_names(
         path_file=path_data_ukb_41826,
-        delimiter="\t",
+        delimiter=",", # "," or "\t"
         start=1,
         stop=2,
     )
@@ -215,13 +215,13 @@ def read_source(path_dock=None):
 
     data_ukb_41826 = pandas.read_csv(
         path_data_ukb_41826,
-        sep="\t",
+        sep=",", # "," or "\t"
         header=0,
         #dtype=variables_types,
     )
     data_ukb_43878 = pandas.read_csv(
         path_data_ukb_43878,
-        sep="\t",
+        sep=",", # "," or "\t"
         header=0,
         #dtype=variables_types,
     )
