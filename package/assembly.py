@@ -200,7 +200,7 @@ def extract_organize_variable_fields_instances_names(
     # Iterate across records for rows.
     # Collect variables' names and types.
     names = list()
-    names.append(extra_names)
+    names.extend(extra_names)
     for record in records:
         field = str(record["field"])
         instances_total_raw = str(record["instances_keep"])
