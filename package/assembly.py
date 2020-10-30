@@ -304,7 +304,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
 
     # Read source information from file.
     # Exclusion identifiers are "eid".
@@ -321,9 +321,9 @@ def execute_procedure(
 
     # Merge tables.
     data_raw = merge_data_variables_identifiers(
-        data_identifier_pairs=prune["data_identifier_pairs"],
-        data_ukb_41826=prune["data_ukb_41826"],
-        data_ukb_43878=prune["data_ukb_43878"],
+        data_identifier_pairs=source["data_identifier_pairs"],
+        data_ukb_41826=source["data_ukb_41826"],
+        data_ukb_43878=source["data_ukb_43878"],
         report=True,
     )
 
