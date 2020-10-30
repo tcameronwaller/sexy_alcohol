@@ -44,6 +44,7 @@ import promiscuity.utility as utility
 
 def extract_organize_variables_types(
     data_ukbiobank_variables=None,
+    extra_pairs=None,
 ):
     """
     Organize information about data types of UK Biobank phenotype variables.
@@ -51,6 +52,7 @@ def extract_organize_variables_types(
     arguments:
         data_identifier_pairs (object): Pandas data frame of information about
             UK Biobank phenotype variables
+        extra_pairs (dict<str>): extra key value pairs to include
 
     raises:
 
@@ -69,6 +71,7 @@ def extract_organize_variables_types(
     # Iterate across records for rows.
     # Collect variables' names and types.
     variables_types = dict()
+    variables_types.update(extra_pairs)
     for record in records:
         field = str(record["field"])
         type = str(record["type"])
@@ -126,6 +129,10 @@ def read_source(path_dock=None):
     )
     variables_types = extract_organize_variables_types(
         data_ukbiobank_variables=data_ukbiobank_variables,
+        extra_pairs={
+            "IID": "string",
+            "eid": "string",
+        },
     )
     #utility.print_terminal_partition(level=2)
     #print(variables_types["31-0.0"])
@@ -139,7 +146,7 @@ def read_source(path_dock=None):
         path_data_identifier_pairs,
         sep=",",
         header=0,
-        dtype="str",
+        dtype="string",
     )
     # Designate variable types to conserve memory.
     data_ukb_41826 = pandas.read_csv(
@@ -304,7 +311,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 3")
 
     # Read source information from file.
     # Exclusion identifiers are "eid".
