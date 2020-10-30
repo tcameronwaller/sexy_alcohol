@@ -257,6 +257,7 @@ def remove_data_irrelevant_variable_instances_entries(
         data_ukbiobank_variables=data_ukbiobank_variables,
         extra_names=["IID", "eid"],
     )
+    print(column_names)
     # Remove all irrelevant columns.
     data_ukb_41826 = data_ukb_41826.loc[
         :, data_ukb_41826.columns.isin(column_names)
