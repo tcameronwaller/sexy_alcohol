@@ -19,6 +19,7 @@ path_waller="$path_temporary/waller"
 path_scripts="$path_waller/sexy_alcohol/scripts"
 path_parameter="$path_waller/sexy_alcohol/parameter"
 path_variables="$path_parameter/uk_biobank_phenotype_variables.txt"
+path_table_variables="$path_parameter/table_ukbiobank_phenotype_variables.tsv"
 path_dock="$path_waller/dock"
 path_access="$path_dock/access"
 path_ukb_phenotype=$(<"./ukbiobank_phenotype.txt")
@@ -48,6 +49,7 @@ fi
 # Access phenotype variables and auxiliary information from UKBiobank.
 /usr/bin/bash "$path_scripts/access_ukbiobank_phenotypes.sh" \
 $path_variables \
+$path_table_variables \
 $path_identifier_pairs \
 $path_exclusion \
 $path_ukb_phenotype \

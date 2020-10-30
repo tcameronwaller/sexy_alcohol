@@ -42,6 +42,51 @@ import promiscuity.utility as utility
 # Functionality
 
 
+def extract_organize_variables_types(
+    data_ukbiobank_variables=None,
+):
+    """
+    Organize information about data types of UK Biobank phenotype variables.
+
+    arguments:
+        data_identifier_pairs (object): Pandas data frame of information about
+            UK Biobank phenotype variables
+
+    raises:
+
+    returns:
+        (dict<str>): pairs of variables and data types
+
+    """
+
+    # Copy data.
+    data_variables = data_ukbiobank_variables.copy(deep=True)
+    # Organize information.
+    data_variables = data_variables.loc[
+        :, data_variables.columns.isin(["field", "type", "instances_total"])
+    ]
+    records = utility.convert_dataframe_to_records(data=data_variables)
+    # Iterate across records for rows.
+    # Collect variables' names and types.
+    variables_types = dict()
+    for record in records:
+        field = record["field"]
+        type = record["type"]
+        instances_total_raw = str(record["instances_total"])
+        instances_raw = instances_total_raw.split(",")
+        for instance_raw in instances_raw:
+            instance = instance_raw.strip()
+            if len(instance) > 0:
+                name = str(field + "-" + instance)
+                # Create entry for variable's name and type.
+                variables_types[name] = type
+                pass
+            pass
+        pass
+    # Return information.
+    return variables_types
+
+
 def read_source(path_dock=None):
     """
     Reads and organizes source information from file.
@@ -58,6 +103,9 @@ def read_source(path_dock=None):
     """
 
     # Specify directories and files.
+    path_data_ukbiobank_variables = os.path.join(
+        path_dock, "access", "table_ukbiobank_phenotype_variables.tsv"
+    )
     path_exclusion_identifiers = os.path.join(
         path_dock, "access", "list_exclusion_identifiers.txt"
     )
@@ -70,6 +118,18 @@ def read_source(path_dock=None):
     path_data_ukb_43878 = os.path.join(
         path_dock, "access", "ukb43878.raw.tsv"
     )
+    # Determine variable types.
+    data_ukbiobank_variables = pandas.read_csv(
+        path_data_ukbiobank_variables,
+        sep="\t",
+        header=0,
+    )
+    variables_types = extract_organize_variables_types(
+        data_ukbiobank_variables=data_ukbiobank_variables,
+    )
+    utility.print_terminal_partition(level=2)
+    print(variables_types["31-0.0"])
+    print(variables_types["22009-0.11"])
     # Read information from file.
     exclusion_identifiers = utility.read_file_text_list(
         delimiter="\n",
@@ -79,19 +139,24 @@ def read_source(path_dock=None):
         path_data_identifier_pairs,
         sep=",",
         header=0,
+        dtype="str",
     )
+    # Designate variable types to conserve memory.
     data_ukb_41826 = pandas.read_csv(
         path_data_ukb_41826,
         sep="\t",
         header=0,
+        dtype=variables_types,
     )
     data_ukb_43878 = pandas.read_csv(
         path_data_ukb_43878,
         sep="\t",
         header=0,
+        dtype=variables_types,
     )
     # Compile and return information.
     return {
+        "data_ukbiobank_variables": data_ukbiobank_variables,
         "exclusion_identifiers": exclusion_identifiers,
         "data_identifier_pairs": data_identifier_pairs,
         "data_ukb_41826": data_ukb_41826,
@@ -232,9 +297,12 @@ def execute_procedure(
 
     """
 
+    # TODO: 1) manage data types for all variables.
+    # TODO: 2) remove data columns for variable instances we don't want to use
+
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 3")
+    print("version check: 4")
 
     # Read source information from file.
     # Exclusion identifiers are "eid".
