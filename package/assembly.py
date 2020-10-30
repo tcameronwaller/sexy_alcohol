@@ -50,8 +50,8 @@ def extract_organize_variables_types(
     Organize information about data types of UK Biobank phenotype variables.
 
     arguments:
-        data_identifier_pairs (object): Pandas data frame of information about
-            UK Biobank phenotype variables
+        data_ukbiobank_variables (object): Pandas data frame of information
+            about UK Biobank phenotype variables
         extra_pairs (dict<str>): extra key value pairs to include
 
     raises:
@@ -171,6 +171,125 @@ def read_source(path_dock=None):
     }
 
 
+def extract_organize_variable_fields_instances_names(
+    data_ukbiobank_variables=None,
+    extra_names=None,
+):
+    """
+    Organizes column names for variable fields and instances.
+
+    arguments:
+        data_ukbiobank_variables (object): Pandas data frame of information
+            about UK Biobank phenotype variables
+        extra_names (list<str>): extra names to include
+
+    raises:
+
+    returns:
+        (list<str>): column names for variable fields and instances
+
+    """
+
+    # Copy data.
+    data_variables = data_ukbiobank_variables.copy(deep=True)
+    # Organize information.
+    data_variables = data_variables.loc[
+        :, data_variables.columns.isin(["field", "instances_keep"])
+    ]
+    records = utility.convert_dataframe_to_records(data=data_variables)
+    # Iterate across records for rows.
+    # Collect variables' names and types.
+    names = list()
+    names.append(extra_names)
+    for record in records:
+        field = str(record["field"])
+        instances_total_raw = str(record["instances_keep"])
+        instances_raw = instances_total_raw.split(",")
+        for instance_raw in instances_raw:
+            instance = str(instance_raw).strip()
+            if len(instance) > 0:
+                name = str(field + "-" + instance)
+                # Create entry for variable's name and type.
+                names.append(name)
+                pass
+            pass
+        pass
+    # Return information.
+    return names
+
+
+def remove_data_irrelevant_variable_instances_entries(
+    data_ukbiobank_variables=None,
+    data_ukb_41826=None,
+    data_ukb_43878=None,
+    report=None,
+):
+    """
+    Removes irrelevant columns and rows from data.
+
+    arguments:
+        data_ukbiobank_variables (object): Pandas data frame of information
+            about UK Biobank phenotype variables
+        data_ukb_41826 (object): Pandas data frame of variables from UK Biobank
+            phenotype accession 41826
+        data_ukb_43878 (object): Pandas data frame of variables from UK Biobank
+            phenotype accession 43878
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict<object>): collection of Pandas data frames after removal of
+            irrelevant columns and rows
+
+    """
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("...before pruning...")
+        print("data_ukb_41826 shape: " + str(data_ukb_41826.shape))
+        utility.print_terminal_partition(level=4)
+        print("data_ukb_43878 shape: " + str(data_ukb_43878.shape))
+
+    # Extract names of columns for relevant variable fields and instances.
+    column_names = extract_organize_variable_fields_instances_names(
+        data_ukbiobank_variables=data_ukbiobank_variables,
+        extra_names=["IID", "eid"],
+    )
+    # Remove all irrelevant columns.
+    data_ukb_41826 = data_ukb_41826.loc[
+        :, data_ukb_41826.columns.isin(column_names)
+    ]
+    data_ukb_43878 = data_ukb_43878.loc[
+        :, data_ukb_43878.columns.isin(column_names)
+    ]
+    # Remove rows with all missing values.
+    data_ukb_41826.dropna(
+        axis="index",
+        how="all",
+        inplace=True,
+    )
+    data_ukb_43878.dropna(
+        axis="index",
+        how="all",
+        inplace=True,
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("...after pruning...")
+        print("data_ukb_41826 shape: " + str(data_ukb_41826.shape))
+        utility.print_terminal_partition(level=4)
+        print("data_ukb_43878 shape: " + str(data_ukb_43878.shape))
+
+    # Compile and return information.
+    bucket = dict()
+    bucket["data_ukb_41826"] = data_ukb_41826
+    bucket["data_ukb_43878"] = data_ukb_43878
+    return bucket
+
+
 def merge_data_variables_identifiers(
     data_identifier_pairs=None,
     data_ukb_41826=None,
@@ -195,6 +314,14 @@ def merge_data_variables_identifiers(
 
     """
 
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print(data_identifier_pairs)
+        utility.print_terminal_partition(level=2)
+        print(data_ukb_41826)
+        utility.print_terminal_partition(level=2)
+        print(data_ukb_43878)
     # Organize data.
     data_identifier_pairs.set_index(
         "eid",
@@ -231,10 +358,6 @@ def merge_data_variables_identifiers(
 
     # Report.
     if report:
-        utility.print_terminal_partition(level=2)
-        print(data_ukb_41826)
-        utility.print_terminal_partition(level=2)
-        print(data_ukb_43878)
         utility.print_terminal_partition(level=2)
         print(data_merge)
     # Return information.
@@ -311,26 +434,25 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 3")
+    print("version check: 4")
 
     # Read source information from file.
     # Exclusion identifiers are "eid".
     source = read_source(path_dock=path_dock)
 
-    if False:
-        # Remove data columns for irrelevant variable instances.
-        prune = remove_data_irrelevant_variable_instances(
-            data_ukbiobank_variables=source["data_ukbiobank_variables"],
-            data_ukb_41826=source["data_ukb_41826"],
-            data_ukb_43878=source["data_ukb_43878"],
-            report=True,
-        )
+    # Remove data columns for irrelevant variable instances.
+    prune = remove_data_irrelevant_variable_instances_entries(
+        data_ukbiobank_variables=source["data_ukbiobank_variables"],
+        data_ukb_41826=source["data_ukb_41826"],
+        data_ukb_43878=source["data_ukb_43878"],
+        report=True,
+    )
 
     # Merge tables.
     data_raw = merge_data_variables_identifiers(
         data_identifier_pairs=source["data_identifier_pairs"],
-        data_ukb_41826=source["data_ukb_41826"],
-        data_ukb_43878=source["data_ukb_43878"],
+        data_ukb_41826=prune["data_ukb_41826"],
+        data_ukb_43878=prune["data_ukb_43878"],
         report=True,
     )
 
