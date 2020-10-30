@@ -304,19 +304,20 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 6")
+    print("version check: 1")
 
     # Read source information from file.
     # Exclusion identifiers are "eid".
     source = read_source(path_dock=path_dock)
 
-    # Remove data columns for irrelevant variable instances.
-    prune = remove_data_irrelevant_variable_instances(
-        data_ukbiobank_variables=source["data_ukbiobank_variables"],
-        data_ukb_41826=source["data_ukb_41826"],
-        data_ukb_43878=source["data_ukb_43878"],
-        report=True,
-    )
+    if False:
+        # Remove data columns for irrelevant variable instances.
+        prune = remove_data_irrelevant_variable_instances(
+            data_ukbiobank_variables=source["data_ukbiobank_variables"],
+            data_ukb_41826=source["data_ukb_41826"],
+            data_ukb_43878=source["data_ukb_43878"],
+            report=True,
+        )
 
     # Merge tables.
     data_raw = merge_data_variables_identifiers(
