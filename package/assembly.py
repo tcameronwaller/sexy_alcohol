@@ -42,6 +42,46 @@ import promiscuity.utility as utility
 # Functionality
 
 
+def read_ukbiobank_data_column_names(
+    path_file=None,
+    delimiter=None,
+    start=None,
+    stop=None,
+):
+    """
+    Reads and extracts column names from UK Biobank data.
+
+    The UK Biobank ukbconv tool's "txt" option exports to a text file with tab
+    delimiters between columns; however, there are some quirks about the
+    format.
+
+    arguments:
+        path_file (str): path to file of data export from UK Biobank ukbconv
+            tool
+        delimiter (str): delimiter between columns
+        start (int): index of line at which to start reading
+        stop (int): index of line at which to stop reading
+
+    raises:
+
+    returns:
+        (list<str>): list of column names
+
+    """
+
+    # Read lines for samples with genes' signals.
+    lines = utility.read_file_text_lines(
+        path_file=path_file,
+        start=start,
+        stop=stop,
+    )
+    line = lines[0]
+    # Split line's content by delimiter.
+    column_names = line.split("\t")
+    # Return information.
+    return column_names
+
+
 def extract_organize_variables_types(
     data_ukbiobank_variables=None,
     extra_pairs=None,
@@ -149,6 +189,24 @@ def read_source(path_dock=None):
         dtype="string",
     )
     # Designate variable types to conserve memory.
+    column_names = read_ukbiobank_data_column_names(
+        path_file=path_data_ukb_41826,
+        delimiter="\t",
+        start=0,
+        stop=1,
+    )
+    row_values = read_ukbiobank_data_column_names(
+        path_file=path_data_ukb_41826,
+        delimiter="\t",
+        start=1,
+        stop=2,
+    )
+    utility.print_terminal_partition(level=2)
+    print(column_names)
+    utility.print_terminal_partition(level=2)
+    print(row_values)
+    utility.print_terminal_partition(level=2)
+
     data_ukb_41826 = pandas.read_csv(
         path_data_ukb_41826,
         sep="\t",
