@@ -69,9 +69,12 @@ for i in "${accessions[@]}"; do
     # Remove log file to avoid error.
     rm $path_phenotype_data/$dir/$dir.log
     # Convert data to text file with comma ("csv") or tab ("txt") delimiters.
-    $path_tools/ukbconv $path_phenotype_data/$dir/$dir.enc_ukb txt -i"./variables.txt" -o"./$dir.raw"
+    # The option ("txt") for tab delimiters seems to be malfunctional.
+    # The tab delimiter format has different counts of columns in header and
+    # body rows.
+    $path_tools/ukbconv $path_phenotype_data/$dir/$dir.enc_ukb csv -i"./variables.txt" -o"./$dir.raw"
     # Rename product file.
-    mv "./$dir.raw.txt" "./$dir.raw.tsv"
+    #mv "./$dir.raw.csv" "./$dir.raw.tsv"
     # Remove log file to avoid error.
     rm $path_phenotype_data/$dir/$dir.log
 done
