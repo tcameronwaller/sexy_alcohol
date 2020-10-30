@@ -127,9 +127,9 @@ def read_source(path_dock=None):
     variables_types = extract_organize_variables_types(
         data_ukbiobank_variables=data_ukbiobank_variables,
     )
-    utility.print_terminal_partition(level=2)
-    print(variables_types["31-0.0"])
-    print(variables_types["22009-0.11"])
+    #utility.print_terminal_partition(level=2)
+    #print(variables_types["31-0.0"])
+    #print(variables_types["22009-0.11"])
     # Read information from file.
     exclusion_identifiers = utility.read_file_text_list(
         delimiter="\n",
@@ -297,8 +297,10 @@ def execute_procedure(
 
     """
 
-    # TODO: 1) manage data types for all variables.
-    # TODO: 2) remove data columns for variable instances we don't want to use
+    # TODO: 1) remove data columns for variable instances we don't want to use
+    # TODO: 2) get merge to work as efficiently as practical
+    # TODO: 3) derive alcohol consumption quantity and frequency variables
+
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
