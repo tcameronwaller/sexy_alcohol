@@ -130,13 +130,17 @@ def extract_organize_variables_types(
     return variables_types
 
 
-def read_source(path_dock=None):
+def read_source(
+    path_dock=None,
+    report=None,
+):
     """
     Reads and organizes source information from file.
 
     arguments:
         path_dock (str): path to dock directory for source and product
             directories and files
+        report (bool): whether to print reports
 
     raises:
 
@@ -174,9 +178,11 @@ def read_source(path_dock=None):
             "eid": "string",
         },
     )
-    #utility.print_terminal_partition(level=2)
-    #print(variables_types["31-0.0"])
-    #print(variables_types["22009-0.11"])
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print(variables_types["31-0.0"])
+        print(variables_types["22009-0.11"])
     # Read information from file.
     exclusion_identifiers = utility.read_file_text_list(
         delimiter="\n",
@@ -201,25 +207,26 @@ def read_source(path_dock=None):
         start=1,
         stop=2,
     )
-    utility.print_terminal_partition(level=2)
-    print(column_names)
-    print(len(column_names))
-    utility.print_terminal_partition(level=2)
-    print(row_values)
-    print(len(row_values))
-    utility.print_terminal_partition(level=2)
-
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print(column_names)
+        print(len(column_names))
+        utility.print_terminal_partition(level=2)
+        print(row_values)
+        print(len(row_values))
+        utility.print_terminal_partition(level=2)
     data_ukb_41826 = pandas.read_csv(
         path_data_ukb_41826,
         sep=",", # "," or "\t"
         header=0,
-        #dtype=variables_types,
+        dtype=variables_types,
     )
     data_ukb_43878 = pandas.read_csv(
         path_data_ukb_43878,
         sep=",", # "," or "\t"
         header=0,
-        #dtype=variables_types,
+        dtype=variables_types,
     )
     # Compile and return information.
     return {
@@ -514,12 +521,14 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 3")
 
     # Read source information from file.
     # Exclusion identifiers are "eid".
-    source = read_source(path_dock=path_dock)
-
+    source = read_source(
+        path_dock=path_dock,
+        report=True,
+    )
     # Remove data columns for irrelevant variable instances.
     prune = remove_data_irrelevant_variable_instances_entries(
         data_ukbiobank_variables=source["data_ukbiobank_variables"],
