@@ -405,6 +405,7 @@ def merge_data_variables_identifiers(
     # Organize data.
     print(data_identifier_pairs.dtypes)
     data_identifier_pairs.astype("string")
+    print(data_identifier_pairs.dtypes)
     data_identifier_pairs.set_index(
         "eid",
         drop=True,
@@ -412,6 +413,7 @@ def merge_data_variables_identifiers(
     )
     print(data_ukb_41826.dtypes)
     data_ukb_41826["eid"].astype("string")
+    print(data_ukb_41826.dtypes)
     data_ukb_41826.set_index(
         "eid",
         drop=True,
@@ -419,6 +421,7 @@ def merge_data_variables_identifiers(
     )
     print(data_ukb_43878.dtypes)
     data_ukb_43878["eid"].astype("string")
+    print(data_ukb_43878.dtypes)
     data_ukb_43878.set_index(
         "eid",
         drop=True,
