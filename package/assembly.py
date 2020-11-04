@@ -331,9 +331,21 @@ def remove_data_irrelevant_variable_instances_entries(
         how="all",
         inplace=True,
     )
+    data_ukb_41826.dropna(
+        axis="index",
+        how="any",
+        subset=["eid"],
+        inplace=True,
+    )
     data_ukb_43878.dropna(
         axis="index",
         how="all",
+        inplace=True,
+    )
+    data_ukb_43878.dropna(
+        axis="index",
+        how="any",
+        subset=["eid"],
         inplace=True,
     )
     # Report.
@@ -384,16 +396,22 @@ def merge_data_variables_identifiers(
         utility.print_terminal_partition(level=2)
         print(data_ukb_43878)
     # Organize data.
+    print(data_identifier_pairs.dtypes)
+    data_identifier_pairs.astype("string")
     data_identifier_pairs.set_index(
         "eid",
         drop=True,
         inplace=True,
     )
+    print(data_ukb_41826.dtypes)
+    data_ukb_41826["eid"].astype("string")
     data_ukb_41826.set_index(
         "eid",
         drop=True,
         inplace=True,
     )
+    print(data_ukb_43878.dtypes)
+    data_ukb_43878["eid"].astype("string")
     data_ukb_43878.set_index(
         "eid",
         drop=True,
@@ -496,7 +514,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
 
     # Read source information from file.
     # Exclusion identifiers are "eid".
