@@ -391,6 +391,8 @@ def merge_data_variables_identifiers(
     raises:
 
     returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
 
     """
 
@@ -452,6 +454,52 @@ def merge_data_variables_identifiers(
         print(data_merge)
     # Return information.
     return data_merge
+
+
+def exclude_persons_ukbiobank_consent(
+    exclusion_identifiers=None,
+    data=None,
+    report=None,
+):
+    """
+    Removes entries with specific identifiers from data.
+
+    arguments:
+        exclusion_identifiers (list<str>): identifiers of persons who withdrew
+            consent from UK Biobank
+        data (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("Initial data dimensions: " + str(data.shape))
+        utility.print_terminal_partition(level=4)
+        print("Exclusion of persons: " + str(len(exclusion_identifiers)))
+    # Copy data.
+    data = data.copy(deep=True)
+    # Filter data entries.
+    data_exclusion = data.loc[
+        ~data.index.isin(exclusion_identifiers), :
+    ]
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=4)
+        print("Final data dimensions: " + str(data_exclusion.shape))
+    # Return information.
+    return data_exclusion
+
+
+
 
 
 def calculate_alcohol_consumption_monthly(
@@ -517,14 +565,9 @@ def execute_procedure(
 
     """
 
-    # TODO: 1) remove data columns for variable instances we don't want to use
-    # TODO: 2) get merge to work as efficiently as practical
-    # TODO: 3) derive alcohol consumption quantity and frequency variables
-
-
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 3")
+    print("version check: 1")
 
     # Read source information from file.
     # Exclusion identifiers are "eid".
@@ -539,7 +582,6 @@ def execute_procedure(
         data_ukb_43878=source["data_ukb_43878"],
         report=True,
     )
-
     # Merge tables.
     data_raw = merge_data_variables_identifiers(
         data_identifier_pairs=source["data_identifier_pairs"],
@@ -547,6 +589,17 @@ def execute_procedure(
         data_ukb_43878=prune["data_ukb_43878"],
         report=True,
     )
+    # Exclude persons who withdrew consent.
+    data_exclusion = exclude_persons_ukbiobank_consent(
+        exclusion_identifiers=source["exclusion_identifiers"],
+        data=data_raw,
+        report=True,
+    )
+
+
+    # TODO: 1) exclude persons who withdrew consent from UKBiobank
+    # TODO: 2) derive alcohol consumption quantity and frequency variables
+    # TODO: 3) organize menopause variable
 
 
     # Organize general phenotypes.
