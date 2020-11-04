@@ -400,32 +400,30 @@ def merge_data_variables_identifiers(
         inplace=True,
     )
 
-    if False:
-        # Merge data tables using database-style join.
-        # Alternative is to use DataFrame.join().
-        data_merge = data_identifier_pairs.merge(
-            data_ukb_41826,
-            how="outer",
-            left_on="eid",
-            right_on="eid",
-            suffixes=("_pairs", "_41826"),
-        )
-        data_merge = data_merge.merge(
-            data_ukb_43878,
-            how="outer",
-            left_on="eid",
-            right_on="eid",
-            suffixes=("_41826", "_43878"),
-        )
-        # Remove excess columns.
+    # Merge data tables using database-style join.
+    # Alternative is to use DataFrame.join().
+    data_merge = data_identifier_pairs.merge(
+        data_ukb_41826,
+        how="outer",
+        left_on="eid",
+        right_on="eid",
+        suffixes=("_pairs", "_41826"),
+    )
+    data_merge = data_merge.merge(
+        data_ukb_43878,
+        how="outer",
+        left_on="eid",
+        right_on="eid",
+        suffixes=("_41826", "_43878"),
+    )
+    # Remove excess columns.
 
-        # Report.
-        if report:
-            utility.print_terminal_partition(level=2)
-            print(data_merge)
-        # Return information.
-        return data_merge
-    pass
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print(data_merge)
+    # Return information.
+    return data_merge
 
 
 def calculate_alcohol_consumption_monthly(
