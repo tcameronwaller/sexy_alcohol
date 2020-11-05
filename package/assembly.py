@@ -698,7 +698,7 @@ def organize_alcohol_consumption_monthly_drinks(
         inplace=True,
     )
     data["20117-0.0"].astype(
-        "int32",
+        "float32",
         copy=True,
     )
     print(data["20117-0.0"].value_counts())
