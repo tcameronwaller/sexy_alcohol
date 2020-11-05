@@ -692,20 +692,20 @@ def organize_alcohol_consumption_monthly_drinks(
     print(data["20117-0.0"].value_counts())
     print(data["20117-0.0"].dtypes)
     utility.print_terminal_partition(level=2)
-    pandas.to_numeric(
+    data["20117-0.0"] = pandas.to_numeric(
         data["20117-0.0"],
         errors="coerce",
         downcast="float",
     )
     if False:
-        data["20117-0.0"].astype(
-            "float32",
-            copy=True,
-        )
         data["20117-0.0"].fillna(
             value="-3",
             axis="index",
             inplace=True,
+        )
+        data["20117-0.0"].astype(
+            "float32",
+            copy=True,
         )
     print(data["20117-0.0"].value_counts())
     print(data["20117-0.0"].dtypes)
