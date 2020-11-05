@@ -42,6 +42,51 @@ import promiscuity.utility as utility
 # Functionality
 
 
+##########
+# Initialization
+
+
+def initialize_directories(
+    restore=None,
+    path_dock=None,
+):
+    """
+    Initialize directories for procedure's product files.
+
+    arguments:
+        restore (bool): whether to remove previous versions of data
+        path_dock (str): path to dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+        (dict<str>): collection of paths to directories for procedure's files
+
+    """
+
+    # Collect paths.
+    paths = dict()
+    # Define paths to directories.
+    paths["dock"] = path_dock
+    paths["assembly"] = os.path.join(path_dock, "assembly")
+    paths["alcohol_consumption"] = os.path.join(
+        path_dock, "assembly", "alcohol_consumption"
+    )
+    # Remove previous files to avoid version or batch confusion.
+    if restore:
+        utility.remove_directory(path=paths["assembly"])
+    # Initialize directories.
+    utility.create_directories(
+        path=paths["assembly"]
+    )
+    utility.create_directories(
+        path=paths["alcohol_consumption"]
+    )
+    # Return information.
+    return paths
+
+
 def read_ukbiobank_data_column_names(
     path_file=None,
     delimiter=None,
@@ -723,8 +768,7 @@ def organize_alcohol_consumption_monthly_drinks(
     raises:
 
     returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
+        (dict): collection of information about quantity of alcohol consumption
 
     """
 
@@ -775,36 +819,40 @@ def organize_alcohol_consumption_monthly_drinks(
             "5364-0.0",
             "4429-0.0", "4407-0.0", "4418-0.0", "4451-0.0", "4440-0.0",
             "4462-0.0",
-            #"20117-0.0",
-            #"drinks_weekly",
-            #"drinks_monthly",
+            "20117-0.0",
+            "drinks_weekly",
+            "drinks_monthly",
         ],
         axis="columns",
         inplace=True
     )
+    # Organize data for report.
+    data_report = data.copy(deep=True)
+    data_report = data_report.loc[
+        :, data_report.columns.isin([
+            "eid", "IID",
+            "1588-0.0", "1568-0.0", "1578-0.0", "1608-0.0", "1598-0.0",
+            "5364-0.0",
+            "4429-0.0", "4407-0.0", "4418-0.0", "4451-0.0", "4440-0.0",
+            "4462-0.0",
+            "20117-0.0",
+            "drinks_weekly",
+            "drinks_monthly",
+            "alcohol_drinks_monthly",
+        ])
+    ]
     # Report.
     if report:
-        # Copy data.
-        data_report = data.copy(deep=True)
-        # Organize data for report.
-        data_report = data_report.loc[
-            :, data_report.columns.isin([
-                "eid", "IID",
-                "1588-0.0", "1568-0.0", "1578-0.0", "1608-0.0", "1598-0.0",
-                "5364-0.0",
-                "4429-0.0", "4407-0.0", "4418-0.0", "4451-0.0", "4440-0.0",
-                "4462-0.0",
-                "20117-0.0",
-                "drinks_weekly",
-                "drinks_monthly",
-                "alcohol_drinks_monthly",
-            ])
-        ]
         utility.print_terminal_partition(level=2)
         print("Summary of alcohol consumption quantity variables: ")
         print(data_report)
+    # Collect information.
+    bucket = dict()
+    bucket["data"] = data
+    bucket["data_clean"] = data_clean
+    bucket["data_report"] = data_report
     # Return information.
-    return data_clean
+    return bucket
 
 
 
@@ -887,6 +935,63 @@ def organize_female_menopause(
 
 
 
+def write_product_alcohol_consumption(
+    information=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        path_parent (str): path to parent directory
+
+    raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_data_report_quantity = os.path.join(
+        path_parent, "data_report_quantity.tsv"
+    )
+    # Write information to file.
+    information["data_report"].to_csv(
+        path_or_buf=path_data_report_quantity,
+        sep="\t",
+        header=True,
+        index=True,
+    )
+
+    pass
+
+
+
+def write_product(
+    information=None,
+    paths=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        paths (dict<str>): collection of paths to directories for procedure's
+            files
+
+    raises:
+
+    returns:
+
+    """
+
+    # Alcohol consumption.
+    write_product_alcohol_consumption(
+        information=information["alcohol_consumption"],
+        path_parent=paths["alcohol_consumption"],
+    )
+    pass
 
 
 
@@ -915,6 +1020,11 @@ def execute_procedure(
     print(path_dock)
     print("version check: 5")
 
+    # Initialize directories.
+    paths = initialize_directories(
+        restore=True,
+        path_dock=path_dock,
+    )
     # Read source information from file.
     # Exclusion identifiers are "eid".
     source = read_source(
@@ -943,13 +1053,16 @@ def execute_procedure(
     )
     # Convert variable types for further analysis.
     data_type = convert_data_variable_types(
-        data=data_exclusion
-    )
-    # Derive total monthly alcohol consumption in standard UK drinks.
-    data_consumption = organize_alcohol_consumption_monthly_drinks(
-        data=data_type,
+        data=data_exclusion,
         report=True,
     )
+    # Derive total monthly alcohol consumption in standard UK drinks.
+    bin_consumption = organize_alcohol_consumption_monthly_drinks(
+        data=data_type,
+        clean=False,
+        report=True,
+    )
+    # Derive aggregate of AUDIT-C alcohol use questionnaire.
 
 
     # TODO: 2) derive alcohol consumption quantity and frequency variables
@@ -961,6 +1074,19 @@ def execute_procedure(
     # Organize genotype principal components.
 
     # Organize alcohol phenotypes.
+
+    # Collect information.
+    information = dict()
+    information["alcohol_consumption"] = dict()
+    information["alcohol_consumption"]["data_report"] = (
+        bin_consumption["data_report"]
+    )
+    # Write product information to file.
+    write_product(
+        paths=paths,
+        information=information
+    )
+
 
     pass
 
