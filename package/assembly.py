@@ -693,7 +693,7 @@ def organize_alcohol_consumption_monthly_drinks(
     print(data["20117-0.0"].dtypes)
     utility.print_terminal_partition(level=2)
     data["20117-0.0"].fillna(
-        value=-3,
+        value="-3",
         axis="index",
         inplace=True,
     )
@@ -888,7 +888,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
 
     # Read source information from file.
     # Exclusion identifiers are "eid".
