@@ -641,7 +641,10 @@ def determine_total_alcohol_consumption_monthly(
             alcohol_drinks_monthly = alcohol_monthly
             pass
     else:
-        alcohol_drinks_mohtly = alcohol_monthly
+        print("****************************")
+        print("alcohol status missing")
+        print(alcohol_status)
+        alcohol_drinks_monthly = alcohol_monthly
         pass
     # Return information.
     return alcohol_drinks_monthly
