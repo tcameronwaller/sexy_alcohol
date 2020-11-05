@@ -697,11 +697,11 @@ def organize_alcohol_consumption_monthly_drinks(
         errors="coerce",
         downcast="integer",
     )
+    data["20117-0.0"].astype(
+        "float32",
+        copy=True,
+    )
     if False:
-        data["20117-0.0"].astype(
-            "float32",
-            copy=True,
-        )
         data["20117-0.0"].fillna(
             value="-3",
             axis="index",
@@ -894,7 +894,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 3")
 
     # Read source information from file.
     # Exclusion identifiers are "eid".
