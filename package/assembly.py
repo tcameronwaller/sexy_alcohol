@@ -695,13 +695,13 @@ def organize_alcohol_consumption_monthly_drinks(
     pandas.to_numeric(
         data["20117-0.0"],
         errors="coerce",
-        downcast="integer",
-    )
-    data["20117-0.0"].astype(
-        "float32",
-        copy=True,
+        downcast="float",
     )
     if False:
+        data["20117-0.0"].astype(
+            "float32",
+            copy=True,
+        )
         data["20117-0.0"].fillna(
             value="-3",
             axis="index",
