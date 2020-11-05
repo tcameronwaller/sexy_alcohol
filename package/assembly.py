@@ -137,6 +137,9 @@ def read_source(
     """
     Reads and organizes source information from file.
 
+    Notice that Pandas does not accommodate missing values within series of
+    integer variable types.
+
     arguments:
         path_dock (str): path to dock directory for source and product
             directories and files
@@ -594,7 +597,7 @@ def calculate_total_alcohol_consumption_monthly(
 
 
 def determine_total_alcohol_consumption_monthly(
-    alcohol_status=None,
+    status=None,
     drinks_weekly=None,
     drinks_monthly=None,
     weeks_per_month=None,
@@ -608,8 +611,10 @@ def determine_total_alcohol_consumption_monthly(
     "never": 0
     "prefer not to answer": -3
 
+    Accommodate inexact float values.
+
     arguments:
-        alcohol_status (str): person's status of alcohol consumption
+        status (str): person's status of alcohol consumption
         drinks_weekly (float): sum of weekly drinks from weekly variables
         drinks_monthly (float): sum of monthly drinks from monthly variables
         weeks_per_month (float): factor to use for weeks per month
@@ -628,8 +633,8 @@ def determine_total_alcohol_consumption_monthly(
         weeks_per_month=weeks_per_month,
     )
     # Consider alcohol consumption status.
-    if (not pandas.isna(alcohol_status)):
-        if alcohol_status == 0:
+    if (not pandas.isna(status)):
+        if (-0.5 < status and status < 0.5):
             # Confirm that alcohol consumption is none.
             if (not math.isnan(alcohol_monthly)):
                 alcohol_drinks_monthly = alcohol_monthly
@@ -637,9 +642,9 @@ def determine_total_alcohol_consumption_monthly(
                 alcohol_drinks_monthly = 0.0
             pass
         elif (
-            (alcohol_status == 2) or
-            (alcohol_status == 1) or
-            (alcohol_status == -3)
+            (1.5 < status and status < 2.5) or
+            (0.5 < status and status < 1.5) or
+            (-3.5 < status and status < -2.5)
         ):
             # Determine alcohol consumption quantity.
             alcohol_drinks_monthly = alcohol_monthly
@@ -687,13 +692,10 @@ def organize_alcohol_consumption_monthly_drinks(
     print(data["20117-0.0"].value_counts())
     print(data["20117-0.0"].dtypes)
     utility.print_terminal_partition(level=2)
-    data["20117-0.0"].astype(
-        "int32",
-        copy=True,
-    )
-    print(data["20117-0.0"].value_counts())
-    print(data["20117-0.0"].dtypes)
-    utility.print_terminal_partition(level=2)
+    #data["20117-0.0"].astype(
+    #    "int32",
+    #    copy=True,
+    #)
 
     if False:
         # Calculate sum of drinks weekly.
