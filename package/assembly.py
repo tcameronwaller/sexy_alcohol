@@ -412,25 +412,19 @@ def merge_data_variables_identifiers(
         utility.print_terminal_partition(level=2)
         print(data_ukb_43878)
     # Organize data.
-    print(data_identifier_pairs.dtypes)
     data_identifier_pairs.astype("string")
-    print(data_identifier_pairs.dtypes)
     data_identifier_pairs.set_index(
         "eid",
         drop=True,
         inplace=True,
     )
-    print(data_ukb_41826.dtypes)
     data_ukb_41826["eid"].astype("string")
-    print(data_ukb_41826.dtypes)
     data_ukb_41826.set_index(
         "eid",
         drop=True,
         inplace=True,
     )
-    print(data_ukb_43878.dtypes)
     data_ukb_43878["eid"].astype("string")
-    print(data_ukb_43878.dtypes)
     data_ukb_43878.set_index(
         "eid",
         drop=True,
@@ -504,6 +498,62 @@ def exclude_persons_ukbiobank_consent(
         print("Final data dimensions: " + str(data_exclusion.shape))
     # Return information.
     return data_exclusion
+
+
+def convert_data_variable_types(
+    data=None,
+    report=None,
+):
+    """
+    Converts data variable types.
+
+    arguments:
+        data (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("Before type conversion")
+        utility.print_terminal_partition(level=3)
+        print(data.dtypes)
+    # Copy data.
+    data = data.copy(deep=True)
+    # Convert data variable types.
+    data["20117-0.0"] = pandas.to_numeric(
+        data["20117-0.0"],
+        errors="coerce", # force any invalid values to missing or null
+        downcast="float",
+    )
+    if False:
+        data["20117-0.0"].fillna(
+            value="-3",
+            axis="index",
+            inplace=True,
+        )
+        data["20117-0.0"].astype(
+            "float32",
+            copy=True,
+        )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("After type conversion")
+        utility.print_terminal_partition(level=3)
+        print(data.dtypes)
+        utility.print_terminal_partition(level=4)
+        print(data["20117-0.0"].value_counts())
+    # Return information.
+    return data
 
 
 def calculate_sum_drinks(
@@ -587,7 +637,7 @@ def calculate_total_alcohol_consumption_monthly(
         )
     elif (not math.isnan(drinks_weekly)):
         alcohol_drinks_monthly = (weeks_per_month * drinks_weekly)
-    elif (not math.isnan(alcohol_monthly)):
+    elif (not math.isnan(drinks_monthly)):
         alcohol_drinks_monthly = drinks_monthly
     else:
         # There is no valid information about alcohol consumption quantity.
@@ -650,16 +700,8 @@ def determine_total_alcohol_consumption_monthly(
             alcohol_drinks_monthly = alcohol_monthly
             pass
         else:
-            print("****************************")
-            print("alcohol status not missing but weird")
-            print(status)
-            print(type(status))
             alcohol_drinks_monthly = alcohol_monthly
     else:
-        print("****************************")
-        print("alcohol status missing")
-        print(status)
-        print(type(status))
         alcohol_drinks_monthly = alcohol_monthly
         pass
     # Return information.
@@ -688,29 +730,6 @@ def organize_alcohol_consumption_monthly_drinks(
 
     # Copy data.
     data = data.copy(deep=True)
-    utility.print_terminal_partition(level=1)
-    print(data["20117-0.0"].value_counts())
-    print(data["20117-0.0"].dtypes)
-    utility.print_terminal_partition(level=2)
-    data["20117-0.0"] = pandas.to_numeric(
-        data["20117-0.0"],
-        errors="coerce",
-        downcast="float",
-    )
-    if False:
-        data["20117-0.0"].fillna(
-            value="-3",
-            axis="index",
-            inplace=True,
-        )
-        data["20117-0.0"].astype(
-            "float32",
-            copy=True,
-        )
-    print(data["20117-0.0"].value_counts())
-    print(data["20117-0.0"].dtypes)
-    utility.print_terminal_partition(level=2)
-
     # Calculate sum of drinks weekly.
     data["drinks_weekly"] = data.apply(
         lambda row:
@@ -922,9 +941,13 @@ def execute_procedure(
         data=data_raw,
         report=True,
     )
+    # Convert variable types for further analysis.
+    data_type = convert_data_variable_types(
+        data=data_exclusion
+    )
     # Derive total monthly alcohol consumption in standard UK drinks.
     data_consumption = organize_alcohol_consumption_monthly_drinks(
-        data=data_exclusion,
+        data=data_type,
         report=True,
     )
 
