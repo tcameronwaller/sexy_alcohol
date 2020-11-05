@@ -652,14 +652,14 @@ def determine_total_alcohol_consumption_monthly(
         else:
             print("****************************")
             print("alcohol status not missing but weird")
-            print(alcohol_status)
-            print(type(alcohol_status))
+            print(status)
+            print(type(status))
             alcohol_drinks_monthly = alcohol_monthly
     else:
         print("****************************")
         print("alcohol status missing")
-        print(alcohol_status)
-        print(type(alcohol_status))
+        print(status)
+        print(type(status))
         alcohol_drinks_monthly = alcohol_monthly
         pass
     # Return information.
@@ -728,7 +728,7 @@ def organize_alcohol_consumption_monthly_drinks(
         data["alcohol_drinks_monthly"] = data.apply(
             lambda row:
                 determine_total_alcohol_consumption_monthly(
-                    alcohol_status=row["20117-0.0"],
+                    status=row["20117-0.0"],
                     drinks_weekly=row["drinks_weekly"],
                     drinks_monthly=row["drinks_monthly"],
                     weeks_per_month=4.345, # 52.143 weeks per year (12 months)
@@ -881,7 +881,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 4")
+    print("version check: 1")
 
     # Read source information from file.
     # Exclusion identifiers are "eid".
