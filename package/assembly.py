@@ -640,6 +640,11 @@ def determine_total_alcohol_consumption_monthly(
             # Determine alcohol consumption quantity.
             alcohol_drinks_monthly = alcohol_monthly
             pass
+        else:
+            print("****************************")
+            print("alcohol status not missing but weird")
+            print(alcohol_status)
+            alcohol_drinks_monthly = alcohol_monthly
     else:
         print("****************************")
         print("alcohol status missing")
@@ -857,7 +862,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 3")
+    print("version check: 4")
 
     # Read source information from file.
     # Exclusion identifiers are "eid".
