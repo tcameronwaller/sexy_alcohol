@@ -221,12 +221,16 @@ def read_source(
         sep=",", # "," or "\t"
         header=0,
         dtype=variables_types,
+        na_values=["<NA>"],
+        keep_default_na=True,
     )
     data_ukb_43878 = pandas.read_csv(
         path_data_ukb_43878,
         sep=",", # "," or "\t"
         header=0,
         dtype=variables_types,
+        na_values=["<NA>"],
+        keep_default_na=True,
     )
     # Compile and return information.
     return {
@@ -644,11 +648,13 @@ def determine_total_alcohol_consumption_monthly(
             print("****************************")
             print("alcohol status not missing but weird")
             print(alcohol_status)
+            print(type(alcohol_status))
             alcohol_drinks_monthly = alcohol_monthly
     else:
         print("****************************")
         print("alcohol status missing")
         print(alcohol_status)
+        print(type(alcohol_status))
         alcohol_drinks_monthly = alcohol_monthly
         pass
     # Return information.
@@ -679,6 +685,8 @@ def organize_alcohol_consumption_monthly_drinks(
     data = data.copy(deep=True)
     utility.print_terminal_partition(level=1)
     print(data["20117-0.0"].value_counts())
+    print(data["20117-0.0"].dtypes)
+    utility.print_terminal_partition(level=2)
     # Calculate sum of drinks weekly.
     data["drinks_weekly"] = data.apply(
         lambda row:
