@@ -669,6 +669,8 @@ def organize_alcohol_consumption_monthly_drinks(
 
     # Copy data.
     data = data.copy(deep=True)
+    utility.print_terminal_partition(level=1)
+    print(data["20117-0.0"])
     # Calculate sum of drinks weekly.
     data["drinks_weekly"] = data.apply(
         lambda row:
