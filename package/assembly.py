@@ -625,7 +625,7 @@ def determine_total_alcohol_consumption_monthly(
     )
     # Consider alcohol consumption status.
     if (not math.isnan(alcohol_status)):
-        if alcohol_status == "0":
+        if alcohol_status == 0:
             # Confirm that alcohol consumption is none.
             if (not math.isnan(alcohol_monthly)):
                 alcohol_drinks_monthly = alcohol_monthly
@@ -633,9 +633,9 @@ def determine_total_alcohol_consumption_monthly(
                 alcohol_drinks_monthly = 0.0
             pass
         elif (
-            (alcohol_status == "2") or
-            (alcohol_status == "1") or
-            (alcohol_status == "-3")
+            (alcohol_status == 2) or
+            (alcohol_status == 1) or
+            (alcohol_status == -3)
         ):
             # Determine alcohol consumption quantity.
             alcohol_drinks_monthly = alcohol_monthly
