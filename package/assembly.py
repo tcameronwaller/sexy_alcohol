@@ -544,7 +544,7 @@ def calculate_sum_drinks(
         # Calculate sum of drinks.
         drinks = 0
         for type in types:
-            if ((not math.isnan(type)) and (type >= 0)):
+            if ((not pandas.isna(type)) and (type >= 0)):
                 drinks = drinks + type
                 pass
             pass
@@ -624,7 +624,7 @@ def determine_total_alcohol_consumption_monthly(
         weeks_per_month=weeks_per_month,
     )
     # Consider alcohol consumption status.
-    if (not math.isnan(alcohol_status)):
+    if (not pandas.isna(alcohol_status)):
         if alcohol_status == 0:
             # Confirm that alcohol consumption is none.
             if (not math.isnan(alcohol_monthly)):
@@ -854,7 +854,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 3")
 
     # Read source information from file.
     # Exclusion identifiers are "eid".
