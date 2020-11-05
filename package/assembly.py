@@ -1059,7 +1059,6 @@ def execute_procedure(
     # Derive total monthly alcohol consumption in standard UK drinks.
     bin_consumption = organize_alcohol_consumption_monthly_drinks(
         data=data_type,
-        clean=False,
         report=True,
     )
     # Derive aggregate of AUDIT-C alcohol use questionnaire.
