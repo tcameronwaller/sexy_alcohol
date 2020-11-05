@@ -687,81 +687,90 @@ def organize_alcohol_consumption_monthly_drinks(
     print(data["20117-0.0"].value_counts())
     print(data["20117-0.0"].dtypes)
     utility.print_terminal_partition(level=2)
-    # Calculate sum of drinks weekly.
-    data["drinks_weekly"] = data.apply(
-        lambda row:
-            calculate_sum_drinks(
-                beer_cider=row["1588-0.0"],
-                wine_red=row["1568-0.0"],
-                wine_white=row["1578-0.0"],
-                port=row["1608-0.0"],
-                liquor=row["1598-0.0"],
-                other=row["5364-0.0"],
-            ),
-        axis="columns", # apply across rows
+    data["20117-0.0"].astype(
+        "int32",
+        copy=True,
     )
-    # Calculate sum of drinks monthly.
-    data["drinks_monthly"] = data.apply(
-        lambda row:
-            calculate_sum_drinks(
-                beer_cider=row["4429-0.0"],
-                wine_red=row["4407-0.0"],
-                wine_white=row["4418-0.0"],
-                port=row["4451-0.0"],
-                liquor=row["4440-0.0"],
-                other=row["4462-0.0"],
-            ),
-        axis="columns", # apply across rows
-    )
-    # Determine sum of total drinks monthly.
-    data["alcohol_drinks_monthly"] = data.apply(
-        lambda row:
-            determine_total_alcohol_consumption_monthly(
-                alcohol_status=row["20117-0.0"],
-                drinks_weekly=row["drinks_weekly"],
-                drinks_monthly=row["drinks_monthly"],
-                weeks_per_month=4.345, # 52.143 weeks per year (12 months)
-            ),
-        axis="columns", # apply across rows
-    )
-    # Remove columns for variables that are not necessary anymore.
-    data_clean = data.copy(deep=True)
-    data_clean.drop(
-        labels=[
-            "1588-0.0", "1568-0.0", "1578-0.0", "1608-0.0", "1598-0.0",
-            "5364-0.0",
-            "4429-0.0", "4407-0.0", "4418-0.0", "4451-0.0", "4440-0.0",
-            "4462-0.0",
-            #"20117-0.0",
-            #"drinks_weekly",
-            #"drinks_monthly",
-        ],
-        axis="columns",
-        inplace=True
-    )
-    # Report.
-    if report:
-        # Copy data.
-        data_report = data.copy(deep=True)
-        # Organize data for report.
-        data_report = data_report.loc[
-            :, data_report.columns.isin([
-                "eid", "IID",
+    print(data["20117-0.0"].value_counts())
+    print(data["20117-0.0"].dtypes)
+    utility.print_terminal_partition(level=2)
+
+    if False:
+        # Calculate sum of drinks weekly.
+        data["drinks_weekly"] = data.apply(
+            lambda row:
+                calculate_sum_drinks(
+                    beer_cider=row["1588-0.0"],
+                    wine_red=row["1568-0.0"],
+                    wine_white=row["1578-0.0"],
+                    port=row["1608-0.0"],
+                    liquor=row["1598-0.0"],
+                    other=row["5364-0.0"],
+                ),
+            axis="columns", # apply across rows
+        )
+        # Calculate sum of drinks monthly.
+        data["drinks_monthly"] = data.apply(
+            lambda row:
+                calculate_sum_drinks(
+                    beer_cider=row["4429-0.0"],
+                    wine_red=row["4407-0.0"],
+                    wine_white=row["4418-0.0"],
+                    port=row["4451-0.0"],
+                    liquor=row["4440-0.0"],
+                    other=row["4462-0.0"],
+                ),
+            axis="columns", # apply across rows
+        )
+        # Determine sum of total drinks monthly.
+        data["alcohol_drinks_monthly"] = data.apply(
+            lambda row:
+                determine_total_alcohol_consumption_monthly(
+                    alcohol_status=row["20117-0.0"],
+                    drinks_weekly=row["drinks_weekly"],
+                    drinks_monthly=row["drinks_monthly"],
+                    weeks_per_month=4.345, # 52.143 weeks per year (12 months)
+                ),
+            axis="columns", # apply across rows
+        )
+        # Remove columns for variables that are not necessary anymore.
+        data_clean = data.copy(deep=True)
+        data_clean.drop(
+            labels=[
                 "1588-0.0", "1568-0.0", "1578-0.0", "1608-0.0", "1598-0.0",
                 "5364-0.0",
                 "4429-0.0", "4407-0.0", "4418-0.0", "4451-0.0", "4440-0.0",
                 "4462-0.0",
-                "20117-0.0",
-                "drinks_weekly",
-                "drinks_monthly",
-                "alcohol_drinks_monthly",
-            ])
-        ]
-        utility.print_terminal_partition(level=2)
-        print("Summary of alcohol consumption quantity variables: ")
-        print(data_report)
-    # Return information.
-    return data_clean
+                #"20117-0.0",
+                #"drinks_weekly",
+                #"drinks_monthly",
+            ],
+            axis="columns",
+            inplace=True
+        )
+        # Report.
+        if report:
+            # Copy data.
+            data_report = data.copy(deep=True)
+            # Organize data for report.
+            data_report = data_report.loc[
+                :, data_report.columns.isin([
+                    "eid", "IID",
+                    "1588-0.0", "1568-0.0", "1578-0.0", "1608-0.0", "1598-0.0",
+                    "5364-0.0",
+                    "4429-0.0", "4407-0.0", "4418-0.0", "4451-0.0", "4440-0.0",
+                    "4462-0.0",
+                    "20117-0.0",
+                    "drinks_weekly",
+                    "drinks_monthly",
+                    "alcohol_drinks_monthly",
+                ])
+            ]
+            utility.print_terminal_partition(level=2)
+            print("Summary of alcohol consumption quantity variables: ")
+            print(data_report)
+        # Return information.
+        return data_clean
 
 
 
