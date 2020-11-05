@@ -854,7 +854,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
 
     # Read source information from file.
     # Exclusion identifiers are "eid".
