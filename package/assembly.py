@@ -499,22 +499,71 @@ def exclude_persons_ukbiobank_consent(
     return data_exclusion
 
 
+def calculate_sum_drinks(
+    beer_cider=None,
+    wine_red=None,
+    wine_white=None,
+    port=None,
+    liquor=None,
+    other=None,
+):
+    """
+    Calculates the sum of drinks.
+
+    UK Biobank data coding 100291.
+    "do not know": -1
+    "prefer not to answer": -3
+
+    arguments:
+        beer_cider (int): count of drinks by type
+        wine_red (int): count of drinks by type
+        wine_white (int): count of drinks by type
+        port (int): count of drinks by type
+        liquor (int): count of drinks by type
+        other (int): count of drinks by type
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (int): sum of counts of drinks
+
+    """
+
+    # Consider all types of alcoholic beverage.
+    types = [beer_cider, wine_red, wine_white, port, liquor, other]
+    # Determine whether all relevant variables have missing values.
+    valid = False
+    for type in types:
+        if ((type != -1) and (type != -3)):
+            valid = True
+            pass
+        pass
+    if valid:
+        # Variables have valid values.
+        # Calculate sum of drinks.
+        drinks = 0
+        for type in types:
+            if ((not math.isnan(type)) and (type >= 0)):
+                drinks = drinks + type
+                pass
+            pass
+    else:
+        drinks = float("nan")
+    return drinks
 
 
-
-def calculate_alcohol_consumption_monthly(
-    alcohol_status=None,
-    alcohol_weekly=None,
-    alcohol_monthly=None,
+def calculate_total_alcohol_consumption_monthly(
+    drinks_weekly=None,
+    drinks_monthly=None,
     weeks_per_month=None,
 ):
     """
     Calculate monthly alcohol consumption in drinks.
 
     arguments:
-        alcohol_status (str): person's status of alcohol consumption
-        alcohol_weekly (float): sum of weekly drinks from weekly variables
-        alcohol_monthly (float): sum of monthly drinks from monthly variables
+        drinks_weekly (float): sum of weekly drinks from weekly variables
+        drinks_monthly (float): sum of monthly drinks from monthly variables
         weeks_per_month (float): factor to use for weeks per month
 
     raises:
@@ -524,25 +573,257 @@ def calculate_alcohol_consumption_monthly(
 
     """
 
-    # Calculate monthly drinks.
-    if alcohol_status == "Never":
-        drinks_monthly = 0.0
-    elif alcohol_status == "Current":
-        # Use as much information as is available.
-        if not math.isnan(alcohol_weekly) and not math.isnan(alcohol_monthly):
-            drinks_monthly = (
-                alcohol_monthly + (weeks_per_month * alcohol_weekly)
-            )
-        elif not math.isnan(alcohol_weekly):
-            drinks_monthly = (weeks_per_month * alcohol_weekly)
-        elif not math.isnan(alcohol_monthly):
-            drinks_monthly = alcohol_monthly
+    # Use as much valid information as is available.
+    if (not math.isnan(drinks_weekly) and not math.isnan(drinks_monthly)):
+        alcohol_drinks_monthly = (
+            drinks_monthly + (weeks_per_month * drinks_weekly)
+        )
+    elif (not math.isnan(drinks_weekly)):
+        alcohol_drinks_monthly = (weeks_per_month * drinks_weekly)
+    elif (not math.isnan(alcohol_monthly)):
+        alcohol_drinks_monthly = drinks_monthly
+    else:
+        # There is no valid information about alcohol consumption quantity.
+        alcohol_drinks_monthly = float("nan")
+        pass
+    return alcohol_drinks_monthly
+
+
+def determine_total_alcohol_consumption_monthly(
+    alcohol_status=None,
+    drinks_weekly=None,
+    drinks_monthly=None,
+    weeks_per_month=None,
+):
+    """
+    Calculate monthly alcohol consumption in drinks.
+
+    UK Biobank data coding 90.
+    "current": 2
+    "previous": 1
+    "never": 0
+    "prefer not to answer": -3
+
+    arguments:
+        alcohol_status (str): person's status of alcohol consumption
+        drinks_weekly (float): sum of weekly drinks from weekly variables
+        drinks_monthly (float): sum of monthly drinks from monthly variables
+        weeks_per_month (float): factor to use for weeks per month
+
+    raises:
+
+    returns:
+        (float): person's monthly alcohol consumption in drinks
+
+    """
+
+    # Calculate alcohol consumption quantity.
+    alcohol_monthly = calculate_total_alcohol_consumption_monthly(
+        drinks_weekly=drinks_weekly,
+        drinks_monthly=drinks_monthly,
+        weeks_per_month=weeks_per_month,
+    )
+    # Consider alcohol consumption status.
+    if alcohol_status == "0":
+        # Confirm that alcohol consumption is none.
+        if (not math.isnan(alcohol_monthly)):
+            alcohol_drinks_monthly = alcohol_monthly
         else:
-            # There is no available information about alcohol consumption
-            # in drinks.
-            drinks_monthly = float("nan")
+            alcohol_drinks_monthly = 0.0
+        pass
+    elif (
+        (alcohol_status == "2") or
+        (alcohol_status == "1") or
+        (alcohol_status == "-3")
+    ):
+        # Determine alcohol consumption quantity.
+        alcohol_drinks_monthly = alcohol_monthly
+        pass
     # Return information.
-    return drinks_monthly
+    return alcohol_drinks_monthly
+
+
+def organize_alcohol_consumption_monthly_drinks(
+    data=None,
+    report=None,
+):
+    """
+    Organizes information about alcohol consumption in standard drinks monthly.
+
+    arguments:
+        data (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy data.
+    data = data.copy(deep=True)
+    # Calculate sum of drinks weekly.
+    data["drinks_weekly"] = data.apply(
+        lambda row:
+            calculate_sum_drinks(
+                beer_cider=row["1588-0.0"],
+                wine_red=row["1568-0.0"],
+                wine_white=row["1578-0.0"],
+                port=row["1608-0.0"],
+                liquor=row["1598-0.0"],
+                other=row["5364-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Calculate sum of drinks monthly.
+    data["drinks_monthly"] = data.apply(
+        lambda row:
+            calculate_sum_drinks(
+                beer_cider=row["4429-0.0"],
+                wine_red=row["4407-0.0"],
+                wine_white=row["4418-0.0"],
+                port=row["4451-0.0"],
+                liquor=row["4440-0.0"],
+                other=row["4462-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine sum of total drinks monthly.
+    data["alcohol_drinks_monthly"] = data.apply(
+        lambda row:
+            determine_total_alcohol_consumption_monthly(
+                alcohol_status=row["20117-0.0"],
+                drinks_weekly=row["drinks_weekly"],
+                drinks_monthly=row["drinks_monthly"],
+                weeks_per_month=4.345, # 52.143 weeks per year (12 months)
+            ),
+        axis="columns", # apply across rows
+    )
+    # Remove columns for variables that are not necessary anymore.
+    data_clean = data.copy(deep=True)
+    data_clean.drop(
+        labels=[
+            "1588-0.0", "1568-0.0", "1578-0.0", "1608-0.0", "1598-0.0",
+            "5364-0.0",
+            "4429-0.0", "4407-0.0", "4418-0.0", "4451-0.0", "4440-0.0",
+            "4462-0.0",
+            #"20117-0.0",
+            #"drinks_weekly",
+            #"drinks_monthly",
+        ],
+        axis="columns",
+        inplace=True
+    )
+    # Report.
+    if report:
+        # Copy data.
+        data_report = data.copy(deep=True)
+        # Organize data for report.
+        data_report = data_report.loc[
+            :, data_report.columns.isin([
+                "eid", "IID",
+                "1588-0.0", "1568-0.0", "1578-0.0", "1608-0.0", "1598-0.0",
+                "5364-0.0",
+                "4429-0.0", "4407-0.0", "4418-0.0", "4451-0.0", "4440-0.0",
+                "4462-0.0",
+                "20117-0.0",
+                "drinks_weekly",
+                "drinks_monthly",
+                "alcohol_drinks_monthly",
+            ])
+        ]
+        utility.print_terminal_partition(level=2)
+        print("Summary of alcohol consumption quantity variables: ")
+        print(data_report)
+    # Return information.
+    return data_clean
+
+
+
+# TODO: organize AUDIT-C variables... sum of AUDIT-C questions 1-3
+# TODO: handle the specific missing value codes
+
+
+
+
+# TODO: derive "hysterectomy" and "oophrectomy" separately
+# TODO: then derive "menopause"
+
+def organize_female_menopause(
+    data=None,
+    report=None,
+):
+    """
+    Organizes information about whether female persons have experienced
+    menopause.
+
+    arguments:
+        data (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy data.
+    data = data.copy(deep=True)
+    # Calculate sum of drinks weekly.
+    data["menopause"] = data.apply(
+        lambda row:
+            calculate_sum_drinks(
+                beer_cider=row["1588-0.0"],
+                wine_red=row["1568-0.0"],
+                wine_white=row["1578-0.0"],
+                port=row["1608-0.0"],
+                liquor=row["1598-0.0"],
+                other=row["5364-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    data["hysterectomy"] = data.apply(
+        lambda row:
+            calculate_sum_drinks(
+                beer_cider=row["1588-0.0"],
+                wine_red=row["1568-0.0"],
+                wine_white=row["1578-0.0"],
+                port=row["1608-0.0"],
+                liquor=row["1598-0.0"],
+                other=row["5364-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    data["oophorectomy"] = data.apply(
+        lambda row:
+            calculate_sum_drinks(
+                beer_cider=row["1588-0.0"],
+                wine_red=row["1568-0.0"],
+                wine_white=row["1578-0.0"],
+                port=row["1608-0.0"],
+                liquor=row["1598-0.0"],
+                other=row["5364-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=4)
+        print("Final data dimensions: " + str(data_exclusion.shape))
+    # Return information.
+    return data_exclusion
+
+
+
+
+
 
 
 ###############################################################################
@@ -589,15 +870,19 @@ def execute_procedure(
         data_ukb_43878=prune["data_ukb_43878"],
         report=True,
     )
-    # Exclude persons who withdrew consent.
+    # Exclude persons who withdrew consent from the UK Biobank.
     data_exclusion = exclude_persons_ukbiobank_consent(
         exclusion_identifiers=source["exclusion_identifiers"],
         data=data_raw,
         report=True,
     )
+    # Derive total monthly alcohol consumption in standard UK drinks.
+    data_consumption = organize_alcohol_consumption_monthly_drinks(
+        data=data_exclusion,
+        report=True,
+    )
 
 
-    # TODO: 1) exclude persons who withdrew consent from UKBiobank
     # TODO: 2) derive alcohol consumption quantity and frequency variables
     # TODO: 3) organize menopause variable
 
