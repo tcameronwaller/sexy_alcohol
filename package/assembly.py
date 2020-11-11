@@ -677,10 +677,10 @@ def calculate_sum_drinks(
 
     # Consider all types of alcoholic beverage.
     types = [beer_cider, wine_red, wine_white, port, liquor, other]
-    # Determine whether all relevant variables have missing values.
+    # Determine whether any relevant variables have missing values.
     valid = False
     for type in types:
-        if ((type != -1) and (type != -3)):
+        if (not pandas.isna(type) and (type != -1) and (type != -3)):
             valid = True
             pass
         pass
