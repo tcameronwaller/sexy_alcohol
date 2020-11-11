@@ -87,7 +87,7 @@ def initialize_directories(
     return paths
 
 
-def read_ukbiobank_data_column_names(
+def read_ukbiobank_table_column_names(
     path_file=None,
     delimiter=None,
     start=None,
@@ -128,14 +128,14 @@ def read_ukbiobank_data_column_names(
 
 
 def extract_organize_variables_types(
-    data_ukbiobank_variables=None,
+    table_ukbiobank_variables=None,
     extra_pairs=None,
 ):
     """
     Organize information about data types of UK Biobank phenotype variables.
 
     arguments:
-        data_ukbiobank_variables (object): Pandas data frame of information
+        table_ukbiobank_variables (object): Pandas data frame of information
             about UK Biobank phenotype variables
         extra_pairs (dict<str>): extra key value pairs to include
 
@@ -147,12 +147,12 @@ def extract_organize_variables_types(
     """
 
     # Copy data.
-    data_variables = data_ukbiobank_variables.copy(deep=True)
+    table_variables = table_ukbiobank_variables.copy(deep=True)
     # Organize information.
-    data_variables = data_variables.loc[
-        :, data_variables.columns.isin(["field", "type", "instances_total"])
+    table_variables = table_variables.loc[
+        :, table_variables.columns.isin(["field", "type", "instances_total"])
     ]
-    records = utility.convert_dataframe_to_records(data=data_variables)
+    records = utility.convert_dataframe_to_records(data=table_variables)
     # Iterate across records for rows.
     # Collect variables' names and types.
     variables_types = dict()
@@ -198,29 +198,29 @@ def read_source(
     """
 
     # Specify directories and files.
-    path_data_ukbiobank_variables = os.path.join(
+    path_table_ukbiobank_variables = os.path.join(
         path_dock, "access", "table_ukbiobank_phenotype_variables.tsv"
     )
     path_exclusion_identifiers = os.path.join(
         path_dock, "access", "list_exclusion_identifiers.txt"
     )
-    path_data_identifier_pairs = os.path.join(
+    path_table_identifier_pairs = os.path.join(
         path_dock, "access", "table_identifier_pairs.csv"
     )
-    path_data_ukb_41826 = os.path.join(
+    path_table_ukb_41826 = os.path.join(
         path_dock, "access", "ukb41826.raw.csv"
     )
-    path_data_ukb_43878 = os.path.join(
+    path_table_ukb_43878 = os.path.join(
         path_dock, "access", "ukb43878.raw.csv"
     )
     # Determine variable types.
-    data_ukbiobank_variables = pandas.read_csv(
-        path_data_ukbiobank_variables,
+    table_ukbiobank_variables = pandas.read_csv(
+        path_table_ukbiobank_variables,
         sep="\t",
         header=0,
     )
     variables_types = extract_organize_variables_types(
-        data_ukbiobank_variables=data_ukbiobank_variables,
+        table_ukbiobank_variables=table_ukbiobank_variables,
         extra_pairs={
             "IID": "string",
             "eid": "string",
@@ -236,21 +236,21 @@ def read_source(
         delimiter="\n",
         path_file=path_exclusion_identifiers
     )
-    data_identifier_pairs = pandas.read_csv(
-        path_data_identifier_pairs,
+    table_identifier_pairs = pandas.read_csv(
+        path_table_identifier_pairs,
         sep=",",
         header=0,
         dtype="string",
     )
     # Designate variable types to conserve memory.
-    column_names = read_ukbiobank_data_column_names(
-        path_file=path_data_ukb_41826,
+    column_names = read_ukbiobank_table_column_names(
+        path_file=path_table_ukb_41826,
         delimiter=",", # "," or "\t"
         start=0,
         stop=1,
     )
-    row_values = read_ukbiobank_data_column_names(
-        path_file=path_data_ukb_41826,
+    row_values = read_ukbiobank_table_column_names(
+        path_file=path_table_ukb_41826,
         delimiter=",", # "," or "\t"
         start=1,
         stop=2,
@@ -264,16 +264,16 @@ def read_source(
         print(row_values)
         print(len(row_values))
         utility.print_terminal_partition(level=2)
-    data_ukb_41826 = pandas.read_csv(
-        path_data_ukb_41826,
+    table_ukb_41826 = pandas.read_csv(
+        path_table_ukb_41826,
         sep=",", # "," or "\t"
         header=0,
         dtype=variables_types,
         na_values=["<NA>"],
         keep_default_na=True,
     )
-    data_ukb_43878 = pandas.read_csv(
-        path_data_ukb_43878,
+    table_ukb_43878 = pandas.read_csv(
+        path_table_ukb_43878,
         sep=",", # "," or "\t"
         header=0,
         dtype=variables_types,
@@ -282,23 +282,23 @@ def read_source(
     )
     # Compile and return information.
     return {
-        "data_ukbiobank_variables": data_ukbiobank_variables,
+        "table_ukbiobank_variables": table_ukbiobank_variables,
         "exclusion_identifiers": exclusion_identifiers,
-        "data_identifier_pairs": data_identifier_pairs,
-        "data_ukb_41826": data_ukb_41826,
-        "data_ukb_43878": data_ukb_43878,
+        "table_identifier_pairs": table_identifier_pairs,
+        "table_ukb_41826": table_ukb_41826,
+        "table_ukb_43878": table_ukb_43878,
     }
 
 
 def extract_organize_variable_fields_instances_names(
-    data_ukbiobank_variables=None,
+    table_ukbiobank_variables=None,
     extra_names=None,
 ):
     """
     Organizes column names for variable fields and instances.
 
     arguments:
-        data_ukbiobank_variables (object): Pandas data frame of information
+        table_ukbiobank_variables (object): Pandas data frame of information
             about UK Biobank phenotype variables
         extra_names (list<str>): extra names to include
 
@@ -310,12 +310,12 @@ def extract_organize_variable_fields_instances_names(
     """
 
     # Copy data.
-    data_variables = data_ukbiobank_variables.copy(deep=True)
+    table_variables = table_ukbiobank_variables.copy(deep=True)
     # Organize information.
-    data_variables = data_variables.loc[
-        :, data_variables.columns.isin(["field", "instances_keep"])
+    table_variables = table_variables.loc[
+        :, table_variables.columns.isin(["field", "instances_keep"])
     ]
-    records = utility.convert_dataframe_to_records(data=data_variables)
+    records = utility.convert_dataframe_to_records(data=table_variables)
     # Iterate across records for rows.
     # Collect variables' names and types.
     names = list()
@@ -337,21 +337,21 @@ def extract_organize_variable_fields_instances_names(
     return names
 
 
-def remove_data_irrelevant_variable_instances_entries(
-    data_ukbiobank_variables=None,
-    data_ukb_41826=None,
-    data_ukb_43878=None,
+def remove_table_irrelevant_variable_instances_entries(
+    table_ukbiobank_variables=None,
+    table_ukb_41826=None,
+    table_ukb_43878=None,
     report=None,
 ):
     """
     Removes irrelevant columns and rows from data.
 
     arguments:
-        data_ukbiobank_variables (object): Pandas data frame of information
+        table_ukbiobank_variables (object): Pandas data frame of information
             about UK Biobank phenotype variables
-        data_ukb_41826 (object): Pandas data frame of variables from UK Biobank
+        table_ukb_41826 (object): Pandas data frame of variables from UK Biobank
             phenotype accession 41826
-        data_ukb_43878 (object): Pandas data frame of variables from UK Biobank
+        table_ukb_43878 (object): Pandas data frame of variables from UK Biobank
             phenotype accession 43878
         report (bool): whether to print reports
 
@@ -367,41 +367,41 @@ def remove_data_irrelevant_variable_instances_entries(
     if report:
         utility.print_terminal_partition(level=2)
         print("...before pruning...")
-        print("data_ukb_41826 shape: " + str(data_ukb_41826.shape))
+        print("table_ukb_41826 shape: " + str(table_ukb_41826.shape))
         utility.print_terminal_partition(level=4)
-        print("data_ukb_43878 shape: " + str(data_ukb_43878.shape))
+        print("table_ukb_43878 shape: " + str(table_ukb_43878.shape))
 
     # Extract names of columns for relevant variable fields and instances.
     column_names = extract_organize_variable_fields_instances_names(
-        data_ukbiobank_variables=data_ukbiobank_variables,
+        table_ukbiobank_variables=table_ukbiobank_variables,
         extra_names=["IID", "eid"],
     )
     print(column_names)
     # Remove all irrelevant columns.
-    data_ukb_41826 = data_ukb_41826.loc[
-        :, data_ukb_41826.columns.isin(column_names)
+    table_ukb_41826 = table_ukb_41826.loc[
+        :, table_ukb_41826.columns.isin(column_names)
     ]
-    data_ukb_43878 = data_ukb_43878.loc[
-        :, data_ukb_43878.columns.isin(column_names)
+    table_ukb_43878 = table_ukb_43878.loc[
+        :, table_ukb_43878.columns.isin(column_names)
     ]
     # Remove rows with all missing values.
-    data_ukb_41826.dropna(
+    table_ukb_41826.dropna(
         axis="index",
         how="all",
         inplace=True,
     )
-    data_ukb_41826.dropna(
+    table_ukb_41826.dropna(
         axis="index",
         how="any",
         subset=["eid"],
         inplace=True,
     )
-    data_ukb_43878.dropna(
+    table_ukb_43878.dropna(
         axis="index",
         how="all",
         inplace=True,
     )
-    data_ukb_43878.dropna(
+    table_ukb_43878.dropna(
         axis="index",
         how="any",
         subset=["eid"],
@@ -411,32 +411,32 @@ def remove_data_irrelevant_variable_instances_entries(
     if report:
         utility.print_terminal_partition(level=2)
         print("...after pruning...")
-        print("data_ukb_41826 shape: " + str(data_ukb_41826.shape))
+        print("table_ukb_41826 shape: " + str(table_ukb_41826.shape))
         utility.print_terminal_partition(level=4)
-        print("data_ukb_43878 shape: " + str(data_ukb_43878.shape))
+        print("table_ukb_43878 shape: " + str(table_ukb_43878.shape))
 
     # Compile and return information.
     bucket = dict()
-    bucket["data_ukb_41826"] = data_ukb_41826
-    bucket["data_ukb_43878"] = data_ukb_43878
+    bucket["table_ukb_41826"] = table_ukb_41826
+    bucket["table_ukb_43878"] = table_ukb_43878
     return bucket
 
 
-def merge_data_variables_identifiers(
-    data_identifier_pairs=None,
-    data_ukb_41826=None,
-    data_ukb_43878=None,
+def merge_table_variables_identifiers(
+    table_identifier_pairs=None,
+    table_ukb_41826=None,
+    table_ukb_43878=None,
     report=None,
 ):
     """
     Reads and organizes source information from file.
 
     arguments:
-        data_identifier_pairs (object): Pandas data frame of associations
+        table_identifier_pairs (object): Pandas data frame of associations
             between "IID" and "eid"
-        data_ukb_41826 (object): Pandas data frame of variables from UK Biobank
+        table_ukb_41826 (object): Pandas data frame of variables from UK Biobank
             phenotype accession 41826
-        data_ukb_43878 (object): Pandas data frame of variables from UK Biobank
+        table_ukb_43878 (object): Pandas data frame of variables from UK Biobank
             phenotype accession 43878
         report (bool): whether to print reports
 
@@ -451,26 +451,26 @@ def merge_data_variables_identifiers(
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
-        print(data_identifier_pairs)
+        print(table_identifier_pairs)
         utility.print_terminal_partition(level=2)
-        print(data_ukb_41826)
+        print(table_ukb_41826)
         utility.print_terminal_partition(level=2)
-        print(data_ukb_43878)
+        print(table_ukb_43878)
     # Organize data.
-    data_identifier_pairs.astype("string")
-    data_identifier_pairs.set_index(
+    table_identifier_pairs.astype("string")
+    table_identifier_pairs.set_index(
         "eid",
         drop=True,
         inplace=True,
     )
-    data_ukb_41826["eid"].astype("string")
-    data_ukb_41826.set_index(
+    table_ukb_41826["eid"].astype("string")
+    table_ukb_41826.set_index(
         "eid",
         drop=True,
         inplace=True,
     )
-    data_ukb_43878["eid"].astype("string")
-    data_ukb_43878.set_index(
+    table_ukb_43878["eid"].astype("string")
+    table_ukb_43878.set_index(
         "eid",
         drop=True,
         inplace=True,
@@ -478,15 +478,15 @@ def merge_data_variables_identifiers(
 
     # Merge data tables using database-style join.
     # Alternative is to use DataFrame.join().
-    data_merge = data_identifier_pairs.merge(
-        data_ukb_41826,
+    table_merge = table_identifier_pairs.merge(
+        table_ukb_41826,
         how="outer",
         left_on="eid",
         right_on="eid",
         suffixes=("_pairs", "_41826"),
     )
-    data_merge = data_merge.merge(
-        data_ukb_43878,
+    table_merge = table_merge.merge(
+        table_ukb_43878,
         how="outer",
         left_on="eid",
         right_on="eid",
@@ -497,14 +497,14 @@ def merge_data_variables_identifiers(
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
-        print(data_merge)
+        print(table_merge)
     # Return information.
-    return data_merge
+    return table_merge
 
 
 def exclude_persons_ukbiobank_consent(
     exclusion_identifiers=None,
-    data=None,
+    table=None,
     report=None,
 ):
     """
@@ -513,7 +513,7 @@ def exclude_persons_ukbiobank_consent(
     arguments:
         exclusion_identifiers (list<str>): identifiers of persons who withdrew
             consent from UK Biobank
-        data (object): Pandas data frame of phenotype variables across UK
+        table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
         report (bool): whether to print reports
 
@@ -528,32 +528,36 @@ def exclude_persons_ukbiobank_consent(
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
-        print("Initial data dimensions: " + str(data.shape))
+        print("Initial table dimensions: " + str(table.shape))
         utility.print_terminal_partition(level=4)
         print("Exclusion of persons: " + str(len(exclusion_identifiers)))
     # Copy data.
-    data = data.copy(deep=True)
+    table = table.copy(deep=True)
     # Filter data entries.
-    data_exclusion = data.loc[
-        ~data.index.isin(exclusion_identifiers), :
+    table_exclusion = table.loc[
+        ~table.index.isin(exclusion_identifiers), :
     ]
     # Report.
     if report:
         utility.print_terminal_partition(level=4)
-        print("Final data dimensions: " + str(data_exclusion.shape))
+        print("Final data dimensions: " + str(table_exclusion.shape))
     # Return information.
-    return data_exclusion
+    return table_exclusion
 
 
-def convert_data_variable_types(
-    data=None,
+def convert_table_variable_types(
+    table=None,
     report=None,
 ):
     """
     Converts data variable types.
 
+    The UK Biobank encodes several nominal variables with integers. Missing
+    values for these variables necessitates some attention to type conversion
+    from string to float for analysis.
+
     arguments:
-        data (object): Pandas data frame of phenotype variables across UK
+        table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
         report (bool): whether to print reports
 
@@ -570,22 +574,60 @@ def convert_data_variable_types(
         utility.print_terminal_partition(level=2)
         print("Before type conversion")
         utility.print_terminal_partition(level=3)
-        print(data.dtypes)
+        print(table.dtypes)
     # Copy data.
-    data = data.copy(deep=True)
+    table = table.copy(deep=True)
     # Convert data variable types.
-    data["20117-0.0"] = pandas.to_numeric(
-        data["20117-0.0"],
+    # Alcohol variables.
+    table["20117-0.0"] = pandas.to_numeric(
+        table["20117-0.0"],
         errors="coerce", # force any invalid values to missing or null
         downcast="float",
     )
+    table["20414-0.0"] = pandas.to_numeric(
+        table["20414-0.0"],
+        errors="coerce", # force any invalid values to missing or null
+        downcast="float",
+    )
+    table["20403-0.0"] = pandas.to_numeric(
+        table["20403-0.0"],
+        errors="coerce", # force any invalid values to missing or null
+        downcast="float",
+    )
+    table["20416-0.0"] = pandas.to_numeric(
+        table["20416-0.0"],
+        errors="coerce", # force any invalid values to missing or null
+        downcast="float",
+    )
+    table["1558-0.0"] = pandas.to_numeric(
+        table["1558-0.0"],
+        errors="coerce", # force any invalid values to missing or null
+        downcast="float",
+    )
+    # Menopause variables.
+    table["2724-0.0"] = pandas.to_numeric(
+        table["2724-0.0"],
+        errors="coerce", # force any invalid values to missing or null
+        downcast="float",
+    )
+    table["3591-0.0"] = pandas.to_numeric(
+        table["3591-0.0"],
+        errors="coerce", # force any invalid values to missing or null
+        downcast="float",
+    )
+    table["2834-0.0"] = pandas.to_numeric(
+        table["2834-0.0"],
+        errors="coerce", # force any invalid values to missing or null
+        downcast="float",
+    )
+
     if False:
-        data["20117-0.0"].fillna(
+        table["20117-0.0"].fillna(
             value="-3",
             axis="index",
             inplace=True,
         )
-        data["20117-0.0"].astype(
+        table["20117-0.0"].astype(
             "float32",
             copy=True,
         )
@@ -594,11 +636,12 @@ def convert_data_variable_types(
         utility.print_terminal_partition(level=2)
         print("After type conversion")
         utility.print_terminal_partition(level=3)
-        print(data.dtypes)
+        print(table.dtypes)
         utility.print_terminal_partition(level=4)
-        print(data["20117-0.0"].value_counts())
+        print("20117-0.0 value counts: ")
+        print(table["20117-0.0"].value_counts())
     # Return information.
-    return data
+    return table
 
 
 def calculate_sum_drinks(
@@ -754,14 +797,14 @@ def determine_total_alcohol_consumption_monthly(
 
 
 def organize_alcohol_consumption_monthly_drinks(
-    data=None,
+    table=None,
     report=None,
 ):
     """
     Organizes information about alcohol consumption in standard drinks monthly.
 
     arguments:
-        data (object): Pandas data frame of phenotype variables across UK
+        table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
         report (bool): whether to print reports
 
@@ -773,9 +816,9 @@ def organize_alcohol_consumption_monthly_drinks(
     """
 
     # Copy data.
-    data = data.copy(deep=True)
+    table = table.copy(deep=True)
     # Calculate sum of drinks weekly.
-    data["drinks_weekly"] = data.apply(
+    table["drinks_weekly"] = table.apply(
         lambda row:
             calculate_sum_drinks(
                 beer_cider=row["1588-0.0"],
@@ -788,7 +831,7 @@ def organize_alcohol_consumption_monthly_drinks(
         axis="columns", # apply across rows
     )
     # Calculate sum of drinks monthly.
-    data["drinks_monthly"] = data.apply(
+    table["drinks_monthly"] = table.apply(
         lambda row:
             calculate_sum_drinks(
                 beer_cider=row["4429-0.0"],
@@ -801,7 +844,7 @@ def organize_alcohol_consumption_monthly_drinks(
         axis="columns", # apply across rows
     )
     # Determine sum of total drinks monthly.
-    data["alcohol_drinks_monthly"] = data.apply(
+    table["alcohol_drinks_monthly"] = table.apply(
         lambda row:
             determine_total_alcohol_consumption_monthly(
                 status=row["20117-0.0"],
@@ -812,8 +855,8 @@ def organize_alcohol_consumption_monthly_drinks(
         axis="columns", # apply across rows
     )
     # Remove columns for variables that are not necessary anymore.
-    data_clean = data.copy(deep=True)
-    data_clean.drop(
+    table_clean = table.copy(deep=True)
+    table_clean.drop(
         labels=[
             "1588-0.0", "1568-0.0", "1578-0.0", "1608-0.0", "1598-0.0",
             "5364-0.0",
@@ -827,9 +870,9 @@ def organize_alcohol_consumption_monthly_drinks(
         inplace=True
     )
     # Organize data for report.
-    data_report = data.copy(deep=True)
-    data_report = data_report.loc[
-        :, data_report.columns.isin([
+    table_report = table.copy(deep=True)
+    table_report = table_report.loc[
+        :, table_report.columns.isin([
             "eid", "IID",
             "1588-0.0", "1568-0.0", "1578-0.0", "1608-0.0", "1598-0.0",
             "5364-0.0",
@@ -845,12 +888,12 @@ def organize_alcohol_consumption_monthly_drinks(
     if report:
         utility.print_terminal_partition(level=2)
         print("Summary of alcohol consumption quantity variables: ")
-        print(data_report)
+        print(table_report)
     # Collect information.
     bucket = dict()
-    bucket["data"] = data
-    bucket["data_clean"] = data_clean
-    bucket["data_report"] = data_report
+    bucket["table"] = table
+    bucket["table_clean"] = table_clean
+    bucket["table_report"] = table_report
     # Return information.
     return bucket
 
@@ -866,7 +909,7 @@ def organize_alcohol_consumption_monthly_drinks(
 # TODO: then derive "menopause"
 
 def organize_female_menopause(
-    data=None,
+    table=None,
     report=None,
 ):
     """
@@ -874,7 +917,7 @@ def organize_female_menopause(
     menopause.
 
     arguments:
-        data (object): Pandas data frame of phenotype variables across UK
+        table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
         report (bool): whether to print reports
 
@@ -887,9 +930,9 @@ def organize_female_menopause(
     """
 
     # Copy data.
-    data = data.copy(deep=True)
+    table = table.copy(deep=True)
     # Calculate sum of drinks weekly.
-    data["menopause"] = data.apply(
+    table["menopause"] = table.apply(
         lambda row:
             calculate_sum_drinks(
                 beer_cider=row["1588-0.0"],
@@ -901,7 +944,7 @@ def organize_female_menopause(
             ),
         axis="columns", # apply across rows
     )
-    data["hysterectomy"] = data.apply(
+    table["hysterectomy"] = table.apply(
         lambda row:
             calculate_sum_drinks(
                 beer_cider=row["1588-0.0"],
@@ -913,7 +956,7 @@ def organize_female_menopause(
             ),
         axis="columns", # apply across rows
     )
-    data["oophorectomy"] = data.apply(
+    table["oophorectomy"] = table.apply(
         lambda row:
             calculate_sum_drinks(
                 beer_cider=row["1588-0.0"],
@@ -929,9 +972,9 @@ def organize_female_menopause(
     # Report.
     if report:
         utility.print_terminal_partition(level=4)
-        print("Final data dimensions: " + str(data_exclusion.shape))
+        print("Final data dimensions: " + str(table_exclusion.shape))
     # Return information.
-    return data_exclusion
+    return table_exclusion
 
 
 
@@ -953,19 +996,18 @@ def write_product_alcohol_consumption(
     """
 
     # Specify directories and files.
-    path_data_report_quantity = os.path.join(
-        path_parent, "data_report_quantity.tsv"
+    path_table_report_quantity = os.path.join(
+        path_parent, "table_report_quantity.tsv"
     )
     # Write information to file.
-    information["data_report"].to_csv(
-        path_or_buf=path_data_report_quantity,
+    information["table_report"].to_csv(
+        path_or_buf=path_table_report_quantity,
         sep="\t",
         header=True,
         index=True,
     )
 
     pass
-
 
 
 def write_product(
@@ -992,8 +1034,6 @@ def write_product(
         path_parent=paths["alcohol_consumption"],
     )
     pass
-
-
 
 
 ###############################################################################
@@ -1032,33 +1072,33 @@ def execute_procedure(
         report=True,
     )
     # Remove data columns for irrelevant variable instances.
-    prune = remove_data_irrelevant_variable_instances_entries(
-        data_ukbiobank_variables=source["data_ukbiobank_variables"],
-        data_ukb_41826=source["data_ukb_41826"],
-        data_ukb_43878=source["data_ukb_43878"],
+    prune = remove_table_irrelevant_variable_instances_entries(
+        table_ukbiobank_variables=source["table_ukbiobank_variables"],
+        table_ukb_41826=source["table_ukb_41826"],
+        table_ukb_43878=source["table_ukb_43878"],
         report=True,
     )
     # Merge tables.
-    data_raw = merge_data_variables_identifiers(
-        data_identifier_pairs=source["data_identifier_pairs"],
-        data_ukb_41826=prune["data_ukb_41826"],
-        data_ukb_43878=prune["data_ukb_43878"],
+    table_raw = merge_table_variables_identifiers(
+        table_identifier_pairs=source["table_identifier_pairs"],
+        table_ukb_41826=prune["table_ukb_41826"],
+        table_ukb_43878=prune["table_ukb_43878"],
         report=True,
     )
     # Exclude persons who withdrew consent from the UK Biobank.
-    data_exclusion = exclude_persons_ukbiobank_consent(
+    table_exclusion = exclude_persons_ukbiobank_consent(
         exclusion_identifiers=source["exclusion_identifiers"],
-        data=data_raw,
+        table=table_raw,
         report=True,
     )
     # Convert variable types for further analysis.
-    data_type = convert_data_variable_types(
-        data=data_exclusion,
+    table_type = convert_table_variable_types(
+        table=table_exclusion,
         report=True,
     )
     # Derive total monthly alcohol consumption in standard UK drinks.
     bin_consumption = organize_alcohol_consumption_monthly_drinks(
-        data=data_type,
+        table=table_type,
         report=True,
     )
     # Derive aggregate of AUDIT-C alcohol use questionnaire.
@@ -1066,6 +1106,8 @@ def execute_procedure(
 
     # TODO: 2) derive alcohol consumption quantity and frequency variables
     # TODO: 3) organize menopause variable
+
+    # TODO: 3) evaluate person sub-cohorts by variable availability etc
 
 
     # Organize general phenotypes.
@@ -1077,8 +1119,8 @@ def execute_procedure(
     # Collect information.
     information = dict()
     information["alcohol_consumption"] = dict()
-    information["alcohol_consumption"]["data_report"] = (
-        bin_consumption["data_report"]
+    information["alcohol_consumption"]["table_report"] = (
+        bin_consumption["table_report"]
     )
     # Write product information to file.
     write_product(
