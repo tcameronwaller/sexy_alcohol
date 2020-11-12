@@ -1530,12 +1530,13 @@ def organize_plot_variable_histogram_summary_charts(
         file="histogram_alcohol_drinks_monthly.png",
         path_directory=paths["plot"],
     )
-    plot_variable_series_histogram(
-        series=table["alcoholism"].dropna().to_list(),
-        bins=15,
-        file="histogram_alcoholism.png",
-        path_directory=paths["plot"],
-    )
+    if False:
+        plot_variable_series_histogram(
+            series=table["alcoholism"].dropna().to_list(),
+            bins=15,
+            file="histogram_alcoholism.png",
+            path_directory=paths["plot"],
+        )
 
     pass
 
@@ -1655,12 +1656,13 @@ def write_product_alcohol(
         header=True,
         index=True,
     )
-    information["table_report_alcoholism"].to_csv(
-        path_or_buf=path_table_report_alcoholism,
-        sep="\t",
-        header=True,
-        index=True,
-    )
+    if False:
+        information["table_report_alcoholism"].to_csv(
+            path_or_buf=path_table_report_alcoholism,
+            sep="\t",
+            header=True,
+            index=True,
+        )
     pass
 
 
@@ -1724,7 +1726,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -1772,14 +1774,15 @@ def execute_procedure(
         report=True,
     )
     # Derive aggregate of AUDIT-C alcohol use questionnaire.
-    bin_alcoholism = organize_auditc_questionnaire_alcoholism_variables(
-        table=bin_consumption_previous["table_clean"],
-        report=True,
-    )
+    if False:
+        bin_alcoholism = organize_auditc_questionnaire_alcoholism_variables(
+            table=bin_consumption_previous["table_clean"],
+            report=True,
+        )
 
     # Temporary charts
     organize_plot_variable_histogram_summary_charts(
-        table=bin_alcoholism["table_clean"],
+        table=bin_consumption_previous["table_clean"],
         paths=paths,
     )
 
@@ -1805,9 +1808,10 @@ def execute_procedure(
     information["alcohol"]["table_report_previous"] = (
         bin_consumption_previous["table_report"]
     )
-    information["alcohol"]["table_report_alcoholism"] = (
-        bin_alcoholism["table_report"]
-    )
+    if False:
+        information["alcohol"]["table_report_alcoholism"] = (
+            bin_alcoholism["table_report"]
+        )
     information["assembly"]["table_phenotypes"] = bin_alcoholism["table_clean"]
     # Write product information to file.
     write_product(
