@@ -1,0 +1,65 @@
+
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+Method
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+
+--------------------------------------------------
+PubMed:29754766
+Date: 10 May 2018
+Authors: Ni, ..., Lee
+Journal: American Journal of Human Genetics
+Title: "Estimation of Genetic Correlation via Linkage Disequilibrium Score Regression and Genomic Restricted Maximum Likelihood"
+Note:
+- Stacey J. Winham recommended and shared on 21 September 2020
+- Comparison of GREML to LD score regression
+- Genetic correlation describes similarity of genotypes between two phenotypes of interest; for example, do tall people tend to be genetically similar to happy people?
+- Genomic Restricted Maximum Likelihood (GREML) tends towards greater accuracy than Linkage Disequilibrium Score Regression (LDSC)
+- LDSC is computationally less expensive than GREML
+- Best practice is to perform both LDSC and GREML and report the estimate from the method with the lesser standard error
+- GREML
+-- 1. estimate SNV heritability of each phenotype by GREML in GCTA
+-- 2. authors cite Lee, Bioinformatics, 2016 and Maier, AJHG, 2015 for REML methods
+
+--------------------------------------------------
+PubMed:26414676
+Date: 28 September 2015
+Authors: Bulik-Sullivan, ..., Neale
+Journal: Nature Genetics
+Title: "An atlas of genetic correlations across human diseases and traits"
+Note:
+- study reports genetic correlations between many phenotypes of interest
+- study applies LD Score regression to estimate covariance
+- study also applies GREML, but the implementation seems a bit ambiguous
+
+--------------------------------------------------
+PubMed:21167468
+Date: 7 January 2011
+Journal: American Journal of Human Genetics
+Title: "GCTA: a tool for genome-wide complex trait analysis"
+Note:
+- Stacey J. Winham recommended and shared on 21 September 2020
+- GCTA GREML method
+
+--------------------------------------------------
+PubMed:25642630
+
+Note:
+- Stacey J. Winham recommended and shared on 21 September 2020
+- LD score regression
+
+--------------------------------------------------
+PubMed:27663502
+
+Note:
+- Stacey J. Winham recommended and shared on 21 September 2020
+- LD score regression
+- https://github.com/bulik/ldsc
+

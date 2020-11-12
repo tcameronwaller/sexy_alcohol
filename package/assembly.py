@@ -70,8 +70,8 @@ def initialize_directories(
     # Define paths to directories.
     paths["dock"] = path_dock
     paths["assembly"] = os.path.join(path_dock, "assembly")
-    paths["alcohol_consumption"] = os.path.join(
-        path_dock, "assembly", "alcohol_consumption"
+    paths["alcohol"] = os.path.join(
+        path_dock, "assembly", "alcohol"
     )
     # Remove previous files to avoid version or batch confusion.
     if restore:
@@ -81,7 +81,7 @@ def initialize_directories(
         path=paths["assembly"]
     )
     utility.create_directories(
-        path=paths["alcohol_consumption"]
+        path=paths["alcohol"]
     )
     # Return information.
     return paths
@@ -644,6 +644,147 @@ def convert_table_variable_types(
     return table
 
 
+def translate_alcohol_none(
+    frequency=None,
+    previous=None,
+):
+    """
+    Translate information from UK Biobank about whether person
+    never consumes any alcohol.
+
+    "frequency", field 1558: "Alcohol intake frequency"
+    UK Biobank data coding 100402 for variable field 1558.
+    "daily or almost daily": 1
+    "three or four times a week": 2
+    "once or twice a week": 3
+    "one to three times a month": 4
+    "special occasions only": 5
+    "never": 6
+    "prefer not to answer": -3
+
+    "previous", field 3731: "Former alcohol drinker"
+    Variable 3731 was only collected for persons who never consume any alcohol
+    currently (UK Biobank variable 1558).
+    UK Biobank data coding 100352 for variable field 3731.
+    "yes": 1
+    "no": 0
+    "prefer not to answer": -3
+
+    Accommodate inexact float values.
+
+    arguments:
+        frequency (float): frequency of alcohol consumption, UK Biobank field
+            1558
+        previous (float): previous alcohol consumption, UK Biobank field
+            3731
+
+    raises:
+
+    returns:
+        (bool): whether person never consumes any alcohol
+
+    """
+
+    # Determine whether the variable has a valid (non-missing) value.
+    # Only consider interpretable values to be valid.
+    if (
+        (not pandas.isna(frequency)) and
+        (0.5 <= frequency and frequency < 6.5)
+    ):
+        # The variable has a valid value.
+        # Determine whether the person ever consumes any alcohol currently.
+        if (5.5 <= frequency and frequency < 6.5):
+            # frequency = "never"
+            # Determine whether the person ever consumed any alcohol
+            # previously.
+            if (
+                (not pandas.isna(previous)) and
+                (-0.5 <= previous and previous < 1.5)
+            ):
+                if (0.5 <= previous and previous < 1.5):
+                    # previous = "yes"
+                    # The person consumed alcohol previously.
+                    alcohol_none = False
+                elif (-0.5 <= previous and previous < 0.5):
+                    # previous = "no"
+                    # The person does not consume alcohol currently and did not
+                    # consume alcohol previously.
+                    alcohol_none = True
+            else:
+                # No valid information about previous alcohol consumption.
+                # The person does not consume alcohol currently, but we do not
+                # know about any previous consumption.
+                alcohol_none = True
+        else:
+            # Persons consumes alcohol currently.
+            alcohol_none = False
+    else:
+        alcohol_none = float("nan")
+    # Return information.
+    return alcohol_none
+
+
+def translate_alcohol_consumption_frequency(
+    frequency=None,
+):
+    """
+    Translate information from UK Biobank about whether person
+    never consumes any alcohol.
+
+    "frequency", field 1558: "Alcohol intake frequency"
+    UK Biobank data coding 100402 for variable field 1558.
+    "daily or almost daily": 1
+    "three or four times a week": 2
+    "once or twice a week": 3
+    "one to three times a month": 4
+    "special occasions only": 5
+    "never": 6
+    "prefer not to answer": -3
+
+    Accommodate inexact float values.
+
+    arguments:
+        frequency (float): frequency of alcohol consumption, UK Biobank field
+            1558
+
+    raises:
+
+    returns:
+        (int): ordinal representation of person's frequency of alcohol
+            consumption
+
+    """
+
+    # Determine whether the variable has a valid (non-missing) value.
+    if (
+        (not pandas.isna(frequency)) and
+        (0.5 <= frequency and frequency < 6.5)
+    ):
+        # The variable has a valid value.
+        if (5.5 <= frequency and frequency < 6.5):
+            # "never"
+            alcohol_frequency = 0
+        elif (4.5 <= frequency and frequency < 5.5):
+            # "special occasions only"
+            alcohol_frequency = 1
+        elif (3.5 <= frequency and frequency < 4.5):
+            # "one to three times a month"
+            alcohol_frequency = 2
+        elif (2.5 <= frequency and frequency < 3.5):
+            # "once or twice a week"
+            alcohol_frequency = 3
+        elif (1.5 <= frequency and frequency < 2.5):
+            # "three or four times a week"
+            alcohol_frequency = 4
+        elif (0.5 <= frequency and frequency < 1.5):
+            # "daily or almost daily"
+            alcohol_frequency = 5
+    else:
+        alcohol_frequency = float("nan")
+    # Return information.
+    return alcohol_frequency
+
+
 def calculate_sum_drinks(
     beer_cider=None,
     wine_red=None,
@@ -735,7 +876,7 @@ def calculate_total_alcohol_consumption_monthly(
 
 
 def determine_total_alcohol_consumption_monthly(
-    status=None,
+    alcohol_frequency=None,
     drinks_weekly=None,
     drinks_monthly=None,
     weeks_per_month=None,
@@ -752,7 +893,8 @@ def determine_total_alcohol_consumption_monthly(
     Accommodate inexact float values.
 
     arguments:
-        status (str): person's status of alcohol consumption
+        alcohol_frequency (int): ordinal representation of person's frequency
+            of alcohol consumption
         drinks_weekly (float): sum of weekly drinks from weekly variables
         drinks_monthly (float): sum of monthly drinks from monthly variables
         weeks_per_month (float): factor to use for weeks per month
@@ -771,32 +913,25 @@ def determine_total_alcohol_consumption_monthly(
         weeks_per_month=weeks_per_month,
     )
     # Consider alcohol consumption status.
-    if (not pandas.isna(status)):
-        if (-0.5 < status and status < 0.5):
-            # Confirm that alcohol consumption is none.
-            if (not math.isnan(alcohol_monthly)):
-                alcohol_drinks_monthly = alcohol_monthly
-            else:
-                alcohol_drinks_monthly = 0.0
-            pass
-        elif (
-            (1.5 < status and status < 2.5) or
-            (0.5 < status and status < 1.5) or
-            (-3.5 < status and status < -2.5)
-        ):
-            # Determine alcohol consumption quantity.
+    if (
+        (not math.isnan(alcohol_frequency)) and
+        (-0.5 <= alcohol_frequency and alcohol_frequency < 0.5)
+    ):
+        # Person never consumes any alcohol currently.
+        if (not math.isnan(alcohol_monthly)):
             alcohol_drinks_monthly = alcohol_monthly
-            pass
         else:
-            alcohol_drinks_monthly = alcohol_monthly
+            alcohol_drinks_monthly = 0.0
     else:
-        alcohol_drinks_monthly = alcohol_monthly
-        pass
+        if (not math.isnan(alcohol_monthly)):
+            alcohol_drinks_monthly = alcohol_monthly
+        else:
+            alcohol_drinks_monthly = float("nan")
     # Return information.
     return alcohol_drinks_monthly
 
 
-def organize_alcohol_consumption_monthly_drinks(
+def organize_current_alcohol_consumption_variables(
     table=None,
     report=None,
 ):
@@ -817,6 +952,24 @@ def organize_alcohol_consumption_monthly_drinks(
 
     # Copy data.
     table = table.copy(deep=True)
+    # Determine whether person never consumes any alcohol, either currently or
+    # previously.
+    table["alcohol_none"] = table.apply(
+        lambda row:
+            translate_alcohol_none(
+                frequency=row["1558-0.0"],
+                previous=row["3731-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine person's frequency of alcohol consumption.
+    table["alcohol_frequency"] = table.apply(
+        lambda row:
+            translate_alcohol_consumption_frequency(
+                frequency=row["1558-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
     # Calculate sum of drinks weekly.
     table["drinks_weekly"] = table.apply(
         lambda row:
@@ -847,7 +1000,7 @@ def organize_alcohol_consumption_monthly_drinks(
     table["alcohol_drinks_monthly"] = table.apply(
         lambda row:
             determine_total_alcohol_consumption_monthly(
-                status=row["20117-0.0"],
+                alcohol_frequency=row["alcohol_frequency"],
                 drinks_weekly=row["drinks_weekly"],
                 drinks_monthly=row["drinks_monthly"],
                 weeks_per_month=4.345, # 52.143 weeks per year (12 months)
@@ -862,7 +1015,7 @@ def organize_alcohol_consumption_monthly_drinks(
             "5364-0.0",
             "4429-0.0", "4407-0.0", "4418-0.0", "4451-0.0", "4440-0.0",
             "4462-0.0",
-            "20117-0.0",
+            #"20117-0.0",
             "drinks_weekly",
             "drinks_monthly",
         ],
@@ -874,11 +1027,14 @@ def organize_alcohol_consumption_monthly_drinks(
     table_report = table_report.loc[
         :, table_report.columns.isin([
             "eid", "IID",
+            "1558-0.0", "3731-0.0",
             "1588-0.0", "1568-0.0", "1578-0.0", "1608-0.0", "1598-0.0",
             "5364-0.0",
             "4429-0.0", "4407-0.0", "4418-0.0", "4451-0.0", "4440-0.0",
             "4462-0.0",
             "20117-0.0",
+            "alcohol_none",
+            "alcohol_frequency",
             "drinks_weekly",
             "drinks_monthly",
             "alcohol_drinks_monthly",
@@ -898,9 +1054,363 @@ def organize_alcohol_consumption_monthly_drinks(
     return bucket
 
 
+def determine_previous_alcohol_consumption(
+    status=None,
+    previous=None,
+    comparison=None,
+):
+    """
+    Translate information from UK Biobank about whether person
+    never consumes any alcohol.
 
-# TODO: organize AUDIT-C variables... sum of AUDIT-C questions 1-3
-# TODO: handle the specific missing value codes
+    "status", field 20117: "Alcohol drinker status"
+    UK Biobank data coding 90 for variable field 20117.
+    "current": 2
+    "previous": 1
+    "never": 0
+    "prefer not to answer": -3
+
+    "previous", field 3731: "Former alcohol drinker"
+    Variable 3731 was only collected for persons who never consume any alcohol
+    currently (UK Biobank variable 1558).
+    UK Biobank data coding 100352 for variable field 3731.
+    "yes": 1
+    "no": 0
+    "prefer not to answer": -3
+
+    "comparison", field 1628: "Alcohol intake versus 10 years previously"
+    Variable 1628 was only collected for persons who consume alcohol currently
+    (UK Biobank variable 1558).
+    UK Biobank data coding 100417 for variable field 1628.
+    "more nowadays": 1
+    "about the same": 2
+    "less nowadays": 3
+    "do not know": -1
+    "prefer not to answer": -3
+
+    Accommodate inexact float values.
+
+    arguments:
+        status (float): status of alcohol consumption, UK Biobank field
+            20117
+        previous (float): previous alcohol consumption, UK Biobank field
+            3731
+        comparison (float): comparison to previous alcohol consumption, UK
+            Biobank field 1628
+
+    raises:
+
+    returns:
+        (int): ordinal representation of person's frequency of alcohol
+            consumption
+
+    """
+
+    # Determine whether the person consumed alcohol previously.
+    if (
+        (not pandas.isna(previous)) and
+        (-0.5 <= previous and previous < 1.5)
+    ):
+        if (0.5 <= previous and previous < 1.5):
+            # The person consumed alcohol previously.
+            alcohol_previous = 1
+        elif (-0.5 <= previous and previous < 0.5):
+            # The person did not consume alcohol previously.
+            alcohol_previous = 0
+    else:
+        alcohol_previous = float("nan")
+    # Determine how current alcohol consumption compares to previous.
+    if (
+        (not pandas.isna(comparison)) and
+        (-0.5 <= comparison and comparison < 3.5)
+    ):
+        if (0.5 <= comparison and comparison < 1.5):
+            # "more nowadays"
+            alcohol_comparison = 1
+        elif (1.5 <= comparison and comparison < 2.5):
+            # "about the same"
+            alcohol_comparison = 2
+        elif (2.5 <= comparison and comparison < 3.5):
+            # "less nowadays"
+            alcohol_comparison = 3
+    else:
+        alcohol_comparison = float("nan")
+    # Combine variables.
+    if (
+        (not math.isnan(alcohol_previous)) and
+        (not math.isnan(alcohol_comparison))
+    ):
+        if (alcohol_previous >= alcohol_comparison):
+            alcohol_combination = alcohol_previous
+        elif (alcohol_previous < alcohol_comparison):
+            alcohol_combination = alcohol_comparison
+    elif (not math.isnan(alcohol_previous)):
+        alcohol_combination = alcohol_previous
+    elif (not math.isnan(alcohol_comparison)):
+        alcohol_combination = alcohol_comparison
+    else:
+        alcohol_combination = float("nan")
+    # Return information.
+    return alcohol_combination
+
+
+def organize_previous_alcohol_consumption_variables(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about previous alcohol consumption.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about quantity of alcohol consumption
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Determine whether person never consumes any alcohol.
+    table["alcohol_previous"] = table.apply(
+        lambda row:
+            determine_previous_alcohol_consumption(
+                status=row["20117-0.0"],
+                previous=row["3731-0.0"],
+                comparison=row["1628-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Remove columns for variables that are not necessary anymore.
+    table_clean = table.copy(deep=True)
+    table_clean.drop(
+        labels=[
+            "3731-0.0", "1628-0.0", "20117-0.0",
+        ],
+        axis="columns",
+        inplace=True
+    )
+    # Organize data for report.
+    table_report = table.copy(deep=True)
+    table_report = table_report.loc[
+        :, table_report.columns.isin([
+            "eid", "IID",
+            "alcohol_previous",
+            "3731-0.0", "1628-0.0", "20117-0.0",
+        ])
+    ]
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("Summary of alcohol consumption quantity variables: ")
+        print(table_report)
+    # Collect information.
+    bucket = dict()
+    bucket["table"] = table
+    bucket["table_clean"] = table_clean
+    bucket["table_report"] = table_report
+    # Return information.
+    return bucket
+
+
+def translate_alcohol_none_auditc(
+    frequency=None,
+):
+    """
+    Translates information from AUDIT-C questionnaire about whether person
+    never consumes any alcohol.
+
+    "frequency", field 20414: "Frequency of drinking alcohol"
+    UK Biobank data coding 521 for variable field 20414.
+    "four or more times a week": 4
+    "two to three times a week": 3
+    "two to four times a month": 2
+    "monthly or less": 1
+    "never": 0
+    "prefer not to answer": -818
+
+    Accommodate inexact float values.
+
+    arguments:
+        frequency (float): AUDIT-C question 1, UK Biobank field 20414
+
+    raises:
+
+    returns:
+        (bool): whether person never consumes any alcohol
+
+    """
+
+    # Determine whether the variable has a valid (non-missing) value.
+    if (
+        (not pandas.isna(frequency)) and
+        (-0.5 <= frequency and frequency < 4.5)
+    ):
+        # The variable has a valid value.
+        # Determine whether the person ever consumes any alcohol.
+        if (-0.5 <= frequency and frequency < 0.5):
+            # Person never consumes any alcohol.
+            alcohol_none_auditc = True
+        else:
+            # Persons consumes alcohol.
+            alcohol_none_auditc = False
+    else:
+        alcohol_none_auditc = float("nan")
+    # Return information.
+    return alcohol_none_auditc
+
+
+def determine_auditc_questionnaire_alcoholism_score(
+    frequency=None,
+    quantity=None,
+    binge=None,
+):
+    """
+    Determine aggregate alcoholism score from responses to the AUDIT-C
+    questionnaire.
+
+    "frequency", field 20414: "Frequency of drinking alcohol"
+    UK Biobank data coding 521 for variable field 20414.
+    "four or more times a week": 4
+    "two to three times a week": 3
+    "two to four times a month": 2
+    "monthly or less": 1
+    "never": 0
+    "prefer not to answer": -818
+
+    UK Biobank only asked questions "quantity" and "binge" if question
+    "frequency" was not "never".
+
+    "quantity", field 20403: "Amount of alcohol drunk on a typical drinking
+    day"
+    UK Biobank data coding 522 for variable field 20403.
+    "ten or more": 5
+    "seven, eight, or nine": 4
+    "five or six": 3
+    "three or four": 2
+    "one or two": 1
+    "prefer not to answer": -818
+
+    "binge", field 20416: "Frequency of consuming six or more units of alcohol"
+    UK Biobank data coding 523 for variable field 20416.
+    "daily or almost daily": 5
+    "weekly": 4
+    "monthly": 3
+    "less than monthly": 2
+    "never": 1
+    "prefer not to answer": -818
+
+    Accommodate inexact float values.
+
+    arguments:
+        frequency (float): AUDIT-C question 1, UK Biobank field 20414
+        quantity (float): AUDIT-C question 2, UK Biobank field 20403
+        binge (float): AUDIT-C question 3, UK Biobank field 20416
+
+    raises:
+
+    returns:
+        (float): person's monthly alcohol consumption in drinks
+
+    """
+
+    # Only consider cases with valid responses to all three questions.
+    if (
+        (
+            (not pandas.isna(frequency)) and
+            (-0.5 <= frequency and frequency < 4.5)
+        )
+        (
+            (not pandas.isna(quantity)) and
+            (0.5 <= quantity and quantity < 5.5)
+        )
+        (
+            (not pandas.isna(binge)) and
+            (0.5 <= binge and binge < 5.5)
+        )
+    ):
+        score = (frequency + quantity + binge)
+    else:
+        score = float("nan")
+    # Return information.
+    return score
+
+
+def organize_auditc_questionnaire_alcoholism_variables(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about alcoholism from the AUDIT-C questionnaire.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about quantity of alcohol consumption
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Determine whether person never consumes any alcohol.
+    table["alcohol_none_auditc"] = table.apply(
+        lambda row:
+            translate_alcohol_none_auditc(
+                frequency=row["20414-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine alcoholism aggregate score.
+    table["alcoholism"] = table.apply(
+        lambda row:
+            determine_auditc_questionnaire_alcoholism_score(
+                auditc_question_1=row["20414-0.0"],
+                auditc_question_2=row["20403-0.0"],
+                auditc_question_3=row["20416-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Remove columns for variables that are not necessary anymore.
+    table_clean = table.copy(deep=True)
+    table_clean.drop(
+        labels=[
+            "20414-0.0", "20403-0.0", "20416-0.0",
+        ],
+        axis="columns",
+        inplace=True
+    )
+    # Organize data for report.
+    table_report = table.copy(deep=True)
+    table_report = table_report.loc[
+        :, table_report.columns.isin([
+            "eid", "IID",
+            "20414-0.0", "20403-0.0", "20416-0.0",
+            "alcohol_none_auditc",
+            "alcoholism",
+        ])
+    ]
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("Summary of alcohol consumption quantity variables: ")
+        print(table_report)
+    # Collect information.
+    bucket = dict()
+    bucket["table"] = table
+    bucket["table_clean"] = table_clean
+    bucket["table_report"] = table_report
+    # Return information.
+    return bucket
+
 
 
 
@@ -978,7 +1488,7 @@ def organize_female_menopause(
 
 
 
-def write_product_alcohol_consumption(
+def write_product_alcohol(
     information=None,
     path_parent=None,
 ):
@@ -996,17 +1506,34 @@ def write_product_alcohol_consumption(
     """
 
     # Specify directories and files.
-    path_table_report_quantity = os.path.join(
-        path_parent, "table_report_quantity.tsv"
+    path_table_report_current = os.path.join(
+        path_parent, "table_report_current.tsv"
+    )
+    path_table_report_previous = os.path.join(
+        path_parent, "table_report_previous.tsv"
+    )
+    path_table_report_alcoholism = os.path.join(
+        path_parent, "table_report_alcoholism.tsv"
     )
     # Write information to file.
-    information["table_report"].to_csv(
-        path_or_buf=path_table_report_quantity,
+    information["table_report_current"].to_csv(
+        path_or_buf=path_table_report_current,
         sep="\t",
         header=True,
         index=True,
     )
-
+    information["table_report_previous"].to_csv(
+        path_or_buf=path_table_report_previous,
+        sep="\t",
+        header=True,
+        index=True,
+    )
+    information["table_report_alcoholism"].to_csv(
+        path_or_buf=path_table_report_alcoholism,
+        sep="\t",
+        header=True,
+        index=True,
+    )
     pass
 
 
@@ -1029,9 +1556,21 @@ def write_product(
     """
 
     # Alcohol consumption.
-    write_product_alcohol_consumption(
-        information=information["alcohol_consumption"],
-        path_parent=paths["alcohol_consumption"],
+    write_product_alcohol(
+        information=information["alcohol"],
+        path_parent=paths["alcohol"],
+    )
+
+    # Specify directories and files.
+    path_table_phenotypes = os.path.join(
+        paths["assembly"], "table_phenotypes.tsv"
+    )
+    # Write information to file.
+    information["table_phenotypes"].to_csv(
+        path_or_buf=path_table_phenotypes,
+        sep="\t",
+        header=True,
+        index=True,
     )
     pass
 
@@ -1058,7 +1597,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 5")
+    print("version check: 1")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -1096,19 +1635,27 @@ def execute_procedure(
         table=table_exclusion,
         report=True,
     )
-    # Derive total monthly alcohol consumption in standard UK drinks.
-    bin_consumption = organize_alcohol_consumption_monthly_drinks(
+    # Derive alcohol consumption variables.
+    bin_consumption_current = organize_current_alcohol_consumption_variables(
         table=table_type,
         report=True,
     )
+    bin_consumption_previous = organize_previous_alcohol_consumption_variables(
+        table=bin_consumption_current["table_clean"],
+        report=True,
+    )
     # Derive aggregate of AUDIT-C alcohol use questionnaire.
+    bin_alcoholism = organize_auditc_questionnaire_aocoholism_variables(
+        table=bin_consumption_previous["table_clean"],
+        report=True,
+    )
 
 
-    # TODO: 2) derive alcohol consumption quantity and frequency variables
+
+
     # TODO: 3) organize menopause variable
 
     # TODO: 3) evaluate person sub-cohorts by variable availability etc
-
 
     # Organize general phenotypes.
 
@@ -1118,10 +1665,17 @@ def execute_procedure(
 
     # Collect information.
     information = dict()
-    information["alcohol_consumption"] = dict()
-    information["alcohol_consumption"]["table_report"] = (
-        bin_consumption["table_report"]
+    information["alcohol"] = dict()
+    information["alcohol"]["table_report_current"] = (
+        bin_consumption_current["table_report"]
     )
+    information["alcohol"]["table_report_previous"] = (
+        bin_consumption_previous["table_report"]
+    )
+    information["alcohol"]["table_report_alcoholism"] = (
+        bin_alcoholism["table_report"]
+    )
+    information["assembly"]["table_phenotypes"] = bin_alcoholism["table_clean"]
     # Write product information to file.
     write_product(
         paths=paths,

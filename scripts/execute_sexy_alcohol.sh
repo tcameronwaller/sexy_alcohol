@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #chmod u+x script.sh
+#chmod -R 777
 
 # Read private, local file paths.
 echo "read private file path variables and organize paths..."
