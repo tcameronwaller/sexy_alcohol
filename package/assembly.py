@@ -1655,7 +1655,7 @@ def execute_procedure(
         report=True,
     )
     # Derive aggregate of AUDIT-C alcohol use questionnaire.
-    bin_alcoholism = organize_auditc_questionnaire_aocoholism_variables(
+    bin_alcoholism = organize_auditc_questionnaire_alcoholism_variables(
         table=bin_consumption_previous["table_clean"],
         report=True,
     )
