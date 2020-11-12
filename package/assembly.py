@@ -36,7 +36,7 @@ import scipy.stats
 
 # Custom
 import promiscuity.utility as utility
-
+import promiscuity.plot as plot
 
 ###############################################################################
 # Functionality
@@ -73,6 +73,9 @@ def initialize_directories(
     paths["alcohol"] = os.path.join(
         path_dock, "assembly", "alcohol"
     )
+    paths["plot"] = os.path.join(
+        path_dock, "assembly", "plot"
+    )
     # Remove previous files to avoid version or batch confusion.
     if restore:
         utility.remove_directory(path=paths["assembly"])
@@ -82,6 +85,9 @@ def initialize_directories(
     )
     utility.create_directories(
         path=paths["alcohol"]
+    )
+    utility.create_directories(
+        path=paths["plot"]
     )
     # Return information.
     return paths
@@ -1383,9 +1389,9 @@ def organize_auditc_questionnaire_alcoholism_variables(
     table["alcoholism"] = table.apply(
         lambda row:
             determine_auditc_questionnaire_alcoholism_score(
-                auditc_question_1=row["20414-0.0"],
-                auditc_question_2=row["20403-0.0"],
-                auditc_question_3=row["20416-0.0"],
+                frequency=row["20414-0.0"],
+                quantity=row["20403-0.0"],
+                binge=row["20416-0.0"],
             ),
         axis="columns", # apply across rows
     )
@@ -1421,6 +1427,117 @@ def organize_auditc_questionnaire_alcoholism_variables(
     # Return information.
     return bucket
 
+
+
+
+
+def plot_variable_series_histogram(
+    series=None,
+    bins=None,
+    file=None,
+    path_directory=None,
+):
+    """
+    Plots charts from the analysis process.
+
+    arguments:
+        comparison (dict): information for chart
+        path_directory (str): path for directory
+
+    raises:
+
+    returns:
+
+    """
+
+    # Specify path to directory and file.
+    path_file = os.path.join(
+        path_directory, file
+    )
+
+    # Define fonts.
+    fonts = plot.define_font_properties()
+    # Define colors.
+    colors = plot.define_color_properties()
+
+    # Report.
+    utility.print_terminal_partition(level=1)
+    print(file)
+    print(len(series))
+    # Create figure.
+    figure = plot.plot_distribution_histogram(
+        series=series,
+        name="",
+        bin_method="count",
+        bin_count=bins,
+        label_bins="values",
+        label_counts="counts of persons per bin",
+        fonts=fonts,
+        colors=colors,
+        line=False,
+        position=1,
+        text="",
+    )
+    # Write figure.
+    plot.write_figure_png(
+        path=path_file,
+        figure=figure
+    )
+
+    pass
+
+
+def organize_plot_variable_histogram_summary_charts(
+    table=None,
+    paths=None,
+):
+    """
+    Organizes information about alcoholism from the AUDIT-C questionnaire.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        paths (dict<str>): collection of paths to directories for procedure's
+            files
+
+    raises:
+
+    returns:
+        (dict): collection of information about quantity of alcohol consumption
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+
+    # Specify directories and files.
+    # Create figures.
+    plot_variable_series_histogram(
+        series=table["alcohol_frequency"].dropna().to_list(),
+        bins=6,
+        file="histogram_alcohol_frequency.png",
+        path_directory=paths["plot"],
+    )
+    plot_variable_series_histogram(
+        series=table["alcohol_previous"].dropna().to_list(),
+        bins=4,
+        file="histogram_alcohol_previous.png",
+        path_directory=paths["plot"],
+    )
+    plot_variable_series_histogram(
+        series=table["alcohol_drinks_monthly"].dropna().to_list(),
+        bins=50,
+        file="histogram_alcohol_drinks_monthly.png",
+        path_directory=paths["plot"],
+    )
+    plot_variable_series_histogram(
+        series=table["alcoholism"].dropna().to_list(),
+        bins=15,
+        file="histogram_alcoholism.png",
+        path_directory=paths["plot"],
+    )
+
+    pass
 
 
 
@@ -1658,6 +1775,12 @@ def execute_procedure(
     bin_alcoholism = organize_auditc_questionnaire_alcoholism_variables(
         table=bin_consumption_previous["table_clean"],
         report=True,
+    )
+
+    # Temporary charts
+    organize_plot_variable_histogram_summary_charts(
+        table=bin_alcoholism["table_clean"],
+        paths=paths,
     )
 
 
