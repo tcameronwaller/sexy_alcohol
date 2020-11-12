@@ -579,6 +579,21 @@ def convert_table_variable_types(
     table = table.copy(deep=True)
     # Convert data variable types.
     # Alcohol variables.
+    table["1558-0.0"] = pandas.to_numeric(
+        table["1558-0.0"],
+        errors="coerce", # force any invalid values to missing or null
+        downcast="float",
+    )
+    table["3731-0.0"] = pandas.to_numeric(
+        table["3731-0.0"],
+        errors="coerce", # force any invalid values to missing or null
+        downcast="float",
+    )
+    table["1628-0.0"] = pandas.to_numeric(
+        table["1628-0.0"],
+        errors="coerce", # force any invalid values to missing or null
+        downcast="float",
+    )
     table["20117-0.0"] = pandas.to_numeric(
         table["20117-0.0"],
         errors="coerce", # force any invalid values to missing or null
@@ -596,11 +611,6 @@ def convert_table_variable_types(
     )
     table["20416-0.0"] = pandas.to_numeric(
         table["20416-0.0"],
-        errors="coerce", # force any invalid values to missing or null
-        downcast="float",
-    )
-    table["1558-0.0"] = pandas.to_numeric(
-        table["1558-0.0"],
         errors="coerce", # force any invalid values to missing or null
         downcast="float",
     )
