@@ -1339,11 +1339,11 @@ def determine_auditc_questionnaire_alcoholism_score(
         (
             (not pandas.isna(frequency)) and
             (-0.5 <= frequency and frequency < 4.5)
-        )
+        ) and
         (
             (not pandas.isna(quantity)) and
             (0.5 <= quantity and quantity < 5.5)
-        )
+        ) and
         (
             (not pandas.isna(binge)) and
             (0.5 <= binge and binge < 5.5)
@@ -1530,13 +1530,12 @@ def organize_plot_variable_histogram_summary_charts(
         file="histogram_alcohol_drinks_monthly.png",
         path_directory=paths["plot"],
     )
-    if False:
-        plot_variable_series_histogram(
-            series=table["alcoholism"].dropna().to_list(),
-            bins=15,
-            file="histogram_alcoholism.png",
-            path_directory=paths["plot"],
-        )
+    plot_variable_series_histogram(
+        series=table["alcoholism"].dropna().to_list(),
+        bins=15,
+        file="histogram_alcoholism.png",
+        path_directory=paths["plot"],
+    )
 
     pass
 
@@ -1726,7 +1725,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 3")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -1774,15 +1773,14 @@ def execute_procedure(
         report=True,
     )
     # Derive aggregate of AUDIT-C alcohol use questionnaire.
-    if False:
-        bin_alcoholism = organize_auditc_questionnaire_alcoholism_variables(
-            table=bin_consumption_previous["table_clean"],
-            report=True,
-        )
+    bin_alcoholism = organize_auditc_questionnaire_alcoholism_variables(
+        table=bin_consumption_previous["table_clean"],
+        report=True,
+    )
 
     # Temporary charts
     organize_plot_variable_histogram_summary_charts(
-        table=bin_consumption_previous["table_clean"],
+        table=bin_alcoholism["table_clean"],
         paths=paths,
     )
 
@@ -1808,10 +1806,9 @@ def execute_procedure(
     information["alcohol"]["table_report_previous"] = (
         bin_consumption_previous["table_report"]
     )
-    if False:
-        information["alcohol"]["table_report_alcoholism"] = (
-            bin_alcoholism["table_report"]
-        )
+    information["alcohol"]["table_report_alcoholism"] = (
+        bin_alcoholism["table_report"]
+    )
     information["assembly"]["table_phenotypes"] = bin_alcoholism["table_clean"]
     # Write product information to file.
     write_product(
