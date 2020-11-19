@@ -619,6 +619,9 @@ def determine_ukbiobank_field_instance_columns_keep(
     # Copy data.
     table_ukbiobank_variables = table_ukbiobank_variables.copy(deep=True)
     # Organize information.
+    table_ukbiobank_variables["field"] = (
+        table_ukbiobank_variables["field"].to_string()
+    )
     table_ukbiobank_variables.set_index(
         "field",
         drop=True,
