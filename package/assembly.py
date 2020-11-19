@@ -99,6 +99,10 @@ def initialize_directories(
     return paths
 
 
+##########
+# Read
+
+
 def read_ukbiobank_table_column_names(
     path_file=None,
     delimiter=None,
@@ -310,6 +314,137 @@ def read_source(
     }
 
 
+##########
+# Organization raw
+
+
+def merge_table_variables_identifiers(
+    table_identifier_pairs=None,
+    table_ukb_41826=None,
+    table_ukb_43878=None,
+    report=None,
+):
+    """
+    Reads and organizes source information from file.
+
+    arguments:
+        table_identifier_pairs (object): Pandas data frame of associations
+            between "IID" and "eid"
+        table_ukb_41826 (object): Pandas data frame of variables from UK Biobank
+            phenotype accession 41826
+        table_ukb_43878 (object): Pandas data frame of variables from UK Biobank
+            phenotype accession 43878
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print(table_identifier_pairs)
+        utility.print_terminal_partition(level=2)
+        print(table_ukb_41826)
+        utility.print_terminal_partition(level=2)
+        print(table_ukb_43878)
+    # Organize data.
+    table_identifier_pairs.astype("string")
+    table_identifier_pairs.set_index(
+        "eid",
+        drop=True,
+        inplace=True,
+    )
+    table_ukb_41826["eid"].astype("string")
+    table_ukb_41826.set_index(
+        "eid",
+        drop=True,
+        inplace=True,
+    )
+    table_ukb_43878["eid"].astype("string")
+    table_ukb_43878.set_index(
+        "eid",
+        drop=True,
+        inplace=True,
+    )
+
+    # Merge data tables using database-style join.
+    # Alternative is to use DataFrame.join().
+    table_merge = table_identifier_pairs.merge(
+        table_ukb_41826,
+        how="outer",
+        left_on="eid",
+        right_on="eid",
+        suffixes=("_pairs", "_41826"),
+    )
+    table_merge = table_merge.merge(
+        table_ukb_43878,
+        how="outer",
+        left_on="eid",
+        right_on="eid",
+        suffixes=("_41826", "_43878"),
+    )
+    # Remove excess columns.
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print(table_merge)
+    # Return information.
+    return table_merge
+
+
+def exclude_persons_ukbiobank_consent(
+    exclusion_identifiers=None,
+    table=None,
+    report=None,
+):
+    """
+    Removes entries with specific identifiers from data.
+
+    arguments:
+        exclusion_identifiers (list<str>): identifiers of persons who withdrew
+            consent from UK Biobank
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("Initial table dimensions: " + str(table.shape))
+        utility.print_terminal_partition(level=4)
+        print("Exclusion of persons: " + str(len(exclusion_identifiers)))
+    # Copy data.
+    table = table.copy(deep=True)
+    # Filter data entries.
+    table_exclusion = table.loc[
+        ~table.index.isin(exclusion_identifiers), :
+    ]
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=4)
+        print("Final data dimensions: " + str(table_exclusion.shape))
+    # Return information.
+    return table_exclusion
+
+
+##########
+# Organization
+
+
 def extract_organize_variable_fields_instances_names(
     table_ukbiobank_variables=None,
     extra_names=None,
@@ -440,129 +575,6 @@ def remove_table_irrelevant_variable_instances_entries(
     bucket["table_ukb_41826"] = table_ukb_41826
     bucket["table_ukb_43878"] = table_ukb_43878
     return bucket
-
-
-def merge_table_variables_identifiers(
-    table_identifier_pairs=None,
-    table_ukb_41826=None,
-    table_ukb_43878=None,
-    report=None,
-):
-    """
-    Reads and organizes source information from file.
-
-    arguments:
-        table_identifier_pairs (object): Pandas data frame of associations
-            between "IID" and "eid"
-        table_ukb_41826 (object): Pandas data frame of variables from UK Biobank
-            phenotype accession 41826
-        table_ukb_43878 (object): Pandas data frame of variables from UK Biobank
-            phenotype accession 43878
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
-
-    """
-
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print(table_identifier_pairs)
-        utility.print_terminal_partition(level=2)
-        print(table_ukb_41826)
-        utility.print_terminal_partition(level=2)
-        print(table_ukb_43878)
-    # Organize data.
-    table_identifier_pairs.astype("string")
-    table_identifier_pairs.set_index(
-        "eid",
-        drop=True,
-        inplace=True,
-    )
-    table_ukb_41826["eid"].astype("string")
-    table_ukb_41826.set_index(
-        "eid",
-        drop=True,
-        inplace=True,
-    )
-    table_ukb_43878["eid"].astype("string")
-    table_ukb_43878.set_index(
-        "eid",
-        drop=True,
-        inplace=True,
-    )
-
-    # Merge data tables using database-style join.
-    # Alternative is to use DataFrame.join().
-    table_merge = table_identifier_pairs.merge(
-        table_ukb_41826,
-        how="outer",
-        left_on="eid",
-        right_on="eid",
-        suffixes=("_pairs", "_41826"),
-    )
-    table_merge = table_merge.merge(
-        table_ukb_43878,
-        how="outer",
-        left_on="eid",
-        right_on="eid",
-        suffixes=("_41826", "_43878"),
-    )
-    # Remove excess columns.
-
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print(table_merge)
-    # Return information.
-    return table_merge
-
-
-def exclude_persons_ukbiobank_consent(
-    exclusion_identifiers=None,
-    table=None,
-    report=None,
-):
-    """
-    Removes entries with specific identifiers from data.
-
-    arguments:
-        exclusion_identifiers (list<str>): identifiers of persons who withdrew
-            consent from UK Biobank
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
-
-    """
-
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("Initial table dimensions: " + str(table.shape))
-        utility.print_terminal_partition(level=4)
-        print("Exclusion of persons: " + str(len(exclusion_identifiers)))
-    # Copy data.
-    table = table.copy(deep=True)
-    # Filter data entries.
-    table_exclusion = table.loc[
-        ~table.index.isin(exclusion_identifiers), :
-    ]
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=4)
-        print("Final data dimensions: " + str(table_exclusion.shape))
-    # Return information.
-    return table_exclusion
 
 
 def convert_table_variable_types(
@@ -1654,15 +1666,25 @@ def write_product_raw(
     path_table_ukb_43878 = os.path.join(
         paths["raw"], "table_ukb_43878.tsv"
     )
-    # Write information to file.
-    information["table_ukb_41826"].to_csv(
-        path_or_buf=path_table_ukb_41826,
-        sep="\t",
-        header=True,
-        index=True,
+    path_table_merge_exclusion = os.path.join(
+        paths["raw"], "table_merge_exclusion.tsv"
     )
-    information["table_ukb_43878"].to_csv(
-        path_or_buf=path_table_ukb_43878,
+    # Write information to file.
+    if False:
+        information["table_ukb_41826"].to_csv(
+            path_or_buf=path_table_ukb_41826,
+            sep="\t",
+            header=True,
+            index=True,
+        )
+        information["table_ukb_43878"].to_csv(
+            path_or_buf=path_table_ukb_43878,
+            sep="\t",
+            header=True,
+            index=True,
+        )
+    information["table_merge_exclusion"].to_csv(
+        path_or_buf=path_table_merge_exclusion,
         sep="\t",
         header=True,
         index=True,
@@ -1780,7 +1802,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 3")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -1793,12 +1815,26 @@ def execute_procedure(
         path_dock=path_dock,
         report=True,
     )
+    # Merge tables.
+    table_merge = merge_table_variables_identifiers(
+        table_identifier_pairs=source["table_identifier_pairs"],
+        table_ukb_41826=source["table_ukb_41826"],
+        table_ukb_43878=source["table_ukb_43878"],
+        report=True,
+    )
+    # Exclude persons who withdrew consent from the UK Biobank.
+    table_exclusion = exclude_persons_ukbiobank_consent(
+        exclusion_identifiers=source["exclusion_identifiers"],
+        table=table_merge,
+        report=True,
+    )
     if True:
         # Write out raw tables for inspection.
         # Collect information.
         information = dict()
         information["table_ukb_41826"] = source["table_ukb_41826"]
         information["table_ukb_43878"] = source["table_ukb_43878"]
+        information["table_merge_exclusion"] = table_exclusion
         # Write product information to file.
         write_product_raw(
             paths=paths,
@@ -1811,19 +1847,6 @@ def execute_procedure(
             table_ukbiobank_variables=source["table_ukbiobank_variables"],
             table_ukb_41826=source["table_ukb_41826"],
             table_ukb_43878=source["table_ukb_43878"],
-            report=True,
-        )
-        # Merge tables.
-        table_raw = merge_table_variables_identifiers(
-            table_identifier_pairs=source["table_identifier_pairs"],
-            table_ukb_41826=prune["table_ukb_41826"],
-            table_ukb_43878=prune["table_ukb_43878"],
-            report=True,
-        )
-        # Exclude persons who withdrew consent from the UK Biobank.
-        table_exclusion = exclude_persons_ukbiobank_consent(
-            exclusion_identifiers=source["exclusion_identifiers"],
-            table=table_raw,
             report=True,
         )
         # Convert variable types for further analysis.
