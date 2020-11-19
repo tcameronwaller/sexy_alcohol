@@ -134,9 +134,15 @@ def read_ukbiobank_table_column_names(
     )
     line = lines[0]
     # Split line's content by delimiter.
-    column_names = line.split(delimiter)
+    names = line.split(delimiter)
+    # Remove excess quotation marks.
+    names_simple = list()
+    for name in names:
+        name = name.replace("\'", "")
+        name = name.replace("\"", "")
+        names_simple.append(name)
     # Return information.
-    return column_names
+    return names_simple
 
 
 def extract_organize_variables_types(
@@ -251,8 +257,9 @@ def read_source(
         stop=1,
     )
     print(columns_new)
+    columns.extend(columns_new)
     columns_unique = utility.collect_unique_elements(
-        elements=columns.extend(columns_new),
+        elements=columns,
     )
     if report:
         utility.print_terminal_partition(level=2)
