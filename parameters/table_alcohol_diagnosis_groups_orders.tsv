@@ -1,0 +1,22 @@
+group	order	2002	2002_description	41271	41271_description	41203	41205	41270	41270_description	41202	41204
+b	1	1408	alcohol dependency					F10	Mental and behavioral disorders due to use of alcohol	F10	F10
+b	1							F100	Acute intoxication	F100	F100
+b	1							F109	Unspecified mental and behavioral disorder	F109	F109
+c	2			3050	Nondependent abuse of alcohol	3050	3050	F101	Alcohol abuse	F101	F101
+a	3			3039	Alcohol dependence	3039	3039	F102	Alcohol dependence, uncomplicated	F102	F102
+a	3			291	Alcohol withdrawal delirium	291	291	F103	Alcohol dependence, withdrawal	F103	F103
+a	3			2910	Alcohol withdrawal delirium	2910	2910	F104	Alcohol dependence, withdrawal, delirium	F104	F104
+a	3			2918	Alcohol withdrawal	2918	2918	F105	Alcohol dependence, withdrawal, psychosis	F105	F105
+a	3							F106	Alcohol dependence, withdrawal, Amnesic syndrome	F106	F106
+a	3							F107	Alcohol dependence, withdrawal, residual and late-onset psychotic disorder	F107	F107
+a	3							F108	Alcohol dependence, withdrawal, other mental and behavioral disorders	F108	F108
+d	4	1604	alcoholic liver disease, alcoholic cirrhosis	3575	Alcoholic polyneuropathy	3575	3575	G621	Alcoholic polyneuropathy	G621	G621
+d	4			4255	Alcoholic cardiomyopathy	4255	4255	I426	Alcoholic cardiomyopathy	I426	I426
+d	4			5353	Alcoholic gastritis	5353	5353	K292	Alcoholic gastritis	K292	K292
+d	4			5710	Alcoholic fatty liver	5710	5710	K70	Alcoholic fatty liver	K70	K70
+d	4			5711	Acute alcoholic hepatitis	5711	5711	K700	Alcoholic fatty liver	K700	K700
+d	4			5712	Alcoholic cirrhosis of liver	5712	5712	K701	Alcoholic hepatitis	K701	K701
+d	4			5713	Alcoholic liver damage, unspecified	5713	5713	K702	Alcoholic fibrosis and sclerosis of liver	K702	K702
+d	4							K703	Alcoholic cirrhosis of liver	K703	K703
+d	4							K704	Alcoholic hepatic failure	K704	K704
+d	4							K709	Alcoholic liver disease, unspecified	K709	K709
