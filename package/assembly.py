@@ -392,12 +392,12 @@ def simplify_field_instances_array_columns(
     table_variables = table_ukbiobank_variables.copy(deep=True)
     # Organize information.
     table_variables = table_variables.loc[
-        :, table_variables.columns.isin(["field", "type", "array_instances"])
+        :, table_variables.columns.isin(["field", "type", "instances_array"])
     ]
     utility.print_terminal_partition(level=1)
     print(table_variables)
     table_variables = table_variables.loc[
-        ~pandas.isna(table_variables["array_instances"]), :
+        ~pandas.isna(table_variables["instances_array"]), :
     ]
     fields_array_instances = table_variables["field"].to_list()
     # Iterate on UK Biobank fields with array instances.

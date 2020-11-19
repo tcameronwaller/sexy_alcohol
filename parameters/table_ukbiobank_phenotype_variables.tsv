@@ -1,4 +1,4 @@
-field	type	category	name	unit, code	coverage	scale	ukb_description	ukb_category	array_instances	instances_total	instances_keep	note
+field	type	category	name	unit, code	coverage	scale	ukb_description	ukb_category	instances_array	instances_total	instances_keep	note
 31	float32		sex	female: 0; male: 1	502492	nominal	Sex	Baseline characteristics		0.0,	0.0,	
 22001	float32		sex_genotype	female: 0; male: 1	488251	nominal	Genetic sex	Genotyping process and sample QC		0.0,	0.0,	
 21022	float32		age	years	502492	ratio	Age at recruitment	Baseline characteristics		0.0,	0.0,	
@@ -40,13 +40,13 @@ field	type	category	name	unit, code	coverage	scale	ukb_description	ukb_category	
 20408	string	alcohol_questionnaire	audit_8		85196	ordinal				0.0,	0.0,	
 20411	string	alcohol_questionnaire	audit_9		157339	ordinal				0.0,	0.0,	
 20405	string	alcohol_questionnaire	audit_10		157339	ordinal				0.0,	0.0,	
-41271	string	diagnosis	icd9_summary		20302	nominal	Diagnoses - ICD9	Summary Diagnoses	TRUE	null	null	
-41203	string	diagnosis	icd9_primary		20302	nominal	Diagnoses - main ICD9	Summary Diagnoses	TRUE	null	null	
-41205	string	diagnosis	icd9_secondary		8714	nominal	Diagnoses - secondary ICD9	Summary Diagnoses	TRUE	null	null	
-41270	string	diagnosis	icd10_summary		410309	nominal	Diagnoses - ICD10	Summary Diagnoses	TRUE	null	null	
-41202	string	diagnosis	icd10_primary		410305	nominal	Diagnoses - main ICD10	Summary Diagnoses	TRUE	null	null	
-41204	string	diagnosis	icd10_secondary		340895	nominal	Diagnoses - secondary ICD10	Summary Diagnoses	TRUE	null	null	
-20002	string	diagnosis	diagnosis_self	1408: alcohol dependency; 1604: alcoholic liver disease, alcoholic cirrhosis	385933	nominal	Non-cancer illness code, self-reported	Medical conditions	TRUE	null	null	
+41271	string	diagnosis	icd9_summary		20302	nominal	Diagnoses - ICD9	Summary Diagnoses	yes	null	null	
+41203	string	diagnosis	icd9_primary		20302	nominal	Diagnoses - main ICD9	Summary Diagnoses	yes	null	null	
+41205	string	diagnosis	icd9_secondary		8714	nominal	Diagnoses - secondary ICD9	Summary Diagnoses	yes	null	null	
+41270	string	diagnosis	icd10_summary		410309	nominal	Diagnoses - ICD10	Summary Diagnoses	yes	null	null	
+41202	string	diagnosis	icd10_primary		410305	nominal	Diagnoses - main ICD10	Summary Diagnoses	yes	null	null	
+41204	string	diagnosis	icd10_secondary		340895	nominal	Diagnoses - secondary ICD10	Summary Diagnoses	yes	null	null	
+20002	string	diagnosis	diagnosis_self	1408: alcohol dependency; 1604: alcoholic liver disease, alcoholic cirrhosis	385933	nominal	Non-cancer illness code, self-reported	Medical conditions	yes	null	null	
 20124	string		depression_moderate	category	15244	nominal	Probable recurrent major depression (moderate)	Mental health		0.0,	0.0,	
 20125	string		depression_severe	category	9398	nominal	Probable recurrent major depression (severe)	Mental health		0.0,	0.0,	
 20126	string		bipolar_or_depression	category	122973	nominal	Bipolar and major depression status	Mental health		0.0,	0.0,	
