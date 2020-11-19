@@ -654,7 +654,7 @@ def determine_ukbiobank_field_instance_columns_keep(
             #instances_keep = table_ukbiobank_variables.at[
             #    column_field, "instances_keep"
             #]
-            instances_keep = reference[column_field]["instances_keep"]
+            instances_keep = reference[int(column_field)]["instances_keep"]
             if not pandas.isna(instances_keep):
                 if column_instance in instances_keep.split(","):
                     columns_keep.append(column)
