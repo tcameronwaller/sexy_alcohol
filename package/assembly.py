@@ -622,18 +622,20 @@ def determine_ukbiobank_field_instance_columns_keep(
     table_ukbiobank_variables = table_ukbiobank_variables.loc[
         :, table_ukbiobank_variables.columns.isin(["field", "instances_keep"])
     ]
-    table_ukbiobank_variables["field"] = (
-        table_ukbiobank_variables["field"].to_string()
-    )
+    if False:
+        table_ukbiobank_variables["field"] = (
+            table_ukbiobank_variables["field"].to_string()
+        )
     table_ukbiobank_variables.set_index(
         "field",
         drop=True,
         inplace=True,
     )
-    table_ukbiobank_variables.index.astype(
-        "string",
-        copy=False,
-    )
+    if False:
+        table_ukbiobank_variables.index.astype(
+            "string",
+            copy=False,
+        )
     print(table_ukbiobank_variables)
     reference = table_ukbiobank_variables.to_dict(orient="index")
     print(reference)
