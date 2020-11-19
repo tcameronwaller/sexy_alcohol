@@ -472,29 +472,6 @@ def remove_table_irrelevant_field_instance_columns(
     table_ukb_43878 = table_ukb_43878.loc[
         :, table_ukb_43878.columns.isin(columns_keep)
     ]
-    # Remove rows with all missing values.
-    table_ukb_41826.dropna(
-        axis="index",
-        how="all",
-        inplace=True,
-    )
-    table_ukb_41826.dropna(
-        axis="index",
-        how="any",
-        subset=["eid"],
-        inplace=True,
-    )
-    table_ukb_43878.dropna(
-        axis="index",
-        how="all",
-        inplace=True,
-    )
-    table_ukb_43878.dropna(
-        axis="index",
-        how="any",
-        subset=["eid"],
-        inplace=True,
-    )
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
@@ -666,6 +643,26 @@ def merge_table_variables_identifiers(
         print(table_ukb_41826)
         utility.print_terminal_partition(level=2)
         print(table_ukb_43878)
+    # Remove rows with null values of merge identifier.
+    table_identifier_pairs.dropna(
+        axis="index",
+        how="any",
+        subset=["eid"],
+        inplace=True,
+    )
+    table_ukb_41826.dropna(
+        axis="index",
+        how="any",
+        subset=["eid"],
+        inplace=True,
+    )
+    table_ukb_43878.dropna(
+        axis="index",
+        how="any",
+        subset=["eid"],
+        inplace=True,
+    )
+
     # Organize data.
     table_identifier_pairs.astype("string")
     table_identifier_pairs.set_index(
@@ -753,6 +750,64 @@ def exclude_persons_ukbiobank_consent(
         print("Final data dimensions: " + str(table_exclusion.shape))
     # Return information.
     return table_exclusion
+
+
+def drop_null_records_all_variables(
+    table=None,
+    columns_any=None,
+    report=None,
+):
+    """
+    Drops rows with null or missing values across all columns.
+
+    arguments:
+        table (object): Pandas data frame of information about UK Biobank
+            phenotype variables
+        columns_any (str): column names for which to drop rows with any missing
+            values
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of information about UK Biobank phenotype
+            variables
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("...before dropping null records...")
+        print("table shape: " + str(table.shape))
+        print(table)
+        utility.print_terminal_partition(level=4)
+    # Remove rows with null values across all columns.
+    table.dropna(
+        axis="index",
+        how="all",
+        inplace=True,
+    )
+    table.dropna(
+        axis="index",
+        how="any",
+        subset=columns_any,
+        inplace=True,
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("...after dropping null records...")
+        print("table shape: " + str(table.shape))
+        print(table)
+        utility.print_terminal_partition(level=4)
+    # Return information.
+    return table
+
+
+
 
 
 ##########
@@ -1850,8 +1905,8 @@ def write_product_raw(
     path_table_ukb_43878 = os.path.join(
         paths["raw"], "table_ukb_43878.tsv"
     )
-    path_table_merge_exclusion = os.path.join(
-        paths["raw"], "table_merge_exclusion.tsv"
+    path_table_raw = os.path.join(
+        paths["raw"], "table_prune_merge_exclusion_valid.tsv"
     )
     # Write information to file.
     if False:
@@ -1867,8 +1922,8 @@ def write_product_raw(
             header=True,
             index=True,
         )
-    information["table_merge_exclusion"].to_csv(
-        path_or_buf=path_table_merge_exclusion,
+    information["table_prune_merge_exclusion_valid"].to_csv(
+        path_or_buf=path_table_raw,
         sep="\t",
         header=True,
         index=True,
@@ -2027,13 +2082,19 @@ def execute_procedure(
         table=table_merge,
         report=True,
     )
+    # Drop any records (persons) with null values across all variables.
+    table_valid = drop_null_records_all_variables(
+        table=table_exclusion,
+        columns_any=["IID"],
+        report=True,
+    )
     if True:
         # Write out raw tables for inspection.
         # Collect information.
         information = dict()
         information["table_ukb_41826"] = source["table_ukb_41826"]
         information["table_ukb_43878"] = source["table_ukb_43878"]
-        information["table_merge_exclusion"] = table_exclusion
+        information["table_prune_merge_exclusion_valid"] = table_valid
         # Write product information to file.
         write_product_raw(
             paths=paths,
