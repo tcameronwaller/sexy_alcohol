@@ -149,6 +149,50 @@ def read_ukbiobank_table_column_names(
     return names_simple
 
 
+def read_collect_ukbiobank_accession_column_names(
+    path_table_ukb_41826=None,
+    path_table_ukb_43878=None,
+):
+    """
+    Reads and extracts column names from UK Biobank data.
+
+    The UK Biobank ukbconv tool's "txt" option exports to a text file with tab
+    delimiters between columns; however, there are some quirks about the
+    format.
+
+    arguments:
+        path_table_ukb_41826 (str): path to file of data export from UK Biobank
+            ukbconv tool
+        path_table_ukb_43878 (str): path to file of data export from UK Biobank
+            ukbconv tool
+
+    raises:
+
+    returns:
+        (list<str>): list of column names
+
+    """
+
+    columns_accession = read_ukbiobank_table_column_names(
+        path_file=path_table_ukb_41826,
+        delimiter=",", # "," or "\t"
+        start=0,
+        stop=1,
+    )
+    columns_new = read_ukbiobank_table_column_names(
+        path_file=path_table_ukb_43878,
+        delimiter=",", # "," or "\t"
+        start=0,
+        stop=1,
+    )
+    columns_accession.extend(columns_new)
+    columns_accession_unique = utility.collect_unique_elements(
+        elements=columns_accession,
+    )
+    # Return information.
+    return columns_accession_unique
+
+
 def extract_organize_variables_types(
     table_ukbiobank_variables=None,
     columns=None,
@@ -235,27 +279,15 @@ def read_source(
         path_dock, "access", "ukb43878.raw.csv"
     )
     # Read all column names from UK Biobank tables.
-    columns = read_ukbiobank_table_column_names(
-        path_file=path_table_ukb_41826,
-        delimiter=",", # "," or "\t"
-        start=0,
-        stop=1,
-    )
-    columns_new = read_ukbiobank_table_column_names(
-        path_file=path_table_ukb_43878,
-        delimiter=",", # "," or "\t"
-        start=0,
-        stop=1,
-    )
-    columns.extend(columns_new)
-    columns_unique = utility.collect_unique_elements(
-        elements=columns,
+    columns_accession = read_collect_ukbiobank_accession_column_names(
+        path_table_ukb_41826=path_table_ukb_41826,
+        path_table_ukb_43878=path_table_ukb_43878,
     )
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
-        print("unique column names: " + str(len(columns_unique)))
-        print(columns_unique)
+        print("unique column names: " + str(len(columns_accession)))
+        print(columns_accession)
         utility.print_terminal_partition(level=2)
         pass
     # Determine variable types.
@@ -266,7 +298,7 @@ def read_source(
     )
     variables_types = extract_organize_variables_types(
         table_ukbiobank_variables=table_ukbiobank_variables,
-        columns=columns_unique,
+        columns=columns_accession,
         extra_pairs={
             "IID": "string",
             "eid": "string",
@@ -307,6 +339,7 @@ def read_source(
     # Compile and return information.
     return {
         "table_ukbiobank_variables": table_ukbiobank_variables,
+        "columns_accession": columns_accession,
         "exclusion_identifiers": exclusion_identifiers,
         "table_identifier_pairs": table_identifier_pairs,
         "table_ukb_41826": table_ukb_41826,
@@ -315,7 +348,7 @@ def read_source(
 
 
 ##########
-# Organization raw
+# Organization
 
 
 def simplify_field_instances_array_row(
@@ -394,8 +427,6 @@ def simplify_field_instances_array_columns(
     table_variables = table_variables.loc[
         :, table_variables.columns.isin(["field", "type", "instances_array"])
     ]
-    utility.print_terminal_partition(level=1)
-    print(table_variables)
     table_variables = table_variables.loc[
         ~pandas.isna(table_variables["instances_array"]), :
     ]
@@ -417,6 +448,7 @@ def simplify_field_instances_array_columns(
         # Collect original columns for the field's array instances.
         columns_drop = list()
         for column in table_ukb.columns.to_list():
+            # Select original field-instance columns.
             if ("-" in column):
                 column_field = column.split("-")[0].strip()
                 if (field == column_field):
@@ -560,11 +592,8 @@ def exclude_persons_ukbiobank_consent(
     return table_exclusion
 
 
-##########
-# Organization
-
-
-def extract_organize_variable_fields_instances_names(
+def determine_ukbiobank_field_instance_columns_keep(
+    columns_accession=None,
     table_ukbiobank_variables=None,
     extra_names=None,
 ):
@@ -572,6 +601,7 @@ def extract_organize_variable_fields_instances_names(
     Organizes column names for variable fields and instances.
 
     arguments:
+        columns_accession (list<str>): column names from UK Biobank accessions
         table_ukbiobank_variables (object): Pandas data frame of information
             about UK Biobank phenotype variables
         extra_names (list<str>): extra names to include
@@ -583,36 +613,46 @@ def extract_organize_variable_fields_instances_names(
 
     """
 
+    # TODO: iterate on actual column names
+    # TODO: extract field and instance (if relevant)
+    # TODO: determine whether field and instance deserve to be kept
     # Copy data.
-    table_variables = table_ukbiobank_variables.copy(deep=True)
+    table_ukbiobank_variables = table_ukbiobank_variables.copy(deep=True)
     # Organize information.
-    table_variables = table_variables.loc[
-        :, table_variables.columns.isin(["field", "instances_keep"])
-    ]
-    records = utility.convert_dataframe_to_records(data=table_variables)
-    # Iterate across records for rows.
-    # Collect variables' names and types.
-    names = list()
-    names.extend(extra_names)
-    for record in records:
-        field = str(record["field"])
-        instances_total_raw = str(record["instances_keep"])
-        instances_raw = instances_total_raw.split(",")
-        for instance_raw in instances_raw:
-            instance = str(instance_raw).strip()
-            if len(instance) > 0:
-                name = str(field + "-" + instance)
-                # Create entry for variable's name and type.
-                names.append(name)
+    table_ukbiobank_variables.set_index(
+        "field",
+        drop=True,
+        inplace=True,
+    )
+    # Iterate on actuall accession column names.
+    # Determine whether to keep column.
+    columns_keep = list()
+    columns_keep.extend(extra_names)
+    for column in columns_accession:
+        column = str(column)
+        # Select original field-instance columns.
+        if ("-" not in column):
+            columns_keep.append(column)
+        else:
+            column_field = column.split("-")[0].strip()
+            column_instance = column.split("-")[1].strip()
+            instances_keep = table_ukbiobank_variables.at[
+                column_field, "instances_keep"
+            ]
+            if not pandas.isna(instances_keep):
+                if column_instance in instances_keep.split(","):
+                    columns_keep.append(column)
+                    pass
                 pass
             pass
         pass
     # Return information.
-    return names
+    return columns_keep
 
 
-def remove_table_irrelevant_variable_instances_entries(
+def remove_table_irrelevant_field_instance_columns(
     table_ukbiobank_variables=None,
+    columns_accession=None,
     table_ukb_41826=None,
     table_ukb_43878=None,
     report=None,
@@ -623,10 +663,11 @@ def remove_table_irrelevant_variable_instances_entries(
     arguments:
         table_ukbiobank_variables (object): Pandas data frame of information
             about UK Biobank phenotype variables
-        table_ukb_41826 (object): Pandas data frame of variables from UK Biobank
-            phenotype accession 41826
-        table_ukb_43878 (object): Pandas data frame of variables from UK Biobank
-            phenotype accession 43878
+        columns_accession (list<str>): column names from UK Biobank accessions
+        table_ukb_41826 (object): Pandas data frame of variables from UK
+            Biobank phenotype data accession 41826
+        table_ukb_43878 (object): Pandas data frame of variables from UK
+            Biobank phenotype data accession 43878
         report (bool): whether to print reports
 
     raises:
@@ -637,26 +678,31 @@ def remove_table_irrelevant_variable_instances_entries(
 
     """
 
+    # Copy data.
+    table_variables = table_ukbiobank_variables.copy(deep=True)
+    table_ukb_41826 = table_ukb_41826.copy(deep=True)
+    table_ukb_43878 = table_ukb_43878.copy(deep=True)
+    # Determine which columns to keep for UK Biobank fields and instances.
+    columns_keep = determine_ukbiobank_field_instance_columns_keep(
+        columns_accession=columns_accession,
+        table_ukbiobank_variables=table_variables,
+        extra_names=["IID", "eid"],
+    )
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
+        print("columns to keep...")
+        print(columns_keep)
         print("...before pruning...")
         print("table_ukb_41826 shape: " + str(table_ukb_41826.shape))
-        utility.print_terminal_partition(level=4)
         print("table_ukb_43878 shape: " + str(table_ukb_43878.shape))
-
-    # Extract names of columns for relevant variable fields and instances.
-    column_names = extract_organize_variable_fields_instances_names(
-        table_ukbiobank_variables=table_ukbiobank_variables,
-        extra_names=["IID", "eid"],
-    )
-    print(column_names)
+        utility.print_terminal_partition(level=4)
     # Remove all irrelevant columns.
     table_ukb_41826 = table_ukb_41826.loc[
-        :, table_ukb_41826.columns.isin(column_names)
+        :, table_ukb_41826.columns.isin(columns_keep)
     ]
     table_ukb_43878 = table_ukb_43878.loc[
-        :, table_ukb_43878.columns.isin(column_names)
+        :, table_ukb_43878.columns.isin(columns_keep)
     ]
     # Remove rows with all missing values.
     table_ukb_41826.dropna(
@@ -686,14 +732,20 @@ def remove_table_irrelevant_variable_instances_entries(
         utility.print_terminal_partition(level=2)
         print("...after pruning...")
         print("table_ukb_41826 shape: " + str(table_ukb_41826.shape))
-        utility.print_terminal_partition(level=4)
         print("table_ukb_43878 shape: " + str(table_ukb_43878.shape))
-
-    # Compile and return information.
+        utility.print_terminal_partition(level=4)
+    # Collect information.
     bucket = dict()
     bucket["table_ukb_41826"] = table_ukb_41826
     bucket["table_ukb_43878"] = table_ukb_43878
+    # Return information.
     return bucket
+
+
+##########
+# Organization
+
+
 
 
 def convert_table_variable_types(
@@ -1921,7 +1973,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 5")
+    print("version check: 1")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -1934,18 +1986,26 @@ def execute_procedure(
         path_dock=path_dock,
         report=True,
     )
+    # Remove data columns for irrelevant variable instances.
+    prune = remove_table_irrelevant_field_instance_columns(
+        table_ukbiobank_variables=source["table_ukbiobank_variables"],
+        columns_accession=source["columns_accession"],
+        table_ukb_41826=source["table_ukb_41826"],
+        table_ukb_43878=source["table_ukb_43878"],
+        report=True,
+    )
     # Simplify UK Biobank fields with multiple instances.
     # Reduce these multiple field instance columns to arrays.
     table_ukb_41826_simple = simplify_field_instances_array_columns(
         table_ukbiobank_variables=source["table_ukbiobank_variables"],
-        table_ukb_raw=source["table_ukb_41826"],
+        table_ukb_raw=prune["table_ukb_41826"],
         delimiter=";",
     )
     # Merge tables.
     table_merge = merge_table_variables_identifiers(
         table_identifier_pairs=source["table_identifier_pairs"],
         table_ukb_41826=table_ukb_41826_simple,
-        table_ukb_43878=source["table_ukb_43878"],
+        table_ukb_43878=prune["table_ukb_43878"],
         report=True,
     )
     # Exclude persons who withdrew consent from the UK Biobank.
@@ -1968,16 +2028,9 @@ def execute_procedure(
         )
 
     if False:
-        # Remove data columns for irrelevant variable instances.
-        prune = remove_table_irrelevant_variable_instances_entries(
-            table_ukbiobank_variables=source["table_ukbiobank_variables"],
-            table_ukb_41826=source["table_ukb_41826"],
-            table_ukb_43878=source["table_ukb_43878"],
-            report=True,
-        )
         # Convert variable types for further analysis.
         table_type = convert_table_variable_types(
-            table=table_exclusion,
+            table=table_prune,
             report=True,
         )
         # Derive alcohol consumption variables.
