@@ -627,6 +627,10 @@ def determine_ukbiobank_field_instance_columns_keep(
         drop=True,
         inplace=True,
     )
+    table_ukbiobank_variables.index.astype(
+        "string",
+        copy=False,
+    )
     # Iterate on actuall accession column names.
     # Determine whether to keep column.
     columns_keep = list()
