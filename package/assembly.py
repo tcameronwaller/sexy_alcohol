@@ -1987,7 +1987,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 3")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -2000,6 +2000,8 @@ def execute_procedure(
         path_dock=path_dock,
         report=True,
     )
+    utility.print_terminal_partition(level=1)
+    print(source["table_ukbiobank_variables"])
     # Remove data columns for irrelevant variable instances.
     prune = remove_table_irrelevant_field_instance_columns(
         table_ukbiobank_variables=source["table_ukbiobank_variables"],
