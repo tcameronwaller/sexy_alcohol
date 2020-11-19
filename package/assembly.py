@@ -620,25 +620,19 @@ def determine_ukbiobank_field_instance_columns_keep(
     table_ukbiobank_variables = table_ukbiobank_variables.copy(deep=True)
     # Organize information.
     table_ukbiobank_variables = table_ukbiobank_variables.loc[
-        :, table_ukbiobank_variables.columns.isin(["field", "instances_keep"])
+        :, table_ukbiobank_variables.columns.isin([
+            "field", "instances_array", "instances_keep"
+        ])
     ]
-    if False:
-        table_ukbiobank_variables["field"] = (
-            table_ukbiobank_variables["field"].to_string()
-        )
     table_ukbiobank_variables.set_index(
         "field",
         drop=True,
         inplace=True,
     )
-    if False:
-        table_ukbiobank_variables.index.astype(
-            "string",
-            copy=False,
-        )
     print(table_ukbiobank_variables)
-    reference = table_ukbiobank_variables.to_dict(orient="index")
-    print(reference)
+    #reference = table_ukbiobank_variables.to_dict(orient="index")
+    # instances_keep = reference[int(column_field)]["instances_keep"]
+    #print(reference)
     # Iterate on actuall accession column names.
     # Determine whether to keep column.
     columns_keep = list()
@@ -651,15 +645,20 @@ def determine_ukbiobank_field_instance_columns_keep(
         else:
             column_field = column.split("-")[0].strip()
             column_instance = column.split("-")[1].strip()
-            #instances_keep = table_ukbiobank_variables.at[
-            #    column_field, "instances_keep"
-            #]
-            instances_keep = reference[int(column_field)]["instances_keep"]
-            if not pandas.isna(instances_keep):
+            instances_array = table_ukbiobank_variables.at[
+                int(column_field), "instances_array",
+            ]
+            instances_keep = table_ukbiobank_variables.at[
+                int(column_field), "instances_keep",
+            ]
+            if not pandas.isna(instances_array):
+                columns_keep.append(column)
+            elif not pandas.isna(instances_keep):
                 if column_instance in instances_keep.split(","):
                     columns_keep.append(column)
                     pass
-                pass
+            else:
+                columns_keep.append(column)
             pass
         pass
     # Return information.
@@ -1989,7 +1988,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 3")
+    print("version check: 4")
 
     # Initialize directories.
     paths = initialize_directories(
