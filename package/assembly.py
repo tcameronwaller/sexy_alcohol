@@ -70,6 +70,9 @@ def initialize_directories(
     # Define paths to directories.
     paths["dock"] = path_dock
     paths["assembly"] = os.path.join(path_dock, "assembly")
+    paths["raw"] = os.path.join(
+        path_dock, "assembly", "raw"
+    )
     paths["alcohol"] = os.path.join(
         path_dock, "assembly", "alcohol"
     )
@@ -82,6 +85,9 @@ def initialize_directories(
     # Initialize directories.
     utility.create_directories(
         path=paths["assembly"]
+    )
+    utility.create_directories(
+        path=paths["raw"]
     )
     utility.create_directories(
         path=paths["alcohol"]
@@ -167,14 +173,19 @@ def extract_organize_variables_types(
         field = str(record["field"])
         type = str(record["type"])
         instances_total_raw = str(record["instances_total"])
-        instances_raw = instances_total_raw.split(",")
-        for instance_raw in instances_raw:
-            instance = str(instance_raw).strip()
-            if len(instance) > 0:
-                name = str(field + "-" + instance)
-                # Create entry for variable's name and type.
-                variables_types[name] = type
+        if (not pandas.isna(instances_total_raw)):
+            instances_raw = instances_total_raw.split(",")
+            for instance_raw in instances_raw:
+                instance = str(instance_raw).strip()
+                if len(instance) > 0:
+                    name = str(field + "-" + instance)
+                    # Create entry for variable's name and type.
+                    variables_types[name] = type
+                    pass
                 pass
+            pass
+        else:
+            variables_typs[field] = type
             pass
         pass
     # Return information.
@@ -1615,6 +1626,47 @@ def organize_female_menopause(
 
 
 
+def write_product_raw(
+    information=None,
+    paths=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        paths (dict<str>): collection of paths to directories for procedure's
+            files
+
+    raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_table_ukb_41826 = os.path.join(
+        paths["raw"], "table_ukb_41826.tsv"
+    )
+    path_table_ukb_43878 = os.path.join(
+        paths["raw"], "table_ukb_43878.tsv"
+    )
+    # Write information to file.
+    information["table_ukb_41826"].to_csv(
+        path_or_buf=path_table_ukb_41826,
+        sep="\t",
+        header=True,
+        index=True,
+    )
+    information["table_ukb_43878"].to_csv(
+        path_or_buf=path_table_ukb_43878,
+        sep="\t",
+        header=True,
+        index=True,
+    )
+    pass
+
+
 def write_product_alcohol(
     information=None,
     path_parent=None,
@@ -1725,7 +1777,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 3")
+    print("version check: 1")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -1738,83 +1790,96 @@ def execute_procedure(
         path_dock=path_dock,
         report=True,
     )
-    # Remove data columns for irrelevant variable instances.
-    prune = remove_table_irrelevant_variable_instances_entries(
-        table_ukbiobank_variables=source["table_ukbiobank_variables"],
-        table_ukb_41826=source["table_ukb_41826"],
-        table_ukb_43878=source["table_ukb_43878"],
-        report=True,
-    )
-    # Merge tables.
-    table_raw = merge_table_variables_identifiers(
-        table_identifier_pairs=source["table_identifier_pairs"],
-        table_ukb_41826=prune["table_ukb_41826"],
-        table_ukb_43878=prune["table_ukb_43878"],
-        report=True,
-    )
-    # Exclude persons who withdrew consent from the UK Biobank.
-    table_exclusion = exclude_persons_ukbiobank_consent(
-        exclusion_identifiers=source["exclusion_identifiers"],
-        table=table_raw,
-        report=True,
-    )
-    # Convert variable types for further analysis.
-    table_type = convert_table_variable_types(
-        table=table_exclusion,
-        report=True,
-    )
-    # Derive alcohol consumption variables.
-    bin_consumption_current = organize_current_alcohol_consumption_variables(
-        table=table_type,
-        report=True,
-    )
-    bin_consumption_previous = organize_previous_alcohol_consumption_variables(
-        table=bin_consumption_current["table_clean"],
-        report=True,
-    )
-    # Derive aggregate of AUDIT-C alcohol use questionnaire.
-    bin_alcoholism = organize_auditc_questionnaire_alcoholism_variables(
-        table=bin_consumption_previous["table_clean"],
-        report=True,
-    )
+    if True:
+        # Write out raw tables for inspection.
+        # Collect information.
+        information = dict()
+        information["table_ukb_41826"] = source["table_ukb_41826"]
+        information["table_ukb_43878"] = source["table_ukb_43878"]
+        # Write product information to file.
+        write_product_raw(
+            paths=paths,
+            information=information
+        )
 
-    # Temporary charts
-    organize_plot_variable_histogram_summary_charts(
-        table=bin_alcoholism["table_clean"],
-        paths=paths,
-    )
+    if False:
+        # Remove data columns for irrelevant variable instances.
+        prune = remove_table_irrelevant_variable_instances_entries(
+            table_ukbiobank_variables=source["table_ukbiobank_variables"],
+            table_ukb_41826=source["table_ukb_41826"],
+            table_ukb_43878=source["table_ukb_43878"],
+            report=True,
+        )
+        # Merge tables.
+        table_raw = merge_table_variables_identifiers(
+            table_identifier_pairs=source["table_identifier_pairs"],
+            table_ukb_41826=prune["table_ukb_41826"],
+            table_ukb_43878=prune["table_ukb_43878"],
+            report=True,
+        )
+        # Exclude persons who withdrew consent from the UK Biobank.
+        table_exclusion = exclude_persons_ukbiobank_consent(
+            exclusion_identifiers=source["exclusion_identifiers"],
+            table=table_raw,
+            report=True,
+        )
+        # Convert variable types for further analysis.
+        table_type = convert_table_variable_types(
+            table=table_exclusion,
+            report=True,
+        )
+        # Derive alcohol consumption variables.
+        bin_consumption_current = organize_current_alcohol_consumption_variables(
+            table=table_type,
+            report=True,
+        )
+        bin_consumption_previous = organize_previous_alcohol_consumption_variables(
+            table=bin_consumption_current["table_clean"],
+            report=True,
+        )
+        # Derive aggregate of AUDIT-C alcohol use questionnaire.
+        bin_alcoholism = organize_auditc_questionnaire_alcoholism_variables(
+            table=bin_consumption_previous["table_clean"],
+            report=True,
+        )
+
+        # Temporary charts
+        organize_plot_variable_histogram_summary_charts(
+            table=bin_alcoholism["table_clean"],
+            paths=paths,
+        )
 
 
 
 
-    # TODO: 3) organize menopause variable
+        # TODO: 3) organize menopause variable
 
-    # TODO: 3) evaluate person sub-cohorts by variable availability etc
+        # TODO: 3) evaluate person sub-cohorts by variable availability etc
 
-    # Organize general phenotypes.
+        # Organize general phenotypes.
 
-    # Organize genotype principal components.
+        # Organize genotype principal components.
 
-    # Organize alcohol phenotypes.
+        # Organize alcohol phenotypes.
 
-    # Collect information.
-    information = dict()
-    information["alcohol"] = dict()
-    information["alcohol"]["table_report_current"] = (
-        bin_consumption_current["table_report"]
-    )
-    information["alcohol"]["table_report_previous"] = (
-        bin_consumption_previous["table_report"]
-    )
-    information["alcohol"]["table_report_alcoholism"] = (
-        bin_alcoholism["table_report"]
-    )
-    information["assembly"]["table_phenotypes"] = bin_alcoholism["table_clean"]
-    # Write product information to file.
-    write_product(
-        paths=paths,
-        information=information
-    )
+        # Collect information.
+        information = dict()
+        information["alcohol"] = dict()
+        information["alcohol"]["table_report_current"] = (
+            bin_consumption_current["table_report"]
+        )
+        information["alcohol"]["table_report_previous"] = (
+            bin_consumption_previous["table_report"]
+        )
+        information["alcohol"]["table_report_alcoholism"] = (
+            bin_alcoholism["table_report"]
+        )
+        information["assembly"]["table_phenotypes"] = bin_alcoholism["table_clean"]
+        # Write product information to file.
+        write_product(
+            paths=paths,
+            information=information
+        )
 
 
     pass
