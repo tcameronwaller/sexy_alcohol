@@ -17,6 +17,7 @@ import textwrap
 # Custom.
 
 import assembly
+import organization
 #import plot
 #import utility
 
@@ -144,6 +145,13 @@ def define_main_subparser(subparsers=None):
             "Organization of information for further analyses."
         )
     )
+    parser_main.add_argument(
+        "-organization", "--organization", dest="organization",
+        action="store_true",
+        help=(
+            "Organization of information for further analyses."
+        )
+    )
     # Define behavior.
     parser_main.set_defaults(func=evaluate_main_parameters)
     # Return parser.
@@ -227,6 +235,13 @@ def evaluate_main_parameters(arguments):
         print("... executing assembly procedure ...")
         # Execute procedure.
         assembly.execute_procedure(
+            path_dock=arguments.path_dock
+        )
+    if arguments.organization:
+        # Report status.
+        print("... executing organization procedure ...")
+        # Execute procedure.
+        organization.execute_procedure(
             path_dock=arguments.path_dock
         )
     pass
