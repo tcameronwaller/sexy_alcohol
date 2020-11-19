@@ -391,11 +391,13 @@ def simplify_field_instances_array_columns(
     table_ukb = table_ukb_raw.copy(deep=True)
     table_variables = table_ukbiobank_variables.copy(deep=True)
     # Organize information.
+    utility.print_terminal_partition(level=1)
+    print(table_variables)
     table_variables = table_variables.loc[
         :, table_variables.columns.isin(["field", "type", "array_instances"])
     ]
     table_variables = table_variables.loc[
-        pandas.isna(table_variables["array_instances"]), :
+        ~pandas.isna(table_variables["array_instances"]), :
     ]
     fields_array_instances = table_variables["field"].to_list()
     # Iterate on UK Biobank fields with array instances.
@@ -1919,7 +1921,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 4")
+    print("version check: 5")
 
     # Initialize directories.
     paths = initialize_directories(
