@@ -619,6 +619,9 @@ def determine_ukbiobank_field_instance_columns_keep(
     # Copy data.
     table_ukbiobank_variables = table_ukbiobank_variables.copy(deep=True)
     # Organize information.
+    table_ukbiobank_variables = table_ukbiobank_variables.loc[
+        :, table_ukbiobank_variables.columns.isin(["field", "instances_keep"])
+    ]
     table_ukbiobank_variables["field"] = (
         table_ukbiobank_variables["field"].to_string()
     )
@@ -631,6 +634,9 @@ def determine_ukbiobank_field_instance_columns_keep(
         "string",
         copy=False,
     )
+    print(table_ukbiobank_variables)
+    reference = table_ukbiobank_variables.to_dict(orient="index")
+    print(reference)
     # Iterate on actuall accession column names.
     # Determine whether to keep column.
     columns_keep = list()
@@ -643,9 +649,10 @@ def determine_ukbiobank_field_instance_columns_keep(
         else:
             column_field = column.split("-")[0].strip()
             column_instance = column.split("-")[1].strip()
-            instances_keep = table_ukbiobank_variables.at[
-                column_field, "instances_keep"
-            ]
+            #instances_keep = table_ukbiobank_variables.at[
+            #    column_field, "instances_keep"
+            #]
+            instances_keep = reference[column_field]["instances_keep"]
             if not pandas.isna(instances_keep):
                 if column_instance in instances_keep.split(","):
                     columns_keep.append(column)
@@ -1980,7 +1987,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
 
     # Initialize directories.
     paths = initialize_directories(
