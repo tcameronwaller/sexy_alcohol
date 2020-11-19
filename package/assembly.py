@@ -147,6 +147,7 @@ def read_ukbiobank_table_column_names(
 
 def extract_organize_variables_types(
     table_ukbiobank_variables=None,
+    columns=None,
     extra_pairs=None,
 ):
     """
@@ -155,6 +156,7 @@ def extract_organize_variables_types(
     arguments:
         table_ukbiobank_variables (object): Pandas data frame of information
             about UK Biobank phenotype variables
+        columns (list<str>): unique names of columns in UK Biobank tables
         extra_pairs (dict<str>): extra key value pairs to include
 
     raises:
@@ -176,22 +178,14 @@ def extract_organize_variables_types(
     variables_types = dict()
     variables_types.update(extra_pairs)
     for record in records:
-        field = str(record["field"])
-        type = str(record["type"])
-        instances_total_raw = str(record["instances_total"])
-        if (not pandas.isna(instances_total_raw)):
-            instances_raw = instances_total_raw.split(",")
-            for instance_raw in instances_raw:
-                instance = str(instance_raw).strip()
-                if len(instance) > 0:
-                    name = str(field + "-" + instance)
-                    # Create entry for variable's name and type.
-                    variables_types[name] = type
-                    pass
+        field = str(record["field"]).strip()
+        type = str(record["type"]).strip()
+        # Search UK Biobank table columns for matches.
+        for column in columns:
+            column_field = column.split("-")[0].strip()
+            if (field == column_field):
+                variables_types[column] = type
                 pass
-            pass
-        else:
-            variables_typs[field] = type
             pass
         pass
     # Return information.
@@ -236,37 +230,36 @@ def read_source(
     path_table_ukb_43878 = os.path.join(
         path_dock, "access", "ukb43878.raw.csv"
     )
-    # Determine variable types.
-    table_ukbiobank_variables = pandas.read_csv(
-        path_table_ukbiobank_variables,
-        sep="\t",
-        header=0,
-    )
-    # Read all column names.
+    # Read all column names from UK Biobank tables.
     columns = read_ukbiobank_table_column_names(
         path_file=path_table_ukb_41826,
         delimiter=",", # "," or "\t"
         start=0,
         stop=1,
     )
-    print(columns)
     columns_new = read_ukbiobank_table_column_names(
         path_file=path_table_ukb_43878,
         delimiter=",", # "," or "\t"
         start=0,
         stop=1,
     )
-    print(columns_new)
     columns.extend(columns_new)
     columns_unique = utility.collect_unique_elements(
         elements=columns,
     )
+    # Report.
     if report:
         utility.print_terminal_partition(level=2)
         print("unique column names: " + str(len(columns_unique)))
         print(columns_unique)
         utility.print_terminal_partition(level=2)
         pass
+    # Determine variable types.
+    table_ukbiobank_variables = pandas.read_csv(
+        path_table_ukbiobank_variables,
+        sep="\t",
+        header=0,
+    )
     variables_types = extract_organize_variables_types(
         table_ukbiobank_variables=table_ukbiobank_variables,
         columns=columns_unique,
@@ -291,28 +284,6 @@ def read_source(
         header=0,
         dtype="string",
     )
-    # Designate variable types to conserve memory.
-    column_names = read_ukbiobank_table_column_names(
-        path_file=path_table_ukb_41826,
-        delimiter=",", # "," or "\t"
-        start=0,
-        stop=1,
-    )
-    row_values = read_ukbiobank_table_column_names(
-        path_file=path_table_ukb_41826,
-        delimiter=",", # "," or "\t"
-        start=1,
-        stop=2,
-    )
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print(column_names)
-        print(len(column_names))
-        utility.print_terminal_partition(level=2)
-        print(row_values)
-        print(len(row_values))
-        utility.print_terminal_partition(level=2)
     table_ukb_41826 = pandas.read_csv(
         path_table_ukb_41826,
         sep=",", # "," or "\t"
@@ -1809,7 +1780,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
 
     # Initialize directories.
     paths = initialize_directories(
