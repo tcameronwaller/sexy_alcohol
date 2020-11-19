@@ -318,6 +318,123 @@ def read_source(
 # Organization raw
 
 
+def simplify_field_instances_array_row(
+    row=None,
+    field=None,
+    delimiter=None,
+):
+    """
+    Simplify field instances for array values.
+
+    arguments:
+        row (object): Pandas data frame row
+        field (str): identifier of UK Biobank field
+        delimiter (str): delimiter for string representation of array values
+
+    raises:
+
+    returns:
+        (str): text array with semicolon delimiters
+
+    """
+
+    # Copy Pandas series for row.
+    row = row.copy(deep=True)
+    # Convert Pandas series row to dictionary.
+    record = row.to_dict()
+    # Collect all non-missing values from the field's columns for instances.
+    values = list()
+    for key in record.keys():
+        key_field = key.split("-")[0].strip()
+        if (field == key_field):
+            value = record[key]
+            if (not pandas.isna(value)):
+                values.append(value)
+            pass
+        pass
+    # Collect unique values.
+    values_unique = utility.collect_unique_elements(
+        elements=values,
+    )
+    # Combine values with text delimiter.
+    if len(values_unique) > 0:
+        text_array = delimiter.join(values_unique)
+    else:
+        text_array = ""
+    # Return information.
+    return text_array
+
+
+def simplify_field_instances_array_columns(
+    table_ukbiobank_variables=None,
+    table_ukb_raw=None,
+    delimiter=None,
+):
+    """
+    Simplify field instances for array values.
+
+    arguments:
+        table_ukbiobank_variables (object): Pandas data frame of information
+            about UK Biobank phenotype variables
+        table_ukb_raw (object): Pandas data frame of information from UK
+            Biobank
+        delimiter (str): delimiter for string representation of array values
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of information from UK Biobank
+
+    """
+
+    # Copy data.
+    table_ukb = table_ukb_raw.copy(deep=True)
+    table_variables = table_ukbiobank_variables.copy(deep=True)
+    # Organize information.
+    table_variables = table_variables.loc[
+        :, table_variables.columns.isin(["field", "type", "array_instances"])
+    ]
+    table_variables = table_variables.loc[
+        pandas.isna(table_variables["array_instances"]), :
+    ]
+    fields_array_instances = table_variables["field"].to_list()
+    # Iterate on UK Biobank fields with array instances.
+    for field in fields_array_instances:
+        # Create new column with text array of all non-missing values from the
+        # field's original columns.
+        column_new = str(str(field) + "_array")
+        table_ukb[column_new] = table_ukb.apply(
+            lambda row:
+                simplify_field_instances_array_row(
+                    row=row,
+                    field=field,
+                    delimiter=delimiter,
+                ),
+            axis="columns", # apply across rows
+        )
+        # Collect original columns for the field's array instances.
+        columns_drop = list()
+        for column in table_ukb.columns.to_list():
+            if ("-" in column):
+                column_field = column.split("-")[0].strip()
+                if (field == column_field):
+                    # Column is an original instance of the field.
+                    # Only original instance columns have the "-" delimiter.
+                    columns_drop.append(column)
+                    pass
+                pass
+            pass
+        # Drop columns.
+        table_clean.drop(
+            labels=columns_drop,
+            axis="columns",
+            inplace=True
+        )
+        pass
+    # Return information.
+    return table_ukb
+
+
 def merge_table_variables_identifiers(
     table_identifier_pairs=None,
     table_ukb_41826=None,
@@ -1802,7 +1919,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 3")
+    print("version check: 4")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -1815,10 +1932,17 @@ def execute_procedure(
         path_dock=path_dock,
         report=True,
     )
+    # Simplify UK Biobank fields with multiple instances.
+    # Reduce these multiple field instance columns to arrays.
+    table_ukb_41826_simple = simplify_field_instances_array_columns(
+        table_ukbiobank_variables=source["table_ukbiobank_variables"],
+        table_ukb_raw=source["table_ukb_41826"],
+        delimiter=";",
+    )
     # Merge tables.
     table_merge = merge_table_variables_identifiers(
         table_identifier_pairs=source["table_identifier_pairs"],
-        table_ukb_41826=source["table_ukb_41826"],
+        table_ukb_41826=table_ukb_41826_simple,
         table_ukb_43878=source["table_ukb_43878"],
         report=True,
     )
