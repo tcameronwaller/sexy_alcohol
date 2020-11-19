@@ -243,12 +243,14 @@ def read_source(
         start=0,
         stop=1,
     )
+    print(columns)
     columns_new = read_ukbiobank_table_column_names(
         path_file=path_table_ukb_43878,
         delimiter=",", # "," or "\t"
         start=0,
         stop=1,
     )
+    print(columns_new)
     columns_unique = utility.collect_unique_elements(
         elements=columns.extend(columns_new),
     )
