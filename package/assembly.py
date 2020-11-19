@@ -134,7 +134,7 @@ def read_ukbiobank_table_column_names(
     )
     line = lines[0]
     # Split line's content by delimiter.
-    column_names = line.split("\t")
+    column_names = line.split(delimiter)
     # Return information.
     return column_names
 
@@ -236,8 +236,31 @@ def read_source(
         sep="\t",
         header=0,
     )
+    # Read all column names.
+    columns = read_ukbiobank_table_column_names(
+        path_file=path_table_ukb_41826,
+        delimiter=",", # "," or "\t"
+        start=0,
+        stop=1,
+    )
+    columns_new = read_ukbiobank_table_column_names(
+        path_file=path_table_ukb_43878,
+        delimiter=",", # "," or "\t"
+        start=0,
+        stop=1,
+    )
+    columns_unique = utility.collect_unique_elements(
+        elements=columns.extend(columns_new),
+    )
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("unique column names: " + str(len(columns_unique)))
+        print(columns_unique)
+        utility.print_terminal_partition(level=2)
+        pass
     variables_types = extract_organize_variables_types(
         table_ukbiobank_variables=table_ukbiobank_variables,
+        columns=columns_unique,
         extra_pairs={
             "IID": "string",
             "eid": "string",
