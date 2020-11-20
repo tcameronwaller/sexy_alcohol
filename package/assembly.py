@@ -598,7 +598,7 @@ def simplify_field_instances_array_columns(
                     row=row,
                     field=field,
                     delimiter=delimiter,
-                    report=report,
+                    report=False,
                 ),
             axis="columns", # apply across rows
         )
@@ -899,7 +899,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 3")
+    print("version check: 4")
 
     # Initialize directories.
     paths = initialize_directories(
