@@ -491,6 +491,7 @@ def simplify_field_instances_array_row(
     row=None,
     field=None,
     delimiter=None,
+    report=None,
 ):
     """
     Simplify field instances for array values.
@@ -499,6 +500,7 @@ def simplify_field_instances_array_row(
         row (object): Pandas data frame row
         field (str): identifier of UK Biobank field
         delimiter (str): delimiter for string representation of array values
+        report (bool): whether to print reports
 
     raises:
 
@@ -513,11 +515,13 @@ def simplify_field_instances_array_row(
     record = row.to_dict()
     # Collect all non-missing values from the field's columns for instances.
     values = list()
+    fields = list()
     for key in record.keys():
         # Select original field-instance columns.
         if ("-" in key):
             key_field = key.split("-")[0].strip()
             if (str(field) == str(key_field)):
+                fields.append(key)
                 value = record[key]
                 if (not pandas.isna(value)):
                     values.append(value)
@@ -525,6 +529,11 @@ def simplify_field_instances_array_row(
                 pass
             pass
         pass
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=4)
+        print("matching fields to " + str(field) + " :")
+        print(fields)
     # Collect unique values.
     values_unique = utility.collect_unique_elements(
         elements=values,
@@ -589,6 +598,7 @@ def simplify_field_instances_array_columns(
                     row=row,
                     field=field,
                     delimiter=delimiter,
+                    report=report,
                 ),
             axis="columns", # apply across rows
         )
@@ -605,6 +615,11 @@ def simplify_field_instances_array_columns(
                     pass
                 pass
             pass
+        # Report.
+        if report:
+            utility.print_terminal_partition(level=3)
+            print("dropping columns for field: " + str(field))
+            print(columns_drop)
         # Drop columns.
         table_ukb.drop(
             labels=columns_drop,
@@ -884,7 +899,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 3")
 
     # Initialize directories.
     paths = initialize_directories(
