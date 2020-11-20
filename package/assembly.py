@@ -608,7 +608,7 @@ def simplify_field_instances_array_columns(
             # Select original field-instance columns.
             if ("-" in column):
                 column_field = column.split("-")[0].strip()
-                if (field == column_field):
+                if (str(field) == str(column_field)):
                     # Column is an original instance of the field.
                     # Only original instance columns have the "-" delimiter.
                     columns_drop.append(column)
@@ -899,7 +899,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 4")
+    print("version check: 5")
 
     # Initialize directories.
     paths = initialize_directories(
