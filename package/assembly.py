@@ -406,7 +406,7 @@ def determine_ukbiobank_field_instance_columns_keep(
             if not pandas.isna(instances_array):
                 columns_keep.append(column)
             elif not pandas.isna(instances_keep):
-                if column_instance in instances_keep.split(","):
+                if str(column_instance) in instances_keep.split(","):
                     columns_keep.append(column)
                     pass
             else:
@@ -517,7 +517,7 @@ def simplify_field_instances_array_row(
         # Select original field-instance columns.
         if ("-" in key):
             key_field = key.split("-")[0].strip()
-            if (field == key_field):
+            if (str(field) == str(key_field)):
                 value = record[key]
                 if (not pandas.isna(value)):
                     values.append(value)
@@ -884,7 +884,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
 
     # Initialize directories.
     paths = initialize_directories(
