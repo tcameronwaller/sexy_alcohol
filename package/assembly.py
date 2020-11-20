@@ -542,6 +542,7 @@ def simplify_field_instances_array_columns(
     table_ukbiobank_variables=None,
     table_ukb_raw=None,
     delimiter=None,
+    report=None,
 ):
     """
     Simplify field instances for array values.
@@ -552,6 +553,7 @@ def simplify_field_instances_array_columns(
         table_ukb_raw (object): Pandas data frame of information from UK
             Biobank
         delimiter (str): delimiter for string representation of array values
+        report (bool): whether to print reports
 
     raises:
 
@@ -571,6 +573,11 @@ def simplify_field_instances_array_columns(
         ~pandas.isna(table_variables["instances_array"]), :
     ]
     fields_array_instances = table_variables["field"].to_list()
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("fields to simplify: " + str(len(fields_array_instances)))
+        print(fields_array_instances)
     # Iterate on UK Biobank fields with array instances.
     for field in fields_array_instances:
         # Create new column with text array of all non-missing values from the
@@ -605,6 +612,12 @@ def simplify_field_instances_array_columns(
             inplace=True
         )
         pass
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("...after simplification of array fields...")
+        print("table_ukb shape: " + str(table_ukb.shape))
+        utility.print_terminal_partition(level=4)
     # Return information.
     return table_ukb
 
@@ -871,7 +884,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 7")
+    print("version check: 1")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -898,6 +911,7 @@ def execute_procedure(
         table_ukbiobank_variables=source["table_ukbiobank_variables"],
         table_ukb_raw=prune["table_ukb_41826"],
         delimiter=";",
+        report=True,
     )
     # Merge tables.
     table_merge = merge_table_variables_identifiers(
