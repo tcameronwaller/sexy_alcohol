@@ -855,7 +855,7 @@ def insert_family_identifier_sort_column_sequence_plink(
     columns = table.columns.to_list()
     columns_sequence = list(filter(
         lambda element: element not in ["IID", "FID"],
-        elements
+        columns
     ))
     columns_sequence.insert(0, "IID") # second column
     columns_sequence.insert(0, "#FID") # first column
@@ -1405,7 +1405,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 4")
+    print("version check: 5")
 
     # Initialize directories.
     paths = initialize_directories(
