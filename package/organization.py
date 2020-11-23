@@ -900,10 +900,10 @@ def organize_trial_phenotypes_covariates(
         subset=["alcohol_none"],
         inplace=True,
     )
-    table_alcohol = table.loc[~(table["alcohol_none"].bool()), :]
+    table_alcohol = table.loc[(table["alcohol_none"] == False), :]
     table_male = table.loc[(table["sex"] == 1.0), :]
     table_testosterone = table_male.loc[
-        (not pandas.isna(table_male["testosterone"])), :
+        (~pandas.isna(table_male["testosterone"])), :
     ]
     table_relevance = table_testosterone.loc[
         :, table_testosterone.columns.isin([
@@ -1405,7 +1405,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 3")
+    print("version check: 4")
 
     # Initialize directories.
     paths = initialize_directories(
