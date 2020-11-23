@@ -73,6 +73,9 @@ def initialize_directories(
     paths["raw"] = os.path.join(
         path_dock, "assembly", "raw"
     )
+    paths["inspection"] = os.path.join(
+        path_dock, "assembly", "inspection"
+    )
     paths["alcohol"] = os.path.join(
         path_dock, "assembly", "alcohol"
     )
@@ -88,6 +91,9 @@ def initialize_directories(
     )
     utility.create_directories(
         path=paths["raw"]
+    )
+    utility.create_directories(
+        path=paths["inspection"]
     )
     utility.create_directories(
         path=paths["alcohol"]
@@ -869,6 +875,36 @@ def write_product_raw(
     pass
 
 
+def write_product_inspection(
+    information=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        path_parent (str): path to parent directory
+            raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_table_text = os.path.join(
+        path_parent, "table_phenotypes.tsv"
+    )
+    # Write information to file.
+    information["table_phenotypes"].to_csv(
+        path_or_buf=path_table_text,
+        sep="\t",
+        header=True,
+        index=True,
+    )
+    pass
+
+
 def write_product_assembly(
     information=None,
     path_parent=None,
@@ -926,6 +962,10 @@ def write_product(
     write_product_raw(
         information=information["raw"],
         path_parent=paths["raw"],
+    )
+    write_product_inspection(
+        information=information["inspection"],
+        path_parent=paths["inspection"],
     )
     write_product_assembly(
         information=information["assembly"],
@@ -1008,9 +1048,13 @@ def execute_procedure(
     # Collect information.
     information = dict()
     information["raw"] = dict()
+    information["inspection"] = dict()
     information["assembly"] = dict()
     information["raw"]["table_ukb_41826"] = (
-        source["table_ukb_41826"].iloc[0:1000, :]
+        source["table_ukb_41826"].iloc[0:10000, :]
+    )
+    information["inspection"]["table_phenotypes"] = (
+        table_valid.iloc[0:10000, :]
     )
     information["assembly"]["table_phenotypes"] = table_valid
     # Write product information to file.
