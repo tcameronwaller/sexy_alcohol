@@ -70,8 +70,8 @@ def initialize_directories(
     # Define paths to directories.
     paths["dock"] = path_dock
     paths["organization"] = os.path.join(path_dock, "organization")
-    paths["raw"] = os.path.join(
-        path_dock, "organization", "raw"
+    paths["trial"] = os.path.join(
+        path_dock, "organization", "trial"
     )
     paths["alcohol"] = os.path.join(
         path_dock, "organization", "alcohol"
@@ -87,7 +87,7 @@ def initialize_directories(
         path=paths["organization"]
     )
     utility.create_directories(
-        path=paths["raw"]
+        path=paths["trial"]
     )
     utility.create_directories(
         path=paths["alcohol"]
@@ -139,11 +139,8 @@ def read_source(
     }
 
 
-
 ##########
 # Organization
-
-
 
 
 def convert_table_variable_types(
@@ -828,6 +825,107 @@ def organize_previous_alcohol_consumption_variables(
     return bucket
 
 
+##########
+# Trial
+
+
+def insert_family_identifier_sort_column_sequence_plink(
+    table=None,
+):
+    """
+    Insert empty family identifiers and sort column sequence for PLINK format.
+
+    arguments:
+        table (object): Pandas data frame of information about phenotype and
+            covariate variables for GWAS
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of information about phenotype and
+            covariate variables in format for GWAS in PLINK
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Introduce family identifier.
+    table["#FID"] = 0
+    # Sort column sequence.
+    columns = table.columns.to_list()
+    columns_sequence = list(filter(
+        lambda element: element not in ["IID", "FID"],
+        elements
+    ))
+    columns_sequence.insert(0, "IID") # second column
+    columns_sequence.insert(0, "#FID") # first column
+    table_columns = table.loc[
+        :, table.columns.isin(columns_sequence)
+    ]
+    table_sequence = table_columns[[*columns_sequence]]
+    # Return information.
+    return table_sequence
+
+
+def organize_trial_phenotypes_covariates(
+    table=None,
+    report=None,
+):
+    """
+    Organize table of phenotypes and covariates for GWAS.
+
+    arguments:
+        table (object): Pandas data frame of information about UK Biobank
+            phenotype variables
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of information about UK Biobank phenotype
+            variables
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Organize variables.
+    table["sex"] = table["31-0.0"]
+    table["age"] = table["21022-0.0"]
+    table["testosterone"] = table["30850-0.0"]
+    # Select records.
+    table_alcohol = table.loc[(not table["alcohol_none"]), :]
+    table_male = table.loc[(table["sex"] == 1.0), :]
+    table_testosterone = table_male.loc[
+        (not pandas.isna(table_male["testosterone"])), :
+    ]
+    table_relevance = table_testosterone.loc[
+        :, table_testosterone.columns.isin([
+            "eid", "IID",
+            "sex", "age", "testosterone",
+            "alcohol_none",
+            "alcohol_frequency",
+            "alcohol_drinks_monthly",
+        ])
+    ]
+    # Introduce family identifiers and sort columns for PLINK format.
+    table_format = insert_family_identifier_sort_column_sequence_plink(
+        table=table_relevance,
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("...after organization...")
+        print("table shape: " + str(table_format.shape))
+        print(table_format)
+        utility.print_terminal_partition(level=4)
+    # Return information.
+    return table_format
+
+
+
+
+
 def translate_alcohol_none_auditc(
     frequency=None,
 ):
@@ -1210,6 +1308,49 @@ def organize_female_menopause(
 
 
 
+
+
+##########
+# Write
+
+
+def write_product_trial(
+    information=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        path_parent (str): path to parent directory
+
+    raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_table_phenotypes = os.path.join(
+        path_parent, "table_phenotypes_covariates.pickle"
+    )
+    path_table_phenotypes_text = os.path.join(
+        path_parent, "table_phenotypes_covariates.tsv"
+    )
+    # Write information to file.
+    information["table_phenotypes_covariates"].to_pickle(
+        path_table_phenotypes
+    )
+    information["table_phenotypes_covariates"].to_csv(
+        path_or_buf=path_table_phenotypes_text,
+        sep="\t",
+        header=True,
+        index=True,
+    )
+    pass
+
+
 def write_product(
     information=None,
     paths=None,
@@ -1228,110 +1369,10 @@ def write_product(
 
     """
 
-    # Specify directories and files.
-    path_table_phenotypes = os.path.join(
-        paths["assembly"], "table_phenotypes.pickle"
-    )
-    path_table_phenotypes_text = os.path.join(
-        paths["assembly"], "table_phenotypes.tsv"
-    )
-    # Write information to file.
-    information["table_phenotypes"].to_pickle(
-        path_table_phenotypes
-    )
-    information["table_phenotypes"].to_csv(
-        path_or_buf=path_table_raw,
-        sep="\t",
-        header=True,
-        index=True,
-    )
-    pass
-
-
-def write_product_alcohol(
-    information=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    # Specify directories and files.
-    path_table_report_current = os.path.join(
-        path_parent, "table_report_current.tsv"
-    )
-    path_table_report_previous = os.path.join(
-        path_parent, "table_report_previous.tsv"
-    )
-    path_table_report_alcoholism = os.path.join(
-        path_parent, "table_report_alcoholism.tsv"
-    )
-    # Write information to file.
-    information["table_report_current"].to_csv(
-        path_or_buf=path_table_report_current,
-        sep="\t",
-        header=True,
-        index=True,
-    )
-    information["table_report_previous"].to_csv(
-        path_or_buf=path_table_report_previous,
-        sep="\t",
-        header=True,
-        index=True,
-    )
-    if False:
-        information["table_report_alcoholism"].to_csv(
-            path_or_buf=path_table_report_alcoholism,
-            sep="\t",
-            header=True,
-            index=True,
-        )
-    pass
-
-
-def write_product_old(
-    information=None,
-    paths=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        paths (dict<str>): collection of paths to directories for procedure's
-            files
-
-    raises:
-
-    returns:
-
-    """
-
-    # Alcohol consumption.
-    write_product_alcohol(
-        information=information["alcohol"],
-        path_parent=paths["alcohol"],
-    )
-
-    # Specify directories and files.
-    path_table_phenotypes = os.path.join(
-        paths["assembly"], "table_phenotypes.tsv"
-    )
-    # Write information to file.
-    information["table_phenotypes"].to_csv(
-        path_or_buf=path_table_phenotypes,
-        sep="\t",
-        header=True,
-        index=True,
+    # Trial organization.
+    write_product_trial(
+        information=information["trial"],
+        path_parent=paths["trial"],
     )
     pass
 
@@ -1358,7 +1399,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 6")
+    print("version check: 1")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -1371,22 +1412,40 @@ def execute_procedure(
         path_dock=path_dock,
         report=True,
     )
+    # Convert variable types for further analysis.
+    table_type = convert_table_variable_types(
+        table=source["table_assembly"],
+        report=True,
+    )
+    # Derive alcohol consumption variables.
+    bin_consumption_current = organize_current_alcohol_consumption_variables(
+        table=table_type,
+        report=True,
+    )
+    bin_consumption_previous = organize_previous_alcohol_consumption_variables(
+        table=bin_consumption_current["table_clean"],
+        report=True,
+    )
+    # Organize information for trial GWAS.
+    table = organize_trial_phenotypes_covariates(
+        table=bin_consumption_previous["table_clean"],
+        report=True,
+    )
+
+
+    # Collect information.
+    information = dict()
+    information["trial"] = dict()
+    information["trial"]["table_phenotypes_covariates"] = (
+        table
+    )
+    # Write product information to file.
+    write_product(
+        paths=paths,
+        information=information
+    )
 
     if False:
-        # Convert variable types for further analysis.
-        table_type = convert_table_variable_types(
-            table=table_prune,
-            report=True,
-        )
-        # Derive alcohol consumption variables.
-        bin_consumption_current = organize_current_alcohol_consumption_variables(
-            table=table_type,
-            report=True,
-        )
-        bin_consumption_previous = organize_previous_alcohol_consumption_variables(
-            table=bin_consumption_current["table_clean"],
-            report=True,
-        )
         # Derive aggregate of AUDIT-C alcohol use questionnaire.
         bin_alcoholism = organize_auditc_questionnaire_alcoholism_variables(
             table=bin_consumption_previous["table_clean"],
