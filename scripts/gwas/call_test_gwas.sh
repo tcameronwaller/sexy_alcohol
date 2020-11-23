@@ -19,7 +19,7 @@ path_waller="$path_temporary/waller"
 path_scripts="$path_waller/sexy_alcohol/scripts"
 path_gwas="$path_waller/dock/gwas"
 path_table_phenotypes_covariates="$path_waller/dock/organization/table_phenotypes_covariates.tsv"
-path_plink2=$(<"./tools_plink2.txt")
+path_plink2=$(<"./tools_user_plink2.txt")
 path_ukb_genotype=$(<"./ukbiobank_genotype.txt")
 
 # Echo each command to console.
@@ -28,6 +28,7 @@ path_ukb_genotype=$(<"./ukbiobank_genotype.txt")
 set +x
 
 mkdir -p $path_gwas
+cd $path_gwas
 
 # Set parameters.
 threads=16
