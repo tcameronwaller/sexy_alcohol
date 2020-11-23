@@ -839,6 +839,72 @@ def drop_null_records_all_variables(
 # Write
 
 
+def write_product_raw(
+    information=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        path_parent (str): path to parent directory
+            raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_table_ukb_41826_text = os.path.join(
+        path_parent, "table_ukb_41826.tsv"
+    )
+    # Write information to file.
+    information["table_ukb_41826"].to_csv(
+        path_or_buf=path_table_ukb_41826_text,
+        sep="\t",
+        header=True,
+        index=True,
+    )
+    pass
+
+
+def write_product_assembly(
+    information=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        path_parent (str): path to parent directory
+            raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_table_phenotypes = os.path.join(
+        path_parent, "table_phenotypes.pickle"
+    )
+    path_table_phenotypes_text = os.path.join(
+        path_parent, "table_phenotypes.tsv"
+    )
+    # Write information to file.
+    information["table_phenotypes"].to_pickle(
+        path_table_phenotypes
+    )
+    information["table_phenotypes"].to_csv(
+        path_or_buf=path_table_phenotypes_text,
+        sep="\t",
+        header=True,
+        index=True,
+    )
+    pass
+
+
 def write_product(
     information=None,
     paths=None,
@@ -857,25 +923,15 @@ def write_product(
 
     """
 
-    # Specify directories and files.
-    path_table_phenotypes = os.path.join(
-        paths["assembly"], "table_phenotypes.pickle"
+    write_product_raw(
+        information=information["raw"],
+        path_parent=paths["raw"],
     )
-    path_table_phenotypes_text = os.path.join(
-        paths["assembly"], "table_phenotypes.tsv"
-    )
-    # Write information to file.
-    information["table_phenotypes"].to_pickle(
-        path_table_phenotypes
-    )
-    information["table_phenotypes"].to_csv(
-        path_or_buf=path_table_phenotypes_text,
-        sep="\t",
-        header=True,
-        index=True,
+    write_product_assembly(
+        information=information["assembly"],
+        path_parent=paths["assembly"],
     )
     pass
-
 
 ###############################################################################
 # Procedure
@@ -951,7 +1007,12 @@ def execute_procedure(
     # Write out raw tables for inspection.
     # Collect information.
     information = dict()
-    information["table_phenotypes"] = table_valid
+    information["raw"] = dict()
+    information["assembly"] = dict()
+    information["raw"]["table_ukb_41826"] = (
+        source["table_ukb_41826"].iloc[0:1000, :]
+    )
+    information["assembly"]["table_phenotypes"] = table_valid
     # Write product information to file.
     write_product(
         paths=paths,
