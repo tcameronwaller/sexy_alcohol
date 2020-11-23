@@ -17,39 +17,32 @@ cd ~/paths
 path_temporary=$(<"./temporary_sexy_alcohol.txt")
 path_waller="$path_temporary/waller"
 path_scripts="$path_waller/sexy_alcohol/scripts"
-
-
-
-path_parameter="$path_waller/sexy_alcohol/parameters"
-path_variables="$path_parameter/uk_biobank_phenotype_variables.txt"
-path_table_variables="$path_parameter/table_ukbiobank_phenotype_variables.tsv"
-path_dock="$path_waller/dock"
-path_access="$path_dock/access"
-path_ukb_phenotype=$(<"./ukbiobank_phenotype.txt")
-path_exclusion="$path_ukb_phenotype/exclude.csv"
-path_ukb_parameter=$(<"./ukbiobank_parameter.txt")
-path_identifier_pairs="$path_ukb_parameter/link.file.csv"
-path_ukb_tools=$(<"./ukbiobank_tools.txt")
+path_gwas="$path_waller/dock/gwas"
+path_table_phenotypes_covariates="$path_waller/dock/organization/table_phenotypes_covariates.tsv"
+path_plink2=$(<"./tools_plink2.txt")
+path_ukb_genotype=$(<"./ukbiobank_genotype.txt")
 
 # Echo each command to console.
 #set -x
 # Suppress echo each command to console.
 set +x
 
+mkdir -p $path_gwas
 
 # Set parameters.
 threads=16
 maf=0.01
 chromosome=3
 phenotype_name="testosterone"
-covariate_names="age,bmi,blah"
+covariate_names="age,bmi"
 
+# Call PLINK2.
 $path_plink2 \
 --memory 90000 \
 --threads $threads \
---bgen $ukbdir/Chromosome/ukb_imp_chr${chromosome}_v3.bgen \
---sample --sample $ukbdir/Chromosome/ukb46237_imp_chr${chromosome}_v3_s487320.sample \
---keep $clinical \
+--bgen $path_ukb_genotype/Chromosome/ukb_imp_chr${chromosome}_v3.bgen \
+--sample $path_ukb_genotype/Chromosome/ukb46237_imp_chr${chromosome}_v3_s487320.sample \
+--keep $path_table_phenotypes_covariates \
 --maf $maf \
 --freq --glm hide-covar \
 --pfilter 1 \

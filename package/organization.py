@@ -897,6 +897,7 @@ def organize_trial_phenotypes_covariates(
     # Organize variables.
     table["sex"] = table["31-0.0"]
     table["age"] = table["21022-0.0"]
+    table["bmi"] = table["21001-0.0"]
     table["testosterone"] = table["30850-0.0"]
     # Select records.
     table.dropna(
@@ -913,7 +914,7 @@ def organize_trial_phenotypes_covariates(
     table_relevance = table_testosterone.loc[
         :, table_testosterone.columns.isin([
             "eid", "IID",
-            "sex", "age", "testosterone",
+            "sex", "age", "bmi", "testosterone",
             "alcohol_none",
             "alcohol_frequency",
             "alcohol_drinks_monthly",
