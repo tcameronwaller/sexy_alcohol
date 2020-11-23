@@ -906,7 +906,7 @@ def organize_trial_phenotypes_covariates(
         inplace=True,
     )
     table_alcohol = table.loc[(table["alcohol_none"] == False), :]
-    table_male = table.loc[(table["sex"] == 1.0), :]
+    table_male = table_alcohol.loc[(table_alcohol["sex"] == 1.0), :]
     table_testosterone = table_male.loc[
         (~pandas.isna(table_male["testosterone"])), :
     ]
@@ -1357,7 +1357,7 @@ def write_product_trial(
         path_or_buf=path_table_phenotypes_text,
         sep="\t",
         header=True,
-        index=True,
+        index=False,
     )
     pass
 
@@ -1410,7 +1410,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 6")
+    print("version check: 7")
 
     # Initialize directories.
     paths = initialize_directories(
