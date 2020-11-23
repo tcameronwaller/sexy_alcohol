@@ -849,12 +849,17 @@ def insert_family_identifier_sort_column_sequence_plink(
 
     # Copy data.
     table = table.copy(deep=True)
+    # Organize.
+    table.reset_index(
+        level=None,
+        inplace=True
+    )
     # Introduce family identifier.
     table["#FID"] = 0
     # Sort column sequence.
     columns = table.columns.to_list()
     columns_sequence = list(filter(
-        lambda element: element not in ["IID", "FID"],
+        lambda element: element not in ["eid", "IID", "#FID"],
         columns
     ))
     columns_sequence.insert(0, "IID") # second column
@@ -1405,7 +1410,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 5")
+    print("version check: 6")
 
     # Initialize directories.
     paths = initialize_directories(
