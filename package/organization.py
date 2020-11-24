@@ -129,13 +129,23 @@ def read_source(
     path_table_assembly = os.path.join(
         path_dock, "assembly", "table_phenotypes.pickle"
     )
+    path_table_ukb_samples = os.path.join(
+        path_dock, "access", "ukb46237_imp_chr21_v3_s487320.sample"
+    )
     # Read information from file.
     table_assembly = pandas.read_pickle(
         path_table_assembly
     )
+    table_ukb_samples = pandas.read_csv(
+        path_table_ukb_samples,
+        sep=",",
+        header=0,
+        dtype="string",
+    )
     # Compile and return information.
     return {
         "table_assembly": table_assembly,
+        "table_ukb_samples": table_ukb_samples,
     }
 
 
@@ -935,6 +945,64 @@ def organize_trial_phenotypes_covariates(
     return table_format
 
 
+def match_ukb_genotype_phenotype_sample_identifiers(
+    table_phenotypes=None,
+    table_ukb_samples=None,
+    report=None,
+):
+    """
+    Organize table of phenotypes and covariates for GWAS.
+
+    arguments:
+        table_phenotypes (object): Pandas data frame of information about UK
+            Biobank phenotype variables
+        table_ukb_samples (object): Pandas data frame of information about UK
+            Biobank genotype samples
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy data.
+    table_phenotypes = table_phenotypes.copy(deep=True)
+    table_ukb_samples = table_ukb_samples.copy(deep=True)
+    # Select random identifiers.
+    table_phenotypes["IID"].astype("string")
+    table_phenotypes.set_index(
+        "IID",
+        drop=True,
+        inplace=True,
+    )
+    table_ukb_samples["IID"].astype("string")
+    table_ukb_samples.set_index(
+        "IID",
+        drop=True,
+        inplace=True,
+    )
+    samples = table_ukb_samples.index.to_list()
+    identifiers_random = random.sample(samples, 100)
+    # Select table records for identifiers.
+    table_phenotypes_match = table_phenotypes.loc[
+        table_phenotypes.index.isin(identifiers_random), :
+    ]
+    table_ukb_samples_match = table_ukb_samples.loc[
+        table_ukb_samples.index.isin(identifiers_random), :
+    ]
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("... match IID's between phenotype and genotype ...")
+        print(table_phenotypes_match)
+        utility.print_terminal_partition(level=4)
+        print(table_ukb_samples_match)
+        utility.print_terminal_partition(level=4)
+    pass
+
+
+
 
 
 
@@ -1449,6 +1517,12 @@ def execute_procedure(
         report=True,
     )
 
+    # Match UKB genotype sample identifiers to phenotype identifiers.
+    match_ukb_genotype_phenotype_sample_identifiers(
+        table_phenotypes=table,
+        table_ukb_samples=source["table_ukb_samples"],
+        report=True,
+    )
 
     # Collect information.
     information = dict()
