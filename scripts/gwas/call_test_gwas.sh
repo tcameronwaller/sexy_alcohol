@@ -18,7 +18,7 @@ path_temporary=$(<"./temporary_sexy_alcohol.txt")
 path_waller="$path_temporary/waller"
 path_scripts="$path_waller/sexy_alcohol/scripts"
 path_gwas="$path_waller/dock/gwas"
-path_table_phenotypes_covariates="$path_waller/dock/organization/table_phenotypes_covariates.tsv"
+path_table_phenotypes_covariates="$path_waller/dock/organization/trial/table_phenotypes_covariates.tsv"
 path_plink2=$(<"./tools_user_plink2.txt")
 path_ukb_genotype=$(<"./ukbiobank_genotype.txt")
 
@@ -33,7 +33,7 @@ cd $path_gwas
 # Set parameters.
 threads=16
 maf=0.01
-chromosome=3
+chromosome=7
 phenotype_name="testosterone"
 covariate_names="age,bmi"
 
