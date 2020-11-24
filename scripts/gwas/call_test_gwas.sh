@@ -38,12 +38,12 @@ phenotype_name="testosterone"
 covariate_names="age,bmi"
 
 # Call PLINK2.
+#--keep $path_table_phenotypes_covariates \
 $path_plink2 \
 --memory 90000 \
 --threads $threads \
 --bgen $path_ukb_genotype/Chromosome/ukb_imp_chr${chromosome}_v3.bgen \
 --sample $path_ukb_genotype/Chromosome/ukb46237_imp_chr${chromosome}_v3_s487320.sample \
---keep $path_table_phenotypes_covariates \
 --maf $maf \
 --freq --glm hide-covar \
 --pfilter 1 \
