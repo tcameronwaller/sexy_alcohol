@@ -138,7 +138,7 @@ def read_source(
     )
     table_ukb_samples = pandas.read_csv(
         path_table_ukb_samples,
-        sep=",",
+        sep="\t",
         header=0,
         dtype="string",
     )
@@ -969,6 +969,14 @@ def match_ukb_genotype_phenotype_sample_identifiers(
     # Copy data.
     table_phenotypes = table_phenotypes.copy(deep=True)
     table_ukb_samples = table_ukb_samples.copy(deep=True)
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("... before match ...")
+        print(table_phenotypes)
+        utility.print_terminal_partition(level=3)
+        print(table_ukb_samples)
+        utility.print_terminal_partition(level=3)
     # Select random identifiers.
     table_phenotypes["IID"].astype("string")
     table_phenotypes.set_index(
