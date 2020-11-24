@@ -33,7 +33,7 @@ cd $path_gwas
 # Set parameters.
 threads=16
 maf=0.01
-chromosome=7
+chromosome=21
 phenotype_name="testosterone"
 covariate_names="age,bmi"
 

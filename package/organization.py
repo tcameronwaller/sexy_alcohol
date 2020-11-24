@@ -855,15 +855,15 @@ def insert_family_identifier_sort_column_sequence_plink(
         inplace=True
     )
     # Introduce family identifier.
-    table["#FID"] = 0
+    table["FID"] = 0
     # Sort column sequence.
     columns = table.columns.to_list()
     columns_sequence = list(filter(
-        lambda element: element not in ["eid", "IID", "#FID"],
+        lambda element: element not in ["eid", "IID", "FID"],
         columns
     ))
     columns_sequence.insert(0, "IID") # second column
-    columns_sequence.insert(0, "#FID") # first column
+    columns_sequence.insert(0, "FID") # first column
     table_columns = table.loc[
         :, table.columns.isin(columns_sequence)
     ]
@@ -1424,6 +1424,11 @@ def execute_procedure(
         path_dock=path_dock,
         report=True,
     )
+
+    # Organize genotype principal components. UK Biobank field 22009.
+
+
+
     # Convert variable types for further analysis.
     table_type = convert_table_variable_types(
         table=source["table_assembly"],
