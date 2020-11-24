@@ -138,7 +138,7 @@ def read_source(
     )
     table_ukb_samples = pandas.read_csv(
         path_table_ukb_samples,
-        sep="\t",
+        sep="\s+",
         header=0,
         dtype="string",
     )
@@ -984,9 +984,9 @@ def match_ukb_genotype_phenotype_sample_identifiers(
         drop=True,
         inplace=True,
     )
-    table_ukb_samples["IID"].astype("string")
+    table_ukb_samples["ID_1"].astype("string")
     table_ukb_samples.set_index(
-        "IID",
+        "ID_1",
         drop=True,
         inplace=True,
     )
