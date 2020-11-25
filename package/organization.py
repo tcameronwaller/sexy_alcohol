@@ -275,7 +275,7 @@ def convert_genotype_variable_types(
     # Determine which columns to convert.
     columns = table.columns.str.startswith("genotype_pc_").to_list()
     # Convert data variable types.
-    for column = columns:
+    for column in columns:
         table[column] = pandas.to_numeric(
             table[column],
             errors="coerce", # force any invalid values to missing or null
@@ -1703,7 +1703,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 7")
+    print("version check: 1")
 
     # Initialize directories.
     paths = initialize_directories(
