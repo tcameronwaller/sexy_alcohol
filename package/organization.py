@@ -150,7 +150,205 @@ def read_source(
 
 
 ##########
-# Organization
+# Genotype
+
+
+def match_column_field(
+    column=None,
+    field=None,
+):
+    """
+    Determine whether a column represents an original instance of a field.
+
+    arguments:
+        column (str): name of column
+        field (str): identifier of field for which to collect columns
+
+    raises:
+
+    returns:
+        (bool): whether column name matches field
+
+    """
+
+    # Determine whether column matches format of an original field instance.
+    if ("-" in column):
+        # Column is an original instance of the field.
+        # Only original instance columns have the "-" delimiter.
+        column_field = column.split("-")[0].strip()
+        if (str(column_field) == str(field)):
+            match = True
+        else:
+            match = False
+    else:
+        match = False
+    # Return information.
+    return match
+
+
+def collect_sort_table_field_instance_columns(
+    field=None,
+    table=None,
+):
+    """
+    Collects names of columns that represent instances of a specific field.
+
+    arguments:
+        field (str): identifier of field for which to collect columns
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (list<str>): names of columns
+
+    """
+
+    # Extract table columns.
+    columns = copy.deepcopy(table.columns.to_list())
+    # Collect columns that represent instances of the field.
+    columns_field = list(filter(
+        lambda column: match_column_field(column=column, field=field),
+        columns
+    ))
+    # Sort columns.
+    columns_sort = sorted(columns_field, reverse=False)
+    # Return information.
+    return columns_sort
+
+
+def translate_column_field_instance_names(
+    columns=None,
+    prefix=None,
+    base=None,
+):
+    """
+    Translates names of columns.
+
+    arguments:
+        columns (list<str>): names of columns for field instances
+        prefix (str): prefix for translations of column names
+        base (int): initial integer for index
+
+    raises:
+
+    returns:
+        (list<str>): names of columns
+
+    """
+
+    index = base
+    translations = dict()
+    for column in columns:
+        translation[str(column)] = str(prefix + str(index))
+        index += 1
+    return translations
+
+
+def convert_genotype_variable_types(
+    prefix=None,
+    table=None,
+):
+    """
+    Converts data variable types.
+
+    The UK Biobank encodes several nominal variables with integers. Missing
+    values for these variables necessitates some attention to type conversion
+    from string to float for analysis.
+
+    arguments:
+        prefix (str): prefix for translations of column names
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Determine which columns to convert.
+    columns = table.columns.str.startswith("genotype_pc_").to_list()
+    # Convert data variable types.
+    for column = columns:
+        table[column] = pandas.to_numeric(
+            table[column],
+            errors="coerce", # force any invalid values to missing or null
+            downcast="float",
+        )
+    # Return information.
+    return table
+
+
+def organize_genotype_principal_component_variables(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about principal components on genotypes.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Extract columns for genotype principal components.
+    columns = collect_sort_table_field_instance_columns(
+        field="22009",
+        table=table,
+    )
+    # Translate column names.
+    translations = translate_column_field_instance_names(
+        columns=columns,
+        prefix="genotype_pc_",
+        base=1,
+    )
+    table.rename(
+        columns=translations,
+        inplace=True,
+    )
+    # Convert variable types.
+    table = convert_genotype_variable_types(
+        prefix="genotype_pc_",
+        table=table,
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("translations of genotype PC column names...")
+        for old in translations.keys():
+            print("   " + old + ": " + translations[old])
+        utility.print_terminal_partition(level=3)
+        utility.print_terminal_partition(level=2)
+        print("Translation of columns for genotype principal components: ")
+        print(table.loc[:, table.columns.str.startswith("genotype_pc_")])
+    # Return information.
+    return table
+
+
+
+
+
+
+
+
+
+
+
 
 
 def convert_table_variable_types(
@@ -1518,55 +1716,61 @@ def execute_procedure(
         path_dock=path_dock,
         report=True,
     )
-
-    # TODO: organize genotype PCs...
-    # TODO: organize other phenotypes and covariates...
-    # TODO: split cohorts... maybe in a new module???
-
-    ##### Group genotype PC organization together
-
-    # Organize genotype principal components. UK Biobank field 22009.
-
-    #### Group all alcohol consumption type variables together
-
-    # Convert variable types for further analysis.
-    table_type = convert_table_variable_types(
+    # Organize information about genotype principal components.
+    table_genotype = organize_genotype_principal_component_variables(
         table=source["table_assembly"],
         report=True,
     )
-    # Derive alcohol consumption variables.
-    bin_consumption_current = organize_current_alcohol_consumption_variables(
-        table=table_type,
-        report=True,
-    )
-    bin_consumption_previous = organize_previous_alcohol_consumption_variables(
-        table=bin_consumption_current["table_clean"],
-        report=True,
-    )
-    # Organize information for trial GWAS.
-    table = organize_trial_phenotypes_covariates(
-        table=bin_consumption_previous["table_clean"],
-        report=True,
-    )
 
-    # Match UKB genotype sample identifiers to phenotype identifiers.
-    match_ukb_genotype_phenotype_sample_identifiers(
-        table_phenotypes=table,
-        table_ukb_samples=source["table_ukb_samples"],
-        report=True,
-    )
+    if False:
+        # TODO: organize genotype PCs...
+        # TODO: organize other phenotypes and covariates...
+        # TODO: split cohorts... maybe in a new module???
 
-    # Collect information.
-    information = dict()
-    information["trial"] = dict()
-    information["trial"]["table_phenotypes_covariates"] = (
-        table
-    )
-    # Write product information to file.
-    write_product(
-        paths=paths,
-        information=information
-    )
+        ##### Group genotype PC organization together
+
+        # Organize genotype principal components. UK Biobank field 22009.
+
+        #### Group all alcohol consumption type variables together
+
+        # Convert variable types for further analysis.
+        table_type = convert_table_variable_types(
+            table=source["table_assembly"],
+            report=True,
+        )
+        # Derive alcohol consumption variables.
+        bin_consumption_current = organize_current_alcohol_consumption_variables(
+            table=table_type,
+            report=True,
+        )
+        bin_consumption_previous = organize_previous_alcohol_consumption_variables(
+            table=bin_consumption_current["table_clean"],
+            report=True,
+        )
+        # Organize information for trial GWAS.
+        table = organize_trial_phenotypes_covariates(
+            table=bin_consumption_previous["table_clean"],
+            report=True,
+        )
+
+        # Match UKB genotype sample identifiers to phenotype identifiers.
+        match_ukb_genotype_phenotype_sample_identifiers(
+            table_phenotypes=table,
+            table_ukb_samples=source["table_ukb_samples"],
+            report=True,
+        )
+
+        # Collect information.
+        information = dict()
+        information["trial"] = dict()
+        information["trial"]["table_phenotypes_covariates"] = (
+            table
+        )
+        # Write product information to file.
+        write_product(
+            paths=paths,
+            information=information
+        )
 
     if False:
         # Derive aggregate of AUDIT-C alcohol use questionnaire.
