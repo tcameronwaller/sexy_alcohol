@@ -1028,7 +1028,8 @@ def match_ukb_genotype_phenotype_sample_identifiers(
 
 
 
-
+##########
+# ... in progress...
 
 
 def translate_alcohol_none_auditc(
@@ -1518,9 +1519,15 @@ def execute_procedure(
         report=True,
     )
 
+    # TODO: organize genotype PCs...
+    # TODO: organize other phenotypes and covariates...
+    # TODO: split cohorts... maybe in a new module???
+
+    ##### Group genotype PC organization together
+
     # Organize genotype principal components. UK Biobank field 22009.
 
-
+    #### Group all alcohol consumption type variables together
 
     # Convert variable types for further analysis.
     table_type = convert_table_variable_types(

@@ -224,7 +224,7 @@ def extract_organize_variables_types(
     table_variables = table_ukbiobank_variables.copy(deep=True)
     # Organize information.
     table_variables = table_variables.loc[
-        :, table_variables.columns.isin(["field", "type", "instances_total"])
+        :, table_variables.columns.isin(["field", "type", "coverage"])
     ]
     records = utility.convert_dataframe_to_records(data=table_variables)
     # Iterate across records for rows.
@@ -357,6 +357,80 @@ def read_source(
 # Organization
 
 
+def parse_field_instance_columns_to_keep(
+    instances_raw=None,
+):
+    """
+    Parse the field's instances to keep.
+
+    arguments:
+        instances_raw (str): raw string of field's instances to keep
+
+    raises:
+
+    returns:
+        (list<str>): field's instances to keep
+
+    """
+
+    instances = list()
+    for instance_raw in instances_raw.split(";"):
+        instance = str(instance_raw).strip()
+        if len(instance) > 0:
+            instances.append(instance)
+            pass
+        pass
+    return instances
+
+
+def determine_keep_column_field_instance(
+    column=None,
+    table_ukbiobank_variables=None,
+):
+    """
+    Determines whether to keep a column for UK Biobank field instance.
+
+    arguments:
+        column (str): column name from UK Biobank accessions
+        table_ukbiobank_variables (object): Pandas data frame of information
+            about UK Biobank phenotype variables
+
+    raises:
+
+    returns:
+        (bool): whether to keep the column
+
+    """
+
+    # Determine whether column matches format of an original field instance.
+    keep = False
+    if ("-" in column):
+        column_field = column.split("-")[0].strip()
+        column_instance = column.split("-")[1].strip()
+        instances_array = table_ukbiobank_variables.at[
+            int(column_field), "instances_array",
+        ]
+        instances_keep_raw = table_ukbiobank_variables.at[
+            int(column_field), "instances_keep",
+        ]
+        # Determine whether to keep column for field's instance.
+        if not pandas.isna(instances_array):
+            if str(instances_array) == "yes":
+                keep = True
+        elif not pandas.isna(instances_array):
+            # Organize field instances to keep.
+            instances_keep = parse_field_instance_columns_to_keep(
+                instances_raw=instances_keep_raw,
+            )
+            if str(column_instance) in instances_keep:
+                keep = True
+                pass
+            pass
+        pass
+    # Return information.
+    return keep
+
+
 def determine_ukbiobank_field_instance_columns_keep(
     columns_accession=None,
     table_ukbiobank_variables=None,
@@ -391,32 +465,19 @@ def determine_ukbiobank_field_instance_columns_keep(
         drop=True,
         inplace=True,
     )
-    # Iterate on actuall accession column names.
+    # Iterate on actual column names from the accession table.
     # Determine whether to keep column.
     columns_keep = list()
     columns_keep.extend(extra_names)
     for column in columns_accession:
         column = str(column)
-        # Select original field-instance columns.
-        if ("-" not in column):
+        # Determine whether to keep column.
+        keep = determine_keep_column_field_instance(
+            column=column,
+            table_ukbiobank_variables=table_ukbiobank_variables,
+        )
+        if keep:
             columns_keep.append(column)
-        else:
-            column_field = column.split("-")[0].strip()
-            column_instance = column.split("-")[1].strip()
-            instances_array = table_ukbiobank_variables.at[
-                int(column_field), "instances_array",
-            ]
-            instances_keep = table_ukbiobank_variables.at[
-                int(column_field), "instances_keep",
-            ]
-            if not pandas.isna(instances_array):
-                columns_keep.append(column)
-            elif not pandas.isna(instances_keep):
-                if str(column_instance) in instances_keep.split(","):
-                    columns_keep.append(column)
-                    pass
-            else:
-                columns_keep.append(column)
             pass
         pass
     # Return information.
@@ -995,7 +1056,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 5")
+    print("version check: 1")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -1062,7 +1123,6 @@ def execute_procedure(
         paths=paths,
         information=information
     )
-
     pass
 
 
