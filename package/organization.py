@@ -839,11 +839,21 @@ def organize_previous_alcohol_consumption_variables(
 # Trial
 
 
-def insert_family_identifier_sort_column_sequence_plink(
+def organize_phenotype_covariate_table_plink_format(
     table=None,
 ):
     """
-    Insert empty family identifiers and sort column sequence for PLINK format.
+    Organize table for phenotypes and covariates in format for PLINK.
+
+    1. Remove any rows with missing, empty values.
+    PLINK cannot accommodate rows with empty cells.
+
+    2. Introduce family identifiers.
+    Family (FID) and individual (IID) identifiers must match the ID_1 and ID_2
+    columns in the sample table.
+
+    3. Sort column sequence.
+    PLINK requires FID and IID columns to come first.
 
     arguments:
         table (object): Pandas data frame of information about phenotype and
@@ -863,6 +873,13 @@ def insert_family_identifier_sort_column_sequence_plink(
     table.reset_index(
         level=None,
         inplace=True
+    )
+    # Remove table rows with any empty cells or missing values.
+    table.dropna(
+        axis="index",
+        how="any",
+        subset=None,
+        inplace=True,
     )
     # Introduce family identifier.
     table["FID"] = table["IID"]
@@ -924,14 +941,14 @@ def organize_trial_phenotypes_covariates(
     table_relevance = table_testosterone.loc[
         :, table_testosterone.columns.isin([
             "eid", "IID",
-            "sex", "age", "bmi", "testosterone",
-            "alcohol_none",
-            "alcohol_frequency",
-            "alcohol_drinks_monthly",
+            "testosterone",
+            "age", "bmi",
+            #"alcohol_frequency",
+            #"alcohol_drinks_monthly",
         ])
     ]
     # Introduce family identifiers and sort columns for PLINK format.
-    table_format = insert_family_identifier_sort_column_sequence_plink(
+    table_format = organize_phenotype_covariate_table_plink_format(
         table=table_relevance,
     )
     # Report.

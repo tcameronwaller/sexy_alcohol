@@ -35,7 +35,7 @@ threads=16
 maf=0.01
 chromosome=21
 phenotype_name="testosterone"
-covariate_names="age,bmi"
+covariate_names="age,bmi" # TODO: PC1-10
 
 # Call PLINK2.
 #--keep $path_table_phenotypes_covariates \
