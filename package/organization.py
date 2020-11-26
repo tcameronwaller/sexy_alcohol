@@ -273,7 +273,7 @@ def convert_genotype_variable_types(
     # Copy data.
     table = table.copy(deep=True)
     # Determine which columns to convert.
-    columns = table.columns.str.startswith("genotype_pc_").to_list()
+    columns = table.columns.str.startswith("genotype_pc_").tolist()
     # Convert data variable types.
     for column in columns:
         table[column] = pandas.to_numeric(
@@ -328,14 +328,25 @@ def organize_genotype_principal_component_variables(
     )
     # Report.
     if report:
+        # Column name translations.
         utility.print_terminal_partition(level=2)
         print("translations of genotype PC column names...")
         for old in translations.keys():
             print("   " + old + ": " + translations[old])
         utility.print_terminal_partition(level=3)
+        # Column names and values.
+        table_report = table.loc[
+            :, table.columns.str.startswith("genotype_pc_")
+        ]
         utility.print_terminal_partition(level=2)
         print("Translation of columns for genotype principal components: ")
-        print(table.loc[:, table.columns.str.startswith("genotype_pc_")])
+        print(table_report)
+        utility.print_terminal_partition(level=3)
+        # Variable types.
+        utility.print_terminal_partition(level=2)
+        print("After type conversion")
+        print(table_report.dtypes)
+        utility.print_terminal_partition(level=3)
     # Return information.
     return table
 
