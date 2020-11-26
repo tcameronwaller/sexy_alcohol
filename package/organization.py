@@ -273,9 +273,13 @@ def convert_genotype_variable_types(
     # Copy data.
     table = table.copy(deep=True)
     # Determine which columns to convert.
-    columns = table.columns.str.startswith("genotype_pc_").tolist()
+    columns = table.columns.to_list()
+    columns_match = list(filter(
+        lambda column: (prefix in column),
+        columns
+    ))
     # Convert data variable types.
-    for column in columns:
+    for column in columns_match:
         table[column] = pandas.to_numeric(
             table[column],
             errors="coerce", # force any invalid values to missing or null
