@@ -172,10 +172,10 @@ def match_column_field(
     """
 
     # Determine whether column matches format of an original field instance.
-    if ("-" in column):
+    if ("-" in str(column)):
         # Column is an original instance of the field.
         # Only original instance columns have the "-" delimiter.
-        column_field = column.split("-")[0].strip()
+        column_field = str(column).split("-")[0].strip()
         if (str(column_field) == str(field)):
             match = True
         else:
@@ -315,6 +315,8 @@ def organize_genotype_principal_component_variables(
         field="22009",
         table=table,
     )
+    print("here are the matching columns...")
+    print(columns)
     # Translate column names.
     translations = translate_column_field_instance_names(
         columns=columns,
@@ -1731,6 +1733,8 @@ def execute_procedure(
         path_dock=path_dock,
         report=True,
     )
+    print("here are the original table's columns...")
+    print(source["table_assembly"].columns.to_list())
     # Organize information about genotype principal components.
     table_genotype = organize_genotype_principal_component_variables(
         table=source["table_assembly"],
