@@ -403,8 +403,10 @@ def determine_keep_column_field_instance(
     """
 
     # Determine whether column matches format of an original field instance.
-    keep = False
     if ("-" in column):
+        # Default value.
+        keep = False
+        # Organize information.
         column_field = column.split("-")[0].strip()
         column_instance = column.split("-")[1].strip()
         instances_array = table_ukbiobank_variables.at[
@@ -415,9 +417,9 @@ def determine_keep_column_field_instance(
         ]
         # Determine whether to keep column for field's instance.
         if not pandas.isna(instances_array):
-            if str(instances_array) == "yes":
+            if str(instances_array).strip().lower() == "yes":
                 keep = True
-        elif not pandas.isna(instances_array):
+        elif not pandas.isna(instances_keep_raw):
             # Organize field instances to keep.
             instances_keep = parse_field_instance_columns_to_keep(
                 instances_raw=instances_keep_raw,
@@ -427,6 +429,10 @@ def determine_keep_column_field_instance(
                 pass
             pass
         pass
+    else:
+        # Column is not an original field instance.
+        # Keep the column.
+        keep = True
     # Return information.
     return keep
 
