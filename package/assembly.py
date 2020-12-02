@@ -532,7 +532,8 @@ def remove_table_irrelevant_field_instance_columns(
     if report:
         utility.print_terminal_partition(level=2)
         print("columns to keep: " + str(len(columns_keep)))
-        print(columns_keep[0:50])
+        #print(columns_keep[0:50])
+        print(columns_keep)
         utility.print_terminal_partition(level=3)
         print("...before pruning...")
         print("table_ukb_41826 shape: " + str(table_ukb_41826.shape))
@@ -1062,7 +1063,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 3")
 
     # Initialize directories.
     paths = initialize_directories(
