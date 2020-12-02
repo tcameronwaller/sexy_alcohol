@@ -388,6 +388,7 @@ def parse_field_instance_columns_to_keep(
 def determine_keep_column_field_instance(
     column=None,
     table_ukbiobank_variables=None,
+    report=None,
 ):
     """
     Determines whether to keep a column for UK Biobank field instance.
@@ -396,6 +397,7 @@ def determine_keep_column_field_instance(
         column (str): column name from UK Biobank accessions
         table_ukbiobank_variables (object): Pandas data frame of information
             about UK Biobank phenotype variables
+        report (bool): whether to print reports
 
     raises:
 
@@ -417,8 +419,13 @@ def determine_keep_column_field_instance(
         instances_keep_raw = table_ukbiobank_variables.at[
             int(column_field), "instances_keep",
         ]
-        utility.print_terminal_partition(level=3)
-        if str(column_field) in ["31", "50", "22009"]:
+        # Report.
+        if (
+            report and
+            (len(str(column_field)) > 0) and
+            (str(column_field) in ["31", "50", "22009"])
+        ):
+            utility.print_terminal_partition(level=3)
             print(column_field)
         # Determine whether to keep column for field's instance.
         if not pandas.isna(instances_array):
@@ -429,7 +436,12 @@ def determine_keep_column_field_instance(
             instances_keep = parse_field_instance_columns_to_keep(
                 instances_raw=instances_keep_raw,
             )
-            if str(column_field) in ["31", "50", "22009"]:
+            # Report.
+            if (
+                report and
+                (len(str(column_field)) > 0) and
+                (str(column_field) in ["31", "50", "22009"])
+            ):
                 print(instances_keep_raw)
                 print(instances_keep)
             if str(column_instance) in instances_keep:
@@ -449,6 +461,7 @@ def determine_ukbiobank_field_instance_columns_keep(
     columns_accession=None,
     table_ukbiobank_variables=None,
     extra_names=None,
+    report=None,
 ):
     """
     Organizes column names for variable fields and instances.
@@ -458,6 +471,7 @@ def determine_ukbiobank_field_instance_columns_keep(
         table_ukbiobank_variables (object): Pandas data frame of information
             about UK Biobank phenotype variables
         extra_names (list<str>): extra names to include
+        report (bool): whether to print reports
 
     raises:
 
@@ -489,6 +503,7 @@ def determine_ukbiobank_field_instance_columns_keep(
         keep = determine_keep_column_field_instance(
             column=column,
             table_ukbiobank_variables=table_ukbiobank_variables,
+            report=report,
         )
         if keep:
             columns_keep.append(column)
@@ -535,6 +550,7 @@ def remove_table_irrelevant_field_instance_columns(
         columns_accession=columns_accession,
         table_ukbiobank_variables=table_variables,
         extra_names=["IID", "eid"],
+        report=report,
     )
     # Report.
     if report:

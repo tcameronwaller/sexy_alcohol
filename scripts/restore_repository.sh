@@ -10,8 +10,17 @@ path_waller="$path_temporary/waller"
 path_sexy_alcohol="$path_waller/sexy_alcohol"
 path_promiscuity="$path_waller/promiscuity"
 
+path_parameters="$path_temporary/waller/sexy_alcohol/parameters"
+path_parameters_table_variables="$path_parameters/table_ukbiobank_phenotype_variables.tsv"
+path_access="$path_temporary/waller/dock/access"
+path_access_table_variables="$path_access/table_ukbiobank_phenotype_variables.tsv"
+
 # Echo each command to console.
 set -x
+
+# Transfer new version of parameters.
+rm $path_access_table_variables
+cp $path_parameters_table_variables $path_access_table_variables
 
 # Remove previous version of program.
 
