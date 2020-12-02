@@ -373,8 +373,10 @@ def parse_field_instance_columns_to_keep(
 
     """
 
+    instances_simple = instances_raw.replace("\'", "")
+    instances_simple = instances_simple.replace("\"", "")
     instances = list()
-    for instance_raw in instances_raw.split(";"):
+    for instance_raw in instances_simple.split(";"):
         instance = str(instance_raw).strip()
         if len(instance) > 0:
             instances.append(str(instance))
@@ -416,7 +418,8 @@ def determine_keep_column_field_instance(
             int(column_field), "instances_keep",
         ]
         utility.print_terminal_partition(level=3)
-        print(column_field)
+        if str(column_field) in ["31", "50", "22009"]:
+            print(column_field)
         # Determine whether to keep column for field's instance.
         if not pandas.isna(instances_array):
             if str(instances_array).strip().lower() == "yes":
@@ -426,7 +429,9 @@ def determine_keep_column_field_instance(
             instances_keep = parse_field_instance_columns_to_keep(
                 instances_raw=instances_keep_raw,
             )
-            print(instances_keep)
+            if str(column_field) in ["31", "50", "22009"]:
+                print(instances_keep_raw)
+                print(instances_keep)
             if str(column_instance) in instances_keep:
                 keep = True
                 pass
@@ -1066,7 +1071,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 3")
+    print("version check: 1")
 
     # Initialize directories.
     paths = initialize_directories(
