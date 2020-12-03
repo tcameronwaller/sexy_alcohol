@@ -18,12 +18,12 @@
 ### -e "./error"
 # Queue.
 # "1-hour", "1-day", "4-day", "7-day", "30-day", "lg-mem"
-#$ -q 1-day
+#$ -q 1-hour
 # Priority 0-15.
 ### -p -10
 # Memory per iteration.
 # Segmentation errors commonly indicate a memory error.
-#$ -l h_vmem=50G
+#$ -l h_vmem=20G
 # Concurrent threads; assigns value to variable NSLOTS.
 #$ -pe threaded 16
 # Range of indices.

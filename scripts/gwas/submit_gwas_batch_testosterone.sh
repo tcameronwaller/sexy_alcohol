@@ -36,7 +36,7 @@ path_table_phenotypes_covariates="$path_temporary/waller/dock/organization/trial
 path_report="$path_temporary/waller/dock/gwas/female_alcohol_testosterone"
 
 # Parameters.
-count=22 # Count of chromosomes on which to run GWAS
+count=2 # 22 # Count of chromosomes on which to run GWAS
 analysis="female_alcohol_testosterone"
 phenotypes="testosterone"
 covariates="age,body_mass_index,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
