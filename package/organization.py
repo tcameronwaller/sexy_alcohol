@@ -1437,15 +1437,13 @@ def select_valid_records_all_specific_variables(
     return table
 
 
-
-
-
 ##########
-# Trial
+# PLINK format
 
 
 def organize_phenotype_covariate_table_plink_format(
     table=None,
+    report=None,
 ):
     """
     Organize table for phenotypes and covariates in format for PLINK.
@@ -1463,6 +1461,7 @@ def organize_phenotype_covariate_table_plink_format(
     arguments:
         table (object): Pandas data frame of information about phenotype and
             covariate variables for GWAS
+        report (bool): whether to print reports
 
     raises:
 
@@ -1500,71 +1499,15 @@ def organize_phenotype_covariate_table_plink_format(
         :, table.columns.isin(columns_sequence)
     ]
     table_sequence = table_columns[[*columns_sequence]]
-    # Return information.
-    return table_sequence
-
-
-def organize_trial_phenotypes_covariates(
-    table=None,
-    report=None,
-):
-    """
-    Organize table of phenotypes and covariates for GWAS.
-
-    arguments:
-        table (object): Pandas data frame of information about UK Biobank
-            phenotype variables
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of information about UK Biobank phenotype
-            variables
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Organize variables.
-    table["sex"] = table["31-0.0"]
-    table["age"] = table["21022-0.0"]
-    table["bmi"] = table["21001-0.0"]
-    table["testosterone"] = table["30850-0.0"]
-    # Select records.
-    table.dropna(
-        axis="index",
-        how="any",
-        subset=["alcohol_none"],
-        inplace=True,
-    )
-    table_alcohol = table.loc[(table["alcohol_none"] == False), :]
-    table_male = table_alcohol.loc[(table_alcohol["sex"] == 1.0), :]
-    table_testosterone = table_male.loc[
-        (~pandas.isna(table_male["testosterone"])), :
-    ]
-    table_relevance = table_testosterone.loc[
-        :, table_testosterone.columns.isin([
-            "eid", "IID",
-            "testosterone",
-            "age", "bmi",
-            #"alcohol_frequency",
-            #"alcohol_drinks_monthly",
-        ])
-    ]
-    # Introduce family identifiers and sort columns for PLINK format.
-    table_format = organize_phenotype_covariate_table_plink_format(
-        table=table_relevance,
-    )
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
-        print("...after organization...")
-        print("table shape: " + str(table_format.shape))
-        print(table_format)
+        print("... phenotype covariate table in format for PLINK ...")
+        print("table shape: " + str(table_sequence.shape))
+        print(table_sequence)
         utility.print_terminal_partition(level=4)
     # Return information.
-    return table_format
+    return table_sequence
 
 
 def match_ukb_genotype_phenotype_sample_identifiers(
@@ -1630,6 +1573,9 @@ def match_ukb_genotype_phenotype_sample_identifiers(
         print(table_ukb_samples_match)
         utility.print_terminal_partition(level=4)
     pass
+
+
+
 
 
 
@@ -1832,9 +1778,6 @@ def organize_auditc_questionnaire_alcoholism_variables(
     return bucket
 
 
-
-
-
 def plot_variable_series_histogram(
     series=None,
     bins=None,
@@ -1944,8 +1887,6 @@ def organize_plot_variable_histogram_summary_charts(
     pass
 
 
-
-
 # TODO: derive "hysterectomy" and "oophrectomy" separately
 # TODO: then derive "menopause"
 
@@ -2016,9 +1957,6 @@ def organize_female_menopause(
         print("Final data dimensions: " + str(table_exclusion.shape))
     # Return information.
     return table_exclusion
-
-
-
 
 
 ##########
@@ -2110,7 +2048,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 3")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -2151,59 +2089,36 @@ def execute_procedure(
     # Select records with valid values of relevant variables.
     table_valid = select_valid_records_all_specific_variables(
         names=[
+            "IID",
             "age", "body_mass_index", "testosterone", "alcohol_drinks_monthly",
         ],
         prefixes=["genotype_pc_",],
         table=table_cohort,
         report=True,
     )
+    # Organize phenotypes and covariates in format for analysis in PLINK.
+    table_format = organize_phenotype_covariate_table_plink_format(
+        table=table_valid,
+        report=True,
+    )
+    # Match UKB genotype sample identifiers to phenotype identifiers.
+    match_ukb_genotype_phenotype_sample_identifiers(
+        table_phenotypes=table_format,
+        table_ukb_samples=source["table_ukb_samples"],
+        report=True,
+    )
 
-
-    # Select relevant columns and drop any rows with null values.
-    # function should accept...
-    # list of explicit column names
-    # prefix by which to select column names (e.g. "genotype_pc_")
-
-    if False:
-        # TODO: organize genotype PCs...
-        # TODO: organize other phenotypes and covariates...
-        # TODO: split cohorts... maybe in a new module???
-
-        ##### Group genotype PC organization together
-
-        # Organize genotype principal components. UK Biobank field 22009.
-
-        #### Group all alcohol consumption type variables together
-
-        # Convert variable types for further analysis.
-        table_type = convert_table_variable_types(
-            table=source["table_assembly"],
-            report=True,
-        )
-        # Organize information for trial GWAS.
-        table = organize_trial_phenotypes_covariates(
-            table=bin_consumption_previous["table_clean"],
-            report=True,
-        )
-
-        # Match UKB genotype sample identifiers to phenotype identifiers.
-        match_ukb_genotype_phenotype_sample_identifiers(
-            table_phenotypes=table,
-            table_ukb_samples=source["table_ukb_samples"],
-            report=True,
-        )
-
-        # Collect information.
-        information = dict()
-        information["trial"] = dict()
-        information["trial"]["table_phenotypes_covariates"] = (
-            table
-        )
-        # Write product information to file.
-        write_product(
-            paths=paths,
-            information=information
-        )
+    # Collect information.
+    information = dict()
+    information["trial"] = dict()
+    information["trial"]["table_phenotypes_covariates"] = (
+        table_format
+    )
+    # Write product information to file.
+    write_product(
+        paths=paths,
+        information=information
+    )
 
     if False:
         # Derive aggregate of AUDIT-C alcohol use questionnaire.
