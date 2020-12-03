@@ -1328,7 +1328,6 @@ def organize_alcohol_consumption_variables(
 # Cohort selection
 
 
-
 def select_cohort(
     table=None,
     report=None,
@@ -1357,7 +1356,7 @@ def select_cohort(
     ]
     # Persons who have consumed alcohol previously or currently.
     table = table.loc[
-        (-0.5 <= table["alcohol_none"] and table["alcohol_none"] < 0.5), :
+        (table["alcohol_none"] < 0.5), :
     ]
     # Report.
     if report:
@@ -1368,23 +1367,23 @@ def select_cohort(
     return table
 
 
+##########
+# Variable selection
 
 
-
-
-
-def convert_table_variable_types(
+def select_valid_records_all_specific_variables(
+    names=None,
+    prefixes=None,
     table=None,
     report=None,
 ):
     """
-    Converts data variable types.
-
-    The UK Biobank encodes several nominal variables with integers. Missing
-    values for these variables necessitates some attention to type conversion
-    from string to float for analysis.
+    Selects variable columns and record rows with valid values across all
+    variables.
 
     arguments:
+        names (list<str>): explicit names of columns to keep
+        prefixes (list<str>): prefixes of names of columns to keep
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
         report (bool): whether to print reports
@@ -1392,79 +1391,53 @@ def convert_table_variable_types(
     raises:
 
     returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
+        (dict): collection of information about phenotype variables
 
     """
 
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("Before type conversion")
-        utility.print_terminal_partition(level=3)
-        print(table.dtypes)
     # Copy data.
     table = table.copy(deep=True)
-    # Convert data variable types.
-    # Alcohol variables.
-    table["1558-0.0"] = pandas.to_numeric(
-        table["1558-0.0"],
-        errors="coerce", # force any invalid values to missing or null
-        downcast="float",
-    )
-    table["20414-0.0"] = pandas.to_numeric(
-        table["20414-0.0"],
-        errors="coerce", # force any invalid values to missing or null
-        downcast="float",
-    )
-    table["20403-0.0"] = pandas.to_numeric(
-        table["20403-0.0"],
-        errors="coerce", # force any invalid values to missing or null
-        downcast="float",
-    )
-    table["20416-0.0"] = pandas.to_numeric(
-        table["20416-0.0"],
-        errors="coerce", # force any invalid values to missing or null
-        downcast="float",
-    )
-    # Menopause variables.
-    table["2724-0.0"] = pandas.to_numeric(
-        table["2724-0.0"],
-        errors="coerce", # force any invalid values to missing or null
-        downcast="float",
-    )
-    table["3591-0.0"] = pandas.to_numeric(
-        table["3591-0.0"],
-        errors="coerce", # force any invalid values to missing or null
-        downcast="float",
-    )
-    table["2834-0.0"] = pandas.to_numeric(
-        table["2834-0.0"],
-        errors="coerce", # force any invalid values to missing or null
-        downcast="float",
-    )
-
-    if False:
-        table["20117-0.0"].fillna(
-            value="-3",
-            axis="index",
-            inplace=True,
-        )
-        table["20117-0.0"].astype(
-            "float32",
-            copy=True,
-        )
+    # Extract table columns.
+    columns_all = copy.deepcopy(table.columns.to_list())
+    # Collect columns to keep.
+    columns_keep = list()
+    columns_names = list(filter(
+        lambda column: (str(column) in names),
+        columns_all
+    ))
+    columns_keep.extend(columns_names)
+    for prefix in prefixes:
+        columns_prefix = list(filter(
+            lambda column: (str(prefix) in str(column)),
+            columns_all
+        ))
+        columns_keep.extend(columns_prefix)
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
-        print("After type conversion")
-        utility.print_terminal_partition(level=3)
-        print(table.dtypes)
-        utility.print_terminal_partition(level=4)
-        print("20117-0.0 value counts: ")
-        print(table["20117-0.0"].value_counts())
+        print("Columns to keep: ")
+        print(columns_keep)
+    # Select columns.
+    table = table.loc[
+        :, table.columns.isin(columns_keep)
+    ]
+    # Remove any record rows with null values.
+    table.dropna(
+        axis="index",
+        how="any",
+        subset=columns_keep,
+        inplace=True,
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("Selection of table columns and rows: ")
+        print(table)
     # Return information.
     return table
+
+
+
 
 
 ##########
@@ -2137,7 +2110,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -2173,6 +2146,15 @@ def execute_procedure(
     # Select cohort.
     table_cohort = select_cohort(
         table=pail_alcohol["quantity"]["table_clean"],
+        report=True,
+    )
+    # Select records with valid values of relevant variables.
+    table_valid = select_valid_records_all_specific_variables(
+        names=[
+            "age", "body_mass_index", "testosterone", "alcohol_drinks_monthly",
+        ],
+        prefixes=["genotype_pc_",],
+        table=table_cohort,
         report=True,
     )
 
