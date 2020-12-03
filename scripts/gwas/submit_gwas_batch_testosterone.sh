@@ -63,10 +63,10 @@ echo "----------------------------------------------------------------------"
 qsub -t 1-${count}:1 \
 -o "$path_report/out.txt" -e "$path_report/error.txt" \
 $path_scripts/run_gwas.sh \
-$path_table_phenotypes_covariates \ # 1
-$path_report \ # 2
-$analysis \ # 3
-$phenotypes \ # 4
-$covariates \ # 5
-$threads \ # 6
-$maf \ # 7
+$path_table_phenotypes_covariates \
+$path_report \
+$analysis \
+$phenotypes \
+$covariates \
+$threads \
+$maf \
