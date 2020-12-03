@@ -18,6 +18,7 @@ path_temporary=$(<"./temporary_sexy_alcohol.txt")
 path_waller="$path_temporary/waller"
 path_scripts="$path_waller/sexy_alcohol/scripts"
 path_gwas="$path_waller/dock/gwas"
+path_report="$path_waller/dock/gwas/testosterone"
 path_table_phenotypes_covariates="$path_waller/dock/organization/trial/table_phenotypes_covariates.tsv"
 path_plink2=$(<"./tools_user_plink2.txt")
 path_ukb_genotype=$(<"./ukbiobank_genotype.txt")
@@ -27,15 +28,15 @@ path_ukb_genotype=$(<"./ukbiobank_genotype.txt")
 # Suppress echo each command to console.
 set +x
 
-mkdir -p $path_gwas
-cd $path_gwas
+mkdir -p $path_report
+cd $path_report
 
 # Set parameters.
 threads=16
 maf=0.01
 chromosome=21
 phenotype_name="testosterone"
-covariate_names="age,bmi" # TODO: PC1-10
+covariate_names="age,body_mass_index,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
 
 # Call PLINK2.
 #--keep $path_table_phenotypes_covariates \
