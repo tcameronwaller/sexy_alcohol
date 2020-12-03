@@ -536,6 +536,7 @@ def determine_alcohol_consumption_frequency(
             # "daily or almost daily"
             alcohol_frequency = 5
     else:
+        # "prefer not to answer" or null
         alcohol_frequency = float("nan")
     # Return information.
     return alcohol_frequency
@@ -920,6 +921,255 @@ def organize_alcohol_consumption_frequency_variables(
     return pail
 
 
+def calculate_sum_drinks(
+    beer_cider=None,
+    wine_red=None,
+    wine_white=None,
+    port=None,
+    liquor=None,
+    other=None,
+):
+    """
+    Calculates the sum of drinks.
+
+    arguments:
+        beer_cider (int): count of drinks by type
+        wine_red (int): count of drinks by type
+        wine_white (int): count of drinks by type
+        port (int): count of drinks by type
+        liquor (int): count of drinks by type
+        other (int): count of drinks by type
+
+    raises:
+
+    returns:
+        (int): sum of counts of drinks
+
+    """
+
+    # Consider all types of alcoholic beverage.
+    types = [beer_cider, wine_red, wine_white, port, liquor, other]
+    # Determine whether any relevant variables have missing values.
+    valid = False
+    for type in types:
+        if (not pandas.isna(type) and (type > -0.5)):
+            valid = True
+            pass
+        pass
+    if valid:
+        # Variables have valid values.
+        # Calculate sum of drinks.
+        drinks = 0
+        for type in types:
+            if ((not pandas.isna(type)) and (type >= 0)):
+                drinks = drinks + type
+                pass
+            pass
+    else:
+        drinks = float("nan")
+    return drinks
+
+
+def calculate_total_alcohol_consumption_monthly(
+    drinks_weekly=None,
+    drinks_monthly=None,
+    weeks_per_month=None,
+):
+    """
+    Calculate monthly alcohol consumption in drinks.
+
+    arguments:
+        drinks_weekly (float): sum of weekly drinks from weekly variables
+        drinks_monthly (float): sum of monthly drinks from monthly variables
+        weeks_per_month (float): factor to use for weeks per month
+
+    raises:
+
+    returns:
+        (float): person's monthly alcohol consumption in drinks
+
+    """
+
+    # Use as much valid information as is available.
+    if (not math.isnan(drinks_weekly) and not math.isnan(drinks_monthly)):
+        alcohol_drinks_monthly = (
+            drinks_monthly + (weeks_per_month * drinks_weekly)
+        )
+    elif (not math.isnan(drinks_weekly)):
+        alcohol_drinks_monthly = (weeks_per_month * drinks_weekly)
+    elif (not math.isnan(drinks_monthly)):
+        alcohol_drinks_monthly = drinks_monthly
+    else:
+        # There is no valid information about alcohol consumption quantity.
+        alcohol_drinks_monthly = float("nan")
+        pass
+    return alcohol_drinks_monthly
+
+
+def determine_total_alcohol_consumption_monthly(
+    alcohol_current=None,
+    drinks_weekly=None,
+    drinks_monthly=None,
+    weeks_per_month=None,
+):
+    """
+    Calculate monthly alcohol consumption in drinks.
+
+    Accommodate inexact float values.
+
+    arguments:
+        alcohol_current (float): binary representation of whether person
+            consumes alcohol currently
+        drinks_weekly (float): sum of weekly drinks from weekly variables
+        drinks_monthly (float): sum of monthly drinks from monthly variables
+        weeks_per_month (float): factor to use for weeks per month
+
+    raises:
+
+    returns:
+        (float): person's monthly alcohol consumption in drinks
+
+    """
+
+    # Calculate alcohol consumption quantity.
+    alcohol_monthly = calculate_total_alcohol_consumption_monthly(
+        drinks_weekly=drinks_weekly,
+        drinks_monthly=drinks_monthly,
+        weeks_per_month=weeks_per_month,
+    )
+    # Consider current alcohol consumption.
+    if (
+        (not math.isnan(alcohol_current)) and
+        (-0.5 <= alcohol_current and alcohol_current < 0.5)
+    ):
+        # Person never consumes any alcohol currently.
+        if (not math.isnan(alcohol_monthly)):
+            alcohol_drinks_monthly = alcohol_monthly
+        else:
+            alcohol_drinks_monthly = 0.0
+    else:
+        if (not math.isnan(alcohol_monthly)):
+            alcohol_drinks_monthly = alcohol_monthly
+        else:
+            alcohol_drinks_monthly = float("nan")
+    # Return information.
+    return alcohol_drinks_monthly
+
+
+def organize_alcohol_consumption_quantity_variables(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about alcohol consumption in standard drinks monthly.
+
+    UK Biobank data coding 100291.
+    "do not know": -1
+    "prefer not to answer": -3
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about quantity of alcohol consumption
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Convert variable types.
+    columns_type = [
+        "1588-0.0", "1568-0.0", "1578-0.0", "1608-0.0", "1598-0.0", "5364-0.0",
+        "4429-0.0", "4407-0.0", "4418-0.0", "4451-0.0", "4440-0.0", "4462-0.0",
+    ]
+    table = convert_table_columns_variables_types_float(
+        columns=columns_type,
+        table=table,
+    )
+    # Calculate sum of drinks weekly.
+    table["drinks_weekly"] = table.apply(
+        lambda row:
+            calculate_sum_drinks(
+                beer_cider=row["1588-0.0"],
+                wine_red=row["1568-0.0"],
+                wine_white=row["1578-0.0"],
+                port=row["1608-0.0"],
+                liquor=row["1598-0.0"],
+                other=row["5364-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Calculate sum of drinks monthly.
+    table["drinks_monthly"] = table.apply(
+        lambda row:
+            calculate_sum_drinks(
+                beer_cider=row["4429-0.0"],
+                wine_red=row["4407-0.0"],
+                wine_white=row["4418-0.0"],
+                port=row["4451-0.0"],
+                liquor=row["4440-0.0"],
+                other=row["4462-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine sum of total drinks monthly.
+    table["alcohol_drinks_monthly"] = table.apply(
+        lambda row:
+            determine_total_alcohol_consumption_monthly(
+                alcohol_current=row["alcohol_current"],
+                drinks_weekly=row["drinks_weekly"],
+                drinks_monthly=row["drinks_monthly"],
+                weeks_per_month=4.345, # 52.143 weeks per year (12 months)
+            ),
+        axis="columns", # apply across rows
+    )
+    # Remove columns for variables that are not necessary anymore.
+    table_clean = table.copy(deep=True)
+    table_clean.drop(
+        labels=[
+            "1588-0.0", "1568-0.0", "1578-0.0", "1608-0.0", "1598-0.0",
+            "5364-0.0",
+            "4429-0.0", "4407-0.0", "4418-0.0", "4451-0.0", "4440-0.0",
+            "4462-0.0",
+            "drinks_weekly",
+            "drinks_monthly",
+        ],
+        axis="columns",
+        inplace=True
+    )
+    # Organize data for report.
+    table_report = table.copy(deep=True)
+    table_report = table_report.loc[
+        :, table_report.columns.isin([
+            "eid", "IID",
+            "1588-0.0", "1568-0.0", "1578-0.0", "1608-0.0", "1598-0.0",
+            "5364-0.0",
+            "4429-0.0", "4407-0.0", "4418-0.0", "4451-0.0", "4440-0.0",
+            "4462-0.0",
+            "drinks_weekly",
+            "drinks_monthly",
+            "alcohol_drinks_monthly",
+            "alcohol_current",
+        ])
+    ]
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("Summary of alcohol consumption quantity variables: ")
+        print(table_report)
+    # Collect information.
+    pail = dict()
+    pail["table"] = table
+    pail["table_clean"] = table_clean
+    pail["table_report"] = table_report
+    # Return information.
+    return pail
+
+
 def organize_alcohol_consumption_variables(
     table=None,
     report=None,
@@ -944,16 +1194,15 @@ def organize_alcohol_consumption_variables(
         table=table,
         report=report,
     )
-    if False:
-        # Organize information about current alcohol consumption quantity.
-        pail_quantity = organize_current_alcohol_consumption_variables(
-            table=pail_consumption["table_clean"],
-            report=report,
-        )
+    # Organize information about current alcohol consumption quantity.
+    pail_quantity = organize_alcohol_consumption_quantity_variables(
+        table=pail_consumption["table_clean"],
+        report=report,
+    )
     # Collect information.
     pail = dict()
     pail["consumption"] = pail_consumption
-    #pail["quantity"] = pail_quantity
+    pail["quantity"] = pail_quantity
     # Return information.
     return pail
 
@@ -1058,253 +1307,6 @@ def convert_table_variable_types(
         print(table["20117-0.0"].value_counts())
     # Return information.
     return table
-
-
-def calculate_sum_drinks(
-    beer_cider=None,
-    wine_red=None,
-    wine_white=None,
-    port=None,
-    liquor=None,
-    other=None,
-):
-    """
-    Calculates the sum of drinks.
-
-    UK Biobank data coding 100291.
-    "do not know": -1
-    "prefer not to answer": -3
-
-    arguments:
-        beer_cider (int): count of drinks by type
-        wine_red (int): count of drinks by type
-        wine_white (int): count of drinks by type
-        port (int): count of drinks by type
-        liquor (int): count of drinks by type
-        other (int): count of drinks by type
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (int): sum of counts of drinks
-
-    """
-
-    # Consider all types of alcoholic beverage.
-    types = [beer_cider, wine_red, wine_white, port, liquor, other]
-    # Determine whether any relevant variables have missing values.
-    valid = False
-    for type in types:
-        if (not pandas.isna(type) and (type != -1) and (type != -3)):
-            valid = True
-            pass
-        pass
-    if valid:
-        # Variables have valid values.
-        # Calculate sum of drinks.
-        drinks = 0
-        for type in types:
-            if ((not pandas.isna(type)) and (type >= 0)):
-                drinks = drinks + type
-                pass
-            pass
-    else:
-        drinks = float("nan")
-    return drinks
-
-
-def calculate_total_alcohol_consumption_monthly(
-    drinks_weekly=None,
-    drinks_monthly=None,
-    weeks_per_month=None,
-):
-    """
-    Calculate monthly alcohol consumption in drinks.
-
-    arguments:
-        drinks_weekly (float): sum of weekly drinks from weekly variables
-        drinks_monthly (float): sum of monthly drinks from monthly variables
-        weeks_per_month (float): factor to use for weeks per month
-
-    raises:
-
-    returns:
-        (float): person's monthly alcohol consumption in drinks
-
-    """
-
-    # Use as much valid information as is available.
-    if (not math.isnan(drinks_weekly) and not math.isnan(drinks_monthly)):
-        alcohol_drinks_monthly = (
-            drinks_monthly + (weeks_per_month * drinks_weekly)
-        )
-    elif (not math.isnan(drinks_weekly)):
-        alcohol_drinks_monthly = (weeks_per_month * drinks_weekly)
-    elif (not math.isnan(drinks_monthly)):
-        alcohol_drinks_monthly = drinks_monthly
-    else:
-        # There is no valid information about alcohol consumption quantity.
-        alcohol_drinks_monthly = float("nan")
-        pass
-    return alcohol_drinks_monthly
-
-
-def determine_total_alcohol_consumption_monthly(
-    alcohol_frequency=None,
-    drinks_weekly=None,
-    drinks_monthly=None,
-    weeks_per_month=None,
-):
-    """
-    Calculate monthly alcohol consumption in drinks.
-
-    UK Biobank data coding 90.
-    "current": 2
-    "previous": 1
-    "never": 0
-    "prefer not to answer": -3
-
-    Accommodate inexact float values.
-
-    arguments:
-        alcohol_frequency (int): ordinal representation of person's frequency
-            of alcohol consumption
-        drinks_weekly (float): sum of weekly drinks from weekly variables
-        drinks_monthly (float): sum of monthly drinks from monthly variables
-        weeks_per_month (float): factor to use for weeks per month
-
-    raises:
-
-    returns:
-        (float): person's monthly alcohol consumption in drinks
-
-    """
-
-    # Calculate alcohol consumption quantity.
-    alcohol_monthly = calculate_total_alcohol_consumption_monthly(
-        drinks_weekly=drinks_weekly,
-        drinks_monthly=drinks_monthly,
-        weeks_per_month=weeks_per_month,
-    )
-    # Consider alcohol consumption status.
-    if (
-        (not math.isnan(alcohol_frequency)) and
-        (-0.5 <= alcohol_frequency and alcohol_frequency < 0.5)
-    ):
-        # Person never consumes any alcohol currently.
-        if (not math.isnan(alcohol_monthly)):
-            alcohol_drinks_monthly = alcohol_monthly
-        else:
-            alcohol_drinks_monthly = 0.0
-    else:
-        if (not math.isnan(alcohol_monthly)):
-            alcohol_drinks_monthly = alcohol_monthly
-        else:
-            alcohol_drinks_monthly = float("nan")
-    # Return information.
-    return alcohol_drinks_monthly
-
-
-def organize_current_alcohol_consumption_variables(
-    table=None,
-    report=None,
-):
-    """
-    Organizes information about alcohol consumption in standard drinks monthly.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict): collection of information about quantity of alcohol consumption
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Calculate sum of drinks weekly.
-    table["drinks_weekly"] = table.apply(
-        lambda row:
-            calculate_sum_drinks(
-                beer_cider=row["1588-0.0"],
-                wine_red=row["1568-0.0"],
-                wine_white=row["1578-0.0"],
-                port=row["1608-0.0"],
-                liquor=row["1598-0.0"],
-                other=row["5364-0.0"],
-            ),
-        axis="columns", # apply across rows
-    )
-    # Calculate sum of drinks monthly.
-    table["drinks_monthly"] = table.apply(
-        lambda row:
-            calculate_sum_drinks(
-                beer_cider=row["4429-0.0"],
-                wine_red=row["4407-0.0"],
-                wine_white=row["4418-0.0"],
-                port=row["4451-0.0"],
-                liquor=row["4440-0.0"],
-                other=row["4462-0.0"],
-            ),
-        axis="columns", # apply across rows
-    )
-    # Determine sum of total drinks monthly.
-    table["alcohol_drinks_monthly"] = table.apply(
-        lambda row:
-            determine_total_alcohol_consumption_monthly(
-                alcohol_frequency=row["alcohol_frequency"],
-                drinks_weekly=row["drinks_weekly"],
-                drinks_monthly=row["drinks_monthly"],
-                weeks_per_month=4.345, # 52.143 weeks per year (12 months)
-            ),
-        axis="columns", # apply across rows
-    )
-    # Remove columns for variables that are not necessary anymore.
-    table_clean = table.copy(deep=True)
-    table_clean.drop(
-        labels=[
-            "1588-0.0", "1568-0.0", "1578-0.0", "1608-0.0", "1598-0.0",
-            "5364-0.0",
-            "4429-0.0", "4407-0.0", "4418-0.0", "4451-0.0", "4440-0.0",
-            "4462-0.0",
-            #"20117-0.0",
-            "drinks_weekly",
-            "drinks_monthly",
-        ],
-        axis="columns",
-        inplace=True
-    )
-    # Organize data for report.
-    table_report = table.copy(deep=True)
-    table_report = table_report.loc[
-        :, table_report.columns.isin([
-            "eid", "IID",
-            "1588-0.0", "1568-0.0", "1578-0.0", "1608-0.0", "1598-0.0",
-            "5364-0.0",
-            "4429-0.0", "4407-0.0", "4418-0.0", "4451-0.0", "4440-0.0",
-            "4462-0.0",
-            "drinks_weekly",
-            "drinks_monthly",
-            "alcohol_drinks_monthly",
-        ])
-    ]
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("Summary of alcohol consumption quantity variables: ")
-        print(table_report)
-    # Collect information.
-    bucket = dict()
-    bucket["table"] = table
-    bucket["table_clean"] = table_clean
-    bucket["table_report"] = table_report
-    # Return information.
-    return bucket
 
 
 ##########
