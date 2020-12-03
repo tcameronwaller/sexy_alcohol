@@ -34,9 +34,9 @@ cd $path_report
 # Set parameters.
 threads=16
 maf=0.01
-chromosome=21
-phenotype_name="testosterone"
-covariate_names="age,body_mass_index,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
+chromosome=21 # chromosome=$SGE_TASK_ID
+phenotypes="testosterone"
+covariates="age,body_mass_index,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
 
 # Call PLINK2.
 #--keep $path_table_phenotypes_covariates \
@@ -45,11 +45,12 @@ $path_plink2 \
 --threads $threads \
 --bgen $path_ukb_genotype/Chromosome/ukb_imp_chr${chromosome}_v3.bgen \
 --sample $path_ukb_genotype/Chromosome/ukb46237_imp_chr${chromosome}_v3_s487320.sample \
+--keep $path_table_phenotypes_covariates \
 --maf $maf \
 --freq --glm hide-covar \
 --pfilter 1 \
 --pheno $path_table_phenotypes_covariates \
---pheno-name $phenotype_name \
+--pheno-name $phenotypes \
 --covar $path_table_phenotypes_covariates \
---covar-name $covariate_names \
+--covar-name $covariates \
 --out report \
