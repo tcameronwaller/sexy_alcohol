@@ -707,10 +707,10 @@ def determine_previous_alcohol_consumption(
     return alcohol_previous
 
 
-
 def determine_alcohol_none(
-    frequency=None,
-    previous=None,
+    alcohol_frequency=None,
+    alcohol_current=None,
+    alcohol_previous=None,
 ):
     """
     Translate information from UK Biobank about whether person
@@ -719,10 +719,12 @@ def determine_alcohol_none(
     Accommodate inexact float values.
 
     arguments:
-        frequency (float): frequency of alcohol consumption, UK Biobank field
-            1558
-        previous (float): previous alcohol consumption, UK Biobank field
-            3731
+        alcohol_frequency (float): ordinal representation of person's frequency
+            of alcohol consumption, derivation of UK Biobank field 1558
+        alcohol_current (float): binary representation of whether person
+            consumes alcohol currently
+        alcohol_previous (float): binary representation of whether person
+            consumed alcohol previously
 
     raises:
 
@@ -731,46 +733,54 @@ def determine_alcohol_none(
 
     """
 
-    # Determine whether the variable has a valid (non-missing) value.
-    # Only consider interpretable values to be valid.
-    if (
-        (not pandas.isna(frequency)) and
-        (0.5 <= frequency and frequency < 6.5)
-    ):
+    # Interpret consumption frequency.
+    if (not math.isnan(alcohol_frequency)):
         # The variable has a valid value.
-        # Determine whether the person ever consumes any alcohol currently.
-        if (5.5 <= frequency and frequency < 6.5):
-            # frequency = "never"
-            # Determine whether the person ever consumed any alcohol
-            # previously.
-            if (
-                (not pandas.isna(previous)) and
-                (-0.5 <= previous and previous < 1.5)
-            ):
-                if (0.5 <= previous and previous < 1.5):
-                    # previous = "yes"
-                    # The person consumed alcohol previously.
-                    alcohol_none = False
-                elif (-0.5 <= previous and previous < 0.5):
-                    # previous = "no"
-                    # The person does not consume alcohol currently and did not
-                    # consume alcohol previously.
-                    alcohol_none = True
-            else:
-                # No valid information about previous alcohol consumption.
-                # The person does not consume alcohol currently, but we do not
-                # know about any previous consumption.
-                alcohol_none = True
+        if (-0.5 <= alcohol_frequency and alcohol_frequency < 0.5):
+            # The person never consumes alcohol currently.
+            frequency_boolean = True
         else:
-            # Persons consumes alcohol currently.
-            alcohol_none = False
+            frequency_boolean = False
+    else:
+        frequency_boolean = float("nan")
+    # Interpret current consumption.
+    if (not math.isnan(alcohol_current)):
+        # The variable has a valid value.
+        if (-0.5 <= alcohol_current and alcohol_current < 0.5):
+            # The person never consumes alcohol currently.
+            current_boolean = True
+        else:
+            current_boolean = False
+    else:
+        current_boolean = float("nan")
+    # Interpret previous consumption.
+    if (not math.isnan(alcohol_previous)):
+        # The variable has a valid value.
+        if (-0.5 <= alcohol_previous and alcohol_previous < 0.5):
+            # The person never consumed alcohol previously.
+            previous_boolean = True
+        else:
+            previous_boolean = False
+    else:
+        previous_boolean = float("nan")
+    # Integrate information from multiple variables.
+    if (
+        (not math.isnan(frequency_boolean)) and
+        (not math.isnan(current_boolean)) and
+        (not math.isnan(previous_boolean))
+    ):
+        if (
+            frequency_boolean and
+            current_boolean and
+            previous_boolean
+        ):
+            alcohol_none = 1
+        else:
+            alcohol_none = 0
     else:
         alcohol_none = float("nan")
     # Return information.
     return alcohol_none
-
-
-
 
 
 def organize_alcohol_consumption_frequency_variables(
