@@ -31,7 +31,7 @@
 # Array batch indices cannot start at zero.
 ### -t 1-100:1
 # Limit on concurrent processes.
-### -tc 10
+#$ -tc 2
 
 
 ###########################################################################
