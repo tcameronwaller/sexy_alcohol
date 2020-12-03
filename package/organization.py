@@ -241,7 +241,7 @@ def translate_column_field_instance_names(
     index = base
     translations = dict()
     for column in columns:
-        translation[str(column)] = str(prefix + str(index))
+        translations[str(column)] = str(prefix + str(index))
         index += 1
     return translations
 
