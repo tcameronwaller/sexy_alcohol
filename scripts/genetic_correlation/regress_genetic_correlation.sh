@@ -88,16 +88,24 @@ fi
 ###########################################################################
 # Organize GWAS summary statistics for LDSC.
 
-# Iterate on chromosomes.
 echo "----------------------------------------------------------------------"
-echo "Iterate on that simple array with indices."
+echo "----------------------------------------------------------------------"
+echo "----------------------------------------------------------------------"
+echo "Concatenate GWAS summary statistics across chromosomes."
+echo "----------------------------------------------------------------------"
+echo "----------------------------------------------------------------------"
+echo "----------------------------------------------------------------------"
+echo ""
+echo ""
+echo ""
+echo "----------------------------------------------------------------------"
+echo "Testosterone in females who consume alcohol previously or currently."
 echo "----------------------------------------------------------------------"
 count=22 # 22: count of chromosomes on which ran GWAS
 path_gwas=$path_gwas_testosterone
 #path_gwas=$path_gwas_alcohol
 phenotype="testosterone"
 #phenotype="alcohol_drinks_monthly"
-
 # Concatenate GWAS reports from all chromosomes.
 # Extract relevant information and format for LDSC.
 # Initialize concatenation.
@@ -127,7 +135,41 @@ echo "----------"
 echo "----------"
 echo "----------"
 echo "after concatenation..."
-head -10 $path_concatenation
+head -30 $path_concatenation
+
+echo ""
+echo ""
+echo ""
+echo "----------------------------------------------------------------------"
+echo "Alcohol consumption in females who consume alcohol previously or currently."
+echo "----------------------------------------------------------------------"
+count=22 # 22: count of chromosomes on which ran GWAS
+path_gwas=$path_gwas_alcohol
+phenotype="alcohol_drinks_monthly"
+# Concatenate GWAS reports from all chromosomes.
+# Extract relevant information and format for LDSC.
+# Initialize concatenation.
+cd $path_gwas
+path_concatenation="$path_gwas/concatenation.${phenotype}.glm.linear"
+echo "SNP A1 A2 N BETA P" > $path_concatenation
+for (( index=0; index<=$count; index+=1 )); do
+  path_gwas_chromosome="$path_gwas/chromosome_${index}"
+  echo "gwas chromosome path: "
+  echo $path_gwas_chromosome
+  path_report="$path_gwas_chromosome/report.${phenotype}.glm.linear"
+  # Select and concatenate relevant information from chromosome reports.
+  cat $path_report | awk 'NR > 1 {print $3, $6, $4, $8, $9, $12}' >> $path_concatenation
+done
+echo "----------"
+echo "----------"
+echo "----------"
+echo "after concatenation..."
+head -30 $path_concatenation
+
+
+
+
+
 
 if false; then
     $path_ldsc/munge_sumstats.py \
