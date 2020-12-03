@@ -246,7 +246,40 @@ def translate_column_field_instance_names(
     return translations
 
 
-def convert_genotype_variable_types(
+def convert_table_columns_variables_types_float(
+    columns=None,
+    table=None,
+):
+    """
+    Converts data variable types.
+
+    arguments:
+        columns (list<str>): names of columns
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Convert data variable types.
+    for column in columns:
+        table[column] = pandas.to_numeric(
+            table[column],
+            errors="coerce", # force any invalid values to missing or null
+            downcast="float",
+        )
+    # Return information.
+    return table
+
+
+def convert_table_prefix_columns_variables_types_float(
     prefix=None,
     table=None,
 ):
@@ -275,18 +308,16 @@ def convert_genotype_variable_types(
     # Determine which columns to convert.
     columns = table.columns.to_list()
     columns_match = list(filter(
-        lambda column: (prefix in column),
+        lambda column: (str(prefix) in str(column)),
         columns
     ))
     # Convert data variable types.
-    for column in columns_match:
-        table[column] = pandas.to_numeric(
-            table[column],
-            errors="coerce", # force any invalid values to missing or null
-            downcast="float",
-        )
+    table_type = convert_table_columns_variables_types_float(
+        columns=columns_match,
+        table=table,
+    )
     # Return information.
-    return table
+    return table_type
 
 
 def organize_genotype_principal_component_variables(
@@ -328,7 +359,7 @@ def organize_genotype_principal_component_variables(
         inplace=True,
     )
     # Convert variable types.
-    table = convert_genotype_variable_types(
+    table = convert_table_prefix_columns_variables_types_float(
         prefix="genotype_pc_",
         table=table,
     )
@@ -357,7 +388,156 @@ def organize_genotype_principal_component_variables(
     return table
 
 
+##########
+# Sex hormones
 
+
+def organize_sex_hormone_variables(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about sex hormones.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Translate column names.
+    translations = dict()
+    translations["30600-0.0"] = "albumin"
+    translations["30830-0.0"] = "steroid_globulin"
+    translations["30850-0.0"] = "testosterone"
+    translations["30800-0.0"] = "oestradiol"
+    table.rename(
+        columns=translations,
+        inplace=True,
+    )
+    # Convert variable types.
+    columns_hormones = [
+        "albumin", "steroid_globulin", "testosterone", "oestradiol"
+    ]
+    table_type = convert_table_columns_variables_types_float(
+        columns=columns_hormones,
+        table=table,
+    )
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        print("translations of hormone column names...")
+        for old in translations.keys():
+            print("   " + old + ": " + translations[old])
+        utility.print_terminal_partition(level=3)
+        # Column names and values.
+        table_report = table.loc[
+            :, table.columns.isin(columns_hormones)
+        ]
+        utility.print_terminal_partition(level=2)
+        print("Translation of columns for hormones: ")
+        print(table_report)
+        utility.print_terminal_partition(level=3)
+        # Variable types.
+        utility.print_terminal_partition(level=2)
+        print("After type conversion")
+        print(table_report.dtypes)
+        utility.print_terminal_partition(level=3)
+    # Return information.
+    return table
+
+
+##########
+# Alcohol consumption
+
+
+
+
+
+
+def organize_alcohol_consumption_variables(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about previous and current alcohol consumption.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Translate column names.
+    translations = dict()
+    translations["30600-0.0"] = "albumin"
+    translations["30830-0.0"] = "steroid_globulin"
+    translations["30850-0.0"] = "testosterone"
+    translations["30800-0.0"] = "oestradiol"
+    table.rename(
+        columns=translations,
+        inplace=True,
+    )
+    # Convert variable types.
+    columns_hormones = [
+        "albumin", "steroid_globulin", "testosterone", "oestradiol"
+    ]
+    table_type = convert_table_columns_variables_types_float(
+        columns=columns_hormones,
+        table=table,
+    )
+
+
+    # Organize information about current alcohol consumption.
+    bin_consumption_current = organize_current_alcohol_consumption_variables(
+        table=table_type,
+        report=True,
+    )
+    # Organize information about previous alcohol consumption.
+    bin_consumption_previous = organize_previous_alcohol_consumption_variables(
+        table=bin_consumption_current["table_clean"],
+        report=True,
+    )
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        print("translations of hormone column names...")
+        for old in translations.keys():
+            print("   " + old + ": " + translations[old])
+        utility.print_terminal_partition(level=3)
+        # Column names and values.
+        table_report = table.loc[
+            :, table.columns.isin(columns_hormones)
+        ]
+        utility.print_terminal_partition(level=2)
+        print("Translation of columns for hormones: ")
+        print(table_report)
+        utility.print_terminal_partition(level=3)
+        # Variable types.
+        utility.print_terminal_partition(level=2)
+        print("After type conversion")
+        print(table_report.dtypes)
+        utility.print_terminal_partition(level=3)
+    # Return information.
+    return table
 
 
 
@@ -1733,11 +1913,19 @@ def execute_procedure(
         path_dock=path_dock,
         report=True,
     )
-    print("here are the original table's columns...")
-    print(source["table_assembly"].columns.to_list())
     # Organize information about genotype principal components.
     table_genotype = organize_genotype_principal_component_variables(
         table=source["table_assembly"],
+        report=True,
+    )
+    # Organize information about hormones.
+    table_hormone = organize_sex_hormone_variables(
+        table=table_genotype,
+        report=True,
+    )
+    # Organize information about alcohol consumption.
+    table_alcohol = organize_alcohol_consumption_variables(
+        table=table_hormone,
         report=True,
     )
 
@@ -1755,15 +1943,6 @@ def execute_procedure(
         # Convert variable types for further analysis.
         table_type = convert_table_variable_types(
             table=source["table_assembly"],
-            report=True,
-        )
-        # Derive alcohol consumption variables.
-        bin_consumption_current = organize_current_alcohol_consumption_variables(
-            table=table_type,
-            report=True,
-        )
-        bin_consumption_previous = organize_previous_alcohol_consumption_variables(
-            table=bin_consumption_current["table_clean"],
             report=True,
         )
         # Organize information for trial GWAS.
