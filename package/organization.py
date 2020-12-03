@@ -150,6 +150,123 @@ def read_source(
 
 
 ##########
+# Sex hormones
+
+
+def determine_sex_text(
+    sex=None,
+):
+    """
+    Translate information from UK Biobank about whether person
+    never consumes any alcohol.
+
+    Accommodate inexact float values.
+
+    arguments:
+        sex (float): person's sex, UK Biobank field 31
+
+    raises:
+
+    returns:
+        (str): text representation of person's sex
+
+    """
+
+    # Determine whether the variable has a valid (non-missing) value.
+    if (
+        (not pandas.isna(sex)) and
+        (-0.5 <= sex and sex < 1.5)
+    ):
+        # The variable has a valid value.
+        if (-0.5 <= sex and sex < 0.5):
+            # "female"
+            sex_text = "female"
+        elif (0.5 <= sex and sex < 1.5):
+            # "male"
+            sex_text = "male"
+    else:
+        # null
+        sex_text = float("nan")
+    # Return information.
+    return sex_text
+
+
+def organize_general_attribute_variables(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about general attributes.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Translate column names.
+    translations = dict()
+    translations["31-0.0"] = "sex"
+    translations["21022-0.0"] = "age"
+    translations["21001-0.0"] = "body_mass_index"
+    table.rename(
+        columns=translations,
+        inplace=True,
+    )
+    # Convert variable types.
+    columns_type = [
+        "sex", "age", "body_mass_index"
+    ]
+    table_type = convert_table_columns_variables_types_float(
+        columns=columns_type,
+        table=table,
+    )
+    # Determine text representation of person's sex.
+    table["sex_text"] = table.apply(
+        lambda row:
+            determine_sex_text(
+                sex=row["sex"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        print("translations of general attribute column names...")
+        for old in translations.keys():
+            print("   " + old + ": " + translations[old])
+        utility.print_terminal_partition(level=3)
+        # Organize data for report.
+        table_report = table.copy(deep=True)
+        table_report = table_report.loc[
+            :, table_report.columns.isin([
+                "eid", "IID",
+                "sex", "sex_text", "age", "body_mass_index",
+            ])
+        ]
+        utility.print_terminal_partition(level=2)
+        print("Translation of columns for general attributes: ")
+        print(table_report)
+        utility.print_terminal_partition(level=3)
+        # Variable types.
+        utility.print_terminal_partition(level=2)
+        print("After type conversion")
+        print(table_report.dtypes)
+        utility.print_terminal_partition(level=3)
+    # Return information.
+    return table
+
+
+##########
 # Genotype
 
 
@@ -1207,7 +1324,48 @@ def organize_alcohol_consumption_variables(
     return pail
 
 
+##########
+# Cohort selection
 
+
+
+def select_cohort(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about previous and current alcohol consumption.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Select records.
+    # Persons with sex female.
+    table = table.loc[
+        table["sex_text"] == "female", :
+    ]
+    # Persons who have consumed alcohol previously or currently.
+    table = table.loc[
+        (-0.5 <= table["alcohol_none"] and table["alcohol_none"] < 0.5), :
+    ]
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("Selection of cohort: ")
+        print(table)
+    # Return information.
+    return table
 
 
 
@@ -1992,9 +2150,14 @@ def execute_procedure(
         path_dock=path_dock,
         report=True,
     )
+    # Organize information about general attributes.
+    table_attribute = organize_general_attribute_variables(
+        table=source["table_assembly"],
+        report=True,
+    )
     # Organize information about genotype principal components.
     table_genotype = organize_genotype_principal_component_variables(
-        table=source["table_assembly"],
+        table=table_attribute,
         report=True,
     )
     # Organize information about hormones.
@@ -2007,8 +2170,11 @@ def execute_procedure(
         table=table_hormone,
         report=True,
     )
-
-    # ...
+    # Select cohort.
+    table_cohort = select_cohort(
+        table=pail_alcohol["quantity"]["table_clean"],
+        report=True,
+    )
 
 
     # Select relevant columns and drop any rows with null values.
