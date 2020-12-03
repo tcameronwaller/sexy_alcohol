@@ -34,11 +34,14 @@ path_scripts="$path_waller/sexy_alcohol/scripts/gwas"
 # Case-specific paths.
 path_table_phenotypes_covariates="$path_temporary/waller/dock/organization/trial/table_phenotypes_covariates.tsv"
 path_report="$path_temporary/waller/dock/gwas/female_alcohol_testosterone"
+#path_report="$path_temporary/waller/dock/gwas/female_alcohol_quantity"
 
 # Parameters.
-count=2 # 22 # Count of chromosomes on which to run GWAS
+count=22 # 22 # Count of chromosomes on which to run GWAS
 analysis="female_alcohol_testosterone"
+#analysis="female_alcohol_quantity"
 phenotypes="testosterone"
+#phenotypes="alcohol_drinks_monthly"
 covariates="age,body_mass_index,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
 threads=16
 maf=0.01

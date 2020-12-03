@@ -18,7 +18,7 @@
 ### -e "./error"
 # Queue.
 # "1-hour", "1-day", "4-day", "7-day", "30-day", "lg-mem"
-#$ -q 1-hour
+#$ -q 1-day
 # Priority 0-15.
 ### -p -10
 # Memory per iteration.
@@ -60,7 +60,7 @@ threads=$6
 maf=$7
 
 # Set directory.
-path_chromosome="$path_report/$chromosome"
+path_chromosome="$path_report/chromosome_$chromosome"
 # Determine whether the temporary directory structure already exists.
 if [ ! -d $path_chromosome ]; then
     # Directory does not already exist.
@@ -70,6 +70,7 @@ fi
 cd $path_chromosome
 
 # Call PLINK2.
+# 90,000 Mebibytes (MiB) is 94.372 Gigabytes (GB)
 $path_plink2 \
 --memory 90000 \
 --threads $threads \
