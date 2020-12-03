@@ -425,7 +425,7 @@ def determine_keep_column_field_instance(
             (len(str(column_field)) > 0) and
             (str(column_field) in ["31", "50", "22009"])
         ):
-            utility.print_terminal_partition(level=3)
+            utility.print_terminal_partition(level=4)
             print(column_field)
         # Determine whether to keep column for field's instance.
         if not pandas.isna(instances_array):
@@ -503,7 +503,7 @@ def determine_ukbiobank_field_instance_columns_keep(
         keep = determine_keep_column_field_instance(
             column=column,
             table_ukbiobank_variables=table_ukbiobank_variables,
-            report=report,
+            report=False,
         )
         if keep:
             columns_keep.append(column)
@@ -1087,7 +1087,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
 
     # Initialize directories.
     paths = initialize_directories(
