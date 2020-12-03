@@ -62,13 +62,13 @@ bunzip2 "$path_access/w_hm3.snplist.bz2"
 mv "$path_access/w_hm3.snplist" "$path_alleles/w_hm3.snplist"
 # w_hm3.snplist
 
+# Linkage disequilibrium scores for European population.
+# For simple heritability estimation.
+wget https://data.broadinstitute.org/alkesgroup/LDSCORE/eur_w_ld_chr.tar.bz2
+tar -xjvf eur_w_ld_chr.tar.bz2 -C $path_disequilibrium
+# dock/access/disequilibrium/eur_w_ld_chr/*
+
 if false; then
-    cd $path_access
-    # Linkage disequilibrium scores for European population.
-    # For simple heritability estimation.
-    wget https://data.broadinstitute.org/alkesgroup/LDSCORE/eur_w_ld_chr.tar.bz2
-    tar -xjvf eur_w_ld_chr.tar.bz2 -C $path_disequilibrium
-    # dock/access/disequilibrium/eur_w_ld_chr/*
 
     # Baseline model linkage disequilibrium scores.
     # For partitioned heritability estimation by stratified LD score regression.
@@ -217,7 +217,54 @@ $path_ldsc/munge_sumstats.py \
 
 echo "done without problem"
 
+###########################################################################
+# Estimate phenotype heritability in LDSC.
 
+echo "----------------------------------------------------------------------"
+echo "----------------------------------------------------------------------"
+echo "----------------------------------------------------------------------"
+echo "LDSC simple heritability estimation."
+echo "----------------------------------------------------------------------"
+echo "----------------------------------------------------------------------"
+echo "----------------------------------------------------------------------"
+echo ""
+echo ""
+echo ""
+echo "----------------------------------------------------------------------"
+echo "Testosterone in females who consume alcohol previously or currently."
+echo "----------------------------------------------------------------------"
+
+if false; then
+  $path_ldsc/ldsc.py \
+  --h2 $path_heritability_metabolites/${identifier}_munge.sumstats.gz \
+  --ref-ld-chr $path_disequilibrium/eur_w_ld_chr/ \
+  --w-ld-chr $path_disequilibrium/eur_w_ld_chr/ \
+  --out ${identifier}_heritability
+fi
+
+
+###########################################################################
+# Estimate genetic correlation in LDSC.
+
+echo "----------------------------------------------------------------------"
+echo "----------------------------------------------------------------------"
+echo "----------------------------------------------------------------------"
+echo "LDSC genetic correlation."
+echo "----------------------------------------------------------------------"
+echo "----------------------------------------------------------------------"
+echo "----------------------------------------------------------------------"
+echo ""
+echo ""
+echo ""
+
+path_testosterone="$path_munge/testosterone.sumstats.gz"
+path_alcohol="$path_munge/alcohol_drinks_monthly.sumstats.gz"
+
+$path_ldsc/ldsc.py \
+--rg $path_testosterone,$path_alcohol \
+--ref-ld-chr $path_disequilibrium/eur_w_ld_chr/ \
+--w-ld-chr $path_disequilibrium/eur_w_ld_chr/ \
+--out "$path_genetic_correlation/testosterone_alcohol_correlation"
 
 if false; then
     # Partitioned heritability by stratified LD score regression.
