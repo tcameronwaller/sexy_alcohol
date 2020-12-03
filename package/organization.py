@@ -189,6 +189,7 @@ def match_column_field(
 def collect_sort_table_field_instance_columns(
     field=None,
     table=None,
+    report=None,
 ):
     """
     Collects names of columns that represent instances of a specific field.
@@ -197,6 +198,7 @@ def collect_sort_table_field_instance_columns(
         field (str): identifier of field for which to collect columns
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        report (bool): whether to print reports
 
     raises:
 
@@ -213,7 +215,36 @@ def collect_sort_table_field_instance_columns(
         columns
     ))
     # Sort columns.
-    columns_sort = sorted(columns_field, reverse=False)
+    # Be careful to sort by the integer value of the instance.
+    #columns_sort = sorted(columns_field, reverse=False)
+    columns_instance = list()
+    for column in columns_field:
+        column_instance = str(column).split("-")[1].strip()
+        columns_instance.append(column_instance)
+    columns_integer = list()
+    for column in columns_instance:
+        column_integer = str(column).split(".")[1].strip()
+        columns_integer.append(int(column_integer))
+    table_columns = pandas.DataFrame(
+        data={
+            "column_name": columns_field,
+            "column_instance": columns_instance,
+            "column_integer": columns_integer,
+        }
+    )
+    # Sort table rows.
+    table_columns.sort_values(
+        by=["column_integer"],
+        axis="index",
+        ascending=True,
+        inplace=True,
+    )
+    columns_sort = table_columns["column_name"].to_list()
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("Sorted column names")
+        print(table_columns)
     # Return information.
     return columns_sort
 
@@ -345,9 +376,8 @@ def organize_genotype_principal_component_variables(
     columns = collect_sort_table_field_instance_columns(
         field="22009",
         table=table,
+        report=report,
     )
-    print("here are the matching columns...")
-    print(columns)
     # Translate column names.
     translations = translate_column_field_instance_names(
         columns=columns,
