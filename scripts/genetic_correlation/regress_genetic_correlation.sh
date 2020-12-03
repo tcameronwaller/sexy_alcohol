@@ -52,6 +52,14 @@ fi
 ###########################################################################
 # Access references for LDSC.
 
+cd $path_access
+
+# Definitions of Simple Nucleotide Variant alleles.
+wget https://data.broadinstitute.org/alkesgroup/LDSCORE/w_hm3.snplist.bz2
+bunzip2 "$path_access/w_hm3.snplist.bz2"
+mv "$path_access/w_hm3.snplist" "$path_alleles/w_hm3.snplist"
+# w_hm3.snplist
+
 if false; then
     cd $path_access
     # Linkage disequilibrium scores for European population.
@@ -65,12 +73,6 @@ if false; then
     wget https://data.broadinstitute.org/alkesgroup/LDSCORE/1000G_Phase3_baselineLD_v2.2_ldscores.tgz
     tar -xzvf 1000G_Phase3_baselineLD_v2.2_ldscores.tgz -C $path_baseline
     # dock/access/baseline/baselineLD.*
-
-    # Definitions of Simple Nucleotide Variant alleles.
-    wget https://data.broadinstitute.org/alkesgroup/LDSCORE/w_hm3.snplist.bz2
-    bunzip2 "$path_access/w_hm3.snplist.bz2"
-    mv "$path_access/w_hm3.snplist" "$path_alleles/w_hm3.snplist"
-    # w_hm3.snplist
 
     # Weights.
     # For partitioned heritability estimation by stratified LD score regression.
@@ -112,7 +114,7 @@ phenotype="testosterone"
 cd $path_gwas
 path_concatenation="$path_gwas/concatenation.${phenotype}.glm.linear"
 echo "SNP A1 A2 N BETA P" > $path_concatenation
-for (( index=0; index<=$count; index+=1 )); do
+for (( index=1; index<=$count; index+=1 )); do
   path_gwas_chromosome="$path_gwas/chromosome_${index}"
   echo "gwas chromosome path: "
   echo $path_gwas_chromosome
@@ -152,7 +154,7 @@ phenotype="alcohol_drinks_monthly"
 cd $path_gwas
 path_concatenation="$path_gwas/concatenation.${phenotype}.glm.linear"
 echo "SNP A1 A2 N BETA P" > $path_concatenation
-for (( index=0; index<=$count; index+=1 )); do
+for (( index=1; index<=$count; index+=1 )); do
   path_gwas_chromosome="$path_gwas/chromosome_${index}"
   echo "gwas chromosome path: "
   echo $path_gwas_chromosome
@@ -166,17 +168,39 @@ echo "----------"
 echo "after concatenation..."
 head -30 $path_concatenation
 
+###########################################################################
+# Munge GWAS summary statistics for LDSC.
 
+echo "----------------------------------------------------------------------"
+echo "----------------------------------------------------------------------"
+echo "----------------------------------------------------------------------"
+echo "Munge GWAS summary statistics for LDSC."
+echo "----------------------------------------------------------------------"
+echo "----------------------------------------------------------------------"
+echo "----------------------------------------------------------------------"
+echo ""
+echo ""
+echo ""
+echo "----------------------------------------------------------------------"
+echo "Testosterone in females who consume alcohol previously or currently."
+echo "----------------------------------------------------------------------"
+path_gwas=$path_gwas_testosterone
+#path_gwas=$path_gwas_alcohol
+phenotype="testosterone"
+#phenotype="alcohol_drinks_monthly"
+path_concatenation="$path_gwas/concatenation.${phenotype}.glm.linear"
+path_munge="$path_gwas/${phenotype}"
 
+$path_ldsc/munge_sumstats.py \
+--sumstats $path_concatenation \
+--out $path_munge \
+--merge-alleles $path_alleles/w_hm3.snplist
+
+echo "done without problem"
 
 
 
 if false; then
-    $path_ldsc/munge_sumstats.py \
-    --sumstats ${identifier}_new.txt \
-    --out ${identifier}_munge \
-    --merge-alleles $path_alleles/w_hm3.snplist
-
     # Partitioned heritability by stratified LD score regression.
     #https://github.com/bulik/ldsc/wiki/Partitioned-Heritability-from-Continuous-Annotations
 
