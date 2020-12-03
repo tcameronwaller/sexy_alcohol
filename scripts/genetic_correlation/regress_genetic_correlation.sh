@@ -17,6 +17,7 @@ path_baseline="$path_access/baseline"
 path_weights="$path_access/weights"
 path_frequencies="$path_access/frequencies"
 path_alleles="$path_access/alleles"
+path_munge="$path_temporary/waller/dock/genetic_correlation/munge"
 
 path_gwas="$path_temporary/waller/dock/gwas"
 path_gwas_testosterone="$path_temporary/waller/dock/gwas/female_alcohol_testosterone"
@@ -47,6 +48,7 @@ if [ ! -d $path_genetic_correlation ]; then
     mkdir -p $path_weights
     mkdir -p $path_frequencies
     mkdir -p $path_alleles
+    mkdir -p $path_munge
 fi
 
 ###########################################################################
@@ -190,11 +192,27 @@ path_gwas=$path_gwas_testosterone
 phenotype="testosterone"
 #phenotype="alcohol_drinks_monthly"
 path_concatenation="$path_gwas/concatenation.${phenotype}.glm.linear"
-path_munge="$path_gwas/${phenotype}"
+path_munge_phenotype="$path_munge/${phenotype}"
 
 $path_ldsc/munge_sumstats.py \
 --sumstats $path_concatenation \
---out $path_munge \
+--out $path_munge_phenotype \
+--merge-alleles $path_alleles/w_hm3.snplist
+
+echo ""
+echo ""
+echo ""
+echo "----------------------------------------------------------------------"
+echo "Alcohol consumption in females who consume alcohol previously or currently."
+echo "----------------------------------------------------------------------"
+path_gwas=$path_gwas_alcohol
+phenotype="alcohol_drinks_monthly"
+path_concatenation="$path_gwas/concatenation.${phenotype}.glm.linear"
+path_munge_phenotype="$path_munge/${phenotype}"
+
+$path_ldsc/munge_sumstats.py \
+--sumstats $path_concatenation \
+--out $path_munge_phenotype \
 --merge-alleles $path_alleles/w_hm3.snplist
 
 echo "done without problem"
