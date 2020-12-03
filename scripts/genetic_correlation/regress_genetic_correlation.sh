@@ -92,32 +92,44 @@ fi
 echo "----------------------------------------------------------------------"
 echo "Iterate on that simple array with indices."
 echo "----------------------------------------------------------------------"
-count=22 # 22 # Count of chromosomes on which to run GWAS
-for (( index=0; index<=$count; index+=1 )); do
-    directory="chromosome_${index}"
-    path_directory="$path_gwas_testosterone/$directory"
-    echo "current chromosome path: "
-    echo $path_directory
-done
+count=22 # 22: count of chromosomes on which ran GWAS
+path_gwas=$path_gwas_testosterone
+#path_gwas=$path_gwas_alcohol
+phenotype="testosterone"
+#phenotype="alcohol_drinks_monthly"
 
+# Concatenate GWAS reports from all chromosomes.
+# Extract relevant information and format for LDSC.
+# Initialize concatenation.
+cd $path_gwas
+path_concatenation="$path_gwas/concatenation.${phenotype}.glm.linear"
+echo "SNP A1 A2 N BETA P" > $path_concatenation
+for (( index=0; index<=$count; index+=1 )); do
+  path_gwas_chromosome="$path_gwas/chromosome_${index}"
+  echo "gwas chromosome path: "
+  echo $path_gwas_chromosome
+  path_report="$path_gwas_chromosome/report.${phenotype}.glm.linear"
+  # Select and concatenate relevant information from chromosome reports.
+  # Format of GWAS reports (".glm.linear") by PLINK2.
+  # https://www.cog-genomics.org/plink/2.0/formats
+  # Format of GWAS summary for LDSC.
+  # https://github.com/bulik/ldsc/wiki/Heritability-and-Genetic-Correlation#reformatting-summary-statistics
+  # description: ............................ PLINK2 column ... LDSC column
+  # variant identifier: ..................... "ID" ............ "SNP"
+  # alternate allele (effect allele): ....... "A1" ............ "A1"
+  # reference allele (non-effect allele): ... "REF" ........... "A2"
+  # sample size: ............................ "OBS_CT" ........ "N"
+  # effect (beta): .......................... "BETA" .......... "BETA"
+  # probability (p-value): .................. "P" ............. "P"
+  cat $path_report | awk 'NR > 1 {print $3, $6, $4, $8, $9, $12}' >> $path_concatenation
+done
+echo "----------"
+echo "----------"
+echo "----------"
+echo "after concatenation..."
+head -10 $path_concatenation
 
 if false; then
-    # Read instance.
-    readarray -t files < $path_instances
-    file=${files[$index]}
-    path_file="$path_metabolite_summaries/$file"
-
-    #file="$(basename $path_file)"
-    identifier="$(cut -d'.' -f1 <<<$file)"
-    #echo "metabolite identifier: " $identifier
-
-    # Extract and organize information from summary.
-    # Write information to new, temporary file.
-    cd $path_heritability_metabolites
-    echo "SNP A1 A2 N BETA P" > ${identifier}_new.txt
-    zcat $path_file | awk 'NR > 1 {print $1, $2, $3, $16, $8, $10}' >> ${identifier}_new.txt
-    #head -10 ${identifier}_new.txt
-
     $path_ldsc/munge_sumstats.py \
     --sumstats ${identifier}_new.txt \
     --out ${identifier}_munge \
