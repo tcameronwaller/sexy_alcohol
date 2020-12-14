@@ -1921,6 +1921,299 @@ def organize_alcohol_audit_questionnaire_variables(
     return pail
 
 
+##########
+# Alcoholism diagnoses
+
+
+# TODO: define all ICD9/ICD10 codes within a single function to make it easier
+# TODO: to read in from a table...
+
+
+
+def specify_icd_alcoholism_diagnosis_groups_codes():
+    """
+    Specifies the codes for diagnostic groups relevant to alcoholism.
+
+    arguments:
+
+    raises:
+
+    returns:
+        (dict<dict<str>>): collections of codes for diagnostic groups
+
+    """
+
+    # Determine whether the variable has a valid (non-missing) value.
+    codes = dict()
+
+    codes["group_a"] = dict()
+    codes["group_a"]["icd_9"] = [
+        "3039", "291", "2910", "2918",
+    ]
+    codes["group_a"]["icd_10"] = [
+        "F102", "F103", "F104", "F105", "F106", "F107", "F108",
+    ]
+
+    codes["group_b"] = dict()
+    codes["group_b"]["icd_9"] = []
+    codes["group_b"]["icd_10"] = [
+        "F10", "F100", "F109",
+    ]
+
+    codes["group_c"] = dict()
+    codes["group_c"]["icd_9"] = [
+        "3050",
+    ]
+    codes["group_c"]["icd_10"] = [
+        "F101",
+    ]
+
+    codes["group_d"] = dict()
+    codes["group_d"]["icd_9"] = [
+        "3575", "4255", "5353", "5710", "5711", "5712", "5713",
+    ]
+    codes["group_d"]["icd_10"] = [
+        "G621", "I426", "K292", "K70", "K700", "K701", "K702", "K703", "K704",
+        "K709",
+    ]
+
+    # Return information.
+    return codes
+
+
+def parse_field_array_codes(
+    collection=None,
+    delimiter=None,
+):
+    """
+    Parse the field's array codes.
+
+    arguments:
+        collection (str): raw string of field's array codes
+        delimiter (str): delimiter between codes
+
+    raises:
+
+    returns:
+        (list<str>): field's array codes
+
+    """
+
+    if (
+        (len(str(collection)) > 0) and (delimiter in str(collection))
+    ):
+        codes_raw = str(collection).split(delimiter)
+        codes = list()
+        for (code_raw in codes_raw):
+            code = str(code_raw).strip()
+            if (len(code) > 0):
+                codes.append(str(code))
+            pass
+    else:
+        codes = list()
+    return codes
+
+
+def parse_interpret_icd_diagnosis_codes(
+    row=None,
+    fields=None,
+    codes_group=None,
+):
+    """
+    Parses and interprets ICD diagnosis codes.
+
+    arguments:
+        row (object): Pandas series corresponding to a row of a Pandas data
+            frame
+        fields (list<str>): names of columns for UK Biobank fields for
+            diagnostic codes
+        codes_group (list<str>): codes corresponding to a diagnostic
+            group
+
+    raises:
+
+    returns:
+        (bool): whether values in the current row match the diagnostic group
+
+    """
+
+    match = False
+    for field in fields:
+        collection = row[field].copy(deep=True)
+        codes = parse_field_array_codes(
+            collection=collection,
+            delimiter=";",
+        )
+        if (len(codes) > 0):
+            for code in codes:
+                if (code in codes_group):
+                    match = True
+            pass
+        pass
+    return match
+
+
+def determine_diagnosis_icd_alcoholism_group(
+    row=None,
+    fields_icd_9=None,
+    fields_icd_10=None,
+    codes_icd_group=None,
+):
+    """
+    Organizes information about diagnoses relevant to alcoholism.
+
+    arguments:
+        row (object): Pandas series corresponding to a row of a Pandas data
+            frame
+        fields_icd_9 (list<str>): names of columns for UK Biobank fields for
+            ICD9 diagnostic codes
+        fields_icd_10 (list<str>): names of columns for UK Biobank fields for
+            ICD10 diagnostic codes
+        codes_icd_group (dict<list<str>>): ICD9 and ICD10 codes corresponding
+            to a diagnostic group
+
+    raises:
+
+    returns:
+        (bool): whether values in the current row match the diagnostic group
+
+    """
+
+    # Determine whether any codes in any ICD9 fields match diagnostic group.
+    icd_9_group = parse_interpret_icd_diagnosis_codes(
+        row=row,
+        fields=fields_icd_9,
+        codes_group=codes_icd_group["icd_9"],
+    )
+    # Determine whether any codes in any ICD10 fields match diagnostic group.
+    icd_10_group = parse_interpret_icd_diagnosis_codes(
+        row=row,
+        fields=fields_icd_10,
+        codes_group=codes_icd_group["icd_10"],
+    )
+    # Interpret matches from either ICD9 or ICD10 codes.
+    match = False
+    if (icd_9_group or icd_10_group):
+        match = True
+    # Return information.
+    return match
+
+
+# TODO: interpretation function should collect a list of UKBB fields that correspond
+# TODO: to ICD9, ICD10, self diagnoses respectively
+# self=["2002"],
+# icd_9=["41271", "41203", "41205",],
+# icd_10=["41270", "41202", "41204",],
+
+def organize_alcoholism_diagnosis_variables(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about diagnoses relevant to alcoholism.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about alcoholism diagnoses
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Specify ICD9 and ICD10 diagnostic codes relevant to alcoholism.
+    codes_icd = specify_icd_alcoholism_diagnosis_groups_codes()
+
+    # Specify relevant codes from self diagnosis.
+    # TODO: is this relevant??? ... I guess so, yeah, just a separate variable/group
+
+    # Determine whether person has diagnoses in group A.
+    table["alcohol_diagnosis_a"] = table.apply(
+        lambda row:
+            determine_diagnosis_icd_alcoholism_group(
+                row=row,
+                fields_icd_9=["41271_array", "41203_array", "41205_array",],
+                fields_icd_10=["41270_array", "41202_array", "41204_array",],
+                codes_icd_group=codes_icd["group_a"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether person has diagnoses in group B.
+    table["alcohol_diagnosis_b"] = table.apply(
+        lambda row:
+            determine_diagnosis_icd_alcoholism_group(
+                row=row,
+                fields_icd_9=["41271_array", "41203_array", "41205_array",],
+                fields_icd_10=["41270_array", "41202_array", "41204_array",],
+                codes_icd_group=codes_icd["group_b"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether person has diagnoses in group C.
+    table["alcohol_diagnosis_c"] = table.apply(
+        lambda row:
+            determine_diagnosis_icd_alcoholism_group(
+                row=row,
+                fields_icd_9=["41271_array", "41203_array", "41205_array",],
+                fields_icd_10=["41270_array", "41202_array", "41204_array",],
+                codes_icd_group=codes_icd["group_c"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether person has diagnoses in group D.
+    table["alcohol_diagnosis_d"] = table.apply(
+        lambda row:
+            determine_diagnosis_icd_alcoholism_group(
+                row=row,
+                fields_icd_9=["41271_array", "41203_array", "41205_array",],
+                fields_icd_10=["41270_array", "41202_array", "41204_array",],
+                codes_icd_group=codes_icd["group_d"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether person has self diagnoses.
+
+    # TODO: maybe modify the previous interpretation function to make more general?
+
+    # Remove columns for variables that are not necessary anymore.
+    table_clean = table.copy(deep=True)
+    table_clean.drop(
+        labels=columns_type,
+        axis="columns",
+        inplace=True
+    )
+    # Organize data for report.
+    table_report = table.copy(deep=True)
+    table_report = table_report.loc[
+        :, table_report.columns.isin([
+            "eid", "IID",
+            "41271_array", "41203_array", "41205_array", "41270_array",
+            "41202_array", "41204_array", "20002_array",
+            "alcohol_diagnosis_a",
+            "alcohol_diagnosis_b",
+            "alcohol_diagnosis_c",
+            "alcohol_diagnosis_d",
+            "alcohol_diagnosis_self",
+        ])
+    ]
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("Summary of alcohol diagnosis variables: ")
+        print(table_report)
+    # Collect information.
+    pail = dict()
+    pail["table"] = table
+    pail["table_clean"] = table_clean
+    pail["table_report"] = table_report
+    # Return information.
+    return pail
+
 
 
 
@@ -2689,47 +2982,54 @@ def execute_procedure(
     )
     print(pail_audit["audit"]["table_clean"])
 
-
-
-
-    # Select cohort.
-    table_cohort = select_cohort(
-        table=pail_alcohol_consumption["quantity"]["table_clean"],
+    # Organize International Classification of Disease (ICD) ICD9 and ICD10
+    # codes for diagnoses relevant to alcoholism.
+    pail_diagnosis = organize_alcoholism_diagnosis_variables(
+        table=pail_audit["audit"]["table_clean"],
         report=True,
     )
-    # Select records with valid values of relevant variables.
-    table_valid = select_valid_records_all_specific_variables(
-        names=[
-            "IID",
-            "age", "body_mass_index", "testosterone", "alcohol_drinks_monthly",
-        ],
-        prefixes=["genotype_pc_",],
-        table=table_cohort,
-        report=True,
-    )
-    # Organize phenotypes and covariates in format for analysis in PLINK.
-    table_format = organize_phenotype_covariate_table_plink_format(
-        table=table_valid,
-        report=True,
-    )
-    # Match UKB genotype sample identifiers to phenotype identifiers.
-    match_ukb_genotype_phenotype_sample_identifiers(
-        table_phenotypes=table_format,
-        table_ukb_samples=source["table_ukb_samples"],
-        report=True,
-    )
+    print(pail_diagnosis["table_clean"])
 
-    # Collect information.
-    information = dict()
-    information["trial"] = dict()
-    information["trial"]["table_phenotypes_covariates"] = (
-        table_format
-    )
-    # Write product information to file.
-    write_product(
-        paths=paths,
-        information=information
-    )
+
+    if False:
+        # Select cohort.
+        table_cohort = select_cohort(
+            table=pail_alcohol_consumption["quantity"]["table_clean"],
+            report=True,
+        )
+        # Select records with valid values of relevant variables.
+        table_valid = select_valid_records_all_specific_variables(
+            names=[
+                "IID",
+                "age", "body_mass_index", "testosterone", "alcohol_drinks_monthly",
+            ],
+            prefixes=["genotype_pc_",],
+            table=table_cohort,
+            report=True,
+        )
+        # Organize phenotypes and covariates in format for analysis in PLINK.
+        table_format = organize_phenotype_covariate_table_plink_format(
+            table=table_valid,
+            report=True,
+        )
+        # Match UKB genotype sample identifiers to phenotype identifiers.
+        match_ukb_genotype_phenotype_sample_identifiers(
+            table_phenotypes=table_format,
+            table_ukb_samples=source["table_ukb_samples"],
+            report=True,
+        )
+
+        # Collect information.
+        information = dict()
+        information["trial"] = dict()
+        information["trial"]["table_phenotypes_covariates"] = (
+            table_format
+        )
+        # Write product information to file.
+        write_product(
+            paths=paths,
+            information=information
+        )
 
     if False:
         # Derive aggregate of AUDIT-C alcohol use questionnaire.
