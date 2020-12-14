@@ -1929,7 +1929,6 @@ def organize_alcohol_audit_questionnaire_variables(
 # TODO: to read in from a table...
 
 
-
 def specify_icd_alcoholism_diagnosis_groups_codes():
     """
     Specifies the codes for diagnostic groups relevant to alcoholism.
@@ -1981,6 +1980,27 @@ def specify_icd_alcoholism_diagnosis_groups_codes():
     return codes
 
 
+def specify_self_alcoholism_diagnosis_codes():
+    """
+    Specifies the codes for diagnostic groups relevant to alcoholism.
+
+    arguments:
+
+    raises:
+
+    returns:
+        (list<str>): codes for self diagnosis
+
+    """
+
+    # Specify codes.
+    codes = [
+        "1408", "1604",
+    ]
+    # Return information.
+    return codes
+
+
 def parse_field_array_codes(
     collection=None,
     delimiter=None,
@@ -2014,10 +2034,10 @@ def parse_field_array_codes(
     return codes
 
 
-def parse_interpret_icd_diagnosis_codes(
+def parse_interpret_match_diagnosis_codes(
     row=None,
     fields=None,
-    codes_group=None,
+    codes_match=None,
 ):
     """
     Parses and interprets ICD diagnosis codes.
@@ -2027,7 +2047,7 @@ def parse_interpret_icd_diagnosis_codes(
             frame
         fields (list<str>): names of columns for UK Biobank fields for
             diagnostic codes
-        codes_group (list<str>): codes corresponding to a diagnostic
+        codes_match (list<str>): codes corresponding to a diagnostic
             group
 
     raises:
@@ -2046,7 +2066,7 @@ def parse_interpret_icd_diagnosis_codes(
         )
         if (len(codes) > 0):
             for code in codes:
-                if (code in codes_group):
+                if (code in codes_match):
                     match = True
             pass
         pass
@@ -2080,16 +2100,16 @@ def determine_diagnosis_icd_alcoholism_group(
     """
 
     # Determine whether any codes in any ICD9 fields match diagnostic group.
-    icd_9_group = parse_interpret_icd_diagnosis_codes(
+    icd_9_group = parse_interpret_match_diagnosis_codes(
         row=row,
         fields=fields_icd_9,
-        codes_group=codes_icd_group["icd_9"],
+        codes_match=codes_icd_group["icd_9"],
     )
     # Determine whether any codes in any ICD10 fields match diagnostic group.
-    icd_10_group = parse_interpret_icd_diagnosis_codes(
+    icd_10_group = parse_interpret_match_diagnosis_codes(
         row=row,
         fields=fields_icd_10,
-        codes_group=codes_icd_group["icd_10"],
+        codes_match=codes_icd_group["icd_10"],
     )
     # Interpret matches from either ICD9 or ICD10 codes.
     if (icd_9_group or icd_10_group):
@@ -2099,12 +2119,6 @@ def determine_diagnosis_icd_alcoholism_group(
     # Return information.
     return match
 
-
-# TODO: interpretation function should collect a list of UKBB fields that correspond
-# TODO: to ICD9, ICD10, self diagnoses respectively
-# self=["2002"],
-# icd_9=["41271", "41203", "41205",],
-# icd_10=["41270", "41202", "41204",],
 
 def organize_alcoholism_diagnosis_variables(
     table=None,
@@ -2129,9 +2143,8 @@ def organize_alcoholism_diagnosis_variables(
     table = table.copy(deep=True)
     # Specify ICD9 and ICD10 diagnostic codes relevant to alcoholism.
     codes_icd = specify_icd_alcoholism_diagnosis_groups_codes()
-
     # Specify relevant codes from self diagnosis.
-    # TODO: is this relevant??? ... I guess so, yeah, just a separate variable/group
+    codes_self = specify_self_alcoholism_diagnosis_codes()
 
     # Determine whether person has diagnoses in group A.
     table["alcohol_diagnosis_a"] = table.apply(
@@ -2178,13 +2191,24 @@ def organize_alcoholism_diagnosis_variables(
         axis="columns", # apply across rows
     )
     # Determine whether person has self diagnoses.
-
-    # TODO: maybe modify the previous interpretation function to make more general?
+    table["alcohol_diagnosis_self"] = table.apply(
+        lambda row:
+            parse_interpret_match_diagnosis_codes(
+                row=row,
+                fields=["20002_array"],
+                codes_match=codes_self,
+            ),
+        axis="columns", # apply across rows
+    )
 
     # Remove columns for variables that are not necessary anymore.
     table_clean = table.copy(deep=True)
     table_clean.drop(
-        labels=columns_type,
+        labels=[
+            "41271_array", "41203_array", "41205_array",
+            "41270_array", "41202_array", "41204_array",
+            "20002_array",
+        ],
         axis="columns",
         inplace=True
     )
@@ -2942,7 +2966,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -2971,25 +2995,32 @@ def execute_procedure(
         report=True,
     )
     # Organize information about alcohol consumption.
-    pail_alcohol_consumption = organize_alcohol_consumption_variables(
-        table=table_hormone,
-        report=True,
-    )
+    if False:
+        pail_alcohol_consumption = organize_alcohol_consumption_variables(
+            table=table_hormone,
+            report=True,
+        )
+        print(pail_alcohol_consumption["quantity"]["table_clean"])
     # Organize Alchol Use Disorders Identification Test (AUDIT) and
     # AUDIT-Concise (AUDIT-C) questionnaire scores.
     pail_audit = organize_alcohol_audit_questionnaire_variables(
-        table=pail_alcohol_consumption["quantity"]["table_clean"],
+        table=table_hormone,
         report=True,
     )
     print(pail_audit["audit"]["table_clean"])
 
     # Organize International Classification of Disease (ICD) ICD9 and ICD10
     # codes for diagnoses relevant to alcoholism.
+    # Organize codes for self diagnoses relevant to alcoholism.
     pail_diagnosis = organize_alcoholism_diagnosis_variables(
         table=pail_audit["audit"]["table_clean"],
         report=True,
     )
     print(pail_diagnosis["table_clean"])
+
+    # Organize alcoholism cases and controls.
+    # TODO: there might be multiple definitions of alcoholism cases and controls...
+    # TODO: maybe introduce multiple variables: "alcoholism_1", "alcoholism_2", etc
 
 
     if False:
