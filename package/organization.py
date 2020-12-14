@@ -2004,7 +2004,7 @@ def parse_field_array_codes(
     ):
         codes_raw = str(collection).split(delimiter)
         codes = list()
-        for (code_raw in codes_raw):
+        for code_raw in codes_raw:
             code = str(code_raw).strip()
             if (len(code) > 0):
                 codes.append(str(code))
