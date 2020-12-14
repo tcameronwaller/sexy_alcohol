@@ -2039,7 +2039,7 @@ def parse_interpret_icd_diagnosis_codes(
 
     match = False
     for field in fields:
-        collection = row[field].copy(deep=True)
+        collection = row[field]
         codes = parse_field_array_codes(
             collection=collection,
             delimiter=";",
@@ -2092,9 +2092,10 @@ def determine_diagnosis_icd_alcoholism_group(
         codes_group=codes_icd_group["icd_10"],
     )
     # Interpret matches from either ICD9 or ICD10 codes.
-    match = False
     if (icd_9_group or icd_10_group):
         match = True
+    else:
+        match = False
     # Return information.
     return match
 
