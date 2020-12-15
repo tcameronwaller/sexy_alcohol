@@ -2641,9 +2641,11 @@ def organize_alcoholism_cases_controls_variables(
     table_clean = table.copy(deep=True)
     table_clean.drop(
         labels=[
-            "41271_array", "41203_array", "41205_array",
-            "41270_array", "41202_array", "41204_array",
-            "20002_array",
+            "alcohol_diagnosis_a", "alcohol_diagnosis_b",
+            "alcohol_diagnosis_c", "alcohol_diagnosis_d",
+            "alcohol_diagnosis_self",
+            "alcohol_auditc",
+            "alcohol_audit",
         ],
         axis="columns",
         inplace=True
@@ -2653,8 +2655,6 @@ def organize_alcoholism_cases_controls_variables(
     table_report = table_report.loc[
         :, table_report.columns.isin([
             "eid", "IID",
-            "41271_array", "41203_array", "41205_array", "41270_array",
-            "41202_array", "41204_array", "20002_array",
             "alcohol_diagnosis_a",
             "alcohol_diagnosis_b",
             "alcohol_diagnosis_c",
@@ -3460,6 +3460,11 @@ def execute_procedure(
         report=True,
     )
     print(pail_alcoholism["table_clean"])
+
+
+
+    # TODO: before selecting any cohort,
+    # TODO: be sure to drop records with null or missing values in relevant columns (subset)
 
     # Copy data.
     table_test = pail_alcoholism["table_clean"].copy(deep=True)
