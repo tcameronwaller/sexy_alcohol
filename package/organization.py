@@ -2222,6 +2222,10 @@ def organize_alcoholism_diagnosis_variables(
             "alcohol_diagnosis_self",
         ])
     ]
+    table_report = table_report.loc[
+        table_report["alcohol_diagnosis_a"] == True, :
+    ]
+
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
