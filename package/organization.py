@@ -2370,7 +2370,7 @@ def determine_case_control_alcoholism_one(
         alcohol_diagnosis_c=alcohol_diagnosis_c,
         alcohol_diagnosis_d=alcohol_diagnosis_d,
         alcohol_diagnosis_self=alcohol_diagnosis_self,
-        alcohol_auditc=alcohol_audit_c,
+        alcohol_auditc=alcohol_auditc,
         alcohol_audit=alcohol_audit,
         threshold_auditc=threshold_auditc,
         threshold_audit=threshold_audit,
@@ -2446,7 +2446,7 @@ def determine_case_control_alcoholism_two(
         alcohol_diagnosis_c=alcohol_diagnosis_c,
         alcohol_diagnosis_d=alcohol_diagnosis_d,
         alcohol_diagnosis_self=alcohol_diagnosis_self,
-        alcohol_auditc=alcohol_audit_c,
+        alcohol_auditc=alcohol_auditc,
         alcohol_audit=alcohol_audit,
         threshold_auditc=threshold_auditc,
         threshold_audit=threshold_audit,
@@ -2525,7 +2525,7 @@ def determine_case_control_alcoholism_three(
         alcohol_diagnosis_c=alcohol_diagnosis_c,
         alcohol_diagnosis_d=alcohol_diagnosis_d,
         alcohol_diagnosis_self=alcohol_diagnosis_self,
-        alcohol_auditc=alcohol_audit_c,
+        alcohol_auditc=alcohol_auditc,
         alcohol_audit=alcohol_audit,
         threshold_auditc=threshold_auditc,
         threshold_audit=threshold_audit,
@@ -2677,10 +2677,6 @@ def organize_alcoholism_cases_controls_variables(
     pail["table_report"] = table_report
     # Return information.
     return pail
-
-
-
-
 
 
 ##########
@@ -3407,7 +3403,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 3")
 
     # Initialize directories.
     paths = initialize_directories(
