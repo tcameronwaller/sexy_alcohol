@@ -2150,7 +2150,7 @@ def organize_alcoholism_diagnosis_variables(
     table["alcohol_diagnosis_a"] = table.apply(
         lambda row:
             determine_diagnosis_icd_alcoholism_group(
-                row=row,
+                row=row.copy(deep=True),
                 fields_icd_9=["41271_array", "41203_array", "41205_array",],
                 fields_icd_10=["41270_array", "41202_array", "41204_array",],
                 codes_icd_group=codes_icd["group_a"],
@@ -2161,7 +2161,7 @@ def organize_alcoholism_diagnosis_variables(
     table["alcohol_diagnosis_b"] = table.apply(
         lambda row:
             determine_diagnosis_icd_alcoholism_group(
-                row=row,
+                row=row.copy(deep=True),
                 fields_icd_9=["41271_array", "41203_array", "41205_array",],
                 fields_icd_10=["41270_array", "41202_array", "41204_array",],
                 codes_icd_group=codes_icd["group_b"],
@@ -2172,7 +2172,7 @@ def organize_alcoholism_diagnosis_variables(
     table["alcohol_diagnosis_c"] = table.apply(
         lambda row:
             determine_diagnosis_icd_alcoholism_group(
-                row=row,
+                row=row.copy(deep=True),
                 fields_icd_9=["41271_array", "41203_array", "41205_array",],
                 fields_icd_10=["41270_array", "41202_array", "41204_array",],
                 codes_icd_group=codes_icd["group_c"],
@@ -2183,7 +2183,7 @@ def organize_alcoholism_diagnosis_variables(
     table["alcohol_diagnosis_d"] = table.apply(
         lambda row:
             determine_diagnosis_icd_alcoholism_group(
-                row=row,
+                row=row.copy(deep=True),
                 fields_icd_9=["41271_array", "41203_array", "41205_array",],
                 fields_icd_10=["41270_array", "41202_array", "41204_array",],
                 codes_icd_group=codes_icd["group_d"],
@@ -2194,7 +2194,7 @@ def organize_alcoholism_diagnosis_variables(
     table["alcohol_diagnosis_self"] = table.apply(
         lambda row:
             parse_interpret_match_diagnosis_codes(
-                row=row,
+                row=row.copy(deep=True),
                 fields=["20002_array"],
                 codes_match=codes_self,
             ),
@@ -2238,6 +2238,447 @@ def organize_alcoholism_diagnosis_variables(
     pail["table_report"] = table_report
     # Return information.
     return pail
+
+
+##########
+# Alcoholism cases and controls
+
+
+def determine_control_alcoholism_one_two(
+    alcohol_diagnosis_a=None,
+    alcohol_diagnosis_b=None,
+    alcohol_diagnosis_c=None,
+    alcohol_diagnosis_d=None,
+    alcohol_diagnosis_self=None,
+    alcohol_auditc=None,
+    alcohol_audit=None,
+    threshold_auditc=None,
+    threshold_audit=None,
+):
+    """
+    Determines whether person qualifies as a control for alcoholism.
+
+    arguments:
+        alcohol_diagnosis_a (bool): whether person has diagnosis in alcoholism
+            group A
+        alcohol_diagnosis_b (bool): whether person has diagnosis in alcoholism
+            group B
+        alcohol_diagnosis_c (bool): whether person has diagnosis in alcoholism
+            group C
+        alcohol_diagnosis_d (bool): whether person has diagnosis in alcoholism
+            group D
+        alcohol_diagnosis_self (bool): whether person has self diagnosis of
+            alcoholism
+        alcohol_auditc (float): combination score for AUDIT-C questionnaire
+        alcohol_audit (float): combination score for AUDIT questionnaire
+        threshold_auditc (float): diagnostic threshold for AUDIT-C score
+        threshold_audit (float): diagnostic threshold for AUDIT score
+
+    raises:
+
+    returns:
+        (bool): whether person qualifies as a control for alcoholism
+
+    """
+
+    # Determine whether person has valid values of essential variables.
+    # Diagnoses from ICD9 and ICD10 cannot be null or missing under current
+    # interpretation.
+    if (not math.isnan(alcohol_auditc) and not math.isnan(alcohol_audit)):
+        # Determine whether person's AUDIT-C and AUDIT scores are within
+        # thresholds.
+        if (
+            (alcohol_auditc <= threshold_auditc) and
+            (alcohol_audit <= threshold_audit)
+        ):
+            match_audit = True
+        else:
+            match_audit = False
+        # Determine whether person has diagnoses in any relevant groups.
+        if (
+            (not alcohol_diagnosis_a) and
+            (not alcohol_diagnosis_b) and
+            (not alcohol_diagnosis_c) and
+            (not alcohol_diagnosis_d) and
+            (not alcohol_diagnosis_self)
+        ):
+            match_diagnosis = True
+        else:
+            match_diagnosis = False
+        # Integrate information from both criteria.
+        if (match_audit and match_diagnosis):
+            # Person qualifies as a control for alcoholism.
+            # Person's AUDIT-C and AUDIT scores are below diagnostic
+            # thresholds.
+            # Person does not have any ICD9 or ICD10 diagnostic codes
+            # indicative of alcoholism.
+            match = True
+        else:
+            match = False
+    else:
+        match = float("nan")
+    # Return information.
+    return match
+
+
+def determine_case_control_alcoholism_one(
+    alcohol_diagnosis_a=None,
+    alcohol_diagnosis_b=None,
+    alcohol_diagnosis_c=None,
+    alcohol_diagnosis_d=None,
+    alcohol_diagnosis_self=None,
+    alcohol_auditc=None,
+    alcohol_audit=None,
+    threshold_auditc=None,
+    threshold_audit=None,
+):
+    """
+    Organizes information about alcoholism cases and controls.
+
+    arguments:
+        alcohol_diagnosis_a (bool): whether person has diagnosis in alcoholism
+            group A
+        alcohol_diagnosis_b (bool): whether person has diagnosis in alcoholism
+            group B
+        alcohol_diagnosis_c (bool): whether person has diagnosis in alcoholism
+            group C
+        alcohol_diagnosis_d (bool): whether person has diagnosis in alcoholism
+            group D
+        alcohol_diagnosis_self (bool): whether person has self diagnosis of
+            alcoholism
+        alcohol_auditc (float): combination score for AUDIT-C questionnaire
+        alcohol_audit (float): combination score for AUDIT questionnaire
+        threshold_auditc (float): diagnostic threshold for AUDIT-C score
+        threshold_audit (float): diagnostic threshold for AUDIT score
+
+    raises:
+
+    returns:
+        (float): binary representation whether person qualifies as a case or
+            control by specific definition of alcoholism
+
+    """
+
+    # Determine whether person qualifies as a case of alcoholism.
+    case = bool(alcohol_diagnosis_a)
+
+    # Determine whether person qualifies as a control of alcoholism.
+    # Person's control status can have null or missing values.
+    control = determine_control_alcoholism_one_two(
+        alcohol_diagnosis_a=alcohol_diagnosis_a,
+        alcohol_diagnosis_b=alcohol_diagnosis_b,
+        alcohol_diagnosis_c=alcohol_diagnosis_c,
+        alcohol_diagnosis_d=alcohol_diagnosis_d,
+        alcohol_diagnosis_self=alcohol_diagnosis_self,
+        alcohol_auditc=alcohol_audit_c,
+        alcohol_audit=alcohol_audit,
+        threshold_auditc=threshold_auditc,
+        threshold_audit=threshold_audit,
+    )
+
+    # Assign missing value to persons who qualify neither as case nor control.
+    if (math.isnan(case) and math.isnan(control)):
+        value = float("nan")
+    elif (not math.isnan(case)):
+        if case:
+            value = 1
+    elif (not math.isnan(control)):
+        if control:
+            value = 0
+    # Return information.
+    return value
+
+
+def determine_case_control_alcoholism_two(
+    alcohol_diagnosis_a=None,
+    alcohol_diagnosis_b=None,
+    alcohol_diagnosis_c=None,
+    alcohol_diagnosis_d=None,
+    alcohol_diagnosis_self=None,
+    alcohol_auditc=None,
+    alcohol_audit=None,
+    threshold_auditc=None,
+    threshold_audit=None,
+):
+    """
+    Organizes information about alcoholism cases and controls.
+
+    arguments:
+        alcohol_diagnosis_a (bool): whether person has diagnosis in alcoholism
+            group A
+        alcohol_diagnosis_b (bool): whether person has diagnosis in alcoholism
+            group B
+        alcohol_diagnosis_c (bool): whether person has diagnosis in alcoholism
+            group C
+        alcohol_diagnosis_d (bool): whether person has diagnosis in alcoholism
+            group D
+        alcohol_diagnosis_self (bool): whether person has self diagnosis of
+            alcoholism
+        alcohol_auditc (float): combination score for AUDIT-C questionnaire
+        alcohol_audit (float): combination score for AUDIT questionnaire
+        threshold_auditc (float): diagnostic threshold for AUDIT-C score
+        threshold_audit (float): diagnostic threshold for AUDIT score
+
+    raises:
+
+    returns:
+        (float): binary representation whether person qualifies as a case or
+            control by specific definition of alcoholism
+
+    """
+
+    # Determine whether person qualifies as a case of alcoholism.
+    if (
+        (alcohol_diagnosis_a) or
+        (alcohol_diagnosis_b) or
+        (alcohol_diagnosis_c) or
+        (alcohol_diagnosis_d)
+    ):
+        case = True
+    else:
+        case = False
+
+    # Determine whether person qualifies as a control of alcoholism.
+    # Person's control status can have null or missing values.
+    control = determine_control_alcoholism_one_two(
+        alcohol_diagnosis_a=alcohol_diagnosis_a,
+        alcohol_diagnosis_b=alcohol_diagnosis_b,
+        alcohol_diagnosis_c=alcohol_diagnosis_c,
+        alcohol_diagnosis_d=alcohol_diagnosis_d,
+        alcohol_diagnosis_self=alcohol_diagnosis_self,
+        alcohol_auditc=alcohol_audit_c,
+        alcohol_audit=alcohol_audit,
+        threshold_auditc=threshold_auditc,
+        threshold_audit=threshold_audit,
+    )
+
+    # Assign missing value to persons who qualify neither as case nor control.
+    if (math.isnan(case) and math.isnan(control)):
+        value = float("nan")
+    elif (not math.isnan(case)):
+        if case:
+            value = 1
+    elif (not math.isnan(control)):
+        if control:
+            value = 0
+    # Return information.
+    return value
+
+
+def determine_case_control_alcoholism_three(
+    alcohol_diagnosis_a=None,
+    alcohol_diagnosis_b=None,
+    alcohol_diagnosis_c=None,
+    alcohol_diagnosis_d=None,
+    alcohol_diagnosis_self=None,
+    alcohol_auditc=None,
+    alcohol_audit=None,
+    threshold_auditc=None,
+    threshold_audit=None,
+):
+    """
+    Organizes information about alcoholism cases and controls.
+
+    arguments:
+        alcohol_diagnosis_a (bool): whether person has diagnosis in alcoholism
+            group A
+        alcohol_diagnosis_b (bool): whether person has diagnosis in alcoholism
+            group B
+        alcohol_diagnosis_c (bool): whether person has diagnosis in alcoholism
+            group C
+        alcohol_diagnosis_d (bool): whether person has diagnosis in alcoholism
+            group D
+        alcohol_diagnosis_self (bool): whether person has self diagnosis of
+            alcoholism
+        alcohol_auditc (float): combination score for AUDIT-C questionnaire
+        alcohol_audit (float): combination score for AUDIT questionnaire
+        threshold_auditc (float): diagnostic threshold for AUDIT-C score
+        threshold_audit (float): diagnostic threshold for AUDIT score
+
+    raises:
+
+    returns:
+        (float): binary representation whether person qualifies as a case or
+            control by specific definition of alcoholism
+
+    """
+
+    # Determine whether person qualifies as a case of alcoholism.
+    if (not math.isnan(alcohol_auditc) and not math.isnan(alcohol_audit)):
+        # Determine whether person's AUDIT-C or AUDIT scores are beyond
+        # thresholds.
+        if (
+            (alcohol_auditc > threshold_auditc) or
+            (alcohol_audit > threshold_audit)
+        ):
+            case = True
+        else:
+            case = False
+    else:
+        case = float("nan")
+
+    # Determine whether person qualifies as a control of alcoholism.
+    # Person's control status can have null or missing values.
+    control = determine_control_alcoholism_one_two(
+        alcohol_diagnosis_a=alcohol_diagnosis_a,
+        alcohol_diagnosis_b=alcohol_diagnosis_b,
+        alcohol_diagnosis_c=alcohol_diagnosis_c,
+        alcohol_diagnosis_d=alcohol_diagnosis_d,
+        alcohol_diagnosis_self=alcohol_diagnosis_self,
+        alcohol_auditc=alcohol_audit_c,
+        alcohol_audit=alcohol_audit,
+        threshold_auditc=threshold_auditc,
+        threshold_audit=threshold_audit,
+    )
+
+    # Assign missing value to persons who qualify neither as case nor control.
+    if (math.isnan(case) and math.isnan(control)):
+        value = float("nan")
+    elif (not math.isnan(case)):
+        if case:
+            value = 1
+    elif (not math.isnan(control)):
+        if control:
+            value = 0
+    # Return information.
+    return value
+
+
+def organize_alcoholism_cases_controls_variables(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about alcoholism cases and controls.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about alcoholism cases and controls
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Specify diagnostic thresholds for AUDIT-C and AUDIT scores.
+    # https://auditscreen.org/about/scoring-audit/
+    # Use less than or equal.
+    threshold_auditc = 7
+    threshold_audit = 14
+
+    # Determine whether person is a case or control for alcoholism type 1.
+    # case: ICD9 or ICD10 codes in diagnostic group A
+    # control:
+    # - no ICD9 or ICD10 codes in diagnostic groups A, B, C, or D
+    # - no self diagnoses of alcoholism
+    # - below AUDIT-C and AUDIT thresholds
+    table["alcoholism_1"] = table.apply(
+        lambda row:
+            determine_case_control_alcoholism_one(
+                alcohol_diagnosis_a=row["alcohol_diagnosis_a"],
+                alcohol_diagnosis_b=row["alcohol_diagnosis_b"],
+                alcohol_diagnosis_c=row["alcohol_diagnosis_c"],
+                alcohol_diagnosis_d=row["alcohol_diagnosis_d"],
+                alcohol_diagnosis_self=row["alcohol_diagnosis_self"],
+                alcohol_auditc=row["alcohol_auditc"],
+                alcohol_audit=row["alcohol_audit"],
+                threshold_auditc=threshold_auditc,
+                threshold_audit=threshold_audit,
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether person is a case or control for alcoholism type 2.
+    # case: ICD9 or ICD10 codes in diagnostic group A, B, C, or D
+    # control:
+    # - no ICD9 or ICD10 codes in diagnostic groups A, B, C, or D
+    # - no self diagnoses of alcoholism
+    # - below AUDIT-C and AUDIT thresholds
+    table["alcoholism_2"] = table.apply(
+        lambda row:
+            determine_case_control_alcoholism_two(
+                alcohol_diagnosis_a=row["alcohol_diagnosis_a"],
+                alcohol_diagnosis_b=row["alcohol_diagnosis_b"],
+                alcohol_diagnosis_c=row["alcohol_diagnosis_c"],
+                alcohol_diagnosis_d=row["alcohol_diagnosis_d"],
+                alcohol_diagnosis_self=row["alcohol_diagnosis_self"],
+                alcohol_auditc=row["alcohol_auditc"],
+                alcohol_audit=row["alcohol_audit"],
+                threshold_auditc=threshold_auditc,
+                threshold_audit=threshold_audit,
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether person is a case or control for alcoholism type 3.
+    # case:
+    # AUDIT-C score > threshold_auditc
+    # or
+    # AUDIT score > threshold_audit
+    # control:
+    # - no ICD9 or ICD10 codes in diagnostic groups A, B, C, or D
+    # - no self diagnoses of alcoholism
+    # - below AUDIT-C and AUDIT thresholds
+    table["alcoholism_3"] = table.apply(
+        lambda row:
+            determine_case_control_alcoholism_three(
+                alcohol_diagnosis_a=row["alcohol_diagnosis_a"],
+                alcohol_diagnosis_b=row["alcohol_diagnosis_b"],
+                alcohol_diagnosis_c=row["alcohol_diagnosis_c"],
+                alcohol_diagnosis_d=row["alcohol_diagnosis_d"],
+                alcohol_diagnosis_self=row["alcohol_diagnosis_self"],
+                alcohol_auditc=row["alcohol_auditc"],
+                alcohol_audit=row["alcohol_audit"],
+                threshold_auditc=threshold_auditc,
+                threshold_audit=threshold_audit,
+            ),
+        axis="columns", # apply across rows
+    )
+
+    # Remove columns for variables that are not necessary anymore.
+    table_clean = table.copy(deep=True)
+    table_clean.drop(
+        labels=[
+            "41271_array", "41203_array", "41205_array",
+            "41270_array", "41202_array", "41204_array",
+            "20002_array",
+        ],
+        axis="columns",
+        inplace=True
+    )
+    # Organize data for report.
+    table_report = table.copy(deep=True)
+    table_report = table_report.loc[
+        :, table_report.columns.isin([
+            "eid", "IID",
+            "41271_array", "41203_array", "41205_array", "41270_array",
+            "41202_array", "41204_array", "20002_array",
+            "alcohol_diagnosis_a",
+            "alcohol_diagnosis_b",
+            "alcohol_diagnosis_c",
+            "alcohol_diagnosis_d",
+            "alcohol_diagnosis_self",
+            "alcohol_auditc",
+            "alcohol_audit",
+        ])
+    ]
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("Summary of alcohol diagnosis variables: ")
+        print(table_report)
+    # Collect information.
+    pail = dict()
+    pail["table"] = table
+    pail["table_clean"] = table_clean
+    pail["table_report"] = table_report
+    # Return information.
+    return pail
+
+
 
 
 
@@ -3019,8 +3460,11 @@ def execute_procedure(
     print(pail_diagnosis["table_clean"])
 
     # Organize alcoholism cases and controls.
-    # TODO: there might be multiple definitions of alcoholism cases and controls...
-    # TODO: maybe introduce multiple variables: "alcoholism_1", "alcoholism_2", etc
+    pail_alcoholism = organize_alcoholism_cases_controls_variables(
+        table=pail_diagnosis["table_clean"],
+        report=True,
+    )
+    print(pail_alcoholism["table_clean"])
 
 
     if False:
