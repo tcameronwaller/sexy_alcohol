@@ -3489,10 +3489,10 @@ def execute_procedure(
     # Report.
     if True:
         utility.print_terminal_partition(level=2)
-        print("controls: " + str(table_controls.shape()))
-        print("cases 1: " + str(table_cases_1.shape()))
-        print("cases 2: " + str(table_cases_2.shape()))
-        print("cases 3: " + str(table_cases_3.shape()))
+        print("controls: " + str(table_controls.shape))
+        print("cases 1: " + str(table_cases_1.shape))
+        print("cases 2: " + str(table_cases_2.shape))
+        print("cases 3: " + str(table_cases_3.shape))
 
 
     if False:
