@@ -1925,10 +1925,6 @@ def organize_alcohol_audit_questionnaire_variables(
 # Alcoholism diagnoses
 
 
-# TODO: define all ICD9/ICD10 codes within a single function to make it easier
-# TODO: to read in from a table...
-
-
 def specify_icd_alcoholism_diagnosis_groups_codes():
     """
     Specifies the codes for diagnostic groups relevant to alcoholism.
@@ -2376,15 +2372,16 @@ def determine_case_control_alcoholism_one(
         threshold_audit=threshold_audit,
     )
 
+    # Interpret case and control and assign value.
     # Assign missing value to persons who qualify neither as case nor control.
-    if (math.isnan(case) and math.isnan(control)):
-        value = float("nan")
-    elif (not math.isnan(case)):
-        if case:
-            value = 1
-    elif (not math.isnan(control)):
-        if control:
-            value = 0
+    value = float("nan")
+    if (not math.isnan(case) or not math.isnan(control)):
+        if (not math.isnan(case)):
+            if case:
+                value = 1
+        elif (not math.isnan(control)):
+            if control:
+                value = 0
     # Return information.
     return value
 
@@ -2452,15 +2449,16 @@ def determine_case_control_alcoholism_two(
         threshold_audit=threshold_audit,
     )
 
+    # Interpret case and control and assign value.
     # Assign missing value to persons who qualify neither as case nor control.
-    if (math.isnan(case) and math.isnan(control)):
-        value = float("nan")
-    elif (not math.isnan(case)):
-        if case:
-            value = 1
-    elif (not math.isnan(control)):
-        if control:
-            value = 0
+    value = float("nan")
+    if (not math.isnan(case) or not math.isnan(control)):
+        if (not math.isnan(case)):
+            if case:
+                value = 1
+        elif (not math.isnan(control)):
+            if control:
+                value = 0
     # Return information.
     return value
 
@@ -2531,15 +2529,16 @@ def determine_case_control_alcoholism_three(
         threshold_audit=threshold_audit,
     )
 
+    # Interpret case and control and assign value.
     # Assign missing value to persons who qualify neither as case nor control.
-    if (math.isnan(case) and math.isnan(control)):
-        value = float("nan")
-    elif (not math.isnan(case)):
-        if case:
-            value = 1
-    elif (not math.isnan(control)):
-        if control:
-            value = 0
+    value = float("nan")
+    if (not math.isnan(case) or not math.isnan(control)):
+        if (not math.isnan(case)):
+            if case:
+                value = 1
+        elif (not math.isnan(control)):
+            if control:
+                value = 0
     # Return information.
     return value
 
@@ -3403,7 +3402,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 3")
+    print("version check: 4")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -3461,6 +3460,34 @@ def execute_procedure(
         report=True,
     )
     print(pail_alcoholism["table_clean"])
+
+    # Copy data.
+    table_test = pail_alcoholism["table_clean"].copy(deep=True)
+    # Select records.
+    # Persons with sex female.
+    #table = table.loc[
+    #    table["sex_text"] == "female", :
+    #]
+    # Persons who have consumed alcohol previously or currently.
+    table_controls = table_test.loc[
+        (table_test["alcoholism_1"] < 0.5), :
+    ]
+    table_cases_1 = table_test.loc[
+        (table_test["alcoholism_1"] > 0.5), :
+    ]
+    table_cases_2 = table_test.loc[
+        (table_test["alcoholism_2"] > 0.5), :
+    ]
+    table_cases_3 = table_test.loc[
+        (table_test["alcoholism_3"] > 0.5), :
+    ]
+    # Report.
+    if True:
+        utility.print_terminal_partition(level=2)
+        print("controls: " + str(table_controls.shape()))
+        print("cases 1: " + str(table_cases_1.shape()))
+        print("cases 2: " + str(table_cases_2.shape()))
+        print("cases 3: " + str(table_cases_3.shape()))
 
 
     if False:
