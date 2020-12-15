@@ -2278,41 +2278,56 @@ def determine_control_alcoholism_one_two(
     """
 
     # Determine whether person has valid values of essential variables.
-    # Diagnoses from ICD9 and ICD10 cannot be null or missing under current
-    # interpretation.
-    if (not math.isnan(alcohol_auditc) and not math.isnan(alcohol_audit)):
+    if (math.isnan(alcohol_auditc) and math.isnan(alcohol_audit)):
+        comparison_auditc = False
+        comparison_audit = False
+    else:
         # Determine whether person's AUDIT-C and AUDIT scores are within
         # thresholds.
-        if (
-            (alcohol_auditc <= threshold_auditc) and
-            (alcohol_audit <= threshold_audit)
-        ):
-            match_audit = True
+        if (math.isnan(alcohol_auditc)):
+            comparison_auditc = False
         else:
-            match_audit = False
-        # Determine whether person has diagnoses in any relevant groups.
-        if (
-            (not alcohol_diagnosis_a) and
-            (not alcohol_diagnosis_b) and
-            (not alcohol_diagnosis_c) and
-            (not alcohol_diagnosis_d) and
-            (not alcohol_diagnosis_self)
-        ):
-            match_diagnosis = True
+            if (alcohol_auditc <= threshold_auditc):
+                comparison_auditc = True
+            else:
+                comparison_auditc = False
+        if (math.isnan(alcohol_audit)):
+            comparison_audit = False
         else:
-            match_diagnosis = False
-        # Integrate information from both criteria.
-        if (match_audit and match_diagnosis):
-            # Person qualifies as a control for alcoholism.
-            # Person's AUDIT-C and AUDIT scores are below diagnostic
-            # thresholds.
-            # Person does not have any ICD9 or ICD10 diagnostic codes
-            # indicative of alcoholism.
-            match = True
-        else:
-            match = False
+            if (alcohol_audit <= threshold_audit):
+                comparison_audit = True
+            else:
+                comparison_audit = False
+    # Interpret both AUDIT-C and AUDIT socres.
+    if (comparison_auditc or comparison_audit):
+        match_audit = True
     else:
-        match = float("nan")
+        match_audit = False
+
+    # Determine whether person has diagnoses in any relevant groups.
+    # Diagnoses from ICD9 and ICD10 cannot be null or missing under current
+    # interpretation.
+    if (
+        (not alcohol_diagnosis_a) and
+        (not alcohol_diagnosis_b) and
+        (not alcohol_diagnosis_c) and
+        (not alcohol_diagnosis_d) and
+        (not alcohol_diagnosis_self)
+    ):
+        match_diagnosis = True
+    else:
+        match_diagnosis = False
+    # Integrate information from both criteria.
+    if (match_audit and match_diagnosis):
+        # Person qualifies as a control for alcoholism.
+        # Person's AUDIT-C and AUDIT scores are below diagnostic
+        # thresholds.
+        # Person does not have any ICD9 or ICD10 diagnostic codes
+        # indicative of alcoholism.
+        match = True
+    else:
+        match = False
+
     # Return information.
     return match
 
@@ -3402,7 +3417,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 4")
+    print("version check: 5")
 
     # Initialize directories.
     paths = initialize_directories(
