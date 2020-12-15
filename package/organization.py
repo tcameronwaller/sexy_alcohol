@@ -70,6 +70,9 @@ def initialize_directories(
     # Define paths to directories.
     paths["dock"] = path_dock
     paths["organization"] = os.path.join(path_dock, "organization")
+    paths["quality"] = os.path.join(
+        path_dock, "organization", "quality"
+    )
     paths["trial"] = os.path.join(
         path_dock, "organization", "trial"
     )
@@ -85,6 +88,9 @@ def initialize_directories(
     # Initialize directories.
     utility.create_directories(
         path=paths["organization"]
+    )
+    utility.create_directories(
+        path=paths["quality"]
     )
     utility.create_directories(
         path=paths["trial"]
@@ -2281,27 +2287,22 @@ def determine_control_alcoholism_one_two(
 
     """
 
-    # Determine whether person has valid values of essential variables.
-    if (math.isnan(alcohol_auditc) and math.isnan(alcohol_audit)):
+    # Determine whether person's AUDIT-C and AUDIT scores are within
+    # thresholds.
+    if (math.isnan(alcohol_auditc)):
         comparison_auditc = False
+    else:
+        if (alcohol_auditc <= threshold_auditc):
+            comparison_auditc = True
+        else:
+            comparison_auditc = False
+    if (math.isnan(alcohol_audit)):
         comparison_audit = False
     else:
-        # Determine whether person's AUDIT-C and AUDIT scores are within
-        # thresholds.
-        if (math.isnan(alcohol_auditc)):
-            comparison_auditc = False
+        if (alcohol_audit <= threshold_audit):
+            comparison_audit = True
         else:
-            if (alcohol_auditc <= threshold_auditc):
-                comparison_auditc = True
-            else:
-                comparison_auditc = False
-        if (math.isnan(alcohol_audit)):
             comparison_audit = False
-        else:
-            if (alcohol_audit <= threshold_audit):
-                comparison_audit = True
-            else:
-                comparison_audit = False
     # Interpret both AUDIT-C and AUDIT socres.
     if (comparison_auditc or comparison_audit):
         match_audit = True
@@ -2394,13 +2395,12 @@ def determine_case_control_alcoholism_one(
     # Interpret case and control and assign value.
     # Assign missing value to persons who qualify neither as case nor control.
     value = float("nan")
-    if (not math.isnan(case) or not math.isnan(control)):
-        if (not math.isnan(case)):
-            if case:
-                value = 1
-        elif (not math.isnan(control)):
-            if control:
-                value = 0
+    if (not math.isnan(case)):
+        if case:
+            value = 1
+    if (not math.isnan(control)):
+        if control:
+            value = 0
     # Return information.
     return value
 
@@ -2471,13 +2471,12 @@ def determine_case_control_alcoholism_two(
     # Interpret case and control and assign value.
     # Assign missing value to persons who qualify neither as case nor control.
     value = float("nan")
-    if (not math.isnan(case) or not math.isnan(control)):
-        if (not math.isnan(case)):
-            if case:
-                value = 1
-        elif (not math.isnan(control)):
-            if control:
-                value = 0
+    if (not math.isnan(case)):
+        if case:
+            value = 1
+    if (not math.isnan(control)):
+        if control:
+            value = 0
     # Return information.
     return value
 
@@ -2551,13 +2550,12 @@ def determine_case_control_alcoholism_three(
     # Interpret case and control and assign value.
     # Assign missing value to persons who qualify neither as case nor control.
     value = float("nan")
-    if (not math.isnan(case) or not math.isnan(control)):
-        if (not math.isnan(case)):
-            if case:
-                value = 1
-        elif (not math.isnan(control)):
-            if control:
-                value = 0
+    if (not math.isnan(case)):
+        if case:
+            value = 1
+    if (not math.isnan(control)):
+        if control:
+            value = 0
     # Return information.
     return value
 
@@ -3336,6 +3334,64 @@ def organize_female_menopause(
 # Write
 
 
+def write_product_quality(
+    information=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        path_parent (str): path to parent directory
+
+    raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_table_auditc = os.path.join(
+        path_parent, "table_auditc.tsv"
+    )
+    path_table_audit = os.path.join(
+        path_parent, "table_audit.tsv"
+    )
+    path_table_diagnosis = os.path.join(
+        path_parent, "table_diagnosis.tsv"
+    )
+    path_table_alcoholism = os.path.join(
+        path_parent, "table_alcoholism.tsv"
+    )
+    # Write information to file.
+    information["table_auditc"].to_csv(
+        path_or_buf=path_table_auditc,
+        sep="\t",
+        header=True,
+        index=False,
+    )
+    information["table_audit"].to_csv(
+        path_or_buf=path_table_audit,
+        sep="\t",
+        header=True,
+        index=False,
+    )
+    information["table_diagnosis"].to_csv(
+        path_or_buf=path_table_diagnosis,
+        sep="\t",
+        header=True,
+        index=False,
+    )
+    information["table_alcoholism"].to_csv(
+        path_or_buf=path_table_alcoholism,
+        sep="\t",
+        header=True,
+        index=False,
+    )
+    pass
+
+
 def write_product_trial(
     information=None,
     path_parent=None,
@@ -3391,11 +3447,17 @@ def write_product(
 
     """
 
-    # Trial organization.
-    write_product_trial(
-        information=information["trial"],
-        path_parent=paths["trial"],
+    # Quality control reports.
+    write_product_quality(
+        information=information["quality"],
+        path_parent=paths["quality"],
     )
+    # Trial organization.
+    if False:
+        write_product_trial(
+            information=information["trial"],
+            path_parent=paths["trial"],
+        )
     pass
 
 
@@ -3421,7 +3483,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 5")
+    print("version check: 1")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -3512,6 +3574,28 @@ def execute_procedure(
         print("cases 1: " + str(table_cases_1.shape))
         print("cases 2: " + str(table_cases_2.shape))
         print("cases 3: " + str(table_cases_3.shape))
+
+    # Collect information.
+    information = dict()
+    information["quality"] = dict()
+    information["quality"]["table_auditc"] = (
+        pail_audit["auditc"]["table_report"]
+    )
+    information["quality"]["table_audit"] = (
+        pail_audit["audit"]["table_report"]
+    )
+    information["quality"]["table_diagnosis"] = (
+        pail_diagnosis["table_report"]
+    )
+    information["quality"]["table_alcoholism"] = (
+        pail_alcoholism["table_report"]
+    )
+    # Write product information to file.
+    write_product(
+        paths=paths,
+        information=information
+    )
+
 
 
     if False:
