@@ -2420,14 +2420,14 @@ def determine_case_control_alcoholism_one(
     )
 
     # Interpret case and control and assign value.
+    # Interpretation variables "case" and "control" do not have null values.
     # Assign missing value to persons who qualify neither as case nor control.
-    value = float("nan")
-    if (not math.isnan(case)):
-        if case:
-            value = 1
-    if (not math.isnan(control)):
-        if control:
-            value = 0
+    if case:
+        value = 1
+    elif control:
+        value = 0
+    else:
+        value = float("nan")
     # Return information.
     return value
 
@@ -2500,14 +2500,14 @@ def determine_case_control_alcoholism_two(
     )
 
     # Interpret case and control and assign value.
+    # Interpretation variables "case" and "control" do not have null values.
     # Assign missing value to persons who qualify neither as case nor control.
-    value = float("nan")
-    if (not math.isnan(case)):
-        if case:
-            value = 1
-    if (not math.isnan(control)):
-        if control:
-            value = 0
+    if case:
+        value = 1
+    elif control:
+        value = 0
+    else:
+        value = float("nan")
     # Return information.
     return value
 
@@ -2583,14 +2583,14 @@ def determine_case_control_alcoholism_three(
     )
 
     # Interpret case and control and assign value.
+    # Interpretation variables "case" and "control" do not have null values.
     # Assign missing value to persons who qualify neither as case nor control.
-    value = float("nan")
-    if (not math.isnan(case)):
-        if case:
-            value = 1
-    if (not math.isnan(control)):
-        if control:
-            value = 0
+    if case:
+        value = 1
+    elif control:
+        value = 0
+    else:
+        value = float("nan")
     # Return information.
     return value
 
@@ -3744,7 +3744,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 1")
 
     # Initialize directories.
     paths = initialize_directories(
