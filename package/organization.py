@@ -2642,7 +2642,7 @@ def report_alcoholism_cases_controls_candidates_by_sex(
     utility.print_terminal_partition(level=2)
     print(
         "Persons who consume alcohol previously or currently are candidates"
-        "for alcoholism cases or controls."
+        " for alcoholism cases or controls."
     )
     utility.print_terminal_partition(level=3)
     print("sex: " + str(sex_text))
@@ -2677,7 +2677,7 @@ def report_alcoholism_cases_controls_candidates_females_males(
     )
     # Males.
     report_alcoholism_cases_controls_candidates_by_sex(
-        sex_text="female",
+        sex_text="male",
         table=table,
     )
 
@@ -3744,7 +3744,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
 
     # Initialize directories.
     paths = initialize_directories(
