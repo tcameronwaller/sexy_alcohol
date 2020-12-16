@@ -2736,53 +2736,11 @@ def organize_alcoholism_cases_controls_variables(
 # Cohort selection
 
 
-def select_cohort(
-    table=None,
-    report=None,
-):
-    """
-    Organizes information about previous and current alcohol consumption.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict): collection of information about phenotype variables
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Select records.
-    # Persons with sex female.
-    table = table.loc[
-        table["sex_text"] == "female", :
-    ]
-    # Persons who have consumed alcohol previously or currently.
-    table = table.loc[
-        (table["alcohol_none"] < 0.5), :
-    ]
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("Selection of cohort: ")
-        print(table)
-    # Return information.
-    return table
-
-
-##########
-# Variable selection
-
-
 def select_valid_records_all_specific_variables(
     names=None,
     prefixes=None,
     table=None,
+    drop_columns=None,
     report=None,
 ):
     """
@@ -2794,6 +2752,7 @@ def select_valid_records_all_specific_variables(
         prefixes (list<str>): prefixes of names of columns to keep
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        drop_columns (bool): whether to drop other columns
         report (bool): whether to print reports
 
     raises:
@@ -2826,9 +2785,10 @@ def select_valid_records_all_specific_variables(
         print("Columns to keep: ")
         print(columns_keep)
     # Select columns.
-    table = table.loc[
-        :, table.columns.isin(columns_keep)
-    ]
+    if drop_columns:
+        table = table.loc[
+            :, table.columns.isin(columns_keep)
+        ]
     # Remove any record rows with null values.
     table.dropna(
         axis="index",
@@ -2839,10 +2799,170 @@ def select_valid_records_all_specific_variables(
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
+        print("After dropping rows with null values in specific columns.")
         print("Selection of table columns and rows: ")
         print(table)
     # Return information.
     return table
+
+
+def select_valid_variables_records_by_sex_hormone(
+    sex_text=None,
+    hormone=None,
+    alcoholism=None,
+    table=None,
+    report=None,
+):
+    """
+    Selects variable columns and record rows with valid values across all
+    variables.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        hormone (str): name of column for relevant sex hormone
+        alcoholism (str): name of column defining alcoholism cases and controls
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Select records by sex.
+    table = table.loc[
+        table["sex_text"] == sex_text, :
+    ]
+    # Select records with valid (non-null) values of relevant variables.
+    table = select_valid_records_all_specific_variables(
+        names=[
+            "eid", "IID",
+            "sex", "sex_text", "age", "body_mass_index",
+            hormone,
+            alcoholism,
+        ],
+        prefixes=["genotype_pc_",],
+        table=table,
+        drop_columns=True,
+        report=report,
+    )
+    # Return information.
+    return table
+
+
+def select_organize_variables_cohorts_by_alcoholism_definition(
+    table=None,
+    alcoholism=None,
+    report=None,
+):
+    """
+    Organizes information about previous and current alcohol consumption.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        alcoholism (str): name of column defining alcoholism cases and controls
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+
+    # Select records with valid values of variables relevant to all cohorts.
+    table = select_valid_records_all_specific_variables(
+        names=[
+            "eid", "IID",
+            "sex", "sex_text", "age", "body_mass_index",
+            alcoholism,
+        ],
+        prefixes=["genotype_pc_",],
+        table=table,
+        drop_columns=False,
+        report=False,
+    )
+
+    # Females with valid oestradiol and valid alcoholism definition.
+    table_female_oestradiol = select_valid_variables_records_by_sex_hormone(
+        sex_text="female",
+        hormone="oestradiol",
+        alcoholism=alcoholism,
+        table=table,
+        report=False,
+    )
+    # Females with valid testosterone and valid alcoholism definition.
+    table_female_testosterone = select_valid_variables_records_by_sex_hormone(
+        sex_text="female",
+        hormone="testosterone",
+        alcoholism=alcoholism,
+        table=table,
+        report=False,
+    )
+    # Males with valid oestradiol and valid alcoholism definition.
+    table_male_oestradiol = select_valid_variables_records_by_sex_hormone(
+        sex_text="male",
+        hormone="oestradiol",
+        alcoholism=alcoholism,
+        table=table,
+        report=False,
+    )
+    # Males with valid testosterone and valid alcoholism definition.
+    table_male_testosterone = select_valid_variables_records_by_sex_hormone(
+        sex_text="male",
+        hormone="testosterone",
+        alcoholism=alcoholism,
+        table=table,
+        report=False,
+    )
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print(
+            "Selection of valid variables and records relevant to each cohort."
+        )
+        utility.print_terminal_partition(level=3)
+        print("Alcoholism variable: " + str(alcoholism))
+        utility.print_terminal_partition(level=3)
+        print("Top tier cohort with valid values of all relevant variables.")
+        print("table shape: " + str(table.shape))
+        utility.print_terminal_partition(level=3)
+        print("Females with valid oestradiol and valid alcoholism definition.")
+        print("table shape: " + str(table_female_oestradiol.shape))
+        utility.print_terminal_partition(level=3)
+        print(
+            "Females with valid testosterone and valid alcoholism definition."
+        )
+        print("table shape: " + str(table_female_testosterone.shape))
+        utility.print_terminal_partition(level=3)
+        utility.print_terminal_partition(level=3)
+        print("Males with valid oestradiol and valid alcoholism definition.")
+        print("table shape: " + str(table_male_oestradiol.shape))
+        utility.print_terminal_partition(level=3)
+        print("Males with valid testosterone and valid alcoholism definition.")
+        print("table shape: " + str(table_male_testosterone.shape))
+
+    # Collect information.
+    pail = dict()
+    pail["table_female_oestradiol"] = table_female_oestradiol
+    pail["table_female_testosterone"] = table_female_testosterone
+    pail["table_male_oestradiol"] = table_male_oestradiol
+    pail["table_male_testosterone"] = table_male_testosterone
+    # Return information.
+    return pail
+
+
+
 
 
 ##########
@@ -3578,39 +3698,14 @@ def execute_procedure(
     )
     print(pail_alcoholism["table_clean"])
 
+    # Select and organize variables across cohorts.
+    pail_cohorts = select_organize_variables_cohorts_by_alcoholism_definition(
+        table=pail_alcoholism["table_clean"],
+        alcoholism="alcoholism_1", # "alcoholism_1", "alcoholism_2", "alcoholism_3"
+        report=True,
+    )
 
 
-    # TODO: before selecting any cohort,
-    # TODO: be sure to drop records with null or missing values in relevant columns (subset)
-
-    # Copy data.
-    table_test = pail_alcoholism["table_clean"].copy(deep=True)
-    # Select records.
-    # Persons with sex female.
-    #table = table.loc[
-    #    table["sex_text"] == "female", :
-    #]
-    # Persons who have consumed alcohol previously or currently.
-    table_controls = table_test.loc[
-        (table_test["alcoholism_1"] < 0.5), :
-    ]
-    table_cases_1 = table_test.loc[
-        (table_test["alcoholism_1"] > 0.5), :
-    ]
-    table_cases_2 = table_test.loc[
-        (table_test["alcoholism_2"] > 0.5), :
-    ]
-    table_cases_3 = table_test.loc[
-        (table_test["alcoholism_3"] > 0.5), :
-    ]
-    # Report.
-    if True:
-        utility.print_terminal_partition(level=2)
-        # 133,697 controls with "or" of AUDIT-C and AUDIT scores
-        print("controls: " + str(table_controls.shape))
-        print("cases 1: " + str(table_cases_1.shape))
-        print("cases 2: " + str(table_cases_2.shape))
-        print("cases 3: " + str(table_cases_3.shape))
 
     # Collect information.
     information = dict()
@@ -3633,24 +3728,7 @@ def execute_procedure(
         information=information
     )
 
-
-
     if False:
-        # Select cohort.
-        table_cohort = select_cohort(
-            table=pail_alcohol_consumption["quantity"]["table_clean"],
-            report=True,
-        )
-        # Select records with valid values of relevant variables.
-        table_valid = select_valid_records_all_specific_variables(
-            names=[
-                "IID",
-                "age", "body_mass_index", "testosterone", "alcohol_drinks_monthly",
-            ],
-            prefixes=["genotype_pc_",],
-            table=table_cohort,
-            report=True,
-        )
         # Organize phenotypes and covariates in format for analysis in PLINK.
         table_format = organize_phenotype_covariate_table_plink_format(
             table=table_valid,
