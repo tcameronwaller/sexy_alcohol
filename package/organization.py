@@ -2554,17 +2554,13 @@ def determine_case_control_alcoholism_three(
     """
 
     # Determine whether person qualifies as a case of alcoholism.
-    if (not math.isnan(alcohol_auditc)):
-        # Determine whether person's AUDIT-C or AUDIT scores are beyond
-        # thresholds.
-        if (
-            (alcohol_auditc > threshold_auditc)
-        ):
+    if (math.isnan(alcohol_auditc)):
+        case = False
+    else:
+        if (alcohol_auditc > threshold_auditc):
             case = True
         else:
             case = False
-    else:
-        case = float("nan")
 
     # Determine whether person qualifies as a control of alcoholism.
     # Person's control status can have null or missing values.
@@ -2636,18 +2632,13 @@ def determine_case_control_alcoholism_four(
     """
 
     # Determine whether person qualifies as a case of alcoholism.
-    if (not math.isnan(alcohol_audit)):
-        # Determine whether person's AUDIT-C or AUDIT scores are beyond
-        # thresholds.
-        if (
-            (alcohol_audit > threshold_audit)
-        ):
+    if (math.isnan(alcohol_audit)):
+        case = False
+    else:
+        if (alcohol_audit > threshold_audit):
             case = True
         else:
             case = False
-    else:
-        case = float("nan")
-
     # Determine whether person qualifies as a control of alcoholism.
     # Person's control status can have null or missing values.
     control = determine_control_alcoholism_one_two(
@@ -3288,6 +3279,57 @@ def select_organize_variables_cohorts_by_alcoholism_definition(
     pail["table_female_testosterone"] = table_female_testosterone
     pail["table_male_oestradiol"] = table_male_oestradiol
     pail["table_male_testosterone"] = table_male_testosterone
+    # Return information.
+    return pail
+
+
+def select_organize_variables_cohorts_by_alcoholism_definitions(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about previous and current alcohol consumption.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+
+    # Select and organize variables across cohorts.
+    pail_1 = select_organize_variables_cohorts_by_alcoholism_definition(
+        table=table,
+        alcoholism="alcoholism_1",
+        report=report,
+    )
+    pail_2 = select_organize_variables_cohorts_by_alcoholism_definition(
+        table=table,
+        alcoholism="alcoholism_2",
+        report=report,
+    )
+    pail_3 = select_organize_variables_cohorts_by_alcoholism_definition(
+        table=table,
+        alcoholism="alcoholism_3",
+        report=report,
+    )
+    pail_4 = select_organize_variables_cohorts_by_alcoholism_definition(
+        table=table,
+        alcoholism="alcoholism_4",
+        report=report,
+    )
+    # Collect information.
+    pail = dict()
+    pail["alcoholism_1"] = pail_1
+    pail["alcoholism_2"] = pail_2
+    pail["alcoholism_3"] = pail_3
+    pail["alcoholism_4"] = pail_4
     # Return information.
     return pail
 
@@ -3970,7 +4012,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 3")
+    print("version check: 4")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -4031,9 +4073,8 @@ def execute_procedure(
     print(pail_alcoholism["table_clean"])
 
     # Select and organize variables across cohorts.
-    pail_cohorts = select_organize_variables_cohorts_by_alcoholism_definition(
+    pail_cohorts = select_organize_variables_cohorts_by_alcoholism_definitions(
         table=pail_alcoholism["table_clean"],
-        alcoholism="alcoholism_1", # "alcoholism_1", "alcoholism_2", "alcoholism_3"
         report=True,
     )
 
