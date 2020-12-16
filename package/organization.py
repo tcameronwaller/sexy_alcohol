@@ -2554,11 +2554,92 @@ def determine_case_control_alcoholism_three(
     """
 
     # Determine whether person qualifies as a case of alcoholism.
-    if (not math.isnan(alcohol_auditc) and not math.isnan(alcohol_audit)):
+    if (not math.isnan(alcohol_auditc)):
         # Determine whether person's AUDIT-C or AUDIT scores are beyond
         # thresholds.
         if (
-            (alcohol_auditc > threshold_auditc) or
+            (alcohol_auditc > threshold_auditc)
+        ):
+            case = True
+        else:
+            case = False
+    else:
+        case = float("nan")
+
+    # Determine whether person qualifies as a control of alcoholism.
+    # Person's control status can have null or missing values.
+    control = determine_control_alcoholism_one_two(
+        alcohol_none=alcohol_none,
+        alcohol_diagnosis_a=alcohol_diagnosis_a,
+        alcohol_diagnosis_b=alcohol_diagnosis_b,
+        alcohol_diagnosis_c=alcohol_diagnosis_c,
+        alcohol_diagnosis_d=alcohol_diagnosis_d,
+        alcohol_diagnosis_self=alcohol_diagnosis_self,
+        alcohol_auditc=alcohol_auditc,
+        alcohol_audit=alcohol_audit,
+        threshold_auditc=threshold_auditc,
+        threshold_audit=threshold_audit,
+    )
+
+    # Interpret case and control and assign value.
+    # Interpretation variables "case" and "control" do not have null values.
+    # Assign missing value to persons who qualify neither as case nor control.
+    if case:
+        value = 1
+    elif control:
+        value = 0
+    else:
+        value = float("nan")
+    # Return information.
+    return value
+
+
+def determine_case_control_alcoholism_four(
+    alcohol_none=None,
+    alcohol_diagnosis_a=None,
+    alcohol_diagnosis_b=None,
+    alcohol_diagnosis_c=None,
+    alcohol_diagnosis_d=None,
+    alcohol_diagnosis_self=None,
+    alcohol_auditc=None,
+    alcohol_audit=None,
+    threshold_auditc=None,
+    threshold_audit=None,
+):
+    """
+    Organizes information about alcoholism cases and controls.
+
+    arguments:
+        alcohol_none (float): binary representation of whether person has never
+            consumed alcohol, formerly or currently
+        alcohol_diagnosis_a (bool): whether person has diagnosis in alcoholism
+            group A
+        alcohol_diagnosis_b (bool): whether person has diagnosis in alcoholism
+            group B
+        alcohol_diagnosis_c (bool): whether person has diagnosis in alcoholism
+            group C
+        alcohol_diagnosis_d (bool): whether person has diagnosis in alcoholism
+            group D
+        alcohol_diagnosis_self (bool): whether person has self diagnosis of
+            alcoholism
+        alcohol_auditc (float): combination score for AUDIT-C questionnaire
+        alcohol_audit (float): combination score for AUDIT questionnaire
+        threshold_auditc (float): diagnostic threshold for AUDIT-C score
+        threshold_audit (float): diagnostic threshold for AUDIT score
+
+    raises:
+
+    returns:
+        (float): binary representation whether person qualifies as a case or
+            control by specific definition of alcoholism
+
+    """
+
+    # Determine whether person qualifies as a case of alcoholism.
+    if (not math.isnan(alcohol_audit)):
+        # Determine whether person's AUDIT-C or AUDIT scores are beyond
+        # thresholds.
+        if (
             (alcohol_audit > threshold_audit)
         ):
             case = True
@@ -2864,8 +2945,6 @@ def organize_alcoholism_cases_controls_variables(
     # Determine whether person is a case or control for alcoholism type 3.
     # case:
     # AUDIT-C score > threshold_auditc
-    # or
-    # AUDIT score > threshold_audit
     # control:
     # - only persons who have consumed alcohol, previously or currently
     # - no ICD9 or ICD10 codes in diagnostic groups A, B, C, or D
@@ -2874,6 +2953,30 @@ def organize_alcoholism_cases_controls_variables(
     table["alcoholism_3"] = table.apply(
         lambda row:
             determine_case_control_alcoholism_three(
+                alcohol_none=row["alcohol_none"],
+                alcohol_diagnosis_a=row["alcohol_diagnosis_a"],
+                alcohol_diagnosis_b=row["alcohol_diagnosis_b"],
+                alcohol_diagnosis_c=row["alcohol_diagnosis_c"],
+                alcohol_diagnosis_d=row["alcohol_diagnosis_d"],
+                alcohol_diagnosis_self=row["alcohol_diagnosis_self"],
+                alcohol_auditc=row["alcohol_auditc"],
+                alcohol_audit=row["alcohol_audit"],
+                threshold_auditc=threshold_auditc,
+                threshold_audit=threshold_audit,
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether person is a case or control for alcoholism type 4.
+    # case:
+    # AUDIT score > threshold_audit
+    # control:
+    # - only persons who have consumed alcohol, previously or currently
+    # - no ICD9 or ICD10 codes in diagnostic groups A, B, C, or D
+    # - no self diagnoses of alcoholism
+    # - below AUDIT-C and AUDIT thresholds
+    table["alcoholism_4"] = table.apply(
+        lambda row:
+            determine_case_control_alcoholism_four(
                 alcohol_none=row["alcohol_none"],
                 alcohol_diagnosis_a=row["alcohol_diagnosis_a"],
                 alcohol_diagnosis_b=row["alcohol_diagnosis_b"],
@@ -2914,7 +3017,7 @@ def organize_alcoholism_cases_controls_variables(
             "alcohol_diagnosis_self",
             "alcohol_auditc",
             "alcohol_audit",
-            "alcoholism_1", "alcoholism_2", "alcoholism_3",
+            "alcoholism_1", "alcoholism_2", "alcoholism_3", "alcoholism_4",
         ])
     ]
     # Report.
@@ -2943,6 +3046,10 @@ def organize_alcoholism_cases_controls_variables(
         )
         report_alcoholism_cases_controls_females_males(
             alcoholism="alcoholism_3",
+            table=table_clean
+        )
+        report_alcoholism_cases_controls_females_males(
+            alcoholism="alcoholism_4",
             table=table_clean
         )
 
@@ -3863,7 +3970,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 3")
 
     # Initialize directories.
     paths = initialize_directories(
