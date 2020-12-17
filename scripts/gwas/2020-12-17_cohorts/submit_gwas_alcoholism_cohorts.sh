@@ -41,7 +41,7 @@ path_scripts="$path_waller/sexy_alcohol/scripts/gwas"
 # male_alcoholism_3_testosterone: job 1944782, job 1944783
 
 # female_alcoholism_4_testosterone: job 1944785, job 1944786
-# male_alcoholism_4_testosterone:
+# male_alcoholism_4_testosterone: job 1944787, job 1944788
 
 # Case-specific parameters.
 threads=16

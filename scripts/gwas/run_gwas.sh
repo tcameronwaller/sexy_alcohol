@@ -37,8 +37,13 @@
 ###########################################################################
 ###########################################################################
 ###########################################################################
-# This script organizes paths and parameters to access local information
-# about persons and phenotypes in the UKBiobank.
+# This script executes GWAS regression across single nucleotide
+# polymorphisms (SNPs).
+# PLINK2's intermediate files occupy much more data storage space than do
+# the final result files.
+# If working within a processing directory with only 3 Terabytes of data
+# storage, then only attempt to execute about 10 GWAS concurrently across
+# a cohort of 30,000-40,000 persons.
 ###########################################################################
 ###########################################################################
 ###########################################################################
