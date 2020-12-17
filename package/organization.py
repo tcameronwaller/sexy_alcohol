@@ -46,6 +46,55 @@ import promiscuity.plot as plot
 # Initialization
 
 
+def initialize_directories_cohorts(
+    path_parent=None,
+):
+    """
+    Initialize directories for procedure's product files.
+
+    arguments:
+        path_parent (str): path to parent directory
+            raises:
+
+    returns:
+        (dict<str>): collection of paths to directories for procedure's files
+
+    """
+
+    # Collect paths.
+    paths = dict()
+    # Define paths to directories.
+    paths["female"] = dict()
+    paths["female"]["oestradiol"] = os.path.join(
+        path_parent, "female", "oestradiol",
+    )
+    paths["female"]["testosterone"] = os.path.join(
+        path_parent, "female", "testosterone",
+    )
+    paths["male"] = dict()
+    paths["male"]["oestradiol"] = os.path.join(
+        path_parent, "male", "oestradiol",
+    )
+    paths["male"]["testosterone"] = os.path.join(
+        path_parent, "male", "testosterone",
+    )
+    # Initialize directories.
+    utility.create_directories(
+        path=paths["female"]["oestradiol"]
+    )
+    utility.create_directories(
+        path=paths["female"]["testosterone"]
+    )
+    utility.create_directories(
+        path=paths["male"]["oestradiol"]
+    )
+    utility.create_directories(
+        path=paths["male"]["testosterone"]
+    )
+    # Return information.
+    return paths
+
+
 def initialize_directories(
     restore=None,
     path_dock=None,
@@ -73,15 +122,33 @@ def initialize_directories(
     paths["quality"] = os.path.join(
         path_dock, "organization", "quality"
     )
-    paths["trial"] = os.path.join(
-        path_dock, "organization", "trial"
+
+    paths["cohorts"] = dict()
+    path_alcoholism_1 = os.path.join(
+        path_dock, "organization", "cohorts", "alcoholism_1",
     )
-    paths["alcohol"] = os.path.join(
-        path_dock, "organization", "alcohol"
+    paths["cohorts"]["alcoholism_1"] = initialize_directories_cohorts(
+        path_parent=path_alcoholism_1,
     )
-    paths["plot"] = os.path.join(
-        path_dock, "organization", "plot"
+    path_alcoholism_2 = os.path.join(
+        path_dock, "organization", "cohorts", "alcoholism_2",
     )
+    paths["cohorts"]["alcoholism_2"] = initialize_directories_cohorts(
+        path_parent=path_alcoholism_2,
+    )
+    path_alcoholism_3 = os.path.join(
+        path_dock, "organization", "cohorts", "alcoholism_3",
+    )
+    paths["cohorts"]["alcoholism_3"] = initialize_directories_cohorts(
+        path_parent=path_alcoholism_3,
+    )
+    path_alcoholism_4 = os.path.join(
+        path_dock, "organization", "cohorts", "alcoholism_4",
+    )
+    paths["cohorts"]["alcoholism_4"] = initialize_directories_cohorts(
+        path_parent=path_alcoholism_4,
+    )
+
     # Remove previous files to avoid version or batch confusion.
     if restore:
         utility.remove_directory(path=paths["organization"])
@@ -91,15 +158,6 @@ def initialize_directories(
     )
     utility.create_directories(
         path=paths["quality"]
-    )
-    utility.create_directories(
-        path=paths["trial"]
-    )
-    utility.create_directories(
-        path=paths["alcohol"]
-    )
-    utility.create_directories(
-        path=paths["plot"]
     )
     # Return information.
     return paths
@@ -3334,9 +3392,6 @@ def select_organize_variables_cohorts_by_alcoholism_definitions(
     return pail
 
 
-
-
-
 ##########
 # PLINK format
 
@@ -3408,6 +3463,111 @@ def organize_phenotype_covariate_table_plink_format(
         utility.print_terminal_partition(level=4)
     # Return information.
     return table_sequence
+
+
+def organize_phenotype_covariate_tables_alcoholism(
+    tables=None,
+    report=None,
+):
+    """
+    Organize table for phenotypes and covariates in format for PLINK.
+
+    arguments:
+        tables (dict<object>): collection of Pandas data frames with
+            information about genotype and phenotype variables across cohorts
+            of persons
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict<object>): collection of Pandas data frames with
+            information about genotype and phenotype variables across cohorts
+            of persons
+
+    """
+
+    # Initialize collection.
+    pail = dict()
+    # Organize format.
+    pail["table_female_oestradiol"] = (
+        organize_phenotype_covariate_table_plink_format(
+            table=tables["table_female_oestradiol"],
+            report=report,
+    ))
+    pail["table_female_testosterone"] = (
+        organize_phenotype_covariate_table_plink_format(
+            table=tables["table_female_testosterone"],
+            report=report,
+    ))
+    pail["table_male_oestradiol"] = (
+        organize_phenotype_covariate_table_plink_format(
+            table=tables["table_male_oestradiol"],
+            report=report,
+    ))
+    pail["table_male_testosterone"] = (
+        organize_phenotype_covariate_table_plink_format(
+            table=tables["table_male_testosterone"],
+            report=report,
+    ))
+    # Return information.
+    return pail
+
+
+def organize_phenotype_covariate_tables_plink_format(
+    tables=None,
+    report=None,
+):
+    """
+    Organize table for phenotypes and covariates in format for PLINK.
+
+    1. Remove any rows with missing, empty values.
+    PLINK cannot accommodate rows with empty cells.
+
+    2. Introduce family identifiers.
+    Family (FID) and individual (IID) identifiers must match the ID_1 and ID_2
+    columns in the sample table.
+
+    3. Sort column sequence.
+    PLINK requires FID and IID columns to come first.
+
+    arguments:
+        tables (dict<dict<object>>): collection of Pandas data frames with
+            information about genotype and phenotype variables across cohorts
+            of persons
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict<dict<object>>): collection of Pandas data frames with
+            information about genotype and phenotype variables across cohorts
+            of persons
+
+    """
+
+    # Initialize collection.
+    pail = dict()
+    # Conver format.
+    pail["alcoholism_1"] = organize_phenotype_covariate_tables_alcoholism(
+        tables=tables["alcoholism_1"],
+        report=report,
+    )
+    pail["alcoholism_2"] = organize_phenotype_covariate_tables_alcoholism(
+        tables=tables["alcoholism_2"],
+        report=report,
+    )
+    pail["alcoholism_3"] = organize_phenotype_covariate_tables_alcoholism(
+        tables=tables["alcoholism_3"],
+        report=report,
+    )
+    pail["alcoholism_4"] = organize_phenotype_covariate_tables_alcoholism(
+        tables=tables["alcoholism_4"],
+        report=report,
+    )
+    # Return information.
+    return pail
+
 
 
 def match_ukb_genotype_phenotype_sample_identifiers(
@@ -3921,6 +4081,105 @@ def write_product_quality(
     pass
 
 
+def write_product_cohorts_alcoholism(
+    information=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        path_parent (str): path to parent directory
+
+    raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_table_female_oestradiol = os.path.join(
+        path_parent["female"]["oestradiol"],
+        "table_phenotypes_covariates.tsv"
+    )
+    path_table_female_testosterone = os.path.join(
+        path_parent["female"]["testosterone"],
+        "table_phenotypes_covariates.tsv"
+    )
+    path_table_male_oestradiol = os.path.join(
+        path_parent["male"]["oestradiol"],
+        "table_phenotypes_covariates.tsv"
+    )
+    path_table_male_testosterone = os.path.join(
+        path_parent["male"]["testosterone"],
+        "table_phenotypes_covariates.tsv"
+    )
+
+    # Write information to file.
+    information["table_female_oestradiol"].to_csv(
+        path_or_buf=path_table_female_oestradiol,
+        sep="\t",
+        header=True,
+        index=False,
+    )
+    information["table_female_testosterone"].to_csv(
+        path_or_buf=path_table_female_testosterone,
+        sep="\t",
+        header=True,
+        index=False,
+    )
+    information["table_male_oestradiol"].to_csv(
+        path_or_buf=path_table_male_oestradiol,
+        sep="\t",
+        header=True,
+        index=False,
+    )
+    information["table_male_testosterone"].to_csv(
+        path_or_buf=path_table_male_testosterone,
+        sep="\t",
+        header=True,
+        index=False,
+    )
+    pass
+
+
+def write_product_cohorts(
+    information=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        path_parent (str): path to parent directory
+
+    raises:
+
+    returns:
+
+    """
+
+    write_product_cohorts_alcoholism(
+        information=information["alcoholism_1"],
+        path_parent=path_parent["alcoholism_1"],
+    )
+    write_product_cohorts_alcoholism(
+        information=information["alcoholism_2"],
+        path_parent=path_parent["alcoholism_2"],
+    )
+    write_product_cohorts_alcoholism(
+        information=information["alcoholism_3"],
+        path_parent=path_parent["alcoholism_3"],
+    )
+    write_product_cohorts_alcoholism(
+        information=information["alcoholism_4"],
+        path_parent=path_parent["alcoholism_4"],
+    )
+    pass
+
+
 def write_product_trial(
     information=None,
     path_parent=None,
@@ -3981,6 +4240,12 @@ def write_product(
         information=information["quality"],
         path_parent=paths["quality"],
     )
+    # Cohort tables in PLINK format.
+    write_product_cohorts(
+        information=information["cohorts"],
+        path_parent=paths["cohorts"],
+    )
+
     # Trial organization.
     if False:
         write_product_trial(
@@ -4012,7 +4277,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 4")
+    print("version check: 5")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -4078,7 +4343,11 @@ def execute_procedure(
         report=True,
     )
 
-
+    # Organize phenotypes and covariates in format for analysis in PLINK.
+    pail_format = organize_phenotype_covariate_tables_plink_format(
+        tables=pail_cohorts,
+        report=True,
+    )
 
     # Collect information.
     information = dict()
@@ -4095,6 +4364,7 @@ def execute_procedure(
     information["quality"]["table_alcoholism"] = (
         pail_alcoholism["table_report"]
     )
+    information["cohorts"] = pail_format
     # Write product information to file.
     write_product(
         paths=paths,
@@ -4102,11 +4372,6 @@ def execute_procedure(
     )
 
     if False:
-        # Organize phenotypes and covariates in format for analysis in PLINK.
-        table_format = organize_phenotype_covariate_table_plink_format(
-            table=table_valid,
-            report=True,
-        )
         # Match UKB genotype sample identifiers to phenotype identifiers.
         match_ukb_genotype_phenotype_sample_identifiers(
             table_phenotypes=table_format,
