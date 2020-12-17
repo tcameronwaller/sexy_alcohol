@@ -17,7 +17,7 @@ echo "----------------------------------------------------------------------"
 echo "----------"
 echo "The script organizes and submits an array batch job."
 echo "----------"
-echo "version check: 11"
+echo "version check: 1"
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
@@ -31,28 +31,25 @@ path_waller="$path_temporary/waller"
 path_dock="$path_temporary/waller/dock"
 path_scripts="$path_waller/sexy_alcohol/scripts/gwas"
 
-# female_alcoholism_1_oestradiol: job 1943204, job 1943205
-# male_alcoholism_1_oestradiol: job 1943206, job 1943207
-# female_alcoholism_1_testosterone: job 1943208, job 1943209
-# male_alcoholism_1_testosterone: job 1943210, job 1943211
+# female_alcoholism_1_testosterone:
+# male_alcoholism_1_testosterone:
 
-# female_alcoholism_2_oestradiol: job 1943213, job 1943214
-# male_alcoholism_2_oestradiol: job 1943353, job 1943354
-# female_alcoholism_2_testosterone: job 1943363, job 1943364
-# male_alcoholism_2_testosterone: job 1943366, job 1943367
+# female_alcoholism_2_testosterone:
+# male_alcoholism_2_testosterone:
 
-# female_alcoholism_3_oestradiol: job 1943373, job 1943374
-# male_alcoholism_3_oestradiol: job 1943376, job 1943377
-# female_alcoholism_3_testosterone: job 1943378, job 1943379
+# female_alcoholism_3_testosterone:
 # male_alcoholism_3_testosterone:
+
+# female_alcoholism_4_testosterone:
+# male_alcoholism_4_testosterone:
 
 # Case-specific parameters.
 threads=16
 maf=0.01
 count=22 # 22 # Count of chromosomes on which to run GWAS
 covariates="age,body_mass_index,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
-sex="male"
-alcoholism="alcoholism_3"
+sex="female"
+alcoholism="alcoholism_1"
 hormone="testosterone"
 analysis="${sex}_${alcoholism}_${hormone}"
 phenotypes_alcoholism=$alcoholism

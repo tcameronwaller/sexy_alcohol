@@ -18,10 +18,6 @@ path_access_table_variables="$path_access/table_ukbiobank_phenotype_variables.ts
 # Echo each command to console.
 set -x
 
-# Transfer new version of parameters.
-rm $path_access_table_variables
-cp $path_parameters_table_variables $path_access_table_variables
-
 # Remove previous version of program.
 
 echo "remove previous versions of the repositories..."
@@ -48,3 +44,7 @@ mv "$path_promiscuity/package" "$path_promiscuity/promiscuity"
 
 echo "organize promiscuity as a subpackage within sexy_alcohol..."
 cp -r "$path_promiscuity/promiscuity" "$path_sexy_alcohol/sexy_alcohol/promiscuity"
+
+# Transfer new version of parameters.
+rm $path_access_table_variables
+cp $path_parameters_table_variables $path_access_table_variables

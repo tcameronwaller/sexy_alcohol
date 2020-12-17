@@ -80,6 +80,7 @@ $path_plink2 \
 --keep $path_table_phenotypes_covariates \
 --maf $maf \
 --freq --glm hide-covar \
+--pfilter 1 \
 --pheno $path_table_phenotypes_covariates \
 --pheno-name $phenotypes \
 --covar $path_table_phenotypes_covariates \
