@@ -17,7 +17,7 @@ echo "----------------------------------------------------------------------"
 echo "----------"
 echo "The script organizes and submits an array batch job."
 echo "----------"
-echo "version check: 7"
+echo "version check: 8"
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
@@ -39,17 +39,21 @@ path_scripts="$path_waller/sexy_alcohol/scripts/gwas"
 # female_alcoholism_2_oestradiol: job 1943213, job 1943214
 # male_alcoholism_2_oestradiol: job 1943353, job 1943354
 # female_alcoholism_2_testosterone: job 1943363, job 1943364
-# male_alcoholism_2_testosterone:
+# male_alcoholism_2_testosterone: job 1943366, job 1943367
 
+# female_alcoholism_3_oestradiol:
+# male_alcoholism_3_oestradiol:
+# female_alcoholism_3_testosterone:
+# male_alcoholism_3_testosterone:
 
 # Case-specific parameters.
 threads=16
 maf=0.01
 count=22 # 22 # Count of chromosomes on which to run GWAS
 covariates="age,body_mass_index,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
-sex="male"
-alcoholism="alcoholism_2"
-hormone="testosterone"
+sex="female"
+alcoholism="alcoholism_3"
+hormone="oestradiol"
 analysis="${sex}_${alcoholism}_${hormone}"
 phenotypes_alcoholism=$alcoholism
 phenotypes_hormone=$hormone
