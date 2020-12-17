@@ -47,6 +47,7 @@ import promiscuity.plot as plot
 
 
 def initialize_directories_cohorts(
+    information=None,
     path_parent=None,
 ):
     """
@@ -54,45 +55,37 @@ def initialize_directories_cohorts(
 
     arguments:
         path_parent (str): path to parent directory
-            raises:
+
+    raises:
 
     returns:
         (dict<str>): collection of paths to directories for procedure's files
 
     """
 
-    # Collect paths.
+    # Collect information.
     paths = dict()
-    # Define paths to directories.
-    paths["female"] = dict()
-    paths["female"]["oestradiol"] = os.path.join(
-        path_parent, "female", "oestradiol",
-    )
-    paths["female"]["testosterone"] = os.path.join(
-        path_parent, "female", "testosterone",
-    )
-    paths["male"] = dict()
-    paths["male"]["oestradiol"] = os.path.join(
-        path_parent, "male", "oestradiol",
-    )
-    paths["male"]["testosterone"] = os.path.join(
-        path_parent, "male", "testosterone",
-    )
-    # Initialize directories.
-    utility.create_directories(
-        path=paths["female"]["oestradiol"]
-    )
-    utility.create_directories(
-        path=paths["female"]["testosterone"]
-    )
-    utility.create_directories(
-        path=paths["male"]["oestradiol"]
-    )
-    utility.create_directories(
-        path=paths["male"]["testosterone"]
-    )
-    # Return information.
-    return paths
+
+    sexes = ["female", "male",]
+    alcoholisms = [
+        "alcoholism_1", "alcoholism_2", "alcoholism_3", "alcoholism_4",
+    ]
+    hormones = ["oestradiol", "testosterone",]
+    for sex in sexes:
+        for alcoholism in alcoholisms:
+            for hormone in hormones:
+                paths[sex][alcoholism][hormone] = os.path.join(
+                    path_parent, "cohorts", sex, alcoholism, hormone
+                )
+                # Initialize directories.
+                utility.create_directories(
+                    path=paths[sex][alcoholism][hormone]
+                )
+                pass
+            pass
+        pass
+    pass
+
 
 
 def initialize_directories(
@@ -134,30 +127,8 @@ def initialize_directories(
     )
 
     # Directory tiers.
-    paths["cohorts"] = dict()
-    path_alcoholism_1 = os.path.join(
-        path_dock, "organization", "cohorts", "alcoholism_1",
-    )
-    paths["cohorts"]["alcoholism_1"] = initialize_directories_cohorts(
-        path_parent=path_alcoholism_1,
-    )
-    path_alcoholism_2 = os.path.join(
-        path_dock, "organization", "cohorts", "alcoholism_2",
-    )
-    paths["cohorts"]["alcoholism_2"] = initialize_directories_cohorts(
-        path_parent=path_alcoholism_2,
-    )
-    path_alcoholism_3 = os.path.join(
-        path_dock, "organization", "cohorts", "alcoholism_3",
-    )
-    paths["cohorts"]["alcoholism_3"] = initialize_directories_cohorts(
-        path_parent=path_alcoholism_3,
-    )
-    path_alcoholism_4 = os.path.join(
-        path_dock, "organization", "cohorts", "alcoholism_4",
-    )
-    paths["cohorts"]["alcoholism_4"] = initialize_directories_cohorts(
-        path_parent=path_alcoholism_4,
+    paths["cohorts"] = initialize_directories_cohorts(
+        path_parent=paths["organization"],
     )
 
     # Return information.
@@ -279,7 +250,9 @@ def organize_general_attribute_variables(
     table = table.copy(deep=True)
     # Translate column names.
     translations = dict()
-    translations["31-0.0"] = "sex"
+    #translations["31-0.0"] = "sex"
+    # Use genotypic sex to avoid data entry errors or confusion with gender.
+    translations["22001-0.0"] = "sex"
     translations["21022-0.0"] = "age"
     translations["21001-0.0"] = "body_mass_index"
     table.rename(
@@ -3186,12 +3159,11 @@ def select_valid_records_all_specific_variables(
     return table
 
 
-def select_valid_variables_records_by_sex_hormone(
+def select_valid_cohort_records_variables(
     sex_text=None,
-    hormone=None,
     alcoholism=None,
+    hormone=None,
     table=None,
-    report=None,
 ):
     """
     Selects variable columns and record rows with valid values across all
@@ -3199,11 +3171,10 @@ def select_valid_variables_records_by_sex_hormone(
 
     arguments:
         sex_text (str): textual representation of sex selection
-        hormone (str): name of column for relevant sex hormone
         alcoholism (str): name of column defining alcoholism cases and controls
+        hormone (str): name of column for relevant sex hormone
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
-        report (bool): whether to print reports
 
     raises:
 
@@ -3229,25 +3200,25 @@ def select_valid_variables_records_by_sex_hormone(
         prefixes=["genotype_pc_",],
         table=table,
         drop_columns=True,
-        report=report,
+        report=False,
     )
     # Return information.
     return table
 
 
-def select_organize_variables_cohorts_by_alcoholism_definition(
-    table=None,
+def select_organize_cohorts_variables_by_hormone(
+    sex_text=None,
     alcoholism=None,
-    report=None,
+    table=None,
 ):
     """
     Organizes information about previous and current alcohol consumption.
 
     arguments:
+        sex_text (str): textual representation of sex selection
+        alcoholism (str): name of column defining alcoholism cases and controls
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
-        alcoholism (str): name of column defining alcoholism cases and controls
-        report (bool): whether to print reports
 
     raises:
 
@@ -3256,93 +3227,74 @@ def select_organize_variables_cohorts_by_alcoholism_definition(
 
     """
 
-    # Copy data.
-    table = table.copy(deep=True)
-
-    # Select records with valid values of variables relevant to all cohorts.
-    table = select_valid_records_all_specific_variables(
-        names=[
-            "eid", "IID",
-            "sex", "sex_text", "age", "body_mass_index",
-            alcoholism,
-        ],
-        prefixes=["genotype_pc_",],
-        table=table,
-        drop_columns=False,
-        report=False,
-    )
-
-    # Females with valid oestradiol and valid alcoholism definition.
-    table_female_oestradiol = select_valid_variables_records_by_sex_hormone(
-        sex_text="female",
-        hormone="oestradiol",
-        alcoholism=alcoholism,
-        table=table,
-        report=False,
-    )
-    # Females with valid testosterone and valid alcoholism definition.
-    table_female_testosterone = select_valid_variables_records_by_sex_hormone(
-        sex_text="female",
-        hormone="testosterone",
-        alcoholism=alcoholism,
-        table=table,
-        report=False,
-    )
-    # Males with valid oestradiol and valid alcoholism definition.
-    table_male_oestradiol = select_valid_variables_records_by_sex_hormone(
-        sex_text="male",
-        hormone="oestradiol",
-        alcoholism=alcoholism,
-        table=table,
-        report=False,
-    )
-    # Males with valid testosterone and valid alcoholism definition.
-    table_male_testosterone = select_valid_variables_records_by_sex_hormone(
-        sex_text="male",
-        hormone="testosterone",
-        alcoholism=alcoholism,
-        table=table,
-        report=False,
-    )
-
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print(
-            "Selection of valid variables and records relevant to each cohort."
-        )
-        utility.print_terminal_partition(level=3)
-        print("Alcoholism variable: " + str(alcoholism))
-        utility.print_terminal_partition(level=3)
-        print("Top tier cohort with valid values of all relevant variables.")
-        print("table shape: " + str(table.shape))
-        utility.print_terminal_partition(level=3)
-        print("Females with valid oestradiol and valid alcoholism definition.")
-        print("table shape: " + str(table_female_oestradiol.shape))
-        utility.print_terminal_partition(level=3)
-        print(
-            "Females with valid testosterone and valid alcoholism definition."
-        )
-        print("table shape: " + str(table_female_testosterone.shape))
-        utility.print_terminal_partition(level=3)
-        utility.print_terminal_partition(level=3)
-        print("Males with valid oestradiol and valid alcoholism definition.")
-        print("table shape: " + str(table_male_oestradiol.shape))
-        utility.print_terminal_partition(level=3)
-        print("Males with valid testosterone and valid alcoholism definition.")
-        print("table shape: " + str(table_male_testosterone.shape))
-
+    # Select and organize variables across cohorts.
     # Collect information.
     pail = dict()
-    pail["table_female_oestradiol"] = table_female_oestradiol
-    pail["table_female_testosterone"] = table_female_testosterone
-    pail["table_male_oestradiol"] = table_male_oestradiol
-    pail["table_male_testosterone"] = table_male_testosterone
+    pail["oestradiol"] = select_valid_cohort_records_variables(
+        sex_text=sex_text,
+        alcoholism=alcoholism,
+        hormone="oestradiol",
+        table=table,
+    )
+    pail["testosterone"] = select_valid_cohort_records_variables(
+        sex_text=sex_text,
+        alcoholism=alcoholism,
+        hormone="testosterone",
+        table=table,
+    )
     # Return information.
     return pail
 
 
-def select_organize_variables_cohorts_by_alcoholism_definitions(
+def select_organize_cohorts_variables_by_alcoholism_hormone(
+    sex_text=None,
+    table=None,
+):
+    """
+    Organizes information about previous and current alcohol consumption.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+
+    # Select and organize variables across cohorts.
+    # Collect information.
+    pail = dict()
+
+    pail["alcoholism_1"] = select_organize_cohorts_variables_by_hormone(
+        sex_text=sex_text,
+        alcoholism="alcoholism_1",
+        table=table,
+    )
+    pail["alcoholism_2"] = select_organize_cohorts_variables_by_hormone(
+        sex_text=sex_text,
+        alcoholism="alcoholism_2",
+        table=table,
+    )
+    pail["alcoholism_3"] = select_organize_cohorts_variables_by_hormone(
+        sex_text=sex_text,
+        alcoholism="alcoholism_3",
+        table=table,
+    )
+    pail["alcoholism_4"] = select_organize_cohorts_variables_by_hormone(
+        sex_text=sex_text,
+        alcoholism="alcoholism_4",
+        table=table,
+    )
+    # Return information.
+    return pail
+
+
+def select_organize_cohorts_variables_by_sex_alcoholism_hormone(
     table=None,
     report=None,
 ):
@@ -3363,32 +3315,34 @@ def select_organize_variables_cohorts_by_alcoholism_definitions(
 
 
     # Select and organize variables across cohorts.
-    pail_1 = select_organize_variables_cohorts_by_alcoholism_definition(
-        table=table,
-        alcoholism="alcoholism_1",
-        report=report,
-    )
-    pail_2 = select_organize_variables_cohorts_by_alcoholism_definition(
-        table=table,
-        alcoholism="alcoholism_2",
-        report=report,
-    )
-    pail_3 = select_organize_variables_cohorts_by_alcoholism_definition(
-        table=table,
-        alcoholism="alcoholism_3",
-        report=report,
-    )
-    pail_4 = select_organize_variables_cohorts_by_alcoholism_definition(
-        table=table,
-        alcoholism="alcoholism_4",
-        report=report,
-    )
     # Collect information.
     pail = dict()
-    pail["alcoholism_1"] = pail_1
-    pail["alcoholism_2"] = pail_2
-    pail["alcoholism_3"] = pail_3
-    pail["alcoholism_4"] = pail_4
+
+    pail["female"] = select_organize_cohorts_variables_by_alcoholism_hormone(
+        sex_text="female",
+        table=table,
+    )
+    pail["male"] = select_organize_cohorts_variables_by_alcoholism_hormone(
+        sex_text="male",
+        table=table,
+    )
+    # Report.
+    if report:
+        table_report = pail["female"]["alcoholism_1"]["testosterone"].copy(
+            deep=True
+        )
+        table_control = table_report.loc[
+            table_report["alcoholism_1"] < 0.5, :
+        ]
+        table_case = table_report.loc[
+            table_report["alcoholism_1"] > 0.5, :
+        ]
+        utility.print_terminal_partition(level=2)
+        print("Females, alcoholism_1, testosterone")
+        print("Controls table shape: " + str(table_control.shape))
+        utility.print_terminal_partition(level=3)
+        print("Cases table shape: " + str(table_case.shape))
+        utility.print_terminal_partition(level=3)
     # Return information.
     return pail
 
@@ -3397,7 +3351,46 @@ def select_organize_variables_cohorts_by_alcoholism_definitions(
 # PLINK format
 
 
+def translate_binary_phenotype_plink(
+    binary_value=None,
+):
+    """
+    Translate information from simple binary representation to plink
+    representation.
+
+    Accommodate inexact float values and null values.
+
+    arguments:
+        binary_value (float): binary (0, 1) representation of a phenotype
+
+    raises:
+
+    returns:
+        (float): plink binary representation of a phenotype
+
+    """
+
+    # Determine whether the variable has a valid (non-missing) value.
+    if (
+        (not math.isnan(binary_value)) and
+        (-0.5 <= binary_value and binary_value < 1.5)
+    ):
+        # The variable has a valid value.
+        if (-0.5 <= binary_value and binary_value < 0.5):
+            # 0: control
+            value = 1
+        elif (0.5 <= binary_value and binary_value < 1.5):
+            # 1: case
+            value = 2
+    else:
+        # null
+        value = float("nan")
+    # Return information.
+    return value
+
+
 def organize_phenotype_covariate_table_plink_format(
+    binary_phenotypes=None,
     table=None,
     report=None,
 ):
@@ -3415,6 +3408,9 @@ def organize_phenotype_covariate_table_plink_format(
     PLINK requires FID and IID columns to come first.
 
     arguments:
+        binary_phenotypes (list<str>): names of columns with binary phenotypes
+            (control: 0, case: 1) that need conversion to PLINK format
+            (control: 1, case: 2)
         table (object): Pandas data frame of information about phenotype and
             covariate variables for GWAS
         report (bool): whether to print reports
@@ -3429,6 +3425,16 @@ def organize_phenotype_covariate_table_plink_format(
 
     # Copy data.
     table = table.copy(deep=True)
+    # Translate binary phenotype variables.
+    for binary_phenotype in binary_phenotypes:
+        table[binary_phenotype] = table.apply(
+            lambda row:
+                translate_binary_phenotype_plink(
+                    binary_value=row[binary_phenotype],
+                ),
+            axis="columns", # apply across rows
+        )
+        pass
     # Organize.
     table.reset_index(
         level=None,
@@ -3467,6 +3473,7 @@ def organize_phenotype_covariate_table_plink_format(
 
 
 def organize_phenotype_covariate_tables_alcoholism(
+    binary_phenotypes=None,
     tables=None,
     report=None,
 ):
@@ -3474,6 +3481,9 @@ def organize_phenotype_covariate_tables_alcoholism(
     Organize table for phenotypes and covariates in format for PLINK.
 
     arguments:
+        binary_phenotypes (list<str>): names of columns with binary phenotypes
+            (control: 0, case: 1) that need conversion to PLINK format
+            (control: 1, case: 2)
         tables (dict<object>): collection of Pandas data frames with
             information about genotype and phenotype variables across cohorts
             of persons
@@ -3491,26 +3501,75 @@ def organize_phenotype_covariate_tables_alcoholism(
     # Initialize collection.
     pail = dict()
     # Organize format.
-    pail["table_female_oestradiol"] = (
-        organize_phenotype_covariate_table_plink_format(
-            table=tables["table_female_oestradiol"],
-            report=report,
-    ))
-    pail["table_female_testosterone"] = (
-        organize_phenotype_covariate_table_plink_format(
-            table=tables["table_female_testosterone"],
-            report=report,
-    ))
-    pail["table_male_oestradiol"] = (
-        organize_phenotype_covariate_table_plink_format(
-            table=tables["table_male_oestradiol"],
-            report=report,
-    ))
-    pail["table_male_testosterone"] = (
-        organize_phenotype_covariate_table_plink_format(
-            table=tables["table_male_testosterone"],
-            report=report,
-    ))
+    pail["oestradiol"] = organize_phenotype_covariate_table_plink_format(
+        binary_phenotypes=binary_phenotypes,
+        table=tables["oestradiol"],
+        report=report,
+    )
+    pail["testosterone"] = organize_phenotype_covariate_table_plink_format(
+        binary_phenotypes=binary_phenotypes,
+        table=tables["testosterone"],
+        report=report,
+    )
+    # Return information.
+    return pail
+
+
+def organize_phenotype_covariate_tables_sex(
+    tables=None,
+    report=None,
+):
+    """
+    Organize table for phenotypes and covariates in format for PLINK.
+
+    1. Remove any rows with missing, empty values.
+    PLINK cannot accommodate rows with empty cells.
+
+    2. Introduce family identifiers.
+    Family (FID) and individual (IID) identifiers must match the ID_1 and ID_2
+    columns in the sample table.
+
+    3. Sort column sequence.
+    PLINK requires FID and IID columns to come first.
+
+    arguments:
+        tables (dict<dict<object>>): collection of Pandas data frames with
+            information about genotype and phenotype variables across cohorts
+            of persons
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict<dict<object>>): collection of Pandas data frames with
+            information about genotype and phenotype variables across cohorts
+            of persons
+
+    """
+
+    # Initialize collection.
+    pail = dict()
+    # Convert format.
+    pail["alcoholism_1"] = organize_phenotype_covariate_tables_alcoholism(
+        binary_phenotypes=["alcoholism_1"],
+        tables=tables["alcoholism_1"],
+        report=report,
+    )
+    pail["alcoholism_2"] = organize_phenotype_covariate_tables_alcoholism(
+        binary_phenotypes=["alcoholism_2"],
+        tables=tables["alcoholism_2"],
+        report=report,
+    )
+    pail["alcoholism_3"] = organize_phenotype_covariate_tables_alcoholism(
+        binary_phenotypes=["alcoholism_3"],
+        tables=tables["alcoholism_3"],
+        report=report,
+    )
+    pail["alcoholism_4"] = organize_phenotype_covariate_tables_alcoholism(
+        binary_phenotypes=["alcoholism_4"],
+        tables=tables["alcoholism_4"],
+        report=report,
+    )
     # Return information.
     return pail
 
@@ -3550,25 +3609,16 @@ def organize_phenotype_covariate_tables_plink_format(
     # Initialize collection.
     pail = dict()
     # Conver format.
-    pail["alcoholism_1"] = organize_phenotype_covariate_tables_alcoholism(
-        tables=tables["alcoholism_1"],
+    pail["female"] = organize_phenotype_covariate_tables_sex(
+        tables=tables["female"],
         report=report,
     )
-    pail["alcoholism_2"] = organize_phenotype_covariate_tables_alcoholism(
-        tables=tables["alcoholism_2"],
-        report=report,
-    )
-    pail["alcoholism_3"] = organize_phenotype_covariate_tables_alcoholism(
-        tables=tables["alcoholism_3"],
-        report=report,
-    )
-    pail["alcoholism_4"] = organize_phenotype_covariate_tables_alcoholism(
-        tables=tables["alcoholism_4"],
+    pail["male"] = organize_phenotype_covariate_tables_sex(
+        tables=tables["male"],
         report=report,
     )
     # Return information.
     return pail
-
 
 
 def match_ukb_genotype_phenotype_sample_identifiers(
@@ -4082,7 +4132,10 @@ def write_product_quality(
     pass
 
 
-def write_product_cohorts_alcoholism(
+def write_product_cohorts_sex_alcoholism_hormone(
+    sex_text=None,
+    alcoholism=None,
+    hormone=None,
     information=None,
     path_parent=None,
 ):
@@ -4090,6 +4143,9 @@ def write_product_cohorts_alcoholism(
     Writes product information to file.
 
     arguments:
+        sex_text (str): textual representation of sex selection
+        alcoholism (str): name of column defining alcoholism cases and controls
+        hormone (str): name of column for relevant sex hormone
         information (object): information to write to file
         path_parent (str): path to parent directory
 
@@ -4100,44 +4156,13 @@ def write_product_cohorts_alcoholism(
     """
 
     # Specify directories and files.
-    path_table_female_oestradiol = os.path.join(
-        path_parent["female"]["oestradiol"],
+    path_table = os.path.join(
+        path_parent[sex][alcoholism][hormone],
         "table_phenotypes_covariates.tsv"
     )
-    path_table_female_testosterone = os.path.join(
-        path_parent["female"]["testosterone"],
-        "table_phenotypes_covariates.tsv"
-    )
-    path_table_male_oestradiol = os.path.join(
-        path_parent["male"]["oestradiol"],
-        "table_phenotypes_covariates.tsv"
-    )
-    path_table_male_testosterone = os.path.join(
-        path_parent["male"]["testosterone"],
-        "table_phenotypes_covariates.tsv"
-    )
-
     # Write information to file.
-    information["table_female_oestradiol"].to_csv(
-        path_or_buf=path_table_female_oestradiol,
-        sep="\t",
-        header=True,
-        index=False,
-    )
-    information["table_female_testosterone"].to_csv(
-        path_or_buf=path_table_female_testosterone,
-        sep="\t",
-        header=True,
-        index=False,
-    )
-    information["table_male_oestradiol"].to_csv(
-        path_or_buf=path_table_male_oestradiol,
-        sep="\t",
-        header=True,
-        index=False,
-    )
-    information["table_male_testosterone"].to_csv(
-        path_or_buf=path_table_male_testosterone,
+    information[sex][alcoholism][hormone].to_csv(
+        path_or_buf=path_table,
         sep="\t",
         header=True,
         index=False,
@@ -4162,22 +4187,21 @@ def write_product_cohorts(
 
     """
 
-    write_product_cohorts_alcoholism(
-        information=information["alcoholism_1"],
-        path_parent=path_parent["alcoholism_1"],
-    )
-    write_product_cohorts_alcoholism(
-        information=information["alcoholism_2"],
-        path_parent=path_parent["alcoholism_2"],
-    )
-    write_product_cohorts_alcoholism(
-        information=information["alcoholism_3"],
-        path_parent=path_parent["alcoholism_3"],
-    )
-    write_product_cohorts_alcoholism(
-        information=information["alcoholism_4"],
-        path_parent=path_parent["alcoholism_4"],
-    )
+    sexes = ["female", "male",]
+    alcoholisms = [
+        "alcoholism_1", "alcoholism_2", "alcoholism_3", "alcoholism_4",
+    ]
+    hormones = ["oestradiol", "testosterone",]
+    for sex in sexes:
+        for alcoholism in alcoholisms:
+            for hormone in hormones:
+                write_product_cohorts_sex_alcoholism_hormone(
+                    sex_text=sex,
+                    alcoholism=alcoholism,
+                    hormone=hormone,
+                    information=information,
+                    path_parent=path_parent,
+                )
     pass
 
 
@@ -4278,7 +4302,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 6")
+    print("version check: 1")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -4339,7 +4363,7 @@ def execute_procedure(
     print(pail_alcoholism["table_clean"])
 
     # Select and organize variables across cohorts.
-    pail_cohorts = select_organize_variables_cohorts_by_alcoholism_definitions(
+    pail_cohorts = select_organize_cohorts_variables_by_sex_alcoholism_hormone(
         table=pail_alcoholism["table_clean"],
         report=True,
     )
