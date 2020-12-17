@@ -122,7 +122,18 @@ def initialize_directories(
     paths["quality"] = os.path.join(
         path_dock, "organization", "quality"
     )
+    # Remove previous files to avoid version or batch confusion.
+    if restore:
+        utility.remove_directory(path=paths["organization"])
+    # Initialize directories.
+    utility.create_directories(
+        path=paths["organization"]
+    )
+    utility.create_directories(
+        path=paths["quality"]
+    )
 
+    # Directory tiers.
     paths["cohorts"] = dict()
     path_alcoholism_1 = os.path.join(
         path_dock, "organization", "cohorts", "alcoholism_1",
@@ -149,16 +160,6 @@ def initialize_directories(
         path_parent=path_alcoholism_4,
     )
 
-    # Remove previous files to avoid version or batch confusion.
-    if restore:
-        utility.remove_directory(path=paths["organization"])
-    # Initialize directories.
-    utility.create_directories(
-        path=paths["organization"]
-    )
-    utility.create_directories(
-        path=paths["quality"]
-    )
     # Return information.
     return paths
 
@@ -4277,7 +4278,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 5")
+    print("version check: 6")
 
     # Initialize directories.
     paths = initialize_directories(
