@@ -31,12 +31,17 @@ path_waller="$path_temporary/waller"
 path_dock="$path_temporary/waller/dock"
 path_scripts="$path_waller/sexy_alcohol/scripts/gwas"
 
+# female_alcoholism_1_oestradiol: job 1943204, job 1943205
+# female_alcoholism_1_testosterone:
+# male_alcoholism_1_oestradiol:
+# male_alcoholism_1_testosterone:
+
 # Case-specific parameters.
 threads=16
 maf=0.01
 count=22 # 22 # Count of chromosomes on which to run GWAS
 covariates="age,body_mass_index,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
-sex="female"
+sex="male"
 alcoholism="alcoholism_1"
 hormone="oestradiol"
 analysis="${sex}_${alcoholism}_${hormone}"
