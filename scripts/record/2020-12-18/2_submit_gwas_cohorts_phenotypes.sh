@@ -88,7 +88,7 @@ echo "Submit array batch to Sun Grid Engine."
 echo "----------------------------------------------------------------------"
 qsub -t 1-${chromosomes}:1 \
 -o "$path_gwas_hormone/out.txt" -e "$path_gwas_hormone/error.txt" \
-$path_scripts/run_gwas.sh \
+$path_scripts/3_run_gwas.sh \
 $path_table_phenotypes_covariates \
 $path_gwas_hormone \
 $cohort_comparison \
