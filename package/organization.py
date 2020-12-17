@@ -4157,11 +4157,11 @@ def write_product_cohorts_sex_alcoholism_hormone(
 
     # Specify directories and files.
     path_table = os.path.join(
-        path_parent[sex][alcoholism][hormone],
+        path_parent[sex_text][alcoholism][hormone],
         "table_phenotypes_covariates.tsv"
     )
     # Write information to file.
-    information[sex][alcoholism][hormone].to_csv(
+    information[sex_text][alcoholism][hormone].to_csv(
         path_or_buf=path_table,
         sep="\t",
         header=True,
@@ -4302,7 +4302,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 3")
 
     # Initialize directories.
     paths = initialize_directories(
