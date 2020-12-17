@@ -22,61 +22,47 @@ echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
 
-# Organize paths.
-# Read private, local file paths.
-echo "read private file path variables and organize paths..."
-cd ~/paths
-path_temporary=$(<"./temporary_sexy_alcohol.txt")
-path_waller="$path_temporary/waller"
-path_dock="$path_temporary/waller/dock"
-path_scripts="$path_waller/sexy_alcohol/scripts/gwas"
 
-# female_alcoholism_1_testosterone: job 1944120, job 1944121
-# male_alcoholism_1_testosterone: job 1944122, job 1944123
+# Organize variables.
+sex=$1 # name of sex
+alcoholism=$2 # name of definition of alcoholism
+hormone=$3 # name of hormone
+path_scripts=$4 # path to directory with relevant scripts
+path_dock=$5 # path to directory for GWAS summary statistics
 
-# female_alcoholism_2_testosterone: job 1944139, job 1944140
-# male_alcoholism_2_testosterone: job 1944141, job 1944142
+# Organize paths and parameters.
+cohort_comparison="${sex}_${alcoholism}_${hormone}"
+path_table_phenotypes_covariates="$path_dock/organization/cohorts/$sex/$alcoholism/$hormone/table_phenotypes_covariates.tsv"
+path_gwas="$path_dock/gwas"
+path_gwas_alcoholism="$path_gwas/$cohort_comparison/$alcoholism"
+path_gwas_hormone="$path_gwas/$cohort_comparison/$hormone"
 
-# female_alcoholism_3_testosterone: job 1944171, job 1944172
-# male_alcoholism_3_testosterone: job 1944782, job 1944783
-
-# female_alcoholism_4_testosterone: job 1944785, job 1944786
-# male_alcoholism_4_testosterone: job 1944787, job 1944788
-
-# Case-specific parameters.
-threads=16
-maf=0.01
-count=22 # 22 # Count of chromosomes on which to run GWAS
-covariates="age,body_mass_index,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
-sex="male"
-alcoholism="alcoholism_4"
-hormone="testosterone"
-analysis="${sex}_${alcoholism}_${hormone}"
 phenotypes_alcoholism=$alcoholism
 phenotypes_hormone=$hormone
 
-# Case-specific paths.
-path_table_phenotypes_covariates="$path_temporary/waller/dock/organization/cohorts/$alcoholism/$sex/$hormone/table_phenotypes_covariates.tsv"
-path_report_alcoholism="$path_temporary/waller/dock/gwas/$analysis/$alcoholism"
-path_report_hormone="$path_temporary/waller/dock/gwas/$analysis/$hormone"
+# General parameters.
+threads=16
+maf=0.01
+chromosomes=22 # 22 # Count of chromosomes on which to run GWAS
+covariates="age,body_mass_index,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
 
 # Echo each command to console.
 #set -x
 # Suppress echo each command to console.
 set +x
 
-# Determine whether the temporary directory structure already exists.
-if [ ! -d $path_report_alcoholism ]; then
+# Initialize directories.
+rm -r $path_gwas_alcoholism
+if [ ! -d $path_gwas_alcoholism ]; then
     # Directory does not already exist.
     # Create directory.
-    mkdir -p $path_report_alcoholism
+    mkdir -p $path_gwas_alcoholism
 fi
-
-# Determine whether the temporary directory structure already exists.
-if [ ! -d $path_report_hormone ]; then
+rm -r $path_gwas_hormone
+if [ ! -d $path_gwas_hormone ]; then
     # Directory does not already exist.
     # Create directory.
-    mkdir -p $path_report_hormone
+    mkdir -p $path_gwas_hormone
 fi
 
 # Submit array batch to Sun Grid Engine.
@@ -84,12 +70,12 @@ fi
 echo "----------------------------------------------------------------------"
 echo "Submit array batch to Sun Grid Engine."
 echo "----------------------------------------------------------------------"
-qsub -t 1-${count}:1 \
--o "$path_report_alcoholism/out.txt" -e "$path_report_alcoholism/error.txt" \
-$path_scripts/run_gwas.sh \
+qsub -t 1-${chromosomes}:1 \
+-o "$path_gwas_alcoholism/out.txt" -e "$path_gwas_alcoholism/error.txt" \
+$path_scripts/3_run_gwas.sh \
 $path_table_phenotypes_covariates \
-$path_report_alcoholism \
-$analysis \
+$path_gwas_alcoholism \
+$cohort_comparison \
 $phenotypes_alcoholism \
 $covariates \
 $threads \
@@ -100,12 +86,12 @@ $maf \
 echo "----------------------------------------------------------------------"
 echo "Submit array batch to Sun Grid Engine."
 echo "----------------------------------------------------------------------"
-qsub -t 1-${count}:1 \
--o "$path_report_hormone/out.txt" -e "$path_report_hormone/error.txt" \
+qsub -t 1-${chromosomes}:1 \
+-o "$path_gwas_hormone/out.txt" -e "$path_gwas_hormone/error.txt" \
 $path_scripts/run_gwas.sh \
 $path_table_phenotypes_covariates \
-$path_report_hormone \
-$analysis \
+$path_gwas_hormone \
+$cohort_comparison \
 $phenotypes_hormone \
 $covariates \
 $threads \
