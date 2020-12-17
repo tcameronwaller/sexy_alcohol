@@ -34,6 +34,9 @@ path_concatenation="$path_gwas/concatenation.${phenotype}.glm.linear"
 
 rm $path_concatenation
 
+# dock/gwas/female_alcoholism_1_testosterone/testosterone/chromosome_1/report.testosterone.glm.linear
+
+
 echo "SNP A1 A2 N BETA P" > $path_concatenation
 for (( index=1; index<=$chromosomes; index+=1 )); do
   path_gwas_chromosome="$path_gwas/chromosome_${index}"

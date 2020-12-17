@@ -14,6 +14,7 @@ path_dock="$path_temporary/waller/dock"
 path_gwas_scripts="$path_temporary/waller/sexy_alcohol/scripts/gwas"
 path_correlation_scripts="$path_temporary/waller/sexy_alcohol/scripts/genetic_correlation"
 
+path_gwas="$path_temporary/waller/dock/gwas"
 path_genetic_correlation="$path_temporary/waller/dock/genetic_correlation"
 
 path_access="$path_temporary/waller/dock/genetic_correlation/access"
@@ -57,6 +58,7 @@ hormone="testosterone"
 $sex \
 $alcoholism \
 $hormone \
+$path_gwas \
 $path_genetic_correlation \
 $path_gwas_scripts \
 $path_correlation_scripts \
