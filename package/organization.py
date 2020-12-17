@@ -47,7 +47,6 @@ import promiscuity.plot as plot
 
 
 def initialize_directories_cohorts(
-    information=None,
     path_parent=None,
 ):
     """
@@ -72,7 +71,9 @@ def initialize_directories_cohorts(
     ]
     hormones = ["oestradiol", "testosterone",]
     for sex in sexes:
+        paths[sex] = dict()
         for alcoholism in alcoholisms:
+            paths[sex][alcoholism] = dict()
             for hormone in hormones:
                 paths[sex][alcoholism][hormone] = os.path.join(
                     path_parent, "cohorts", sex, alcoholism, hormone
@@ -85,7 +86,6 @@ def initialize_directories_cohorts(
             pass
         pass
     pass
-
 
 
 def initialize_directories(
@@ -4302,7 +4302,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
 
     # Initialize directories.
     paths = initialize_directories(
