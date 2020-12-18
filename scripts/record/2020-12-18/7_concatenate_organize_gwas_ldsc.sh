@@ -61,11 +61,11 @@ for (( index=1; index<=$chromosomes; index+=1 )); do
   # Logistic report has "OR" in place of "BETA", but positions are the same.
   # https://www.cog-genomics.org/plink/2.0/formats
 
-  if ($suffix == "linear"); then
+  if [ "$suffix" = "linear" ]; then
     cat $path_report | awk 'NR > 1 {print $3, $6, $4, $8, $9, $12}' >> $path_concatenation
   fi
 
-  if ($suffix == "logistic"); then
+  if [ "$suffix" = "logistic" ]; then
     cat $path_report | awk 'NR > 1 {print $3, $6, $4, $8, log($9), $12}' >> $path_concatenation
     #cat $path_report | awk 'NR > 1 {beta=log($9);print $3, $6, $4, $8, beta, $12}' >> $path_concatenation
   fi
