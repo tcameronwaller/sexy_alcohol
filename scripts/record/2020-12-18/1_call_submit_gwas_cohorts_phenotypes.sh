@@ -8,7 +8,7 @@
 # This script organizes directories and iteration instances then submits
 # script "regress_metabolite_heritability.sh" to the Sun Grid Engine.
 
-# version check: 1
+# version check: 2
 
 ###########################################################################
 ###########################################################################
@@ -32,7 +32,7 @@ if [ ! -d $path_gwas ]; then
     mkdir -p $path_gwas
 fi
 
-
+# Jobs:
 # Parameters.
 sex="female"
 alcoholism="alcoholism_1"

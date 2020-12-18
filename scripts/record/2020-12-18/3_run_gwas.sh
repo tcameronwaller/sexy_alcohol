@@ -25,13 +25,15 @@
 # Segmentation errors commonly indicate a memory error.
 #$ -l h_vmem=20G
 # Concurrent threads; assigns value to variable NSLOTS.
-#$ -pe threaded 16
+# Important to specify 32 threads to avoid inconsistency with interactive
+# calculations.
+#$ -pe threaded 32
 # Range of indices.
 # Specify as argument when calling qsub.
 # Array batch indices cannot start at zero.
 ### -t 1-100:1
 # Limit on concurrent processes.
-#$ -tc 2
+#$ -tc 4
 
 
 ###########################################################################

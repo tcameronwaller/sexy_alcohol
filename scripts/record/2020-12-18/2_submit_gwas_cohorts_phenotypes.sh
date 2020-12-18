@@ -41,7 +41,7 @@ phenotypes_alcoholism=$alcoholism
 phenotypes_hormone=$hormone
 
 # General parameters.
-threads=16
+threads=32
 maf=0.01
 chromosomes=22 # 22 # Count of chromosomes on which to run GWAS
 covariates="age,body_mass_index,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
