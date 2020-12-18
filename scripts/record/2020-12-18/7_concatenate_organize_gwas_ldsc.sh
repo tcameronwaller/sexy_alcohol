@@ -47,9 +47,6 @@ for (( index=1; index<=$chromosomes; index+=1 )); do
   path_report="$path_gwas_chromosome/${prefix}.${phenotype}.glm.${suffix}"
   # Select and concatenate relevant information from chromosome reports.
   # Format of GWAS reports by PLINK2 for linear regression (".glm.linear").
-  # PLINK2 report format is similar for logistic regression (".glm.logistic").
-  # Logistic report has "OR" in place of "BETA", but positions are the same.
-  # https://www.cog-genomics.org/plink/2.0/formats
   # Format of GWAS summary for LDSC.
   # https://github.com/bulik/ldsc/wiki/Heritability-and-Genetic-Correlation#reformatting-summary-statistics
   # description: ............................ PLINK2 column ... LDSC column
@@ -59,7 +56,19 @@ for (( index=1; index<=$chromosomes; index+=1 )); do
   # sample size: ............................ "OBS_CT" ........ "N"
   # effect (beta): .......................... "BETA" .......... "BETA"
   # probability (p-value): .................. "P" ............. "P"
-  cat $path_report | awk 'NR > 1 {print $3, $6, $4, $8, $9, $12}' >> $path_concatenation
+
+  # PLINK2 report format is similar for logistic regression (".glm.logistic").
+  # Logistic report has "OR" in place of "BETA", but positions are the same.
+  # https://www.cog-genomics.org/plink/2.0/formats
+
+  if ($suffix == "linear"); then
+    cat $path_report | awk 'NR > 1 {print $3, $6, $4, $8, $9, $12}' >> $path_concatenation
+  fi
+
+  if ($suffix == "logistic"); then
+    cat $path_report | awk 'NR > 1 {print $3, $6, $4, $8, log($9), $12}' >> $path_concatenation
+    #cat $path_report | awk 'NR > 1 {beta=log($9);print $3, $6, $4, $8, beta, $12}' >> $path_concatenation
+  fi
 done
 echo "----------"
 echo "----------"
