@@ -52,6 +52,7 @@ set +x
 $path_gwas_alcoholism \
 "report" \
 $alcoholism \
+"logistic" \
 22 \
 
 # Access phenotype variables and auxiliary information from UKBiobank.
@@ -59,12 +60,13 @@ $alcoholism \
 $path_gwas_hormone \
 "report" \
 $hormone \
+"linear" \
 22 \
 
 ###########################################################################
 # Munge GWAS summary statistics for LDSC.
 
-path_gwas_alcoholism_concatenation="$path_gwas_alcoholism/concatenation.${alcoholism}.glm.linear"
+path_gwas_alcoholism_concatenation="$path_gwas_alcoholism/concatenation.${alcoholism}.glm.logistic"
 path_gwas_hormone_concatenation="$path_gwas_hormone/concatenation.${hormone}.glm.linear"
 
 /usr/bin/bash "$path_correlation_scripts/munge_gwas_genetic_correlation_ldsc.sh" \

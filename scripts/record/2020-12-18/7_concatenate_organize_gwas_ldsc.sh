@@ -24,13 +24,14 @@ echo ""
 path_gwas=$1 # path to directory with GWAS report files
 prefix=$2 # prefix for GWAS report files
 phenotype=$3 # name of phenotype in names of GWAS report files
-chromosomes=$4 # count of chromosomes
+suffix=$4 # suffix for GWAS report files
+chromosomes=$5 # count of chromosomes
 
 # Concatenate GWAS reports from all chromosomes.
 # Extract relevant information and format for LDSC.
 # Initialize concatenation.
 cd $path_gwas
-path_concatenation="$path_gwas/concatenation.${phenotype}.glm.linear"
+path_concatenation="$path_gwas/concatenation.${phenotype}.glm.${suffix}"
 
 rm $path_concatenation
 
@@ -43,9 +44,11 @@ for (( index=1; index<=$chromosomes; index+=1 )); do
   path_gwas_chromosome="$path_gwas/chromosome_${index}"
   echo "gwas chromosome path: "
   echo $path_gwas_chromosome
-  path_report="$path_gwas_chromosome/${prefix}.${phenotype}.glm.linear"
+  path_report="$path_gwas_chromosome/${prefix}.${phenotype}.glm.${suffix}"
   # Select and concatenate relevant information from chromosome reports.
-  # Format of GWAS reports (".glm.linear") by PLINK2.
+  # Format of GWAS reports by PLINK2 for linear regression (".glm.linear").
+  # PLINK2 report format is similar for logistic regression (".glm.logistic").
+  # Logistic report has "OR" in place of "BETA", but positions are the same.
   # https://www.cog-genomics.org/plink/2.0/formats
   # Format of GWAS summary for LDSC.
   # https://github.com/bulik/ldsc/wiki/Heritability-and-Genetic-Correlation#reformatting-summary-statistics

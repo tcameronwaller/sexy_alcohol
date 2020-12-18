@@ -33,6 +33,7 @@
 # Array batch indices cannot start at zero.
 ### -t 1-100:1
 # Limit on concurrent processes.
+# Process this count of chromosomes at a time for each job.
 #$ -tc 4
 
 

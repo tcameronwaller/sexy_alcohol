@@ -8,7 +8,7 @@
 # This script organizes directories and iteration instances then submits
 # script "regress_metabolite_heritability.sh" to the Sun Grid Engine.
 
-# version check: 2
+# version check: 3
 
 ###########################################################################
 ###########################################################################
@@ -32,14 +32,30 @@ if [ ! -d $path_gwas ]; then
     mkdir -p $path_gwas
 fi
 
-# Jobs:
-# Parameters.
-sex="female"
-alcoholism="alcoholism_1"
-hormone="testosterone"
-/usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
-$sex \
-$alcoholism \
-$hormone \
-$path_scripts \
-$path_dock
+if false; then
+  # Jobs: 1958101, 1958102
+  # Parameters.
+  sex="female"
+  alcoholism="alcoholism_1"
+  hormone="testosterone"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $sex \
+  $alcoholism \
+  $hormone \
+  $path_scripts \
+  $path_dock
+fi
+
+if true; then
+  # Jobs:
+  # Parameters.
+  sex="female"
+  alcoholism="alcoholism_2"
+  hormone="testosterone"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $sex \
+  $alcoholism \
+  $hormone \
+  $path_scripts \
+  $path_dock
+fi
