@@ -53,7 +53,54 @@ set +x
 sex="female"
 alcoholism="alcoholism_1"
 hormone="testosterone"
+/usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
+$sex \
+$alcoholism \
+$hormone \
+$path_gwas \
+$path_genetic_correlation \
+$path_gwas_scripts \
+$path_correlation_scripts \
+$path_ldsc \
+$path_alleles \
+$path_disequilibrium
 
+# Parameters.
+sex="female"
+alcoholism="alcoholism_2"
+hormone="testosterone"
+/usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
+$sex \
+$alcoholism \
+$hormone \
+$path_gwas \
+$path_genetic_correlation \
+$path_gwas_scripts \
+$path_correlation_scripts \
+$path_ldsc \
+$path_alleles \
+$path_disequilibrium
+
+# Parameters.
+sex="female"
+alcoholism="alcoholism_3"
+hormone="testosterone"
+/usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
+$sex \
+$alcoholism \
+$hormone \
+$path_gwas \
+$path_genetic_correlation \
+$path_gwas_scripts \
+$path_correlation_scripts \
+$path_ldsc \
+$path_alleles \
+$path_disequilibrium
+
+# Parameters.
+sex="female"
+alcoholism="alcoholism_4"
+hormone="testosterone"
 /usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
 $sex \
 $alcoholism \
