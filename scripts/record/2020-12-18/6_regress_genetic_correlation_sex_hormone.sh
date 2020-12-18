@@ -48,7 +48,7 @@ set +x
 # Organize GWAS summary statistics for LDSC.
 
 # Access phenotype variables and auxiliary information from UKBiobank.
-/usr/bin/bash "$path_gwas_scripts/concatenate_organize_gwas_ldsc.sh" \
+/usr/bin/bash "$path_gwas_scripts/7_concatenate_organize_gwas_ldsc.sh" \
 $path_gwas_alcoholism \
 "report" \
 $alcoholism \
@@ -56,7 +56,7 @@ $alcoholism \
 22 \
 
 # Access phenotype variables and auxiliary information from UKBiobank.
-/usr/bin/bash "$path_gwas_scripts/concatenate_organize_gwas_ldsc.sh" \
+/usr/bin/bash "$path_gwas_scripts/7_concatenate_organize_gwas_ldsc.sh" \
 $path_gwas_hormone \
 "report" \
 $hormone \
@@ -69,7 +69,7 @@ $hormone \
 path_gwas_alcoholism_concatenation="$path_gwas_alcoholism/concatenation.${alcoholism}.glm.logistic"
 path_gwas_hormone_concatenation="$path_gwas_hormone/concatenation.${hormone}.glm.linear"
 
-/usr/bin/bash "$path_correlation_scripts/munge_gwas_genetic_correlation_ldsc.sh" \
+/usr/bin/bash "$path_correlation_scripts/8_munge_gwas_genetic_correlation_ldsc.sh" \
 $path_gwas_alcoholism_concatenation \
 $path_gwas_hormone_concatenation \
 $path_munge \

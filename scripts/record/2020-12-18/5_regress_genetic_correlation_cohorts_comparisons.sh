@@ -11,8 +11,8 @@ path_ldsc=$(<"./tools_ldsc.txt")
 path_temporary=$(<"./temporary_sexy_alcohol.txt")
 path_waller="$path_temporary/waller"
 path_dock="$path_temporary/waller/dock"
-path_gwas_scripts="$path_temporary/waller/sexy_alcohol/scripts/gwas"
-path_correlation_scripts="$path_temporary/waller/sexy_alcohol/scripts/genetic_correlation"
+path_gwas_scripts="$path_waller/sexy_alcohol/scripts/record/2020-12-18"
+path_correlation_scripts="$path_waller/sexy_alcohol/scripts/record/2020-12-18"
 
 path_gwas="$path_temporary/waller/dock/gwas"
 path_genetic_correlation="$path_temporary/waller/dock/genetic_correlation"
@@ -54,7 +54,7 @@ sex="female"
 alcoholism="alcoholism_1"
 hormone="testosterone"
 
-/usr/bin/bash "$path_correlation_scripts/regress_genetic_correlation_sex_hormone.sh" \
+/usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
 $sex \
 $alcoholism \
 $hormone \
