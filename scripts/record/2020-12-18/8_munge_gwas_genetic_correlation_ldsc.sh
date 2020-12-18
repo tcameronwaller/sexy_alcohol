@@ -52,7 +52,7 @@ path_munge_one_complete="$path_munge/${phenotype_one}.sumstats.gz"
 path_munge_two_complete="$path_munge/${phenotype_two}.sumstats.gz"
 
 $path_ldsc/ldsc.py \
---rg $path_munge_one_complete,$path_munte_two_complete \
+--rg $path_munge_one_complete,$path_munge_two_complete \
 --ref-ld-chr $path_disequilibrium/eur_w_ld_chr/ \
 --w-ld-chr $path_disequilibrium/eur_w_ld_chr/ \
 --out $path_report
