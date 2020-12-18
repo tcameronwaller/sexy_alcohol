@@ -8,7 +8,7 @@
 # This script organizes directories and iteration instances then submits
 # script "regress_metabolite_heritability.sh" to the Sun Grid Engine.
 
-# version check: 4
+# version check: 5
 
 ###########################################################################
 ###########################################################################
@@ -56,10 +56,8 @@ if false; then
   $hormone \
   $path_scripts \
   $path_dock
-fi
 
-if true; then
-  # Jobs:
+  # Jobs: 1958182, 1958183
   # Parameters.
   sex="female"
   alcoholism="alcoholism_3"
@@ -71,7 +69,7 @@ if true; then
   $path_scripts \
   $path_dock
 
-  # Jobs:
+  # Jobs: 1958184, 1958185
   # Parameters.
   sex="female"
   alcoholism="alcoholism_4"
@@ -83,10 +81,38 @@ if true; then
   $path_scripts \
   $path_dock
 
-  # Jobs:
+  # Jobs: 1958186, 1958187
   # Parameters.
   sex="male"
   alcoholism="alcoholism_1"
+  hormone="testosterone"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $sex \
+  $alcoholism \
+  $hormone \
+  $path_scripts \
+  $path_dock
+
+fi
+
+if true; then
+
+  # Jobs:
+  # Parameters.
+  sex="male"
+  alcoholism="alcoholism_2"
+  hormone="testosterone"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $sex \
+  $alcoholism \
+  $hormone \
+  $path_scripts \
+  $path_dock
+
+  # Jobs:
+  # Parameters.
+  sex="male"
+  alcoholism="alcoholism_3"
   hormone="testosterone"
   /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
   $sex \
