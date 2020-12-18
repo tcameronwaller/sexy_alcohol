@@ -37,13 +37,13 @@ path_munge_one="$path_munge/${phenotype_one}"
 $path_ldsc/munge_sumstats.py \
 --sumstats $path_gwas_one \
 --out $path_munge_one \
-#--merge-alleles $path_alleles/w_hm3.snplist
+--merge-alleles $path_alleles/w_hm3.snplist
 
 path_munge_two="$path_munge/${phenotype_two}"
 $path_ldsc/munge_sumstats.py \
 --sumstats $path_gwas_two \
 --out $path_munge_two \
-#--merge-alleles $path_alleles/w_hm3.snplist
+--merge-alleles $path_alleles/w_hm3.snplist
 
 ###########################################################################
 # Estimate genetic correlation in LDSC.
