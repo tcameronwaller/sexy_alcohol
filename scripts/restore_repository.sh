@@ -10,11 +10,7 @@ path_waller="$path_temporary/waller"
 path_sexy_alcohol="$path_waller/sexy_alcohol"
 path_uk_biobank="$path_waller/uk_biobank"
 path_promiscuity="$path_waller/promiscuity"
-
-path_parameters="$path_temporary/waller/sexy_alcohol/parameters"
-path_parameters_table_variables="$path_parameters/table_ukbiobank_phenotype_variables.tsv"
-path_access="$path_temporary/waller/dock/access"
-path_access_table_variables="$path_access/table_ukbiobank_phenotype_variables.tsv"
+path_parameters="$path_temporary/waller/dock/parameters"
 
 # Echo each command to console.
 set -x
@@ -25,6 +21,7 @@ echo "remove previous versions of the repositories..."
 rm -r $path_sexy_alcohol
 rm -r $path_uk_biobank
 rm -r $path_promiscuity
+rm -r $path_parameters
 
 ##########
 # Access and organize current version of the main repository.
@@ -36,15 +33,6 @@ unzip main.zip
 rm main.zip
 mv sexy_alcohol-main $path_sexy_alcohol
 mv "$path_sexy_alcohol/package" "$path_sexy_alcohol/sexy_alcohol"
-
-##########
-# Organize and restore parameters.
-
-# TODO: copy the "parameters" directory from the repository to the "dock"...
-# TODO: modify the access procedure to copy this parameters information to dock, also...
-# Transfer new version of parameters.
-#rm $path_access_table_variables
-#cp $path_parameters_table_variables $path_access_table_variables
 
 ##########
 # Organize and restore supplemental sub-repositories.
@@ -72,3 +60,14 @@ rm main.zip
 mv promiscuity-main $path_promiscuity
 mv "$path_promiscuity/package" "$path_promiscuity/promiscuity"
 cp -r "$path_promiscuity/promiscuity" "$path_sexy_alcohol/sexy_alcohol/promiscuity"
+
+##########
+# Organize and restore parameters.
+
+mkdir -p $path_parameters
+cp -r "$path_sexy_alcohol/parameters" "$path_parameters/parameters"
+mv "$path_parameters/parameters" "$path_parameters/sexy_alcohol"
+cp -r "$path_uk_biobank/parameters" "$path_parameters/parameters"
+mv "$path_parameters/parameters" "$path_parameters/uk_biobank"
+cp -r "$path_promiscuity/parameters" "$path_parameters/parameters"
+mv "$path_parameters/parameters" "$path_parameters/promiscuity"

@@ -16,10 +16,23 @@ echo "read private file path variables and organize paths..."
 cd ~/paths
 path_temporary=$(<"./temporary_sexy_alcohol.txt")
 path_waller="$path_temporary/waller"
-path_scripts="$path_waller/sexy_alcohol/scripts"
+path_sexy_alcohol_scripts="$path_waller/sexy_alcohol/scripts"
+path_sexy_alcohol_parameters="$path_waller/sexy_alcohol/parameters"
+path_access_variables="$path_waller/sexy_alcohol/parameters/uk_biobank_access_variables.txt"
+
+# TODO: I need the path to the list of variables to include for "sexy_alcohol"...
+
+path_uk_biobank_scripts="$path_waller/uk_biobank/scripts"
+path_uk_biobank_parameters="$path_waller/uk_biobank/parameters"
+path_table_variables_reference="$path_parameter/table_ukbiobank_phenotype_variables.tsv"
+
+# TODO: I need to specify the path to the general table of fields, etc...
+
 path_parameter="$path_waller/sexy_alcohol/parameters"
 path_variables="$path_parameter/uk_biobank_phenotype_variables.txt"
 path_table_variables="$path_parameter/table_ukbiobank_phenotype_variables.tsv"
+
+
 path_dock="$path_waller/dock"
 path_access="$path_dock/access"
 path_ukb_phenotype=$(<"./ukbiobank_phenotype.txt")
@@ -47,9 +60,8 @@ fi
 #echo "31 22001 21022 21002 30600" | tr -s " " "\n" > $path_variables
 
 # Access phenotype variables and auxiliary information from UKBiobank.
-/usr/bin/bash "$path_scripts/access_ukbiobank_phenotypes.sh" \
+/usr/bin/bash "$path_uk_biobank_scripts/access_ukbiobank_phenotypes.sh" \
 $path_variables \
-$path_table_variables \
 $path_identifier_pairs \
 $path_exclusion \
 $path_ukb_phenotype \
