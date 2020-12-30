@@ -10,11 +10,6 @@
 ###############################################################################
 # Installation and importation
 
-# Import modules from specific path without having to install a general package
-# I would have to figure out how to pass a path variable...
-# https://stackoverflow.com/questions/67631/how-to-import-a-module-given-the-full-path
-
-
 # Standard
 
 import sys
@@ -2284,7 +2279,7 @@ def organize_alcoholism_diagnosis_variables(
 # Alcoholism cases and controls
 
 
-def determine_control_alcoholism_one_two(
+def determine_control_alcoholism(
     alcohol_none=None,
     alcohol_diagnosis_a=None,
     alcohol_diagnosis_b=None,
@@ -2293,8 +2288,8 @@ def determine_control_alcoholism_one_two(
     alcohol_diagnosis_self=None,
     alcohol_auditc=None,
     alcohol_audit=None,
-    threshold_auditc=None,
-    threshold_audit=None,
+    threshold_auditc_control=None,
+    threshold_audit_control=None,
 ):
     """
     Determines whether person qualifies as a control for alcoholism.
@@ -2314,8 +2309,10 @@ def determine_control_alcoholism_one_two(
             alcoholism
         alcohol_auditc (float): combination score for AUDIT-C questionnaire
         alcohol_audit (float): combination score for AUDIT questionnaire
-        threshold_auditc (float): diagnostic threshold for AUDIT-C score
-        threshold_audit (float): diagnostic threshold for AUDIT score
+        threshold_auditc_control (float): diagnostic control threshold (less
+            than or equal) for AUDIT-C score
+        threshold_audit_control (float): diagnostic control threshold (less
+            than or equal) for AUDIT score
 
     raises:
 
@@ -2342,14 +2339,14 @@ def determine_control_alcoholism_one_two(
     if (math.isnan(alcohol_auditc)):
         comparison_auditc = False
     else:
-        if (alcohol_auditc <= threshold_auditc):
+        if (alcohol_auditc <= threshold_auditc_control):
             comparison_auditc = True
         else:
             comparison_auditc = False
     if (math.isnan(alcohol_audit)):
         comparison_audit = False
     else:
-        if (alcohol_audit <= threshold_audit):
+        if (alcohol_audit <= threshold_audit_control):
             comparison_audit = True
         else:
             comparison_audit = False
@@ -2396,8 +2393,10 @@ def determine_case_control_alcoholism_one(
     alcohol_diagnosis_self=None,
     alcohol_auditc=None,
     alcohol_audit=None,
-    threshold_auditc=None,
-    threshold_audit=None,
+    threshold_auditc_control=None,
+    threshold_auditc_case=None,
+    threshold_audit_control=None,
+    threshold_audit_case=None,
 ):
     """
     Organizes information about alcoholism cases and controls.
@@ -2417,8 +2416,14 @@ def determine_case_control_alcoholism_one(
             alcoholism
         alcohol_auditc (float): combination score for AUDIT-C questionnaire
         alcohol_audit (float): combination score for AUDIT questionnaire
-        threshold_auditc (float): diagnostic threshold for AUDIT-C score
-        threshold_audit (float): diagnostic threshold for AUDIT score
+        threshold_auditc_control (float): diagnostic control threshold (less
+            than or equal) for AUDIT-C score
+        threshold_auditc_case (float): diagnostic case threshold (greater than
+            or equal) for AUDIT-C score
+        threshold_audit_control (float): diagnostic control threshold (less
+            than or equal) for AUDIT score
+        threshold_audit_case (float): diagnostic case threshold (greater than
+            or equal) for AUDIT score
 
     raises:
 
@@ -2439,7 +2444,7 @@ def determine_case_control_alcoholism_one(
 
     # Determine whether person qualifies as a control of alcoholism.
     # Person's control status can have null or missing values.
-    control = determine_control_alcoholism_one_two(
+    control = determine_control_alcoholism(
         alcohol_none=alcohol_none,
         alcohol_diagnosis_a=alcohol_diagnosis_a,
         alcohol_diagnosis_b=alcohol_diagnosis_b,
@@ -2448,8 +2453,8 @@ def determine_case_control_alcoholism_one(
         alcohol_diagnosis_self=alcohol_diagnosis_self,
         alcohol_auditc=alcohol_auditc,
         alcohol_audit=alcohol_audit,
-        threshold_auditc=threshold_auditc,
-        threshold_audit=threshold_audit,
+        threshold_auditc_control=threshold_auditc_control,
+        threshold_audit_control=threshold_audit_control,
     )
 
     # Interpret case and control and assign value.
@@ -2474,8 +2479,10 @@ def determine_case_control_alcoholism_two(
     alcohol_diagnosis_self=None,
     alcohol_auditc=None,
     alcohol_audit=None,
-    threshold_auditc=None,
-    threshold_audit=None,
+    threshold_auditc_control=None,
+    threshold_auditc_case=None,
+    threshold_audit_control=None,
+    threshold_audit_case=None,
 ):
     """
     Organizes information about alcoholism cases and controls.
@@ -2495,8 +2502,14 @@ def determine_case_control_alcoholism_two(
             alcoholism
         alcohol_auditc (float): combination score for AUDIT-C questionnaire
         alcohol_audit (float): combination score for AUDIT questionnaire
-        threshold_auditc (float): diagnostic threshold for AUDIT-C score
-        threshold_audit (float): diagnostic threshold for AUDIT score
+        threshold_auditc_control (float): diagnostic control threshold (less
+            than or equal) for AUDIT-C score
+        threshold_auditc_case (float): diagnostic case threshold (greater than
+            or equal) for AUDIT-C score
+        threshold_audit_control (float): diagnostic control threshold (less
+            than or equal) for AUDIT score
+        threshold_audit_case (float): diagnostic case threshold (greater than
+            or equal) for AUDIT score
 
     raises:
 
@@ -2519,7 +2532,7 @@ def determine_case_control_alcoholism_two(
 
     # Determine whether person qualifies as a control of alcoholism.
     # Person's control status can have null or missing values.
-    control = determine_control_alcoholism_one_two(
+    control = determine_control_alcoholism(
         alcohol_none=alcohol_none,
         alcohol_diagnosis_a=alcohol_diagnosis_a,
         alcohol_diagnosis_b=alcohol_diagnosis_b,
@@ -2528,8 +2541,8 @@ def determine_case_control_alcoholism_two(
         alcohol_diagnosis_self=alcohol_diagnosis_self,
         alcohol_auditc=alcohol_auditc,
         alcohol_audit=alcohol_audit,
-        threshold_auditc=threshold_auditc,
-        threshold_audit=threshold_audit,
+        threshold_auditc_control=threshold_auditc_control,
+        threshold_audit_control=threshold_audit_control,
     )
 
     # Interpret case and control and assign value.
@@ -2554,8 +2567,10 @@ def determine_case_control_alcoholism_three(
     alcohol_diagnosis_self=None,
     alcohol_auditc=None,
     alcohol_audit=None,
-    threshold_auditc=None,
-    threshold_audit=None,
+    threshold_auditc_control=None,
+    threshold_auditc_case=None,
+    threshold_audit_control=None,
+    threshold_audit_case=None,
 ):
     """
     Organizes information about alcoholism cases and controls.
@@ -2575,8 +2590,14 @@ def determine_case_control_alcoholism_three(
             alcoholism
         alcohol_auditc (float): combination score for AUDIT-C questionnaire
         alcohol_audit (float): combination score for AUDIT questionnaire
-        threshold_auditc (float): diagnostic threshold for AUDIT-C score
-        threshold_audit (float): diagnostic threshold for AUDIT score
+        threshold_auditc_control (float): diagnostic control threshold (less
+            than or equal) for AUDIT-C score
+        threshold_auditc_case (float): diagnostic case threshold (greater than
+            or equal) for AUDIT-C score
+        threshold_audit_control (float): diagnostic control threshold (less
+            than or equal) for AUDIT score
+        threshold_audit_case (float): diagnostic case threshold (greater than
+            or equal) for AUDIT score
 
     raises:
 
@@ -2590,14 +2611,14 @@ def determine_case_control_alcoholism_three(
     if (math.isnan(alcohol_auditc)):
         case = False
     else:
-        if (alcohol_auditc > threshold_auditc):
+        if (alcohol_auditc >= threshold_auditc_case):
             case = True
         else:
             case = False
 
     # Determine whether person qualifies as a control of alcoholism.
     # Person's control status can have null or missing values.
-    control = determine_control_alcoholism_one_two(
+    control = determine_control_alcoholism(
         alcohol_none=alcohol_none,
         alcohol_diagnosis_a=alcohol_diagnosis_a,
         alcohol_diagnosis_b=alcohol_diagnosis_b,
@@ -2606,8 +2627,8 @@ def determine_case_control_alcoholism_three(
         alcohol_diagnosis_self=alcohol_diagnosis_self,
         alcohol_auditc=alcohol_auditc,
         alcohol_audit=alcohol_audit,
-        threshold_auditc=threshold_auditc,
-        threshold_audit=threshold_audit,
+        threshold_auditc_control=threshold_auditc_control,
+        threshold_audit_control=threshold_audit_control,
     )
 
     # Interpret case and control and assign value.
@@ -2632,8 +2653,10 @@ def determine_case_control_alcoholism_four(
     alcohol_diagnosis_self=None,
     alcohol_auditc=None,
     alcohol_audit=None,
-    threshold_auditc=None,
-    threshold_audit=None,
+    threshold_auditc_control=None,
+    threshold_auditc_case=None,
+    threshold_audit_control=None,
+    threshold_audit_case=None,
 ):
     """
     Organizes information about alcoholism cases and controls.
@@ -2653,8 +2676,14 @@ def determine_case_control_alcoholism_four(
             alcoholism
         alcohol_auditc (float): combination score for AUDIT-C questionnaire
         alcohol_audit (float): combination score for AUDIT questionnaire
-        threshold_auditc (float): diagnostic threshold for AUDIT-C score
-        threshold_audit (float): diagnostic threshold for AUDIT score
+        threshold_auditc_control (float): diagnostic control threshold (less
+            than or equal) for AUDIT-C score
+        threshold_auditc_case (float): diagnostic case threshold (greater than
+            or equal) for AUDIT-C score
+        threshold_audit_control (float): diagnostic control threshold (less
+            than or equal) for AUDIT score
+        threshold_audit_case (float): diagnostic case threshold (greater than
+            or equal) for AUDIT score
 
     raises:
 
@@ -2668,13 +2697,13 @@ def determine_case_control_alcoholism_four(
     if (math.isnan(alcohol_audit)):
         case = False
     else:
-        if (alcohol_audit > threshold_audit):
+        if (alcohol_audit >= threshold_audit_case):
             case = True
         else:
             case = False
     # Determine whether person qualifies as a control of alcoholism.
     # Person's control status can have null or missing values.
-    control = determine_control_alcoholism_one_two(
+    control = determine_control_alcoholism(
         alcohol_none=alcohol_none,
         alcohol_diagnosis_a=alcohol_diagnosis_a,
         alcohol_diagnosis_b=alcohol_diagnosis_b,
@@ -2683,8 +2712,8 @@ def determine_case_control_alcoholism_four(
         alcohol_diagnosis_self=alcohol_diagnosis_self,
         alcohol_auditc=alcohol_auditc,
         alcohol_audit=alcohol_audit,
-        threshold_auditc=threshold_auditc,
-        threshold_audit=threshold_audit,
+        threshold_auditc_control=threshold_auditc_control,
+        threshold_audit_control=threshold_audit_control,
     )
 
     # Interpret case and control and assign value.
@@ -2893,6 +2922,10 @@ def report_alcoholism_cases_controls_females_males(
     pass
 
 
+# TODO: organize a new report...
+# TODO: table to summarize counts of cases and controls by sex and with valid testosterone or oestradiol
+
+
 def organize_alcoholism_cases_controls_variables(
     table=None,
     report=None,
@@ -2916,9 +2949,13 @@ def organize_alcoholism_cases_controls_variables(
     table = table.copy(deep=True)
     # Specify diagnostic thresholds for AUDIT-C and AUDIT scores.
     # https://auditscreen.org/about/scoring-audit/
-    # Use less than or equal.
-    threshold_auditc = 7
-    threshold_audit = 14
+    # https://cde.drugabuse.gov/instrument/f229c68a-67ce-9a58-e040-bb89ad432be4
+    # Use less than or equal for control thresholds.
+    # Use greater than or equal for case thresholds.
+    threshold_auditc_control = 4
+    threshold_auditc_case = 7
+    threshold_audit_control = 7
+    threshold_audit_case = 15
 
     # Determine whether person is a case or control for alcoholism type 1.
     # case: ICD9 or ICD10 codes in diagnostic group A
@@ -2938,8 +2975,10 @@ def organize_alcoholism_cases_controls_variables(
                 alcohol_diagnosis_self=row["alcohol_diagnosis_self"],
                 alcohol_auditc=row["alcohol_auditc"],
                 alcohol_audit=row["alcohol_audit"],
-                threshold_auditc=threshold_auditc,
-                threshold_audit=threshold_audit,
+                threshold_auditc_control=threshold_auditc_control,
+                threshold_auditc_case=threshold_auditc_case,
+                threshold_audit_control=threshold_audit_control,
+                threshold_audit_case=threshold_audit_case,
             ),
         axis="columns", # apply across rows
     )
@@ -2961,8 +3000,10 @@ def organize_alcoholism_cases_controls_variables(
                 alcohol_diagnosis_self=row["alcohol_diagnosis_self"],
                 alcohol_auditc=row["alcohol_auditc"],
                 alcohol_audit=row["alcohol_audit"],
-                threshold_auditc=threshold_auditc,
-                threshold_audit=threshold_audit,
+                threshold_auditc_control=threshold_auditc_control,
+                threshold_auditc_case=threshold_auditc_case,
+                threshold_audit_control=threshold_audit_control,
+                threshold_audit_case=threshold_audit_case,
             ),
         axis="columns", # apply across rows
     )
@@ -2985,8 +3026,10 @@ def organize_alcoholism_cases_controls_variables(
                 alcohol_diagnosis_self=row["alcohol_diagnosis_self"],
                 alcohol_auditc=row["alcohol_auditc"],
                 alcohol_audit=row["alcohol_audit"],
-                threshold_auditc=threshold_auditc,
-                threshold_audit=threshold_audit,
+                threshold_auditc_control=threshold_auditc_control,
+                threshold_auditc_case=threshold_auditc_case,
+                threshold_audit_control=threshold_audit_control,
+                threshold_audit_case=threshold_audit_case,
             ),
         axis="columns", # apply across rows
     )
@@ -3009,8 +3052,10 @@ def organize_alcoholism_cases_controls_variables(
                 alcohol_diagnosis_self=row["alcohol_diagnosis_self"],
                 alcohol_auditc=row["alcohol_auditc"],
                 alcohol_audit=row["alcohol_audit"],
-                threshold_auditc=threshold_auditc,
-                threshold_audit=threshold_audit,
+                threshold_auditc_control=threshold_auditc_control,
+                threshold_auditc_case=threshold_auditc_case,
+                threshold_audit_control=threshold_audit_control,
+                threshold_audit_case=threshold_audit_case,
             ),
         axis="columns", # apply across rows
     )
@@ -4303,7 +4348,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 4")
+    print("version check: 1")
 
     # Initialize directories.
     paths = initialize_directories(
