@@ -2953,7 +2953,7 @@ def organize_alcoholism_cases_controls_variables(
     # Use less than or equal for control thresholds.
     # Use greater than or equal for case thresholds.
     threshold_auditc_control = 4
-    threshold_auditc_case = 9
+    threshold_auditc_case = 10
     threshold_audit_control = 7
     threshold_audit_case = 15
 
@@ -4348,7 +4348,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 3")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -4381,14 +4381,14 @@ def execute_procedure(
         table=table_hormone,
         report=False,
     )
-    print(pail_alcohol_consumption["quantity"]["table_clean"])
+    #print(pail_alcohol_consumption["quantity"]["table_clean"])
     # Organize Alchol Use Disorders Identification Test (AUDIT) and
     # AUDIT-Concise (AUDIT-C) questionnaire scores.
     pail_audit = organize_alcohol_audit_questionnaire_variables(
         table=pail_alcohol_consumption["quantity"]["table_clean"],
         report=False,
     )
-    print(pail_audit["audit"]["table_clean"])
+    #print(pail_audit["audit"]["table_clean"])
 
     # Organize International Classification of Disease (ICD) ICD9 and ICD10
     # codes for diagnoses relevant to alcoholism.
@@ -4397,7 +4397,7 @@ def execute_procedure(
         table=pail_audit["audit"]["table_clean"],
         report=False,
     )
-    print(pail_diagnosis["table_clean"])
+    #print(pail_diagnosis["table_clean"])
 
     # Organize alcoholism cases and controls.
     # Report females and males who consume alcohol and are candidates for
@@ -4406,7 +4406,7 @@ def execute_procedure(
         table=pail_diagnosis["table_clean"],
         report=True,
     )
-    print(pail_alcoholism["table_clean"])
+    #print(pail_alcoholism["table_clean"])
 
     # Select and organize variables across cohorts.
     pail_cohorts = select_organize_cohorts_variables_by_sex_alcoholism_hormone(
