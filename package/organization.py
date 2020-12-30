@@ -2953,7 +2953,7 @@ def organize_alcoholism_cases_controls_variables(
     # Use less than or equal for control thresholds.
     # Use greater than or equal for case thresholds.
     threshold_auditc_control = 4
-    threshold_auditc_case = 7
+    threshold_auditc_case = 9
     threshold_audit_control = 7
     threshold_audit_case = 15
 
@@ -4348,7 +4348,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -4364,29 +4364,29 @@ def execute_procedure(
     # Organize information about general attributes.
     table_attribute = organize_general_attribute_variables(
         table=source["table_assembly"],
-        report=True,
+        report=False,
     )
     # Organize information about genotype principal components.
     table_genotype = organize_genotype_principal_component_variables(
         table=table_attribute,
-        report=True,
+        report=False,
     )
     # Organize information about hormones.
     table_hormone = organize_sex_hormone_variables(
         table=table_genotype,
-        report=True,
+        report=False,
     )
     # Organize information about alcohol consumption.
     pail_alcohol_consumption = organize_alcohol_consumption_variables(
         table=table_hormone,
-        report=True,
+        report=False,
     )
     print(pail_alcohol_consumption["quantity"]["table_clean"])
     # Organize Alchol Use Disorders Identification Test (AUDIT) and
     # AUDIT-Concise (AUDIT-C) questionnaire scores.
     pail_audit = organize_alcohol_audit_questionnaire_variables(
         table=pail_alcohol_consumption["quantity"]["table_clean"],
-        report=True,
+        report=False,
     )
     print(pail_audit["audit"]["table_clean"])
 
@@ -4395,7 +4395,7 @@ def execute_procedure(
     # Organize codes for self diagnoses relevant to alcoholism.
     pail_diagnosis = organize_alcoholism_diagnosis_variables(
         table=pail_audit["audit"]["table_clean"],
-        report=True,
+        report=False,
     )
     print(pail_diagnosis["table_clean"])
 
@@ -4417,7 +4417,7 @@ def execute_procedure(
     # Organize phenotypes and covariates in format for analysis in PLINK.
     pail_format = organize_phenotype_covariate_tables_plink_format(
         tables=pail_cohorts,
-        report=True,
+        report=False,
     )
 
     # Collect information.
