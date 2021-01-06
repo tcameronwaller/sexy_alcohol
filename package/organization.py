@@ -62,6 +62,7 @@ def initialize_directories_cohorts(
 
     sexes = ["female", "male",]
     alcoholisms = [
+        "alcohol_auditc", "alcohol_audit",
         "alcoholism_1", "alcoholism_2", "alcoholism_3", "alcoholism_4",
     ]
     hormones = ["oestradiol", "testosterone",]
@@ -3067,8 +3068,8 @@ def organize_alcoholism_cases_controls_variables(
             "alcohol_diagnosis_a", "alcohol_diagnosis_b",
             "alcohol_diagnosis_c", "alcohol_diagnosis_d",
             "alcohol_diagnosis_self",
-            "alcohol_auditc",
-            "alcohol_audit",
+            #"alcohol_auditc",
+            #"alcohol_audit",
         ],
         axis="columns",
         inplace=True
@@ -3315,7 +3316,18 @@ def select_organize_cohorts_variables_by_alcoholism_hormone(
     # Select and organize variables across cohorts.
     # Collect information.
     pail = dict()
-
+    # Alcohol consumption variables.
+    pail["alcohol_auditc"] = select_organize_cohorts_variables_by_hormone(
+        sex_text=sex_text,
+        alcoholism="alcohol_auditc",
+        table=table,
+    )
+    pail["alcohol_audit"] = select_organize_cohorts_variables_by_hormone(
+        sex_text=sex_text,
+        alcoholism="alcohol_audit",
+        table=table,
+    )
+    # Alcoholism case, control definitions.
     pail["alcoholism_1"] = select_organize_cohorts_variables_by_hormone(
         sex_text=sex_text,
         alcoholism="alcoholism_1",
@@ -3347,6 +3359,20 @@ def select_organize_cohorts_variables_by_sex_alcoholism_hormone(
     """
     Organizes information about previous and current alcohol consumption.
 
+    Hierarchical tree structure:
+    - "female"
+    -- "alcohol_auditc"
+    --- "oestradiol"
+    --- "testosterone"
+    -- "alcohol_audit"
+    --- [same as "alcohol_auditc"]
+    -- "alcoholism_1"
+    -- "alcoholism_2"
+    -- "alcoholism_3"
+    -- "alcoholism_4"
+    - "male"
+    -- [same as "female"]
+
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
@@ -3374,6 +3400,9 @@ def select_organize_cohorts_variables_by_sex_alcoholism_hormone(
     )
     # Report.
     if report:
+        #table_report = pail["female"]["alcohol_auditc"]["testosterone"].copy(
+        #    deep=True
+        #)
         table_report = pail["female"]["alcoholism_1"]["testosterone"].copy(
             deep=True
         )
@@ -3406,6 +3435,22 @@ def translate_binary_phenotype_plink(
 
     Accommodate inexact float values and null values.
 
+    https://www.cog-genomics.org/plink/1.9/input
+    Section: "Phenotypes"
+    Subsection: "Phenotype encoding"
+        "Missing phenotypes are normally expected to be encoded as -9. You can
+        change this to another integer with --missing-phenotype. (This is a
+        slight change from PLINK 1.07: floating point values are now disallowed
+        due to rounding issues, and nonnumeric values such as 'NA' are rejected
+        since they're treated as missing phenotypes no matter what. Note that
+        --output-missing-phenotype can be given a nonnumeric string.)
+
+        Case/control phenotypes are expected to be encoded as 1=unaffected
+        (control), 2=affected (case); 0 is accepted as an alternate missing
+        value encoding. If you use the --1 flag, 0 is interpreted as unaffected
+        status instead, while 1 maps to affected. This also forces phenotypes to
+        be interpreted as case/control."
+
     arguments:
         binary_value (float): binary (0, 1) representation of a phenotype
 
@@ -3423,10 +3468,12 @@ def translate_binary_phenotype_plink(
     ):
         # The variable has a valid value.
         if (-0.5 <= binary_value and binary_value < 0.5):
-            # 0: control
+            # control, original value: 0
+            # control, Plink translation: 1
             value = 1
         elif (0.5 <= binary_value and binary_value < 1.5):
-            # 1: case
+            # case, original value: 1
+            # case, Plink translation: 2
             value = 2
     else:
         # null
@@ -3437,6 +3484,7 @@ def translate_binary_phenotype_plink(
 
 def organize_phenotype_covariate_table_plink_format(
     binary_phenotypes=None,
+    continuous_phenotypes=None,
     table=None,
     report=None,
 ):
@@ -3454,9 +3502,12 @@ def organize_phenotype_covariate_table_plink_format(
     PLINK requires FID and IID columns to come first.
 
     arguments:
-        binary_phenotypes (list<str>): names of columns with binary phenotypes
-            (control: 0, case: 1) that need conversion to PLINK format
-            (control: 1, case: 2)
+        binary_phenotypes (list<str>): names of columns with discrete binary
+            case-control phenotypes (control: 0, case: 1) that need conversion
+            to PLINK format (control: 1, case: 2)
+        continuous_phenotypes (list<str>): names of columns that PLINK ought
+            to interpret as continuous variables (ordinal discrete, interval
+            continuous, or ratio continuous)
         table (object): Pandas data frame of information about phenotype and
             covariate variables for GWAS
         report (bool): whether to print reports
@@ -3481,6 +3532,11 @@ def organize_phenotype_covariate_table_plink_format(
             axis="columns", # apply across rows
         )
         pass
+    # Translate continuous phenotype variables.
+    table_type = convert_table_columns_variables_types_float(
+        columns=continuous_phenotypes,
+        table=table,
+    )
     # Organize.
     table.reset_index(
         level=None,
@@ -3520,6 +3576,7 @@ def organize_phenotype_covariate_table_plink_format(
 
 def organize_phenotype_covariate_tables_alcoholism(
     binary_phenotypes=None,
+    continuous_phenotypes=None,
     tables=None,
     report=None,
 ):
@@ -3527,9 +3584,12 @@ def organize_phenotype_covariate_tables_alcoholism(
     Organize table for phenotypes and covariates in format for PLINK.
 
     arguments:
-        binary_phenotypes (list<str>): names of columns with binary phenotypes
-            (control: 0, case: 1) that need conversion to PLINK format
-            (control: 1, case: 2)
+        binary_phenotypes (list<str>): names of columns with discrete binary
+            case-control phenotypes (control: 0, case: 1) that need conversion
+            to PLINK format (control: 1, case: 2)
+        continuous_phenotypes (list<str>): names of columns that PLINK ought
+            to interpret as continuous variables (ordinal discrete, interval
+            continuous, or ratio continuous)
         tables (dict<object>): collection of Pandas data frames with
             information about genotype and phenotype variables across cohorts
             of persons
@@ -3549,11 +3609,13 @@ def organize_phenotype_covariate_tables_alcoholism(
     # Organize format.
     pail["oestradiol"] = organize_phenotype_covariate_table_plink_format(
         binary_phenotypes=binary_phenotypes,
+        continuous_phenotypes=continuous_phenotypes,
         table=tables["oestradiol"],
         report=report,
     )
     pail["testosterone"] = organize_phenotype_covariate_table_plink_format(
         binary_phenotypes=binary_phenotypes,
+        continuous_phenotypes=continuous_phenotypes,
         table=tables["testosterone"],
         report=report,
     )
@@ -3596,23 +3658,39 @@ def organize_phenotype_covariate_tables_sex(
     # Initialize collection.
     pail = dict()
     # Convert format.
+    pail["alcohol_auditc"] = organize_phenotype_covariate_tables_alcoholism(
+        binary_phenotypes=[],
+        continuous_phenotypes=["alcohol_auditc"],
+        tables=tables["alcohol_auditc"],
+        report=report,
+    )
+    pail["alcohol_audit"] = organize_phenotype_covariate_tables_alcoholism(
+        binary_phenotypes=[],
+        continuous_phenotypes=["alcohol_audit"],
+        tables=tables["alcohol_audit"],
+        report=report,
+    )
     pail["alcoholism_1"] = organize_phenotype_covariate_tables_alcoholism(
         binary_phenotypes=["alcoholism_1"],
+        continuous_phenotypes=[],
         tables=tables["alcoholism_1"],
         report=report,
     )
     pail["alcoholism_2"] = organize_phenotype_covariate_tables_alcoholism(
         binary_phenotypes=["alcoholism_2"],
+        continuous_phenotypes=[],
         tables=tables["alcoholism_2"],
         report=report,
     )
     pail["alcoholism_3"] = organize_phenotype_covariate_tables_alcoholism(
         binary_phenotypes=["alcoholism_3"],
+        continuous_phenotypes=[],
         tables=tables["alcoholism_3"],
         report=report,
     )
     pail["alcoholism_4"] = organize_phenotype_covariate_tables_alcoholism(
         binary_phenotypes=["alcoholism_4"],
+        continuous_phenotypes=[],
         tables=tables["alcoholism_4"],
         report=report,
     )
@@ -4235,6 +4313,7 @@ def write_product_cohorts(
 
     sexes = ["female", "male",]
     alcoholisms = [
+        "alcohol_auditc", "alcohol_audit",
         "alcoholism_1", "alcoholism_2", "alcoholism_3", "alcoholism_4",
     ]
     hormones = ["oestradiol", "testosterone",]
@@ -4348,7 +4427,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 3")
+    print("version check: 1")
 
     # Initialize directories.
     paths = initialize_directories(
