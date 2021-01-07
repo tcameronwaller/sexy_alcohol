@@ -32,9 +32,8 @@ if [ ! -d $path_gwas ]; then
     mkdir -p $path_gwas
 fi
 
-if false; then
-
-fi
+#if false; then
+#fi
 
 if true; then
 
