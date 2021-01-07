@@ -11,8 +11,8 @@ path_ldsc=$(<"./tools_ldsc.txt")
 path_temporary=$(<"./temporary_sexy_alcohol.txt")
 path_waller="$path_temporary/waller"
 path_dock="$path_temporary/waller/dock"
-path_gwas_scripts="$path_waller/sexy_alcohol/scripts/record/2020-12-18"
-path_correlation_scripts="$path_waller/sexy_alcohol/scripts/record/2020-12-18"
+path_gwas_scripts="$path_waller/sexy_alcohol/scripts/record/2021-01-07"
+path_correlation_scripts="$path_waller/sexy_alcohol/scripts/record/2021-01-07"
 
 path_gwas="$path_temporary/waller/dock/gwas"
 path_genetic_correlation="$path_temporary/waller/dock/genetic_correlation"
@@ -51,7 +51,7 @@ set +x
 
 # Parameters.
 sex="female"
-alcoholism="alcoholism_1"
+alcoholism="alcohol_auditc"
 hormone="testosterone"
 /usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
 $sex \
@@ -67,7 +67,7 @@ $path_disequilibrium
 
 # Parameters.
 sex="female"
-alcoholism="alcoholism_2"
+alcoholism="alcohol_audit"
 hormone="testosterone"
 /usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
 $sex \
@@ -82,8 +82,8 @@ $path_alleles \
 $path_disequilibrium
 
 # Parameters.
-sex="female"
-alcoholism="alcoholism_3"
+sex="male"
+alcoholism="alcohol_auditc"
 hormone="testosterone"
 /usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
 $sex \
@@ -98,8 +98,8 @@ $path_alleles \
 $path_disequilibrium
 
 # Parameters.
-sex="female"
-alcoholism="alcoholism_4"
+sex="male"
+alcoholism="alcohol_audit"
 hormone="testosterone"
 /usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
 $sex \

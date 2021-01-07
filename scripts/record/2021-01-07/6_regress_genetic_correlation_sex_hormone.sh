@@ -47,12 +47,18 @@ set +x
 ###########################################################################
 # Organize GWAS summary statistics for LDSC.
 
+# TODO: need to specify type of regression
+# TODO: make this cleaner... mass a variable or something...
+
+#type_alcoholism="logistic"
+type_alcoholism="linear"
+
 # Access phenotype variables and auxiliary information from UKBiobank.
 /usr/bin/bash "$path_gwas_scripts/7_concatenate_organize_gwas_ldsc.sh" \
 $path_gwas_alcoholism \
 "report" \
 $alcoholism \
-"logistic" \
+$type_alcoholism \
 22 \
 
 # Access phenotype variables and auxiliary information from UKBiobank.
@@ -66,7 +72,7 @@ $hormone \
 ###########################################################################
 # Munge GWAS summary statistics for LDSC.
 
-path_gwas_alcoholism_concatenation="$path_gwas_alcoholism/concatenation.${alcoholism}.glm.logistic"
+path_gwas_alcoholism_concatenation="$path_gwas_alcoholism/concatenation.${alcoholism}.glm.${type_alcoholism}"
 path_gwas_hormone_concatenation="$path_gwas_hormone/concatenation.${hormone}.glm.linear"
 
 /usr/bin/bash "$path_correlation_scripts/8_munge_gwas_genetic_correlation_ldsc.sh" \

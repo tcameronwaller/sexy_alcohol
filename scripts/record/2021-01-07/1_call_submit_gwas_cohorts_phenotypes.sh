@@ -37,7 +37,7 @@ fi
 
 if true; then
 
-  # Jobs:
+  # Jobs: 2336701.1-22:1, 2336702.1-22:1
   # Parameters.
   sex="female"
   alcoholism="alcohol_auditc"
@@ -49,7 +49,7 @@ if true; then
   $path_scripts \
   $path_dock
 
-  # Jobs:
+  # Jobs: 2336703.1-22:1, 2336704.1-22:1
   # Parameters.
   sex="female"
   alcoholism="alcohol_audit"
@@ -61,7 +61,7 @@ if true; then
   $path_scripts \
   $path_dock
 
-  # Jobs:
+  # Jobs: 2336705.1-22:1, 2336706.1-22:1
   # Parameters.
   sex="male"
   alcoholism="alcohol_auditc"
@@ -73,7 +73,7 @@ if true; then
   $path_scripts \
   $path_dock
 
-  # Jobs:
+  # Jobs: 2336707.1-22:1, 2336708.1-22:1
   # Parameters.
   sex="male"
   alcoholism="alcohol_audit"
