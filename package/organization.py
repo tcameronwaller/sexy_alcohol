@@ -3465,7 +3465,6 @@ def translate_binary_phenotype_plink(
 def organize_phenotype_covariate_table_plink_format(
     boolean_phenotypes=None,
     binary_phenotypes=None,
-    boolean_phenotypes=None,
     continuous_variables=None,
     table=None,
 ):
@@ -4397,7 +4396,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
 
     # Initialize directories.
     paths = initialize_directories(
