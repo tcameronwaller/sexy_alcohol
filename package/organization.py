@@ -59,24 +59,22 @@ def initialize_directories_cohorts(
 
     # Collect information.
     paths = dict()
-
     sexes = ["female", "male",]
     alcoholisms = [
-        "alcohol_auditc", "alcohol_audit",
         "alcoholism_1", "alcoholism_2", "alcoholism_3", "alcoholism_4",
     ]
-    hormones = ["oestradiol", "testosterone",]
+    groups = ["all", "case", "control"]
     for sex in sexes:
         paths[sex] = dict()
         for alcoholism in alcoholisms:
             paths[sex][alcoholism] = dict()
-            for hormone in hormones:
-                paths[sex][alcoholism][hormone] = os.path.join(
-                    path_parent, "cohorts", sex, alcoholism, hormone
+            for group in groups:
+                paths[sex][alcoholism][group] = os.path.join(
+                    path_parent, "cohorts", sex, alcoholism, group
                 )
                 # Initialize directories.
                 utility.create_directories(
-                    path=paths[sex][alcoholism][hormone]
+                    path=paths[sex][alcoholism][group]
                 )
                 pass
             pass
@@ -1689,8 +1687,7 @@ def organize_alcohol_auditc_variables(
     return pail
 
 
-def determine_alcohol_audit_score(
-    audit_c=None,
+def determine_alcohol_auditp_score(
     audit_4=None,
     audit_5=None,
     audit_6=None,
@@ -1700,12 +1697,11 @@ def determine_alcohol_audit_score(
     audit_10=None,
 ):
     """
-    Determine a person's score from the AUDIT questionnaire.
+    Determine a person's score from the AUDIT-P questionnaire.
 
     Accommodate inexact float values.
 
     arguments:
-        audit_c ((float): combination score for AUDIT-C questionnaire
         audit_4 (float): AUDIT questionnaire question 4, UK Biobank field
             20413
         audit_5 (float): AUDIT questionnaire question 5, UK Biobank field
@@ -1753,7 +1749,6 @@ def determine_alcohol_audit_score(
 
     # Integrate information from multiple variables.
     if (
-        (not math.isnan(audit_c)) and
         (not math.isnan(audit_4_clean)) and
         (not math.isnan(audit_5_clean)) and
         (not math.isnan(audit_6_clean)) and
@@ -1762,24 +1757,22 @@ def determine_alcohol_audit_score(
         (not math.isnan(audit_9_clean)) and
         (not math.isnan(audit_10_clean))
     ):
-        audit_score = (
-            audit_c +
+        auditp_score = (
             audit_4_clean + audit_5_clean + audit_6_clean + audit_7_clean +
-            audit_8_clean +
-            audit_9_clean + audit_10_clean
+            audit_8_clean + audit_9_clean + audit_10_clean
         )
     else:
-        audit_score = float("nan")
+        auditp_score = float("nan")
     # Return information.
-    return audit_score
+    return auditp_score
 
 
-def organize_alcohol_audit_variables(
+def organize_alcohol_auditp_variables(
     table=None,
     report=None,
 ):
     """
-    Organizes information about alcohol AUDIT questionnaire.
+    Organizes information about alcohol AUDIT-P questionnaire.
 
     "audit_4", field "20413": "Frequency of inability to cease drinking in last
     year"
@@ -1875,10 +1868,9 @@ def organize_alcohol_audit_variables(
         table=table,
     )
     # Determine person's AUDIT-C score.
-    table["alcohol_audit"] = table.apply(
+    table["alcohol_auditp"] = table.apply(
         lambda row:
-            determine_alcohol_audit_score(
-                audit_c=row["alcohol_auditc"],
+            determine_alcohol_auditp_score(
                 audit_4=row["20413-0.0"],
                 audit_5=row["20407-0.0"],
                 audit_6=row["20412-0.0"],
@@ -1903,8 +1895,97 @@ def organize_alcohol_audit_variables(
             "eid", "IID",
             "20413-0.0", "20407-0.0", "20412-0.0", "20409-0.0", "20408-0.0",
             "20411-0.0", "20405-0.0",
-            "alcohol_auditc",
-            "alcohol_audit",
+            "alcohol_auditp",
+        ])
+    ]
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("Summary of alcohol AUDIT-P variables: ")
+        print(table_report)
+    # Collect information.
+    pail = dict()
+    pail["table"] = table
+    pail["table_clean"] = table_clean
+    pail["table_report"] = table_report
+    # Return information.
+    return pail
+
+
+def determine_alcohol_audit_score(
+    alcohol_auditc=None,
+    alcohol_auditp=None,
+):
+    """
+    Determine a person's score from the AUDIT questionnaire.
+
+    Accommodate inexact float values.
+
+    arguments:
+        alcohol_auditc ((float): combination score for AUDIT-C questionnaire
+        alcohol_auditp ((float): combination score for AUDIT-P questionnaire
+
+    raises:
+
+    returns:
+        (float): combination score for AUDIT questionnaire
+
+    """
+
+    # Integrate information from multiple variables.
+    if (
+        (not math.isnan(alcohol_auditc)) and
+        (not math.isnan(alcohol_auditp))
+    ):
+        audit_score = (alcohol_auditc + alcohol_auditp)
+    else:
+        audit_score = float("nan")
+    # Return information.
+    return audit_score
+
+
+def organize_alcohol_audit_variables(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about alcohol AUDIT-P questionnaire.
+
+    The official AUDIT questionnaire scores questions 1-8 on 0 to 4 points and
+    questions 9-10 on 0, 2, or 4 points.
+    https://auditscreen.org/about/scoring-audit/
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about quantity of alcohol consumption
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Determine person's AUDIT score.
+    table["alcohol_audit"] = table.apply(
+        lambda row:
+            determine_alcohol_auditp_score(
+                auditc=row["alcohol_auditc"],
+                auditp=row["alcohol_auditp"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Remove columns for variables that are not necessary anymore.
+    table_clean = table.copy(deep=True)
+    # Organize data for report.
+    table_report = table.copy(deep=True)
+    table_report = table_report.loc[
+        :, table_report.columns.isin([
+            "eid", "IID",
+            "alcohol_auditc", "alcohol_auditp", "alcohol_audit",
         ])
     ]
     # Report.
@@ -1946,13 +2027,19 @@ def organize_alcohol_audit_questionnaire_variables(
         report=report,
     )
     # Organize information about alcohol AUDIT.
-    pail_audit = organize_alcohol_audit_variables(
+    pail_auditp = organize_alcohol_auditp_variables(
         table=pail_auditc["table_clean"],
+        report=report,
+    )
+    # Organize information about alcohol AUDIT.
+    pail_audit = organize_alcohol_audit_variables(
+        table=pail_auditp["table_clean"],
         report=report,
     )
     # Collect information.
     pail = dict()
     pail["auditc"] = pail_auditc
+    pail["auditp"] = pail_auditp
     pail["audit"] = pail_audit
     # Return information.
     return pail
@@ -2462,11 +2549,11 @@ def determine_case_control_alcoholism_one(
     # Interpretation variables "case" and "control" do not have null values.
     # Assign missing value to persons who qualify neither as case nor control.
     if case:
-        value = 1
+        value = True
     elif control:
-        value = 0
+        value = False
     else:
-        value = float("nan")
+        value = None
     # Return information.
     return value
 
@@ -2550,11 +2637,11 @@ def determine_case_control_alcoholism_two(
     # Interpretation variables "case" and "control" do not have null values.
     # Assign missing value to persons who qualify neither as case nor control.
     if case:
-        value = 1
+        value = True
     elif control:
-        value = 0
+        value = False
     else:
-        value = float("nan")
+        value = None
     # Return information.
     return value
 
@@ -2636,11 +2723,11 @@ def determine_case_control_alcoholism_three(
     # Interpretation variables "case" and "control" do not have null values.
     # Assign missing value to persons who qualify neither as case nor control.
     if case:
-        value = 1
+        value = True
     elif control:
-        value = 0
+        value = False
     else:
-        value = float("nan")
+        value = None
     # Return information.
     return value
 
@@ -2721,11 +2808,11 @@ def determine_case_control_alcoholism_four(
     # Interpretation variables "case" and "control" do not have null values.
     # Assign missing value to persons who qualify neither as case nor control.
     if case:
-        value = 1
+        value = True
     elif control:
-        value = 0
+        value = False
     else:
-        value = float("nan")
+        value = None
     # Return information.
     return value
 
@@ -2922,10 +3009,8 @@ def report_alcoholism_cases_controls_females_males(
 
     pass
 
-
 # TODO: organize a new report...
 # TODO: table to summarize counts of cases and controls by sex and with valid testosterone or oestradiol
-
 
 def organize_alcoholism_cases_controls_variables(
     table=None,
@@ -3162,8 +3247,6 @@ def select_valid_records_all_specific_variables(
 
     """
 
-    # Copy data.
-    table = table.copy(deep=True)
     # Extract table columns.
     columns_all = copy.deepcopy(table.columns.to_list())
     # Collect columns to keep.
@@ -3206,10 +3289,12 @@ def select_valid_records_all_specific_variables(
     return table
 
 
-def select_valid_cohort_records_variables(
+def select_sex_alcoholism_cohort_variables_valid_records(
     sex_text=None,
     alcoholism=None,
-    hormone=None,
+    split=None,
+    phenotype_1=None,
+    phenotype_2=None,
     table=None,
 ):
     """
@@ -3219,211 +3304,106 @@ def select_valid_cohort_records_variables(
     arguments:
         sex_text (str): textual representation of sex selection
         alcoholism (str): name of column defining alcoholism cases and controls
-        hormone (str): name of column for relevant sex hormone
+        split (str): how to divide cohort by alcoholism, either "all", "case",
+            or "control"
+        phenotype_1 (str): name of a column for first phenotype variable
+        phenotype_2 (str): name of a column for second phenotype variable
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
 
     raises:
 
     returns:
-        (dict): collection of information about phenotype variables
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
 
     """
 
     # Copy data.
     table = table.copy(deep=True)
-    # Select records by sex.
-    table = table.loc[
-        table["sex_text"] == sex_text, :
-    ]
     # Select records with valid (non-null) values of relevant variables.
+    # Exclude missing values first to avoid interpretation of "None" as False.
     table = select_valid_records_all_specific_variables(
         names=[
             "eid", "IID",
             "sex", "sex_text", "age", "body_mass_index",
-            hormone,
             alcoholism,
+            phenotype_1,
+            phenotype_2,
         ],
         prefixes=["genotype_pc_",],
         table=table,
         drop_columns=True,
         report=False,
     )
+    # Select cohort by values of specific variables.
+    # Select records by sex.
+    table = table.loc[
+        table["sex_text"] == sex_text, :
+    ]
+    # Select records by alcoholism.
+    if (not (str(split) == "all")):
+        if (str(split) == "case"):
+            table = table.loc[table[alcoholism], :]
+        elif (str(split) == "control"):
+            table = table.loc[~table[alcoholism], :]
+        pass
     # Return information.
     return table
 
 
-def select_organize_cohorts_variables_by_hormone(
-    sex_text=None,
-    alcoholism=None,
-    table=None,
+def translate_boolean_phenotype_plink(
+    boolean_value=None,
 ):
     """
-    Organizes information about previous and current alcohol consumption.
+    Translate information from simple binary representation to plink
+    representation.
+
+    Accommodate inexact float values and null values.
+
+    https://www.cog-genomics.org/plink/1.9/input
+    Section: "Phenotypes"
+    Subsection: "Phenotype encoding"
+        "Missing phenotypes are normally expected to be encoded as -9. You can
+        change this to another integer with --missing-phenotype. (This is a
+        slight change from PLINK 1.07: floating point values are now disallowed
+        due to rounding issues, and nonnumeric values such as 'NA' are rejected
+        since they're treated as missing phenotypes no matter what. Note that
+        --output-missing-phenotype can be given a nonnumeric string.)
+
+        Case/control phenotypes are expected to be encoded as 1=unaffected
+        (control), 2=affected (case); 0 is accepted as an alternate missing
+        value encoding. If you use the --1 flag, 0 is interpreted as unaffected
+        status instead, while 1 maps to affected. This also forces phenotypes to
+        be interpreted as case/control."
 
     arguments:
-        sex_text (str): textual representation of sex selection
-        alcoholism (str): name of column defining alcoholism cases and controls
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
+        boolean_value (float): boolean (False, True) representation of a
+            phenotype
 
     raises:
 
     returns:
-        (dict): collection of information about phenotype variables
+        (float): plink binary representation of a phenotype
 
     """
 
-    # Select and organize variables across cohorts.
-    # Collect information.
-    pail = dict()
-    pail["oestradiol"] = select_valid_cohort_records_variables(
-        sex_text=sex_text,
-        alcoholism=alcoholism,
-        hormone="oestradiol",
-        table=table,
-    )
-    pail["testosterone"] = select_valid_cohort_records_variables(
-        sex_text=sex_text,
-        alcoholism=alcoholism,
-        hormone="testosterone",
-        table=table,
-    )
+    # Determine whether the variable has a valid (non-missing) value.
+    if (not pandas.isna(boolean_value)):
+        # The variable has a valid value.
+        if (not boolean_value):
+            # control, original value: False
+            # control, Plink translation: 1
+            value = 1
+        elif (boolean_value):
+            # case, original value: True
+            # case, Plink translation: 2
+            value = 2
+    else:
+        # null
+        value = float("nan")
     # Return information.
-    return pail
-
-
-def select_organize_cohorts_variables_by_alcoholism_hormone(
-    sex_text=None,
-    table=None,
-):
-    """
-    Organizes information about previous and current alcohol consumption.
-
-    arguments:
-        sex_text (str): textual representation of sex selection
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (dict): collection of information about phenotype variables
-
-    """
-
-
-    # Select and organize variables across cohorts.
-    # Collect information.
-    pail = dict()
-    # Alcohol consumption variables.
-    pail["alcohol_auditc"] = select_organize_cohorts_variables_by_hormone(
-        sex_text=sex_text,
-        alcoholism="alcohol_auditc",
-        table=table,
-    )
-    pail["alcohol_audit"] = select_organize_cohorts_variables_by_hormone(
-        sex_text=sex_text,
-        alcoholism="alcohol_audit",
-        table=table,
-    )
-    # Alcoholism case, control definitions.
-    pail["alcoholism_1"] = select_organize_cohorts_variables_by_hormone(
-        sex_text=sex_text,
-        alcoholism="alcoholism_1",
-        table=table,
-    )
-    pail["alcoholism_2"] = select_organize_cohorts_variables_by_hormone(
-        sex_text=sex_text,
-        alcoholism="alcoholism_2",
-        table=table,
-    )
-    pail["alcoholism_3"] = select_organize_cohorts_variables_by_hormone(
-        sex_text=sex_text,
-        alcoholism="alcoholism_3",
-        table=table,
-    )
-    pail["alcoholism_4"] = select_organize_cohorts_variables_by_hormone(
-        sex_text=sex_text,
-        alcoholism="alcoholism_4",
-        table=table,
-    )
-    # Return information.
-    return pail
-
-
-def select_organize_cohorts_variables_by_sex_alcoholism_hormone(
-    table=None,
-    report=None,
-):
-    """
-    Organizes information about previous and current alcohol consumption.
-
-    Hierarchical tree structure:
-    - "female"
-    -- "alcohol_auditc"
-    --- "oestradiol"
-    --- "testosterone"
-    -- "alcohol_audit"
-    --- [same as "alcohol_auditc"]
-    -- "alcoholism_1"
-    -- "alcoholism_2"
-    -- "alcoholism_3"
-    -- "alcoholism_4"
-    - "male"
-    -- [same as "female"]
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict): collection of information about phenotype variables
-
-    """
-
-
-    # Select and organize variables across cohorts.
-    # Collect information.
-    pail = dict()
-
-    pail["female"] = select_organize_cohorts_variables_by_alcoholism_hormone(
-        sex_text="female",
-        table=table,
-    )
-    pail["male"] = select_organize_cohorts_variables_by_alcoholism_hormone(
-        sex_text="male",
-        table=table,
-    )
-    # Report.
-    if report:
-        #table_report = pail["female"]["alcohol_auditc"]["testosterone"].copy(
-        #    deep=True
-        #)
-        table_report = pail["female"]["alcoholism_1"]["testosterone"].copy(
-            deep=True
-        )
-        table_control = table_report.loc[
-            table_report["alcoholism_1"] < 0.5, :
-        ]
-        table_case = table_report.loc[
-            table_report["alcoholism_1"] > 0.5, :
-        ]
-        utility.print_terminal_partition(level=2)
-        print("Females, alcoholism_1, testosterone")
-        print("Controls table shape: " + str(table_control.shape))
-        utility.print_terminal_partition(level=3)
-        print("Cases table shape: " + str(table_case.shape))
-        utility.print_terminal_partition(level=3)
-    # Return information.
-    return pail
-
-
-##########
-# PLINK format
+    return value
 
 
 def translate_binary_phenotype_plink(
@@ -3483,10 +3463,11 @@ def translate_binary_phenotype_plink(
 
 
 def organize_phenotype_covariate_table_plink_format(
+    boolean_phenotypes=None,
     binary_phenotypes=None,
-    continuous_phenotypes=None,
+    boolean_phenotypes=None,
+    continuous_variables=None,
     table=None,
-    report=None,
 ):
     """
     Organize table for phenotypes and covariates in format for PLINK.
@@ -3502,15 +3483,17 @@ def organize_phenotype_covariate_table_plink_format(
     PLINK requires FID and IID columns to come first.
 
     arguments:
+        boolean_phenotypes (list<str>): names of columns with discrete boolean
+            case-control phenotypes (control: False, case: True) that need
+            conversion to PLINK format (control: 1, case: 2)
         binary_phenotypes (list<str>): names of columns with discrete binary
             case-control phenotypes (control: 0, case: 1) that need conversion
             to PLINK format (control: 1, case: 2)
-        continuous_phenotypes (list<str>): names of columns that PLINK ought
+        continuous_variables (list<str>): names of columns that PLINK ought
             to interpret as continuous variables (ordinal discrete, interval
             continuous, or ratio continuous)
         table (object): Pandas data frame of information about phenotype and
             covariate variables for GWAS
-        report (bool): whether to print reports
 
     raises:
 
@@ -3523,6 +3506,16 @@ def organize_phenotype_covariate_table_plink_format(
     # Copy data.
     table = table.copy(deep=True)
     # Translate binary phenotype variables.
+    for boolean_phenotype in boolean_phenotypes:
+        table[boolean_phenotype] = table.apply(
+            lambda row:
+                translate_boolean_phenotype_plink(
+                    boolean_value=row[boolean_phenotype],
+                ),
+            axis="columns", # apply across rows
+        )
+        pass
+    # Translate binary phenotype variables.
     for binary_phenotype in binary_phenotypes:
         table[binary_phenotype] = table.apply(
             lambda row:
@@ -3532,9 +3525,9 @@ def organize_phenotype_covariate_table_plink_format(
             axis="columns", # apply across rows
         )
         pass
-    # Translate continuous phenotype variables.
+    # Translate continuous variables, whether they are phenotypes or covariates.
     table_type = convert_table_columns_variables_types_float(
-        columns=continuous_phenotypes,
+        columns=continuous_variables,
         table=table,
     )
     # Organize.
@@ -3563,188 +3556,173 @@ def organize_phenotype_covariate_table_plink_format(
         :, table.columns.isin(columns_sequence)
     ]
     table_sequence = table_columns[[*columns_sequence]]
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("... phenotype covariate table in format for PLINK ...")
-        print("table shape: " + str(table_sequence.shape))
-        print(table_sequence)
-        utility.print_terminal_partition(level=4)
     # Return information.
     return table_sequence
 
 
-def organize_phenotype_covariate_tables_alcoholism(
-    binary_phenotypes=None,
-    continuous_phenotypes=None,
-    tables=None,
+def organize_plink_cohort_variables_by_sex_alcoholism_split(
+    sex_text=None,
+    alcoholism=None,
+    split=None,
+    phenotype_1=None,
+    phenotype_2=None,
+    table=None,
     report=None,
 ):
     """
-    Organize table for phenotypes and covariates in format for PLINK.
+    Organizes information about previous and current alcohol consumption.
 
     arguments:
-        binary_phenotypes (list<str>): names of columns with discrete binary
-            case-control phenotypes (control: 0, case: 1) that need conversion
-            to PLINK format (control: 1, case: 2)
-        continuous_phenotypes (list<str>): names of columns that PLINK ought
-            to interpret as continuous variables (ordinal discrete, interval
-            continuous, or ratio continuous)
-        tables (dict<object>): collection of Pandas data frames with
-            information about genotype and phenotype variables across cohorts
-            of persons
+        sex_text (str): textual representation of sex selection
+        alcoholism (str): name of column defining alcoholism cases and controls
+        split (str): how to divide cohort by alcoholism, either "all", "case",
+            or "control"
+        phenotype_1 (str): name of a column for first phenotype variable,
+            normally the alcoholism variable, which is binary when "split" is
+            "all"
+        phenotype_2 (str): name of a column for second phenotype variable
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
         report (bool): whether to print reports
 
     raises:
 
     returns:
-        (dict<object>): collection of Pandas data frames with
-            information about genotype and phenotype variables across cohorts
-            of persons
+        (dict): collection of information about phenotype variables
 
     """
 
-    # Initialize collection.
-    pail = dict()
-    # Organize format.
-    pail["oestradiol"] = organize_phenotype_covariate_table_plink_format(
-        binary_phenotypes=binary_phenotypes,
-        continuous_phenotypes=continuous_phenotypes,
-        table=tables["oestradiol"],
-        report=report,
+    # Select cohort's variables and records with valid values.
+    table_valid = select_sex_alcoholism_cohort_variables_valid_records(
+        sex_text=sex_text,
+        alcoholism=alcoholism,
+        split=split,
+        phenotype_1=phenotype_1,
+        phenotype_2=phenotype_2,
+        table=table,
     )
-    pail["testosterone"] = organize_phenotype_covariate_table_plink_format(
-        binary_phenotypes=binary_phenotypes,
-        continuous_phenotypes=continuous_phenotypes,
-        table=tables["testosterone"],
-        report=report,
-    )
+    # Translate variable encodings and table format for analysis in PLINK.
+    # alcoholism is binary, only if split=="all"... in which case "alcoholism" is a phenotype
+    if (str(split) == "all"):
+        table_format = organize_phenotype_covariate_table_plink_format(
+            boolean_phenotypes=[phenotype_1],
+            binary_phenotypes=[],
+            continuous_variables=[phenotype_2],
+            table=table_valid,
+        )
+    elif ((str(split) == "case") or (str(split) == "control")):
+        table_format = organize_phenotype_covariate_table_plink_format(
+            boolean_phenotypes=[],
+            binary_phenotypes=[],
+            continuous_variables=[phenotype_1, phenotype_2],
+            table=table_valid,
+        )
+        pass
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("... phenotype covariate table in format for PLINK ...")
+        print("table shape: " + str(table_format.shape))
+        print(table_sequence)
+        utility.print_terminal_partition(level=4)
     # Return information.
-    return pail
+    return table_format
 
 
-def organize_phenotype_covariate_tables_sex(
-    tables=None,
+def organize_plink_cohorts_variables_by_sex_alcoholism_split(
+    table=None,
     report=None,
 ):
     """
-    Organize table for phenotypes and covariates in format for PLINK.
+    Organizes information about previous and current alcohol consumption.
 
-    1. Remove any rows with missing, empty values.
-    PLINK cannot accommodate rows with empty cells.
-
-    2. Introduce family identifiers.
-    Family (FID) and individual (IID) identifiers must match the ID_1 and ID_2
-    columns in the sample table.
-
-    3. Sort column sequence.
-    PLINK requires FID and IID columns to come first.
+    Hierarchical tree structure for cohorts:
+    - "female"
+    -- "alcoholism_1"
+    --- "all"
+    ---- "alcoholism_1" versus "oestradiol"
+    ---- "alcoholism_1" versus "testosterone"
+    --- "case"
+    ---- "alcohol_auditc" versus "oestradiol"
+    ---- "alcohol_auditc" versus "testosterone"
+    ---- "alcohol_auditp" versus "oestradiol"
+    ---- "alcohol_auditp" versus "testosterone"
+    --- "control"
+    ---- [same as "case"]
+    -- "alcoholism_2"
+    --- [same as "alcoholism_2"]
+    -- "alcoholism_3"
+    -- "alcoholism_4"
+    - "male"
+    -- [same as "female"]
 
     arguments:
-        tables (dict<dict<object>>): collection of Pandas data frames with
-            information about genotype and phenotype variables across cohorts
-            of persons
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
         report (bool): whether to print reports
 
     raises:
 
     returns:
-        (dict<dict<object>>): collection of Pandas data frames with
-            information about genotype and phenotype variables across cohorts
-            of persons
+        (dict): collection of information about phenotype variables
 
     """
 
-    # Initialize collection.
+    # Compile information.
     pail = dict()
-    # Convert format.
-    pail["alcohol_auditc"] = organize_phenotype_covariate_tables_alcoholism(
-        binary_phenotypes=[],
-        continuous_phenotypes=["alcohol_auditc"],
-        tables=tables["alcohol_auditc"],
-        report=report,
-    )
-    pail["alcohol_audit"] = organize_phenotype_covariate_tables_alcoholism(
-        binary_phenotypes=[],
-        continuous_phenotypes=["alcohol_audit"],
-        tables=tables["alcohol_audit"],
-        report=report,
-    )
-    pail["alcoholism_1"] = organize_phenotype_covariate_tables_alcoholism(
-        binary_phenotypes=["alcoholism_1"],
-        continuous_phenotypes=[],
-        tables=tables["alcoholism_1"],
-        report=report,
-    )
-    pail["alcoholism_2"] = organize_phenotype_covariate_tables_alcoholism(
-        binary_phenotypes=["alcoholism_2"],
-        continuous_phenotypes=[],
-        tables=tables["alcoholism_2"],
-        report=report,
-    )
-    pail["alcoholism_3"] = organize_phenotype_covariate_tables_alcoholism(
-        binary_phenotypes=["alcoholism_3"],
-        continuous_phenotypes=[],
-        tables=tables["alcoholism_3"],
-        report=report,
-    )
-    pail["alcoholism_4"] = organize_phenotype_covariate_tables_alcoholism(
-        binary_phenotypes=["alcoholism_4"],
-        continuous_phenotypes=[],
-        tables=tables["alcoholism_4"],
-        report=report,
-    )
+    # Select and organize variables across cohorts.
+    pail["table_female_auditc"] = (
+        organize_plink_cohort_variables_by_sex_alcoholism_split(
+            sex_text="female",
+            alcoholism="alcoholism_1",
+            split="case",
+            phenotype_1="alcohol_auditc",
+            phenotype_2="testosterone",
+            table=table,
+            report=report,
+    ))
+    if False:
+        pail["table_female_auditp"] = (
+            organize_plink_cohort_variables_by_sex_alcoholism_split(
+                sex_text="female",
+                alcoholism="alcoholism_1",
+                split="case",
+                phenotype_1="alcohol_auditp",
+                phenotype_2="testosterone",
+                table=table,
+                report=report,
+        ))
+        pail["table_male_auditc"] = (
+            organize_plink_cohort_variables_by_sex_alcoholism_split(
+                sex_text="male",
+                alcoholism="alcoholism_1",
+                split="case",
+                phenotype_1="alcohol_auditc",
+                phenotype_2="testosterone",
+                table=table,
+                report=report,
+        ))
+        pail["table_male_auditp"] = (
+            organize_plink_cohort_variables_by_sex_alcoholism_split(
+                sex_text="male",
+                alcoholism="alcoholism_1",
+                split="case",
+                phenotype_1="alcohol_auditp",
+                phenotype_2="testosterone",
+                table=table,
+                report=report,
+        ))
     # Return information.
     return pail
 
 
-def organize_phenotype_covariate_tables_plink_format(
-    tables=None,
-    report=None,
-):
-    """
-    Organize table for phenotypes and covariates in format for PLINK.
-
-    1. Remove any rows with missing, empty values.
-    PLINK cannot accommodate rows with empty cells.
-
-    2. Introduce family identifiers.
-    Family (FID) and individual (IID) identifiers must match the ID_1 and ID_2
-    columns in the sample table.
-
-    3. Sort column sequence.
-    PLINK requires FID and IID columns to come first.
-
-    arguments:
-        tables (dict<dict<object>>): collection of Pandas data frames with
-            information about genotype and phenotype variables across cohorts
-            of persons
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict<dict<object>>): collection of Pandas data frames with
-            information about genotype and phenotype variables across cohorts
-            of persons
-
-    """
-
-    # Initialize collection.
-    pail = dict()
-    # Conver format.
-    pail["female"] = organize_phenotype_covariate_tables_sex(
-        tables=tables["female"],
-        report=report,
-    )
-    pail["male"] = organize_phenotype_covariate_tables_sex(
-        tables=tables["male"],
-        report=report,
-    )
-    # Return information.
-    return pail
 
 
+
+##########
+# ... in progress...
+
+# Scrap now...
 def match_ukb_genotype_phenotype_sample_identifiers(
     table_phenotypes=None,
     table_ukb_samples=None,
@@ -3808,14 +3786,6 @@ def match_ukb_genotype_phenotype_sample_identifiers(
         print(table_ukb_samples_match)
         utility.print_terminal_partition(level=4)
     pass
-
-
-
-
-
-
-##########
-# ... in progress...
 
 
 def translate_alcohol_none_auditc(
@@ -4461,8 +4431,10 @@ def execute_procedure(
         report=False,
     )
     #print(pail_alcohol_consumption["quantity"]["table_clean"])
-    # Organize Alchol Use Disorders Identification Test (AUDIT) and
-    # AUDIT-Concise (AUDIT-C) questionnaire scores.
+
+    # Organize Alchol Use Disorders Identification Test (AUDIT) questionnaire
+    # variables, including separate scores for AUDIT-Consumption (AUDIT-C) and
+    # AUDIT-Problem (AUDIT-P) portions of the questionnaire.
     pail_audit = organize_alcohol_audit_questionnaire_variables(
         table=pail_alcohol_consumption["quantity"]["table_clean"],
         report=False,
@@ -4478,6 +4450,12 @@ def execute_procedure(
     )
     #print(pail_diagnosis["table_clean"])
 
+    ###################
+    # TODO:
+    # Need to revise definitions of alcoholism... AUDIT-C should not be a definition.
+    # Maybe introduce definition for AUDIT-P?
+    #####################
+
     # Organize alcoholism cases and controls.
     # Report females and males who consume alcohol and are candidates for
     # either controls or cases of alcoholism.
@@ -4488,38 +4466,41 @@ def execute_procedure(
     #print(pail_alcoholism["table_clean"])
 
     # Select and organize variables across cohorts.
-    pail_cohorts = select_organize_cohorts_variables_by_sex_alcoholism_hormone(
+    # Organize phenotypes and covariates in format for analysis in PLINK.
+    pail_cohorts = organize_plink_cohorts_variables_by_sex_alcoholism_split(
         table=pail_alcoholism["table_clean"],
         report=True,
     )
 
-    # Organize phenotypes and covariates in format for analysis in PLINK.
-    pail_format = organize_phenotype_covariate_tables_plink_format(
-        tables=pail_cohorts,
-        report=False,
-    )
+    if False:
 
-    # Collect information.
-    information = dict()
-    information["quality"] = dict()
-    information["quality"]["table_auditc"] = (
-        pail_audit["auditc"]["table_report"]
-    )
-    information["quality"]["table_audit"] = (
-        pail_audit["audit"]["table_report"]
-    )
-    information["quality"]["table_diagnosis"] = (
-        pail_diagnosis["table_report"]
-    )
-    information["quality"]["table_alcoholism"] = (
-        pail_alcoholism["table_report"]
-    )
-    information["cohorts"] = pail_format
-    # Write product information to file.
-    write_product(
-        paths=paths,
-        information=information
-    )
+        # Organize phenotypes and covariates in format for analysis in PLINK.
+        pail_format = organize_phenotype_covariate_tables_plink_format(
+            tables=pail_cohorts,
+            report=False,
+        )
+
+        # Collect information.
+        information = dict()
+        information["quality"] = dict()
+        information["quality"]["table_auditc"] = (
+            pail_audit["auditc"]["table_report"]
+        )
+        information["quality"]["table_audit"] = (
+            pail_audit["audit"]["table_report"]
+        )
+        information["quality"]["table_diagnosis"] = (
+            pail_diagnosis["table_report"]
+        )
+        information["quality"]["table_alcoholism"] = (
+            pail_alcoholism["table_report"]
+        )
+        information["cohorts"] = pail_format
+        # Write product information to file.
+        write_product(
+            paths=paths,
+            information=information
+        )
 
     if False:
         # Match UKB genotype sample identifiers to phenotype identifiers.
