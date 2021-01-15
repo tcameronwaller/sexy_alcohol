@@ -1363,11 +1363,11 @@ def organize_alcohol_consumption_variables(
 # Alcohol AUDIT questionnaire
 
 
-def interpret_alcohol_auditc_one(
+def interpret_alcohol_audit_one(
     value=None,
 ):
     """
-    Intepret UK Biobank's coding for AUDIT-C questionnaire question 1.
+    Intepret UK Biobank's coding for AUDIT questionnaire question 1.
 
     "audit_1", field "20414": "Frequency of drinking alcohol"
     UK Biobank data coding "521" for variable field "20414".
@@ -1564,7 +1564,7 @@ def determine_alcohol_auditc_score(
     """
 
     # Interpret raw variables.
-    audit_1_clean = interpret_alcohol_auditc_one(
+    audit_1_clean = interpret_alcohol_audit_one(
         value=audit_1,
     )
     audit_2_clean = interpret_alcohol_audit_two_to_eight(
@@ -1972,9 +1972,9 @@ def organize_alcohol_audit_variables(
     # Determine person's AUDIT score.
     table["alcohol_audit"] = table.apply(
         lambda row:
-            determine_alcohol_auditp_score(
-                auditc=row["alcohol_auditc"],
-                auditp=row["alcohol_auditp"],
+            determine_alcohol_audit_score(
+                alcohol_auditc=row["alcohol_auditc"],
+                alcohol_auditp=row["alcohol_auditp"],
             ),
         axis="columns", # apply across rows
     )
@@ -4396,7 +4396,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 3")
 
     # Initialize directories.
     paths = initialize_directories(
