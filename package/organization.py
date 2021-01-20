@@ -2973,203 +2973,6 @@ def determine_case_control_alcoholism_five(
     return value
 
 
-########### Work Zone #################
-
-def report_alcoholism_candidates_by_sex(
-    sex_text=None,
-    table=None,
-):
-    """
-    Selects variable columns and record rows with valid values across all
-    variables.
-
-    arguments:
-        sex_text (str): textual representation of sex selection
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Select records with valid (non-null) values of relevant variables.
-    table = select_valid_records_all_specific_variables(
-        names=[
-            "eid", "IID",
-            "sex", "sex_text", "age", "body_mass_index",
-            "alcohol_none",
-        ],
-        prefixes=["genotype_pc_",],
-        table=table,
-        drop_columns=True,
-        report=False,
-    )
-    # Select records by sex.
-    table = table.loc[
-        table["sex_text"] == sex_text, :
-    ]
-    # Determine whether person has consumed alcohol, previously or currently.
-    # Only persons who have consumed alcohol, previously or currently, ought to
-    # qualify as controls for alcoholism.
-    table = table.loc[
-        table["alcohol_none"] < 0.5, :
-    ]
-    # Report.
-    utility.print_terminal_partition(level=2)
-    print(
-        "Persons who consume alcohol previously or currently are candidates"
-        " for alcoholism cases or controls."
-    )
-    utility.print_terminal_partition(level=3)
-    print("sex: " + str(sex_text))
-    utility.print_terminal_partition(level=3)
-    print("Table dimensions after selection candidates by sex and alcohol.")
-    print("table shape: " + str(table.shape))
-
-    pass
-
-
-def report_alcoholism_candidates_females_males(
-    table=None,
-):
-    """
-    Reports the counts of females and males who are candidates for alcoholism
-    cases and controls.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-
-    """
-
-    # Females.
-    report_alcoholism_candidates_by_sex(
-        sex_text="female",
-        table=table,
-    )
-    # Males.
-    report_alcoholism_candidates_by_sex(
-        sex_text="male",
-        table=table,
-    )
-
-    pass
-
-
-def report_alcoholism_cases_controls_by_sex(
-    alcoholism=None,
-    sex_text=None,
-    table=None,
-):
-    """
-    Selects variable columns and record rows with valid values across all
-    variables.
-
-    arguments:
-        alcoholism (str): name of column defining alcoholism cases and controls
-        sex_text (str): textual representation of sex selection
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Select records with valid (non-null) values of relevant variables.
-    table = select_valid_records_all_specific_variables(
-        names=[
-            "eid", "IID",
-            "sex", "sex_text", "age", "body_mass_index",
-            alcoholism,
-        ],
-        prefixes=["genotype_pc_",],
-        table=table,
-        drop_columns=True,
-        report=False,
-    )
-    # Select records by sex.
-    table = table.loc[
-        table["sex_text"] == sex_text, :
-    ]
-    # Select cases and controls.
-    table_case = table.loc[
-        table[alcoholism] > 0.5, :
-    ]
-    table_control = table.loc[
-        table[alcoholism] < 0.5, :
-    ]
-    # Report.
-    utility.print_terminal_partition(level=2)
-    print(
-        "Cases and controls by sex."
-    )
-    utility.print_terminal_partition(level=3)
-    print("sex: " + str(sex_text))
-    utility.print_terminal_partition(level=3)
-    print("Table dimensions for cases and controls.")
-    print("Cases table shape: " + str(table_case.shape))
-    print("Controls table shape: " + str(table_control.shape))
-
-    pass
-
-
-def report_alcoholism_cases_controls_females_males(
-    alcoholism=None,
-    table=None,
-):
-    """
-    Reports the counts of females and males who are candidates for alcoholism
-    cases and controls.
-
-    arguments:
-        alcoholism (str): name of column defining alcoholism cases and controls
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-
-    """
-
-    # Report.
-    utility.print_terminal_partition(level=2)
-    print(
-        "Cases and controls by sex and definitions of alcoholism."
-    )
-    utility.print_terminal_partition(level=3)
-    print("Alcoholism variable: " + str(alcoholism))
-
-    # Females.
-    report_alcoholism_cases_controls_by_sex(
-        alcoholism=alcoholism,
-        sex_text="female",
-        table=table,
-    )
-    # Males.
-    report_alcoholism_cases_controls_by_sex(
-        alcoholism=alcoholism,
-        sex_text="male",
-        table=table,
-    )
-
-    pass
-
-
-
-
 def organize_report_cohort_by_sex_alcoholism_split_hormone(
     sex_text=None,
     alcohol_consumption=None,
@@ -3254,6 +3057,22 @@ def organize_report_cohorts_by_sex_alcoholism_split_hormone(
     for sex in sexes:
         for alcoholism in alcoholisms:
             for alcoholism_split in alcoholism_splits:
+                utility.print_terminal_partition(level=3)
+                organize_report_cohort_by_sex_alcoholism_split_hormone(
+                    sex_text=sex,
+                    alcohol_consumption=True,
+                    alcoholism=alcoholism,
+                    alcoholism_split=alcoholism_split,
+                    hormone="None... not specific",
+                    variables_names_valid=[
+                        "eid", "IID",
+                        "sex", "sex_text", "age", "body_mass_index",
+                        "alcohol_none",
+                        alcoholism,
+                    ],
+                    variables_prefixes_valid=["genotype_pc_",],
+                    table=table,
+                )
                 for hormone in hormones:
                     organize_report_cohort_by_sex_alcoholism_split_hormone(
                         sex_text=sex,
@@ -3264,6 +3083,7 @@ def organize_report_cohorts_by_sex_alcoholism_split_hormone(
                         variables_names_valid=[
                             "eid", "IID",
                             "sex", "sex_text", "age", "body_mass_index",
+                            "alcohol_none",
                             alcoholism,
                             hormone,
                         ],
@@ -3271,24 +3091,6 @@ def organize_report_cohorts_by_sex_alcoholism_split_hormone(
                         table=table,
                     )
     pass
-
-
-
-#######################################
-
-
-# TODO: organize a new report...
-# TODO: table to summarize counts of cases and controls by sex and with valid testosterone or oestradiol
-
-# female table
-# alcoholism_1 case
-# with testosterone
-# with oestradiol
-# alcoholism_1 control
-# alcoholism_2 case
-# alcoholism_2 control
-
-# male table
 
 
 def organize_alcoholism_cases_controls_variables(
@@ -3505,40 +3307,10 @@ def organize_alcoholism_cases_controls_variables(
         utility.print_terminal_partition(level=2)
         print("Summary of alcoholism cases and controls variables: ")
         print(table_report)
-
-
         organize_report_cohorts_by_sex_alcoholism_split_hormone(
             table=table_clean,
         )
 
-        if False:
-            # Report females and males who consume alcohol and are candidates for
-            # either controls or cases of alcoholism.
-            utility.print_terminal_partition(level=2)
-            print("Alcoholism candidates by sex.")
-            report_alcoholism_candidates_females_males(
-                table=table_clean
-            )
-            # Report females and males who are either controls or cases by each
-            # definition of alcoholism.
-            utility.print_terminal_partition(level=2)
-            print("Alcoholism cases and controls by definition of alcoholism.")
-            report_alcoholism_cases_controls_females_males(
-                alcoholism="alcoholism_1",
-                table=table_clean
-            )
-            report_alcoholism_cases_controls_females_males(
-                alcoholism="alcoholism_2",
-                table=table_clean
-            )
-            report_alcoholism_cases_controls_females_males(
-                alcoholism="alcoholism_3",
-                table=table_clean
-            )
-            report_alcoholism_cases_controls_females_males(
-                alcoholism="alcoholism_4",
-                table=table_clean
-            )
         pass
 
     # Collect information.
@@ -3946,6 +3718,7 @@ def organize_plink_cohort_variables_by_sex_alcoholism_split(
         variables_names_valid=[
             "eid", "IID",
             "sex", "sex_text", "age", "body_mass_index",
+            "alcohol_none",
             phenotype_1,
             phenotype_2,
         ],
@@ -4753,7 +4526,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
 
     # Initialize directories.
     paths = initialize_directories(
