@@ -857,7 +857,7 @@ def determine_previous_alcohol_consumption(
     # Return information.
     return alcohol_previous
 
-
+# TODO: code alcohol_none as True / False / None
 def determine_alcohol_none(
     alcohol_frequency=None,
     alcohol_current=None,
@@ -3312,7 +3312,6 @@ def organize_alcoholism_cases_controls_variables(
         organize_report_cohorts_by_sex_alcoholism_split_hormone(
             table=table_clean,
         )
-
         pass
 
     # Collect information.
@@ -3463,6 +3462,10 @@ def select_sex_alcoholism_cohort_variables_valid_records(
         if (str(alcoholism_split) == "case"):
             table = table.loc[table[alcoholism], :]
         elif (str(alcoholism_split) == "control"):
+            print("...")
+            print("alcoholism split requires taking controls")
+            print("...")
+            print(table)
             table = table.loc[~table[alcoholism], :]
         pass
     # Return information.
@@ -4528,7 +4531,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 3")
+    print("version check: 4")
 
     # Initialize directories.
     paths = initialize_directories(
