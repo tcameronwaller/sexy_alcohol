@@ -3007,6 +3007,12 @@ def organize_report_cohort_by_sex_alcoholism_split_hormone(
 
     """
 
+    # Report.
+    utility.print_terminal_partition(level=4)
+    print("sex: " + str(sex_text))
+    print("alcoholism: " + str(alcoholism))
+    print("alcoholism split: " + str(alcoholism_split))
+    print("hormone: " + str(hormone))
     # Select cohort's variables and records with valid values.
     table_valid = select_sex_alcoholism_cohort_variables_valid_records(
         sex_text=sex_text,
@@ -3018,11 +3024,6 @@ def organize_report_cohort_by_sex_alcoholism_split_hormone(
         table=table,
     )
     # Report.
-    utility.print_terminal_partition(level=4)
-    print("sex: " + str(sex_text))
-    print("alcoholism: " + str(alcoholism))
-    print("alcoholism split: " + str(alcoholism_split))
-    print("hormone: " + str(hormone))
     print("table shape: " + str(table_valid.shape))
     pass
 
@@ -3055,6 +3056,7 @@ def organize_report_cohorts_by_sex_alcoholism_split_hormone(
     ]
     hormones = ["oestradiol", "testosterone",]
     for sex in sexes:
+        utility.print_terminal_partition(level=2)
         for alcoholism in alcoholisms:
             for alcoholism_split in alcoholism_splits:
                 utility.print_terminal_partition(level=3)
@@ -4526,7 +4528,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 3")
 
     # Initialize directories.
     paths = initialize_directories(
