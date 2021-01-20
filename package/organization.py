@@ -3443,41 +3443,35 @@ def select_sex_alcoholism_cohort_variables_valid_records(
     )
     # Select cohort by values of specific variables.
     # Select records by sex.
-    table_sex = table.loc[
+    table = table.loc[
         (table["sex_text"] == sex_text), :
     ]
     # Select records by alcohol consumption.
+    #table["alcohol_none"].astype(bool)
     if (alcohol_consumption):
         # Select records with valid values of "alcohol_none".
-        table_alcohol_valid = table_sex.loc[
-            (pandas.notna(table_sex["alcohol_none"])), :
+        table = table.loc[
+            (pandas.notna(table["alcohol_none"])), :
         ]
-        table_alcohol = table_alcohol_valid.loc[
-            (table_alcohol_valid["alcohol_none"] < 0.5), :
+        table = table.loc[
+            (table["alcohol_none"] < 0.5), :
         ]
-    else:
-        table_alcohol = table_sex.copy(deep=True)
-        pass
     # Select records by alcoholism.
+    # Must first confirm column type so that inverse is accurate.
+    table[alcoholism].astype(bool)
     if (not (str(alcoholism_split) == "all")):
         if (str(alcoholism_split) == "case"):
-            print("...")
-            print("alcoholism split requires taking cases")
-            print("...")
-            print(table_alcohol)
-            table_cohort = table_alcohol.loc[table_alcohol[alcoholism], :]
+            table = table.loc[table[alcoholism], :]
         elif (str(alcoholism_split) == "control"):
             print("...")
             print("alcoholism split requires taking controls")
             print("alcoholism_split: " + alcoholism_split)
             print("alcoholism: " + alcoholism)
             print("...")
-            print(table_alcohol)
-            table_cohort = table_alcohol.loc[~(table_alcohol[alcoholism]), :]
-    else:
-        table_cohort = table_alcohol.copy(deep=True)
+            print(table)
+            table = table.loc[(~table[alcoholism]), :]
     # Return information.
-    return table_cohort
+    return table
 
 
 def translate_boolean_phenotype_plink(
@@ -4539,7 +4533,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 7")
+    print("version check: 8")
 
     # Initialize directories.
     paths = initialize_directories(
