@@ -3678,7 +3678,7 @@ def select_sex_alcoholism_cohort_variables_valid_records(
     if (alcohol_consumption):
         # Select records with valid values of "alcohol_none".
         table = table.loc[
-            (pandas.notna(table["alcohol_none"]), :
+            (pandas.notna(table["alcohol_none"])), :
         ]
         table = table.loc[
             (table["alcohol_none"] < 0.5), :
