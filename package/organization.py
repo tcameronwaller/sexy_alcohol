@@ -3473,7 +3473,7 @@ def select_sex_alcoholism_cohort_variables_valid_records(
             print("alcoholism: " + alcoholism)
             print("...")
             print(table_alcohol)
-            table_cohort = table_alcohol.loc[~table_alcohol[alcoholism], :]
+            table_cohort = table_alcohol.loc[~(table_alcohol[alcoholism]), :]
     else:
         table_cohort = table_alcohol.copy(deep=True)
     # Return information.
@@ -4539,7 +4539,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 6")
+    print("version check: 7")
 
     # Initialize directories.
     paths = initialize_directories(
