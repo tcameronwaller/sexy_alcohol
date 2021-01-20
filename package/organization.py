@@ -2466,8 +2466,7 @@ def determine_control_alcoholism(
     # Integrate information from both criteria.
     if (match_consumption and match_audit and match_diagnosis):
         # Person qualifies as a control for alcoholism.
-        # Person's AUDIT-C and AUDIT scores are below diagnostic
-        # thresholds.
+        # Person's AUDIT scores are below diagnostic thresholds.
         # Person does not have any ICD9 or ICD10 diagnostic codes
         # indicative of alcoholism.
         match = True
@@ -3460,6 +3459,10 @@ def select_sex_alcoholism_cohort_variables_valid_records(
     # Select records by alcoholism.
     if (not (str(alcoholism_split) == "all")):
         if (str(alcoholism_split) == "case"):
+            print("...")
+            print("alcoholism split requires taking cases")
+            print("...")
+            print(table)
             table = table.loc[table[alcoholism], :]
         elif (str(alcoholism_split) == "control"):
             print("...")
@@ -4531,7 +4534,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 4")
+    print("version check: 5")
 
     # Initialize directories.
     paths = initialize_directories(
