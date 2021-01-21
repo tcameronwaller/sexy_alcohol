@@ -3459,6 +3459,7 @@ def select_sex_alcoholism_cohort_variables_valid_records(
     # Select records by alcoholism.
     # Must first confirm column type so that inverse is accurate.
     table[alcoholism].astype(bool)
+    table["alcoholism_not"] = ~table[alcoholism]
     if (not (str(alcoholism_split) == "all")):
         if (str(alcoholism_split) == "case"):
             table = table.loc[table[alcoholism], :]
@@ -3469,7 +3470,13 @@ def select_sex_alcoholism_cohort_variables_valid_records(
             print("alcoholism: " + alcoholism)
             print("...")
             print(table)
-            table = table.loc[(~table[alcoholism]), :]
+            #table = table.loc[(~table[alcoholism]), :]
+            table = table.loc[(table["alcoholism_not"]), :]
+    table.drop(
+        labels=["alcoholism_not",],
+        axis="columns",
+        inplace=True
+    )
     # Return information.
     return table
 
@@ -4533,7 +4540,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 8")
+    print("version check: 9")
 
     # Initialize directories.
     paths = initialize_directories(
