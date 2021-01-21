@@ -32,13 +32,17 @@ if [ ! -d $path_gwas ]; then
     mkdir -p $path_gwas
 fi
 
+# table_female_alcoholism-1_case_auditc_testosterone.tsv
+# table_male_alcoholism-1_case_auditc_testosterone.tsv
+# table_female_alcoholism-2_case_auditc_testosterone.tsv
+# table_male_alcoholism-2_case_auditc_testosterone.tsv
+# table_female_alcoholism-1_case_auditp_testosterone.tsv
+# table_male_alcoholism-1_case_auditp_testosterone.tsv
+# table_female_alcoholism-2_case_auditp_testosterone.tsv
+# table_male_alcoholism-2_case_auditp_testosterone.tsv
+
 #if false; then
 #fi
-
-# path to table
-# name of cohort and analysis
-# alcoholism
-# hormone
 
 if true; then
 
