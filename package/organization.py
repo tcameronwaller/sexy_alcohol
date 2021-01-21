@@ -110,6 +110,10 @@ def initialize_directories(
     paths["quality"] = os.path.join(
         path_dock, "organization", "quality"
     )
+    paths["quality"] = os.path.join(
+        path_dock, "organization", "quality"
+    )
+
     # Remove previous files to avoid version or batch confusion.
     if restore:
         utility.remove_directory(path=paths["organization"])
@@ -3730,14 +3734,17 @@ def organize_plink_cohort_variables_by_sex_alcoholism_split(
     )
 
     # Translate variable encodings and table format for analysis in PLINK.
-    if (str(split) == "all"):
+    if (str(alcoholism_split) == "all"):
         table_format = organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[phenotype_1],
             binary_phenotypes=[],
             continuous_variables=[phenotype_2],
             table=table_valid,
         )
-    elif ((str(split) == "case") or (str(split) == "control")):
+    elif (
+        (str(alcoholism_split) == "case") or
+        (str(alcoholism_split) == "control")
+    ):
         table_format = organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
@@ -4568,7 +4575,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 12")
+    print("version check: 13")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -4637,29 +4644,27 @@ def execute_procedure(
         report=True,
     )
 
-    if False:
-
-        # Collect information.
-        information = dict()
-        information["quality"] = dict()
-        information["quality"]["table_auditc"] = (
-            pail_audit["auditc"]["table_report"]
-        )
-        information["quality"]["table_audit"] = (
-            pail_audit["audit"]["table_report"]
-        )
-        information["quality"]["table_diagnosis"] = (
-            pail_diagnosis["table_report"]
-        )
-        information["quality"]["table_alcoholism"] = (
-            pail_alcoholism["table_report"]
-        )
-        information["cohorts"] = pail_format
-        # Write product information to file.
-        write_product(
-            paths=paths,
-            information=information
-        )
+    # Collect information.
+    information = dict()
+    information["quality"] = dict()
+    information["quality"]["table_auditc"] = (
+        pail_audit["auditc"]["table_report"]
+    )
+    information["quality"]["table_audit"] = (
+        pail_audit["audit"]["table_report"]
+    )
+    information["quality"]["table_diagnosis"] = (
+        pail_diagnosis["table_report"]
+    )
+    information["quality"]["table_alcoholism"] = (
+        pail_alcoholism["table_report"]
+    )
+    information["cohorts"] = pail_cohorts
+    # Write product information to file.
+    write_product(
+        paths=paths,
+        information=information
+    )
 
     if False:
         # Match UKB genotype sample identifiers to phenotype identifiers.
@@ -4668,61 +4673,6 @@ def execute_procedure(
             table_ukb_samples=source["table_ukb_samples"],
             report=True,
         )
-
-        # Collect information.
-        information = dict()
-        information["trial"] = dict()
-        information["trial"]["table_phenotypes_covariates"] = (
-            table_format
-        )
-        # Write product information to file.
-        write_product(
-            paths=paths,
-            information=information
-        )
-
-    if False:
-        # Derive aggregate of AUDIT-C alcohol use questionnaire.
-        bin_alcoholism = organize_auditc_questionnaire_alcoholism_variables(
-            table=bin_consumption_previous["table_clean"],
-            report=True,
-        )
-
-        # Temporary charts
-        organize_plot_variable_histogram_summary_charts(
-            table=bin_alcoholism["table_clean"],
-            paths=paths,
-        )
-
-        # TODO: 3) organize menopause variable
-
-        # TODO: 3) evaluate person sub-cohorts by variable availability etc
-
-        # Organize general phenotypes.
-
-        # Organize genotype principal components.
-
-        # Organize alcohol phenotypes.
-
-        # Collect information.
-        information = dict()
-        information["alcohol"] = dict()
-        information["alcohol"]["table_report_current"] = (
-            bin_consumption_current["table_report"]
-        )
-        information["alcohol"]["table_report_previous"] = (
-            bin_consumption_previous["table_report"]
-        )
-        information["alcohol"]["table_report_alcoholism"] = (
-            bin_alcoholism["table_report"]
-        )
-        information["assembly"]["table_phenotypes"] = bin_alcoholism["table_clean"]
-        # Write product information to file.
-        write_product(
-            paths=paths,
-            information=information
-        )
-
 
     pass
 
