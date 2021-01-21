@@ -3458,11 +3458,11 @@ def select_sex_alcoholism_cohort_variables_valid_records(
         ]
     # Select records by alcoholism.
     # Must first confirm column type so that inverse is accurate.
-    table[alcoholism].astype(bool)
-    table["alcoholism_not"] = ~table[alcoholism]
+    table[alcoholism] = table[alcoholism].astype("bool")
+    #table["alcoholism_not"] = ~table[alcoholism]
     if (not (str(alcoholism_split) == "all")):
         if (str(alcoholism_split) == "case"):
-            table = table.loc[table[alcoholism], :]
+            table = table.loc[(table[alcoholism]), :]
         elif (str(alcoholism_split) == "control"):
             print("...")
             print("alcoholism split requires taking controls")
@@ -3470,13 +3470,15 @@ def select_sex_alcoholism_cohort_variables_valid_records(
             print("alcoholism: " + alcoholism)
             print("...")
             print(table)
-            #table = table.loc[(~table[alcoholism]), :]
-            table = table.loc[(table["alcoholism_not"]), :]
-    table.drop(
-        labels=["alcoholism_not",],
-        axis="columns",
-        inplace=True
-    )
+            table = table.loc[(~table[alcoholism]), :]
+            #table = table.loc[(table["alcoholism_not"]), :]
+
+    if False:
+        table.drop(
+            labels=["alcoholism_not",],
+            axis="columns",
+            inplace=True
+        )
     # Return information.
     return table
 
@@ -4540,7 +4542,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 9")
+    print("version check: 10")
 
     # Initialize directories.
     paths = initialize_directories(
