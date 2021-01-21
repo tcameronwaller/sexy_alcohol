@@ -43,6 +43,7 @@ fi
 # table_male_alcoholism-2_case_auditp_testosterone.tsv
 
 if false; then
+
   # Jobs: 2841910, 2841911
   # Parameters.
   table_name="table_female_alcoholism-1_case_auditc_testosterone.tsv"
@@ -57,11 +58,7 @@ if false; then
   $path_scripts \
   $path_dock
 
-fi
-
-if true; then
-
-  # Jobs: __, __
+  # Jobs: 2841977, 2841978
   # Parameters.
   table_name="table_male_alcoholism-1_case_auditc_testosterone.tsv"
   cohort_comparison="male_alcoholism-1_case_auditc_testosterone"
@@ -75,7 +72,7 @@ if true; then
   $path_scripts \
   $path_dock
 
-  # Jobs: __, __
+  # Jobs: 2841979, 2841980
   # Parameters.
   table_name="table_female_alcoholism-2_case_auditc_testosterone.tsv"
   cohort_comparison="female_alcoholism-2_case_auditc_testosterone"
@@ -89,7 +86,7 @@ if true; then
   $path_scripts \
   $path_dock
 
-  # Jobs: __, __
+  # Jobs: 2841981, 2841982
   # Parameters.
   table_name="table_male_alcoholism-2_case_auditc_testosterone.tsv"
   cohort_comparison="male_alcoholism-2_case_auditc_testosterone"
@@ -104,5 +101,64 @@ if true; then
   $path_dock
 
 
+fi
+
+if true; then
+
+  # Jobs: ,
+  # Parameters.
+  table_name="table_female_alcoholism-1_case_auditp_testosterone.tsv"
+  cohort_comparison="female_alcoholism-1_case_auditp_testosterone"
+  alcoholism="alcohol_auditp"
+  hormone="testosterone"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $table_name \
+  $cohort_comparison \
+  $alcoholism \
+  $hormone \
+  $path_scripts \
+  $path_dock
+
+  # Jobs: ,
+  # Parameters.
+  table_name="table_male_alcoholism-1_case_auditp_testosterone.tsv"
+  cohort_comparison="male_alcoholism-1_case_auditp_testosterone"
+  alcoholism="alcohol_auditp"
+  hormone="testosterone"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $table_name \
+  $cohort_comparison \
+  $alcoholism \
+  $hormone \
+  $path_scripts \
+  $path_dock
+
+  # Jobs: ,
+  # Parameters.
+  table_name="table_female_alcoholism-2_case_auditp_testosterone.tsv"
+  cohort_comparison="female_alcoholism-2_case_auditp_testosterone"
+  alcoholism="alcohol_auditp"
+  hormone="testosterone"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $table_name \
+  $cohort_comparison \
+  $alcoholism \
+  $hormone \
+  $path_scripts \
+  $path_dock
+
+  # Jobs: , 
+  # Parameters.
+  table_name="table_male_alcoholism-2_case_auditp_testosterone.tsv"
+  cohort_comparison="male_alcoholism-2_case_auditp_testosterone"
+  alcoholism="alcohol_auditp"
+  hormone="testosterone"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $table_name \
+  $cohort_comparison \
+  $alcoholism \
+  $hormone \
+  $path_scripts \
+  $path_dock
 
 fi
