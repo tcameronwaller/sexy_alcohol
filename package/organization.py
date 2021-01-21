@@ -110,8 +110,8 @@ def initialize_directories(
     paths["quality"] = os.path.join(
         path_dock, "organization", "quality"
     )
-    paths["quality"] = os.path.join(
-        path_dock, "organization", "quality"
+    paths["cohorts"] = os.path.join(
+        path_dock, "organization", "cohorts"
     )
 
     # Remove previous files to avoid version or batch confusion.
@@ -124,12 +124,9 @@ def initialize_directories(
     utility.create_directories(
         path=paths["quality"]
     )
-
-    # Directory tiers.
-    paths["cohorts"] = initialize_directories_cohorts(
-        path_parent=paths["organization"],
+    utility.create_directories(
+        path=paths["cohorts"]
     )
-
     # Return information.
     return paths
 
@@ -3352,7 +3349,8 @@ def select_valid_records_all_specific_variables(
     raises:
 
     returns:
-        (dict): collection of information about phenotype variables
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
 
     """
 
@@ -3711,7 +3709,8 @@ def organize_plink_cohort_variables_by_sex_alcoholism_split(
     raises:
 
     returns:
-        (dict): collection of information about phenotype variables
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
 
     """
 
@@ -4404,10 +4403,8 @@ def write_product_quality(
     pass
 
 
-def write_product_cohorts_sex_alcoholism_hormone(
-    sex_text=None,
-    alcoholism=None,
-    hormone=None,
+def write_product_cohort_table(
+    name=None,
     information=None,
     path_parent=None,
 ):
@@ -4415,9 +4412,7 @@ def write_product_cohorts_sex_alcoholism_hormone(
     Writes product information to file.
 
     arguments:
-        sex_text (str): textual representation of sex selection
-        alcoholism (str): name of column defining alcoholism cases and controls
-        hormone (str): name of column for relevant sex hormone
+        name (str): base name for file
         information (object): information to write to file
         path_parent (str): path to parent directory
 
@@ -4429,11 +4424,10 @@ def write_product_cohorts_sex_alcoholism_hormone(
 
     # Specify directories and files.
     path_table = os.path.join(
-        path_parent[sex_text][alcoholism][hormone],
-        "table_phenotypes_covariates.tsv"
+        path_parent, str(name + ".tsv")
     )
     # Write information to file.
-    information[sex_text][alcoholism][hormone].to_csv(
+    information.to_csv(
         path_or_buf=path_table,
         sep="\t",
         header=True,
@@ -4459,22 +4453,12 @@ def write_product_cohorts(
 
     """
 
-    sexes = ["female", "male",]
-    alcoholisms = [
-        "alcohol_auditc", "alcohol_audit",
-        "alcoholism_1", "alcoholism_2", "alcoholism_3", "alcoholism_4",
-    ]
-    hormones = ["oestradiol", "testosterone",]
-    for sex in sexes:
-        for alcoholism in alcoholisms:
-            for hormone in hormones:
-                write_product_cohorts_sex_alcoholism_hormone(
-                    sex_text=sex,
-                    alcoholism=alcoholism,
-                    hormone=hormone,
-                    information=information,
-                    path_parent=path_parent,
-                )
+    for name in information.keys():
+        write_product_cohort_table(
+            name=name,
+            information=information[name],
+            path_parent=path_parent,
+        )
     pass
 
 
@@ -4575,7 +4559,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 13")
+    print("version check: 14")
 
     # Initialize directories.
     paths = initialize_directories(
