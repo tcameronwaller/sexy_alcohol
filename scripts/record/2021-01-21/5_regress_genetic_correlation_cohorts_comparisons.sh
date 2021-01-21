@@ -49,14 +49,26 @@ set +x
 ###########################################################################
 # ...
 
+# female_alcoholism-1_case_auditc_testosterone
+# male_alcoholism-1_case_auditc_testosterone
+# female_alcoholism-2_case_auditc_testosterone
+# male_alcoholism-2_case_auditc_testosterone
+
+# female_alcoholism-1_case_auditp_testosterone
+# male_alcoholism-1_case_auditp_testosterone
+# female_alcoholism-2_case_auditp_testosterone
+# male_alcoholism-2_case_auditp_testosterone ... not done
+
 # Parameters.
-sex="female"
+cohort_comparison="female_alcoholism-1_case_auditc_testosterone"
 alcoholism="alcohol_auditc"
 hormone="testosterone"
 /usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
-$sex \
+$cohort_comparison \
 $alcoholism \
 $hormone \
+"linear" \
+"linear" \
 $path_gwas \
 $path_genetic_correlation \
 $path_gwas_scripts \
@@ -66,29 +78,15 @@ $path_alleles \
 $path_disequilibrium
 
 # Parameters.
-sex="female"
-alcoholism="alcohol_audit"
-hormone="testosterone"
-/usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
-$sex \
-$alcoholism \
-$hormone \
-$path_gwas \
-$path_genetic_correlation \
-$path_gwas_scripts \
-$path_correlation_scripts \
-$path_ldsc \
-$path_alleles \
-$path_disequilibrium
-
-# Parameters.
-sex="male"
+cohort_comparison="male_alcoholism-1_case_auditc_testosterone"
 alcoholism="alcohol_auditc"
 hormone="testosterone"
 /usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
-$sex \
+$cohort_comparison \
 $alcoholism \
 $hormone \
+"linear" \
+"linear" \
 $path_gwas \
 $path_genetic_correlation \
 $path_gwas_scripts \
@@ -98,13 +96,105 @@ $path_alleles \
 $path_disequilibrium
 
 # Parameters.
-sex="male"
-alcoholism="alcohol_audit"
+cohort_comparison="female_alcoholism-2_case_auditc_testosterone"
+alcoholism="alcohol_auditc"
 hormone="testosterone"
 /usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
-$sex \
+$cohort_comparison \
 $alcoholism \
 $hormone \
+"linear" \
+"linear" \
+$path_gwas \
+$path_genetic_correlation \
+$path_gwas_scripts \
+$path_correlation_scripts \
+$path_ldsc \
+$path_alleles \
+$path_disequilibrium
+
+# Parameters.
+cohort_comparison="male_alcoholism-2_case_auditc_testosterone"
+alcoholism="alcohol_auditc"
+hormone="testosterone"
+/usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
+$cohort_comparison \
+$alcoholism \
+$hormone \
+"linear" \
+"linear" \
+$path_gwas \
+$path_genetic_correlation \
+$path_gwas_scripts \
+$path_correlation_scripts \
+$path_ldsc \
+$path_alleles \
+$path_disequilibrium
+
+# Parameters.
+cohort_comparison="female_alcoholism-1_case_auditp_testosterone"
+alcoholism="alcohol_auditp"
+hormone="testosterone"
+/usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
+$cohort_comparison \
+$alcoholism \
+$hormone \
+"linear" \
+"linear" \
+$path_gwas \
+$path_genetic_correlation \
+$path_gwas_scripts \
+$path_correlation_scripts \
+$path_ldsc \
+$path_alleles \
+$path_disequilibrium
+
+# Parameters.
+cohort_comparison="male_alcoholism-1_case_auditp_testosterone"
+alcoholism="alcohol_auditp"
+hormone="testosterone"
+/usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
+$cohort_comparison \
+$alcoholism \
+$hormone \
+"linear" \
+"linear" \
+$path_gwas \
+$path_genetic_correlation \
+$path_gwas_scripts \
+$path_correlation_scripts \
+$path_ldsc \
+$path_alleles \
+$path_disequilibrium
+
+# Parameters.
+cohort_comparison="female_alcoholism-2_case_auditp_testosterone"
+alcoholism="alcohol_auditp"
+hormone="testosterone"
+/usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
+$cohort_comparison \
+$alcoholism \
+$hormone \
+"linear" \
+"linear" \
+$path_gwas \
+$path_genetic_correlation \
+$path_gwas_scripts \
+$path_correlation_scripts \
+$path_ldsc \
+$path_alleles \
+$path_disequilibrium
+
+# Parameters.
+cohort_comparison="male_alcoholism-2_case_auditp_testosterone"
+alcoholism="alcohol_auditp"
+hormone="testosterone"
+/usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
+$cohort_comparison \
+$alcoholism \
+$hormone \
+"linear" \
+"linear" \
 $path_gwas \
 $path_genetic_correlation \
 $path_gwas_scripts \

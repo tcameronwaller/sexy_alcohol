@@ -105,7 +105,7 @@ fi
 
 if true; then
 
-  # Jobs: ,
+  # Jobs: 2842801, 2842802
   # Parameters.
   table_name="table_female_alcoholism-1_case_auditp_testosterone.tsv"
   cohort_comparison="female_alcoholism-1_case_auditp_testosterone"
@@ -119,7 +119,7 @@ if true; then
   $path_scripts \
   $path_dock
 
-  # Jobs: ,
+  # Jobs: 2842803, 2842804
   # Parameters.
   table_name="table_male_alcoholism-1_case_auditp_testosterone.tsv"
   cohort_comparison="male_alcoholism-1_case_auditp_testosterone"
@@ -133,7 +133,7 @@ if true; then
   $path_scripts \
   $path_dock
 
-  # Jobs: ,
+  # Jobs: 2842805, 2842806
   # Parameters.
   table_name="table_female_alcoholism-2_case_auditp_testosterone.tsv"
   cohort_comparison="female_alcoholism-2_case_auditp_testosterone"
@@ -147,7 +147,7 @@ if true; then
   $path_scripts \
   $path_dock
 
-  # Jobs: , 
+  # Jobs: 2842807, 2842808
   # Parameters.
   table_name="table_male_alcoholism-2_case_auditp_testosterone.tsv"
   cohort_comparison="male_alcoholism-2_case_auditp_testosterone"
