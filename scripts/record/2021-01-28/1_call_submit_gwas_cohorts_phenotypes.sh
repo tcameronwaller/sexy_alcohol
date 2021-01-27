@@ -38,9 +38,9 @@ fi
 # table_female_alcoholism-4_testosterone.tsv
 # table_female_alcoholism-5_testosterone.tsv
 
-if true; then
+if false; then
 
-  # Jobs: ___, ___
+  # Jobs: 3314662, 3314663
   # Parameters.
   table_name="table_female_alcoholism-1_testosterone.tsv"
   cohort_comparison="female_alcoholism-1_testosterone"
@@ -54,7 +54,7 @@ if true; then
   $path_scripts \
   $path_dock
 
-  # Jobs: ___, ___
+  # Jobs: 3314664, 3314665
   # Parameters.
   table_name="table_female_alcoholism-2_testosterone.tsv"
   cohort_comparison="female_alcoholism-2_testosterone"
@@ -68,7 +68,7 @@ if true; then
   $path_scripts \
   $path_dock
 
-  # Jobs: ___, ___
+  # Jobs: 3314666, 3314667
   # Parameters.
   table_name="table_female_alcoholism-3_testosterone.tsv"
   cohort_comparison="female_alcoholism-3_testosterone"
@@ -82,7 +82,7 @@ if true; then
   $path_scripts \
   $path_dock
 
-  # Jobs: ___, ___
+  # Jobs: 3314668, 3314669
   # Parameters.
   table_name="table_female_alcoholism-4_testosterone.tsv"
   cohort_comparison="female_alcoholism-4_testosterone"
@@ -96,7 +96,7 @@ if true; then
   $path_scripts \
   $path_dock
 
-  # Jobs: ___, ___
+  # Jobs: 3314671, 3314672
   # Parameters.
   table_name="table_female_alcoholism-5_testosterone.tsv"
   cohort_comparison="female_alcoholism-5_testosterone"
@@ -118,13 +118,69 @@ fi
 # table_male_alcoholism-4_testosterone.tsv
 # table_male_alcoholism-5_testosterone.tsv
 
-if false; then
+if true; then
 
   # Jobs: ___, ___
   # Parameters.
   table_name="table_male_alcoholism-1_testosterone.tsv"
   cohort_comparison="male_alcoholism-1_testosterone"
   alcoholism="alcoholism_1"
+  hormone="testosterone"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $table_name \
+  $cohort_comparison \
+  $alcoholism \
+  $hormone \
+  $path_scripts \
+  $path_dock
+
+  # Jobs: ___, ___
+  # Parameters.
+  table_name="table_male_alcoholism-2_testosterone.tsv"
+  cohort_comparison="male_alcoholism-2_testosterone"
+  alcoholism="alcoholism_2"
+  hormone="testosterone"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $table_name \
+  $cohort_comparison \
+  $alcoholism \
+  $hormone \
+  $path_scripts \
+  $path_dock
+
+  # Jobs: ___, ___
+  # Parameters.
+  table_name="table_male_alcoholism-3_testosterone.tsv"
+  cohort_comparison="male_alcoholism-3_testosterone"
+  alcoholism="alcoholism_3"
+  hormone="testosterone"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $table_name \
+  $cohort_comparison \
+  $alcoholism \
+  $hormone \
+  $path_scripts \
+  $path_dock
+
+  # Jobs: ___, ___
+  # Parameters.
+  table_name="table_male_alcoholism-4_testosterone.tsv"
+  cohort_comparison="male_alcoholism-4_testosterone"
+  alcoholism="alcoholism_4"
+  hormone="testosterone"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $table_name \
+  $cohort_comparison \
+  $alcoholism \
+  $hormone \
+  $path_scripts \
+  $path_dock
+
+  # Jobs: ___, ___
+  # Parameters.
+  table_name="table_male_alcoholism-5_testosterone.tsv"
+  cohort_comparison="male_alcoholism-5_testosterone"
+  alcoholism="alcoholism_5"
   hormone="testosterone"
   /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
   $table_name \

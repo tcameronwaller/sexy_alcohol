@@ -34,7 +34,7 @@
 ### -t 1-100:1
 # Limit on concurrent processes.
 # Process this count of chromosomes at a time for each job.
-#$ -tc 8
+#$ -tc 6
 
 # http://gridscheduler.sourceforge.net/htmlman/htmlman1/qsub.html
 
