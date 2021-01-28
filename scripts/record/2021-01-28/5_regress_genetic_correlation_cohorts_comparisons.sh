@@ -63,6 +63,26 @@ set +x
 
 if true; then
   # Parameters.
+  cohort_comparison="male_alcoholism-1_testosterone"
+  alcoholism="alcoholism_1"
+  hormone="testosterone"
+  /usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
+  $cohort_comparison \
+  $alcoholism \
+  $hormone \
+  "logistic" \
+  "linear" \
+  $path_gwas \
+  $path_genetic_correlation \
+  $path_gwas_scripts \
+  $path_correlation_scripts \
+  $path_ldsc \
+  $path_alleles \
+  $path_disequilibrium
+fi
+
+if false; then
+  # Parameters.
   cohort_comparison="female_alcoholism-1_testosterone"
   alcoholism="alcoholism_1"
   hormone="testosterone"
