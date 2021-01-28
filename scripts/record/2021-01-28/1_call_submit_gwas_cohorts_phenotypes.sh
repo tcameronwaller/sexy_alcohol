@@ -120,7 +120,7 @@ fi
 
 if true; then
 
-  # Jobs: ___, ___
+  # Jobs: 3345350, 3345351
   # Parameters.
   table_name="table_male_alcoholism-1_testosterone.tsv"
   cohort_comparison="male_alcoholism-1_testosterone"
@@ -134,7 +134,7 @@ if true; then
   $path_scripts \
   $path_dock
 
-  # Jobs: ___, ___
+  # Jobs: 3345352, 3345353
   # Parameters.
   table_name="table_male_alcoholism-2_testosterone.tsv"
   cohort_comparison="male_alcoholism-2_testosterone"
@@ -148,7 +148,7 @@ if true; then
   $path_scripts \
   $path_dock
 
-  # Jobs: ___, ___
+  # Jobs: 3345354, 3345355
   # Parameters.
   table_name="table_male_alcoholism-3_testosterone.tsv"
   cohort_comparison="male_alcoholism-3_testosterone"
@@ -162,7 +162,7 @@ if true; then
   $path_scripts \
   $path_dock
 
-  # Jobs: ___, ___
+  # Jobs: 3345356, 3345357
   # Parameters.
   table_name="table_male_alcoholism-4_testosterone.tsv"
   cohort_comparison="male_alcoholism-4_testosterone"
@@ -176,7 +176,7 @@ if true; then
   $path_scripts \
   $path_dock
 
-  # Jobs: ___, ___
+  # Jobs: 3345358, 3345359
   # Parameters.
   table_name="table_male_alcoholism-5_testosterone.tsv"
   cohort_comparison="male_alcoholism-5_testosterone"
