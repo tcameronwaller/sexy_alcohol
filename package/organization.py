@@ -3801,7 +3801,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
     pail = dict()
     # Select and organize variables across cohorts.
 
-    pail["table_female_alcoholism-1_testosterone"] = (
+    pail["table_female_alcoholism-1_oestradiol"] = (
         organize_plink_cohort_variables_by_sex_alcoholism_split(
             sex_text="female",
             alcohol_consumption=True,
@@ -3812,7 +3812,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             table=table,
             report=report,
     ))
-    pail["table_male_alcoholism-1_testosterone"] = (
+    pail["table_male_alcoholism-1_oestradiol"] = (
         organize_plink_cohort_variables_by_sex_alcoholism_split(
             sex_text="male",
             alcohol_consumption=True,
@@ -3824,7 +3824,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             report=report,
     ))
 
-    pail["table_female_alcoholism-2_testosterone"] = (
+    pail["table_female_alcoholism-2_oestradiol"] = (
         organize_plink_cohort_variables_by_sex_alcoholism_split(
             sex_text="female",
             alcohol_consumption=True,
@@ -3835,7 +3835,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             table=table,
             report=report,
     ))
-    pail["table_male_alcoholism-2_testosterone"] = (
+    pail["table_male_alcoholism-2_oestradiol"] = (
         organize_plink_cohort_variables_by_sex_alcoholism_split(
             sex_text="male",
             alcohol_consumption=True,
@@ -3847,7 +3847,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             report=report,
     ))
 
-    pail["table_female_alcoholism-3_testosterone"] = (
+    pail["table_female_alcoholism-3_oestradiol"] = (
         organize_plink_cohort_variables_by_sex_alcoholism_split(
             sex_text="female",
             alcohol_consumption=True,
@@ -3858,7 +3858,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             table=table,
             report=report,
     ))
-    pail["table_male_alcoholism-3_testosterone"] = (
+    pail["table_male_alcoholism-3_oestradiol"] = (
         organize_plink_cohort_variables_by_sex_alcoholism_split(
             sex_text="male",
             alcohol_consumption=True,
@@ -3870,7 +3870,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             report=report,
     ))
 
-    pail["table_female_alcoholism-4_testosterone"] = (
+    pail["table_female_alcoholism-4_oestradiol"] = (
         organize_plink_cohort_variables_by_sex_alcoholism_split(
             sex_text="female",
             alcohol_consumption=True,
@@ -3881,7 +3881,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             table=table,
             report=report,
     ))
-    pail["table_male_alcoholism-4_testosterone"] = (
+    pail["table_male_alcoholism-4_oestradiol"] = (
         organize_plink_cohort_variables_by_sex_alcoholism_split(
             sex_text="male",
             alcohol_consumption=True,
@@ -3893,7 +3893,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             report=report,
     ))
 
-    pail["table_female_alcoholism-5_testosterone"] = (
+    pail["table_female_alcoholism-5_oestradiol"] = (
         organize_plink_cohort_variables_by_sex_alcoholism_split(
             sex_text="female",
             alcohol_consumption=True,
@@ -3904,7 +3904,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             table=table,
             report=report,
     ))
-    pail["table_male_alcoholism-5_testosterone"] = (
+    pail["table_male_alcoholism-5_oestradiol"] = (
         organize_plink_cohort_variables_by_sex_alcoholism_split(
             sex_text="male",
             alcohol_consumption=True,
@@ -4644,7 +4644,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
     # Pause procedure.
     time.sleep(5.0)
 
@@ -4704,7 +4704,7 @@ def execute_procedure(
     # either controls or cases of alcoholism.
     pail_alcoholism = organize_alcoholism_cases_controls_variables(
         table=pail_diagnosis["table_clean"],
-        report=True,
+        report=False,
     )
     #print(pail_alcoholism["table_clean"])
 
@@ -4712,7 +4712,7 @@ def execute_procedure(
     # Organize phenotypes and covariates in format for analysis in PLINK.
     pail_cohorts = organize_plink_cohorts_variables_by_sex_alcoholism_split(
         table=pail_alcoholism["table_clean"],
-        report=False,
+        report=True,
     )
 
     # Collect information.
