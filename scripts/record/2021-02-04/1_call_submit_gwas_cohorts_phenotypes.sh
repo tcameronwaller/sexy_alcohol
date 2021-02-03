@@ -38,7 +38,7 @@ fi
 # table_female_alcoholism-4_oestradiol.tsv
 # table_female_alcoholism-5_oestradiol.tsv
 
-if true; then
+if false; then
 
   # Jobs: ___, ___
   # Parameters.
@@ -118,7 +118,7 @@ fi
 # table_male_alcoholism-4_oestradiol.tsv
 # table_male_alcoholism-5_oestradiol.tsv
 
-if false; then
+if true; then
 
   # Jobs: ___, ___
   # Parameters.
