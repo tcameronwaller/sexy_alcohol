@@ -3807,7 +3807,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             alcoholism="alcoholism_1",
             alcoholism_split="all",
             phenotype_1="alcoholism_1",
-            phenotype_2="testosterone",
+            phenotype_2="oestradiol",
             table=table,
             report=report,
     ))
@@ -3818,7 +3818,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             alcoholism="alcoholism_1",
             alcoholism_split="all",
             phenotype_1="alcoholism_1",
-            phenotype_2="testosterone",
+            phenotype_2="oestradiol",
             table=table,
             report=report,
     ))
@@ -3830,7 +3830,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             alcoholism="alcoholism_2",
             alcoholism_split="all",
             phenotype_1="alcoholism_2",
-            phenotype_2="testosterone",
+            phenotype_2="oestradiol",
             table=table,
             report=report,
     ))
@@ -3841,7 +3841,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             alcoholism="alcoholism_2",
             alcoholism_split="all",
             phenotype_1="alcoholism_2",
-            phenotype_2="testosterone",
+            phenotype_2="oestradiol",
             table=table,
             report=report,
     ))
@@ -3853,7 +3853,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             alcoholism="alcoholism_3",
             alcoholism_split="all",
             phenotype_1="alcoholism_3",
-            phenotype_2="testosterone",
+            phenotype_2="oestradiol",
             table=table,
             report=report,
     ))
@@ -3864,7 +3864,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             alcoholism="alcoholism_3",
             alcoholism_split="all",
             phenotype_1="alcoholism_3",
-            phenotype_2="testosterone",
+            phenotype_2="oestradiol",
             table=table,
             report=report,
     ))
@@ -3876,7 +3876,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             alcoholism="alcoholism_4",
             alcoholism_split="all",
             phenotype_1="alcoholism_4",
-            phenotype_2="testosterone",
+            phenotype_2="oestradiol",
             table=table,
             report=report,
     ))
@@ -3887,7 +3887,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             alcoholism="alcoholism_4",
             alcoholism_split="all",
             phenotype_1="alcoholism_4",
-            phenotype_2="testosterone",
+            phenotype_2="oestradiol",
             table=table,
             report=report,
     ))
@@ -3899,7 +3899,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             alcoholism="alcoholism_5",
             alcoholism_split="all",
             phenotype_1="alcoholism_5",
-            phenotype_2="testosterone",
+            phenotype_2="oestradiol",
             table=table,
             report=report,
     ))
@@ -3910,7 +3910,7 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
             alcoholism="alcoholism_5",
             alcoholism_split="all",
             phenotype_1="alcoholism_5",
-            phenotype_2="testosterone",
+            phenotype_2="oestradiol",
             table=table,
             report=report,
     ))
@@ -4703,7 +4703,7 @@ def execute_procedure(
     # either controls or cases of alcoholism.
     pail_alcoholism = organize_alcoholism_cases_controls_variables(
         table=pail_diagnosis["table_clean"],
-        report=False,
+        report=True,
     )
     #print(pail_alcoholism["table_clean"])
 
@@ -4711,7 +4711,7 @@ def execute_procedure(
     # Organize phenotypes and covariates in format for analysis in PLINK.
     pail_cohorts = organize_plink_cohorts_variables_by_sex_alcoholism_split(
         table=pail_alcoholism["table_clean"],
-        report=True,
+        report=False,
     )
 
     # Collect information.
