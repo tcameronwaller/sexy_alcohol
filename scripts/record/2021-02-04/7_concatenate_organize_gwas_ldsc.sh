@@ -28,7 +28,7 @@ suffix=$4 # suffix for GWAS report files
 chromosomes=$5 # count of chromosomes
 path_scripts=$6 # scripts
 
-path_calculate_z_score="$path_scripts/test_calculate_z_score.sh"
+path_calculate_z_score="$path_scripts/calculate_z_score.sh"
 
 # Concatenate GWAS reports from all chromosomes.
 # Extract relevant information and format for LDSC.
@@ -45,7 +45,7 @@ if [ "$suffix" = "linear" ]; then
   path_concatenation="$path_gwas/concatenation.${phenotype}.glm.${suffix}"
   rm $path_concatenation
   path_raw="$path_gwas/concatenation.${phenotype}.glm.${suffix}_raw"
-  echo "SNP A1 A2 N BETA P" > $path_concatenation
+  echo "SNP A1 A2 N BETA P" > $path_raw
   for (( index=1; index<=$chromosomes; index+=1 )); do
     path_gwas_chromosome="$path_gwas/chromosome_${index}"
     echo "gwas chromosome path: "
@@ -66,17 +66,9 @@ if [ "$suffix" = "linear" ]; then
     cat $path_report | awk 'NR > 1 {print $3, $6, $4, $8, $9, $12}' >> $path_raw
   done
 
-  #cat $path_raw | $path_calculate_z_score >> $path_concatenation
-  $path_calculate_z_score 5 $path_raw
-
-  # TODO: now I need to z-score transform the BETAs...
-  # TODO: 1. calculate mean of BETAs
-  # TODO: 2. calculate standard deviation of BETAs
-  # TODO: 3. calculate z-score of each BETA
+  # Calculate Z-score standardization of Beta coefficients.
+  $path_calculate_z_score 5 $path_raw $path_concatenation
 fi
-
-
-
 
 # Organize and concatenate information from logistic GWAS.
 if [ "$suffix" = "logistic" ]; then
