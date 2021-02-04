@@ -33,17 +33,28 @@ path_ldsc=$9 # path to LDSC
 ###########################################################################
 # Munge GWAS summary statistics for LDSC.
 
+# https://github.com/bulik/ldsc/wiki/Heritability-and-Genetic-Correlation#reformatting-summary-statistics
+# "(Note that some summary statistic files do not have a signed summary
+# statistic, but are coded so that A1 is always the trait- or risk-increasing
+# allele. This is equivalent to providing a signed summary statistic, and
+# munge_sumstats.py will process such files if called with the --a1-inc1 flag)."
+
+# PLINK2 reports Odds Ratios (logistic regression) and Beta Coefficients
+# (linear regression) relative to the A1 allele.
+
 path_munge_one="$path_munge/${phenotype_one}"
 $path_ldsc/munge_sumstats.py \
 --sumstats $path_gwas_one \
 --out $path_munge_one \
---merge-alleles $path_alleles/w_hm3.snplist
+--merge-alleles $path_alleles/w_hm3.snplist \
+--a1-inc1
 
 path_munge_two="$path_munge/${phenotype_two}"
 $path_ldsc/munge_sumstats.py \
 --sumstats $path_gwas_two \
 --out $path_munge_two \
---merge-alleles $path_alleles/w_hm3.snplist
+--merge-alleles $path_alleles/w_hm3.snplist \
+--a1-inc1
 
 ###########################################################################
 # Estimate genetic correlation in LDSC.

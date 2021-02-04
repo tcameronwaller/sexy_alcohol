@@ -38,6 +38,8 @@ rm $path_concatenation
 # dock/gwas/female_alcoholism_1_testosterone/testosterone/chromosome_1/report.testosterone.glm.linear
 # dock/gwas/female_alcoholism_1_testosterone/alcoholism_1/chromosome_1/report.alcoholism_1.glm.linear
 
+echo "interpreting ${phenotype} as ${suffix}..."
+
 # Organize and concatenate information from linear GWAS.
 if [ "$suffix" = "linear" ]; then
   echo "SNP A1 A2 N BETA P" > $path_concatenation
@@ -48,6 +50,7 @@ if [ "$suffix" = "linear" ]; then
     path_report="$path_gwas_chromosome/${prefix}.${phenotype}.glm.${suffix}"
     # Select and concatenate relevant information from chromosome reports.
     # Format of GWAS reports by PLINK2 for linear regression (".glm.linear").
+    # https://www.cog-genomics.org/plink/2.0/formats
     # Format of GWAS summary for LDSC.
     # https://github.com/bulik/ldsc/wiki/Heritability-and-Genetic-Correlation#reformatting-summary-statistics
     # description: ............................ PLINK2 column ... LDSC column
@@ -71,6 +74,7 @@ if [ "$suffix" = "logistic" ]; then
     path_report="$path_gwas_chromosome/${prefix}.${phenotype}.glm.${suffix}"
     # Select and concatenate relevant information from chromosome reports.
     # Format of GWAS reports by PLINK2 for logistic regression (".glm.logistic").
+    # https://www.cog-genomics.org/plink/2.0/formats
 
     # PLINK2 report format is similar for logistic regression (".glm.logistic").
     # Logistic report has "OR" in place of "BETA", but positions are the same.
