@@ -44,8 +44,13 @@ fi
 # table_female_alcoholism-4_steroid-globulin.tsv
 # table_female_alcoholism-5_steroid-globulin.tsv
 
+# table_female_alcoholism-1_albumin.tsv
+# table_female_alcoholism-2_albumin.tsv
+# table_female_alcoholism-3_albumin.tsv
+# table_female_alcoholism-4_albumin.tsv
+# table_female_alcoholism-5_albumin.tsv
 
-if true; then
+if false; then
 
   # Jobs: ___, ___
   # Parameters.
@@ -131,7 +136,14 @@ fi
 # table_male_alcoholism-4_steroid-globulin.tsv
 # table_male_alcoholism-5_steroid-globulin.tsv
 
-if false; then
+# table_male_alcoholism-1_albumin.tsv
+# table_male_alcoholism-2_albumin.tsv
+# table_male_alcoholism-3_albumin.tsv
+# table_male_alcoholism-4_albumin.tsv
+# table_male_alcoholism-5_albumin.tsv
+
+
+if true; then
 
   # Jobs: ___, ___
   # Parameters.

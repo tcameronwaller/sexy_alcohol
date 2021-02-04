@@ -3802,121 +3802,117 @@ def organize_plink_cohorts_variables_by_sex_alcoholism_split(
     pail = dict()
     # Select and organize variables across cohorts.
 
-    pail["table_female_alcoholism-1_steroid-globulin"] = (
+    pail["table_female_alcoholism-1_albumin"] = (
         organize_plink_cohort_variables_by_sex_alcoholism_split(
             sex_text="female",
             alcohol_consumption=True,
             alcoholism="alcoholism_1",
             alcoholism_split="all",
             phenotype_1="alcoholism_1",
-            phenotype_2="steroid_globulin",
+            phenotype_2="albumin",
             table=table,
             report=report,
     ))
-    pail["table_male_alcoholism-1_steroid-globulin"] = (
+    pail["table_female_alcoholism-2_albumin"] = (
+        organize_plink_cohort_variables_by_sex_alcoholism_split(
+            sex_text="female",
+            alcohol_consumption=True,
+            alcoholism="alcoholism_2",
+            alcoholism_split="all",
+            phenotype_1="alcoholism_2",
+            phenotype_2="albumin",
+            table=table,
+            report=report,
+    ))
+    pail["table_female_alcoholism-3_albumin"] = (
+        organize_plink_cohort_variables_by_sex_alcoholism_split(
+            sex_text="female",
+            alcohol_consumption=True,
+            alcoholism="alcoholism_3",
+            alcoholism_split="all",
+            phenotype_1="alcoholism_3",
+            phenotype_2="albumin",
+            table=table,
+            report=report,
+    ))
+    pail["table_female_alcoholism-4_albumin"] = (
+        organize_plink_cohort_variables_by_sex_alcoholism_split(
+            sex_text="female",
+            alcohol_consumption=True,
+            alcoholism="alcoholism_4",
+            alcoholism_split="all",
+            phenotype_1="alcoholism_4",
+            phenotype_2="albumin",
+            table=table,
+            report=report,
+    ))
+    pail["table_female_alcoholism-5_albumin"] = (
+        organize_plink_cohort_variables_by_sex_alcoholism_split(
+            sex_text="female",
+            alcohol_consumption=True,
+            alcoholism="alcoholism_5",
+            alcoholism_split="all",
+            phenotype_1="alcoholism_5",
+            phenotype_2="albumin",
+            table=table,
+            report=report,
+    ))
+
+    pail["table_male_alcoholism-1_albumin"] = (
         organize_plink_cohort_variables_by_sex_alcoholism_split(
             sex_text="male",
             alcohol_consumption=True,
             alcoholism="alcoholism_1",
             alcoholism_split="all",
             phenotype_1="alcoholism_1",
-            phenotype_2="steroid_globulin",
+            phenotype_2="albumin",
             table=table,
             report=report,
     ))
-
-    pail["table_female_alcoholism-2_steroid-globulin"] = (
-        organize_plink_cohort_variables_by_sex_alcoholism_split(
-            sex_text="female",
-            alcohol_consumption=True,
-            alcoholism="alcoholism_2",
-            alcoholism_split="all",
-            phenotype_1="alcoholism_2",
-            phenotype_2="steroid_globulin",
-            table=table,
-            report=report,
-    ))
-    pail["table_male_alcoholism-2_steroid-globulin"] = (
+    pail["table_male_alcoholism-2_albumin"] = (
         organize_plink_cohort_variables_by_sex_alcoholism_split(
             sex_text="male",
             alcohol_consumption=True,
             alcoholism="alcoholism_2",
             alcoholism_split="all",
             phenotype_1="alcoholism_2",
-            phenotype_2="steroid_globulin",
+            phenotype_2="albumin",
             table=table,
             report=report,
     ))
-
-    pail["table_female_alcoholism-3_steroid-globulin"] = (
-        organize_plink_cohort_variables_by_sex_alcoholism_split(
-            sex_text="female",
-            alcohol_consumption=True,
-            alcoholism="alcoholism_3",
-            alcoholism_split="all",
-            phenotype_1="alcoholism_3",
-            phenotype_2="steroid_globulin",
-            table=table,
-            report=report,
-    ))
-    pail["table_male_alcoholism-3_steroid-globulin"] = (
+    pail["table_male_alcoholism-3_albumin"] = (
         organize_plink_cohort_variables_by_sex_alcoholism_split(
             sex_text="male",
             alcohol_consumption=True,
             alcoholism="alcoholism_3",
             alcoholism_split="all",
             phenotype_1="alcoholism_3",
-            phenotype_2="steroid_globulin",
+            phenotype_2="albumin",
             table=table,
             report=report,
     ))
-
-    pail["table_female_alcoholism-4_steroid-globulin"] = (
-        organize_plink_cohort_variables_by_sex_alcoholism_split(
-            sex_text="female",
-            alcohol_consumption=True,
-            alcoholism="alcoholism_4",
-            alcoholism_split="all",
-            phenotype_1="alcoholism_4",
-            phenotype_2="steroid_globulin",
-            table=table,
-            report=report,
-    ))
-    pail["table_male_alcoholism-4_steroid-globulin"] = (
+    pail["table_male_alcoholism-4_albumin"] = (
         organize_plink_cohort_variables_by_sex_alcoholism_split(
             sex_text="male",
             alcohol_consumption=True,
             alcoholism="alcoholism_4",
             alcoholism_split="all",
             phenotype_1="alcoholism_4",
-            phenotype_2="steroid_globulin",
+            phenotype_2="albumin",
             table=table,
             report=report,
     ))
-
-    pail["table_female_alcoholism-5_steroid-globulin"] = (
-        organize_plink_cohort_variables_by_sex_alcoholism_split(
-            sex_text="female",
-            alcohol_consumption=True,
-            alcoholism="alcoholism_5",
-            alcoholism_split="all",
-            phenotype_1="alcoholism_5",
-            phenotype_2="steroid_globulin",
-            table=table,
-            report=report,
-    ))
-    pail["table_male_alcoholism-5_steroid-globulin"] = (
+    pail["table_male_alcoholism-5_albumin"] = (
         organize_plink_cohort_variables_by_sex_alcoholism_split(
             sex_text="male",
             alcohol_consumption=True,
             alcoholism="alcoholism_5",
             alcoholism_split="all",
             phenotype_1="alcoholism_5",
-            phenotype_2="steroid_globulin",
+            phenotype_2="albumin",
             table=table,
             report=report,
     ))
-
     # Return information.
     return pail
 
@@ -3954,6 +3950,17 @@ def scrap_record_cohorts_variables_by_sex_alcoholism_split(
     # Compile information.
     pail = dict()
     # Select and organize variables across cohorts.
+    pail["table_female_alcoholism-1_steroid-globulin"] = (
+        organize_plink_cohort_variables_by_sex_alcoholism_split(
+            sex_text="female",
+            alcohol_consumption=True,
+            alcoholism="alcoholism_1",
+            alcoholism_split="all",
+            phenotype_1="alcoholism_1",
+            phenotype_2="steroid_globulin",
+            table=table,
+            report=report,
+    ))
     pail["table_female_alcoholism-1_oestradiol"] = (
         organize_plink_cohort_variables_by_sex_alcoholism_split(
             sex_text="female",
