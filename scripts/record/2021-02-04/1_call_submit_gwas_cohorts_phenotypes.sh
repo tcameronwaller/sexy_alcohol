@@ -50,14 +50,14 @@ fi
 # table_female_alcoholism-4_albumin.tsv
 # table_female_alcoholism-5_albumin.tsv
 
-if false; then
+if true; then
 
   # Jobs: ___, ___
   # Parameters.
-  table_name="table_female_alcoholism-1_steroid-globulin.tsv"
-  cohort_comparison="female_alcoholism-1_steroid-globulin"
+  table_name="table_female_alcoholism-1_albumin.tsv"
+  cohort_comparison="female_alcoholism-1_albumin"
   alcoholism="alcoholism_1"
-  hormone="steroid_globulin"
+  hormone="albumin"
   /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
   $table_name \
   $cohort_comparison \
@@ -68,10 +68,10 @@ if false; then
 
   # Jobs: ___, ___
   # Parameters.
-  table_name="table_female_alcoholism-2_steroid-globulin.tsv"
-  cohort_comparison="female_alcoholism-2_steroid-globulin"
+  table_name="table_female_alcoholism-2_albumin.tsv"
+  cohort_comparison="female_alcoholism-2_albumin"
   alcoholism="alcoholism_2"
-  hormone="steroid_globulin"
+  hormone="albumin"
   /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
   $table_name \
   $cohort_comparison \
@@ -82,10 +82,10 @@ if false; then
 
   # Jobs: ___, ___
   # Parameters.
-  table_name="table_female_alcoholism-3_steroid-globulin.tsv"
-  cohort_comparison="female_alcoholism-3_steroid-globulin"
+  table_name="table_female_alcoholism-3_albumin.tsv"
+  cohort_comparison="female_alcoholism-3_albumin"
   alcoholism="alcoholism_3"
-  hormone="steroid_globulin"
+  hormone="albumin"
   /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
   $table_name \
   $cohort_comparison \
@@ -96,10 +96,10 @@ if false; then
 
   # Jobs: ___, ___
   # Parameters.
-  table_name="table_female_alcoholism-4_steroid-globulin.tsv"
-  cohort_comparison="female_alcoholism-4_steroid-globulin"
+  table_name="table_female_alcoholism-4_albumin.tsv"
+  cohort_comparison="female_alcoholism-4_albumin"
   alcoholism="alcoholism_4"
-  hormone="steroid_globulin"
+  hormone="albumin"
   /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
   $table_name \
   $cohort_comparison \
@@ -110,10 +110,10 @@ if false; then
 
   # Jobs: ___, ___
   # Parameters.
-  table_name="table_female_alcoholism-5_steroid-globulin.tsv"
-  cohort_comparison="female_alcoholism-5_steroid-globulin"
+  table_name="table_female_alcoholism-5_albumin.tsv"
+  cohort_comparison="female_alcoholism-5_albumin"
   alcoholism="alcoholism_5"
-  hormone="steroid_globulin"
+  hormone="albumin"
   /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
   $table_name \
   $cohort_comparison \
@@ -121,6 +121,7 @@ if false; then
   $hormone \
   $path_scripts \
   $path_dock
+
 
 fi
 
@@ -143,7 +144,7 @@ fi
 # table_male_alcoholism-5_albumin.tsv
 
 
-if true; then
+if false; then
 
   # Jobs: ___, ___
   # Parameters.
