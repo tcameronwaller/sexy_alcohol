@@ -38,38 +38,59 @@ rm $path_concatenation
 # dock/gwas/female_alcoholism_1_testosterone/testosterone/chromosome_1/report.testosterone.glm.linear
 # dock/gwas/female_alcoholism_1_testosterone/alcoholism_1/chromosome_1/report.alcoholism_1.glm.linear
 
-
-echo "SNP A1 A2 N BETA P" > $path_concatenation
-for (( index=1; index<=$chromosomes; index+=1 )); do
-  path_gwas_chromosome="$path_gwas/chromosome_${index}"
-  echo "gwas chromosome path: "
-  echo $path_gwas_chromosome
-  path_report="$path_gwas_chromosome/${prefix}.${phenotype}.glm.${suffix}"
-  # Select and concatenate relevant information from chromosome reports.
-  # Format of GWAS reports by PLINK2 for linear regression (".glm.linear").
-  # Format of GWAS summary for LDSC.
-  # https://github.com/bulik/ldsc/wiki/Heritability-and-Genetic-Correlation#reformatting-summary-statistics
-  # description: ............................ PLINK2 column ... LDSC column
-  # variant identifier: ..................... "ID" ............ "SNP"
-  # alternate allele (effect allele): ....... "A1" ............ "A1"
-  # reference allele (non-effect allele): ... "REF" ........... "A2"
-  # sample size: ............................ "OBS_CT" ........ "N"
-  # effect (beta): .......................... "BETA" .......... "BETA"
-  # probability (p-value): .................. "P" ............. "P"
-
-  # PLINK2 report format is similar for logistic regression (".glm.logistic").
-  # Logistic report has "OR" in place of "BETA", but positions are the same.
-  # https://www.cog-genomics.org/plink/2.0/formats
-
-  if [ "$suffix" = "linear" ]; then
+# Organize and concatenate information from linear GWAS.
+if [ "$suffix" = "linear" ]; then
+  echo "SNP A1 A2 N BETA P" > $path_concatenation
+  for (( index=1; index<=$chromosomes; index+=1 )); do
+    path_gwas_chromosome="$path_gwas/chromosome_${index}"
+    echo "gwas chromosome path: "
+    echo $path_gwas_chromosome
+    path_report="$path_gwas_chromosome/${prefix}.${phenotype}.glm.${suffix}"
+    # Select and concatenate relevant information from chromosome reports.
+    # Format of GWAS reports by PLINK2 for linear regression (".glm.linear").
+    # Format of GWAS summary for LDSC.
+    # https://github.com/bulik/ldsc/wiki/Heritability-and-Genetic-Correlation#reformatting-summary-statistics
+    # description: ............................ PLINK2 column ... LDSC column
+    # variant identifier: ..................... "ID" ............ "SNP"
+    # alternate allele (effect allele): ....... "A1" ............ "A1"
+    # reference allele (non-effect allele): ... "REF" ........... "A2"
+    # sample size: ............................ "OBS_CT" ........ "N"
+    # effect (beta): .......................... "BETA" .......... "BETA"
+    # probability (p-value): .................. "P" ............. "P"
     cat $path_report | awk 'NR > 1 {print $3, $6, $4, $8, $9, $12}' >> $path_concatenation
-  fi
+  done
+fi
 
-  if [ "$suffix" = "logistic" ]; then
-    cat $path_report | awk 'NR > 1 {print $3, $6, $4, $8, log($9), $12}' >> $path_concatenation
+# Organize and concatenate information from logistic GWAS.
+if [ "$suffix" = "logistic" ]; then
+  echo "SNP A1 A2 N OR P" > $path_concatenation
+  for (( index=1; index<=$chromosomes; index+=1 )); do
+    path_gwas_chromosome="$path_gwas/chromosome_${index}"
+    echo "gwas chromosome path: "
+    echo $path_gwas_chromosome
+    path_report="$path_gwas_chromosome/${prefix}.${phenotype}.glm.${suffix}"
+    # Select and concatenate relevant information from chromosome reports.
+    # Format of GWAS reports by PLINK2 for logistic regression (".glm.logistic").
+
+    # PLINK2 report format is similar for logistic regression (".glm.logistic").
+    # Logistic report has "OR" in place of "BETA", but positions are the same.
+    # https://www.cog-genomics.org/plink/2.0/formats
+
+    # Format of GWAS summary for LDSC.
+    # https://github.com/bulik/ldsc/wiki/Heritability-and-Genetic-Correlation#reformatting-summary-statistics
+    # description: ............................ PLINK2 column ... LDSC column
+    # variant identifier: ..................... "ID" ............ "SNP"
+    # alternate allele (effect allele): ....... "A1" ............ "A1"
+    # reference allele (non-effect allele): ... "REF" ........... "A2"
+    # sample size: ............................ "OBS_CT" ........ "N"
+    # effect (odds ratio): .................... "OR" ............ "OR"
+    # probability (p-value): .................. "P" ............. "P"
+    cat $path_report | awk 'NR > 1 {print $3, $6, $4, $8, $9, $12}' >> $path_concatenation
+    #cat $path_report | awk 'NR > 1 {print $3, $6, $4, $8, log($9), $12}' >> $path_concatenation
     #cat $path_report | awk 'NR > 1 {beta=log($9);print $3, $6, $4, $8, beta, $12}' >> $path_concatenation
-  fi
-done
+  done
+fi
+
 echo "----------"
 echo "----------"
 echo "----------"
