@@ -55,13 +55,20 @@ set +x
 # female_alcoholism-4_oestradiol
 # female_alcoholism-5_oestradiol
 
-# male_alcoholism-1_oestradiol
-# male_alcoholism-2_oestradiol
-# male_alcoholism-3_oestradiol
-# male_alcoholism-4_oestradiol
-# male_alcoholism-5_oestradiol
+# female_alcoholism-1_steroid-globulin
+# female_alcoholism-2_steroid-globulin
+# female_alcoholism-3_steroid-globulin
+# female_alcoholism-4_steroid-globulin
+# female_alcoholism-5_steroid-globulin
+
+# female_alcoholism-1_albumin
+# female_alcoholism-2_albumin
+# female_alcoholism-3_albumin
+# female_alcoholism-4_albumin
+# female_alcoholism-5_albumin
 
 if true; then
+
   # Parameters.
   cohort_comparison="female_alcoholism-1_oestradiol"
   alcoholism="alcoholism_1"
@@ -79,6 +86,79 @@ if true; then
   $path_ldsc \
   $path_alleles \
   $path_disequilibrium
+
+  # Parameters.
+  cohort_comparison="female_alcoholism-2_oestradiol"
+  alcoholism="alcoholism_2"
+  hormone="oestradiol"
+  /usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
+  $cohort_comparison \
+  $alcoholism \
+  $hormone \
+  "logistic" \
+  "linear" \
+  $path_gwas \
+  $path_genetic_correlation \
+  $path_gwas_scripts \
+  $path_correlation_scripts \
+  $path_ldsc \
+  $path_alleles \
+  $path_disequilibrium
+
+  # Parameters.
+  cohort_comparison="female_alcoholism-3_oestradiol"
+  alcoholism="alcoholism_3"
+  hormone="oestradiol"
+  /usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
+  $cohort_comparison \
+  $alcoholism \
+  $hormone \
+  "logistic" \
+  "linear" \
+  $path_gwas \
+  $path_genetic_correlation \
+  $path_gwas_scripts \
+  $path_correlation_scripts \
+  $path_ldsc \
+  $path_alleles \
+  $path_disequilibrium
+
+  # Parameters.
+  cohort_comparison="female_alcoholism-4_oestradiol"
+  alcoholism="alcoholism_4"
+  hormone="oestradiol"
+  /usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
+  $cohort_comparison \
+  $alcoholism \
+  $hormone \
+  "logistic" \
+  "linear" \
+  $path_gwas \
+  $path_genetic_correlation \
+  $path_gwas_scripts \
+  $path_correlation_scripts \
+  $path_ldsc \
+  $path_alleles \
+  $path_disequilibrium
+
+  # Parameters.
+  cohort_comparison="female_alcoholism-5_oestradiol"
+  alcoholism="alcoholism_5"
+  hormone="oestradiol"
+  /usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
+  $cohort_comparison \
+  $alcoholism \
+  $hormone \
+  "logistic" \
+  "linear" \
+  $path_gwas \
+  $path_genetic_correlation \
+  $path_gwas_scripts \
+  $path_correlation_scripts \
+  $path_ldsc \
+  $path_alleles \
+  $path_disequilibrium
+
 fi
 
 if false; then
