@@ -67,7 +67,7 @@ if [ "$suffix" = "linear" ]; then
   done
 
   # Calculate Z-score standardization of Beta coefficients.
-  $path_calculate_z_score 5 $path_raw $path_concatenation
+  /usr/bin/bash $path_calculate_z_score 5 $path_raw $path_concatenation
 fi
 
 # Organize and concatenate information from logistic GWAS.
