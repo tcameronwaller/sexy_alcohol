@@ -67,7 +67,7 @@ if [ "$suffix" = "linear" ]; then
   done
 
   #cat $path_raw | $path_calculate_z_score >> $path_concatenation
-  cat $path_raw | $path_calculate_z_score 5
+  $path_calculate_z_score 5 $path_raw
 
   # TODO: now I need to z-score transform the BETAs...
   # TODO: 1. calculate mean of BETAs

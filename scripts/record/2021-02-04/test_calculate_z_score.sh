@@ -2,8 +2,9 @@
 
 # Organize variables.
 column=$1 # column for which to calculate z-score
+table_original=$2 # original table
 
-mean=(awk -v N=$column 'NR > 1 { sum += $N } END { if (NR > 0) print sum / NR }')
+mean=(awk -v N=$column 'NR > 1 { sum += $N } END { if (NR > 0) print sum / NR }' $table_original)
 
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
