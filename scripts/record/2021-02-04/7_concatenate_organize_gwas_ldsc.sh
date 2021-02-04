@@ -26,14 +26,14 @@ prefix=$2 # prefix for GWAS report files
 phenotype=$3 # name of phenotype in names of GWAS report files
 suffix=$4 # suffix for GWAS report files
 chromosomes=$5 # count of chromosomes
+path_scripts=$6 # scripts
+
+path_calculate_z_score="$path_scripts/test_calculate_z_score.sh"
 
 # Concatenate GWAS reports from all chromosomes.
 # Extract relevant information and format for LDSC.
 # Initialize concatenation.
 cd $path_gwas
-path_concatenation="$path_gwas/concatenation.${phenotype}.glm.${suffix}"
-
-rm $path_concatenation
 
 # dock/gwas/female_alcoholism_1_testosterone/testosterone/chromosome_1/report.testosterone.glm.linear
 # dock/gwas/female_alcoholism_1_testosterone/alcoholism_1/chromosome_1/report.alcoholism_1.glm.linear
@@ -42,6 +42,9 @@ echo "interpreting ${phenotype} as ${suffix}..."
 
 # Organize and concatenate information from linear GWAS.
 if [ "$suffix" = "linear" ]; then
+  path_concatenation="$path_gwas/concatenation.${phenotype}.glm.${suffix}"
+  rm $path_concatenation
+  path_raw="$path_gwas/concatenation.${phenotype}.glm.${suffix}_raw"
   echo "SNP A1 A2 N BETA P" > $path_concatenation
   for (( index=1; index<=$chromosomes; index+=1 )); do
     path_gwas_chromosome="$path_gwas/chromosome_${index}"
@@ -60,12 +63,25 @@ if [ "$suffix" = "linear" ]; then
     # sample size: ............................ "OBS_CT" ........ "N"
     # effect (beta): .......................... "BETA" .......... "BETA"
     # probability (p-value): .................. "P" ............. "P"
-    cat $path_report | awk 'NR > 1 {print $3, $6, $4, $8, $9, $12}' >> $path_concatenation
+    cat $path_report | awk 'NR > 1 {print $3, $6, $4, $8, $9, $12}' >> $path_raw
   done
+
+  #cat $path_raw | $path_calculate_z_score >> $path_concatenation
+  cat $path_raw | $path_calculate_z_score 5
+
+  # TODO: now I need to z-score transform the BETAs...
+  # TODO: 1. calculate mean of BETAs
+  # TODO: 2. calculate standard deviation of BETAs
+  # TODO: 3. calculate z-score of each BETA
 fi
+
+
+
 
 # Organize and concatenate information from logistic GWAS.
 if [ "$suffix" = "logistic" ]; then
+  path_concatenation="$path_gwas/concatenation.${phenotype}.glm.${suffix}"
+  rm $path_concatenation
   echo "SNP A1 A2 N OR P" > $path_concatenation
   for (( index=1; index<=$chromosomes; index+=1 )); do
     path_gwas_chromosome="$path_gwas/chromosome_${index}"

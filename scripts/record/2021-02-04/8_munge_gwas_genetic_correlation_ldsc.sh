@@ -42,19 +42,21 @@ path_ldsc=$9 # path to LDSC
 # PLINK2 reports Odds Ratios (logistic regression) and Beta Coefficients
 # (linear regression) relative to the A1 allele.
 
+# I think that it is not necessary to use the "--a1-inc" flag.
+
 path_munge_one="$path_munge/${phenotype_one}"
 $path_ldsc/munge_sumstats.py \
 --sumstats $path_gwas_one \
 --out $path_munge_one \
 --merge-alleles $path_alleles/w_hm3.snplist \
---a1-inc
+#--a1-inc
 
 path_munge_two="$path_munge/${phenotype_two}"
 $path_ldsc/munge_sumstats.py \
 --sumstats $path_gwas_two \
 --out $path_munge_two \
 --merge-alleles $path_alleles/w_hm3.snplist \
---a1-inc
+#--a1-inc
 
 ###########################################################################
 # Estimate genetic correlation in LDSC.

@@ -71,6 +71,7 @@ $path_gwas_alcoholism \
 $alcoholism \
 $type_alcoholism \
 22 \
+$path_gwas_scripts \
 
 # Access phenotype variables and auxiliary information from UKBiobank.
 /usr/bin/bash "$path_gwas_scripts/7_concatenate_organize_gwas_ldsc.sh" \
@@ -79,6 +80,7 @@ $path_gwas_hormone \
 $hormone \
 $type_hormone \
 22 \
+$path_gwas_scripts \
 
 ###########################################################################
 # Munge GWAS summary statistics for LDSC.
