@@ -50,7 +50,7 @@ fi
 # table_female_alcoholism-4_albumin.tsv
 # table_female_alcoholism-5_albumin.tsv
 
-if true; then
+if false; then
 
   # Jobs: ___, ___
   # Parameters.
@@ -144,7 +144,7 @@ fi
 # table_male_alcoholism-5_albumin.tsv
 
 
-if false; then
+if true; then
 
   # Jobs: ___, ___
   # Parameters.
