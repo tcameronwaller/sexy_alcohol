@@ -70,9 +70,9 @@ set +x
 if true; then
 
   # Parameters.
-  cohort_comparison="female_alcoholism-2_albumin"
-  alcoholism="alcoholism_2"
-  hormone="albumin"
+  cohort_comparison="female_alcoholism-1_testosterone"
+  alcoholism="alcoholism_1"
+  hormone="testosterone"
   /usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
   $cohort_comparison \
   $alcoholism \
@@ -88,9 +88,9 @@ if true; then
   $path_disequilibrium
 
   # Parameters.
-  cohort_comparison="male_alcoholism-2_albumin"
-  alcoholism="alcoholism_2"
-  hormone="albumin"
+  cohort_comparison="male_alcoholism-1_testosterone"
+  alcoholism="alcoholism_1"
+  hormone="testosterone"
   /usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
   $cohort_comparison \
   $alcoholism \
