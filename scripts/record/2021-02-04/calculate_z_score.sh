@@ -14,8 +14,8 @@ mean=$(cat $path_table_original | awk -v column=$column 'BEGIN { FS=" " } NR > 1
 variations=$(cat $path_table_original | awk -v column="$column" -v mean="$mean" \
 'BEGIN { FS=" " } NR > 1 { value += (($column - mean)^2) } END { print value }')
 # The following formulas for standard deviation are equivalent.
-#standard_deviation=$(bc -l <<< "sqrt(($sum_squares - (($sum^2)/$count))/($count - 1))")
-standard_deviation=$(bc -l <<< "sqrt(($variations)/($count - 1))")
+standard_deviation=$(bc -l <<< "sqrt(($sum_squares - (($sum^2)/$count))/($count - 1))")
+#standard_deviation=$(bc -l <<< "sqrt(($variations)/($count - 1))")
 
 # Report statistics.
 echo "----------"
