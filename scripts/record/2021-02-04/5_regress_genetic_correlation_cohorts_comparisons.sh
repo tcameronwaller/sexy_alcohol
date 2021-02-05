@@ -70,7 +70,7 @@ set +x
 if true; then
 
   # Parameters.
-  cohort_comparison="female_alcoholism-1_oestradiol"
+  cohort_comparison="male_alcoholism-1_oestradiol"
   alcoholism="alcoholism_1"
   hormone="oestradiol"
   /usr/bin/bash "$path_correlation_scripts/6_regress_genetic_correlation_sex_hormone.sh" \
