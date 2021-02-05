@@ -5,6 +5,10 @@ column=$1 # column for which to calculate z-score
 path_table_original=$2 # original table
 path_table_novel=$3 # novel table
 
+echo "----------"
+echo "----------"
+echo "----------"
+
 # Set column delimiter.
 # Calculate cumulative statistics.
 count=$(cat $path_table_original | awk 'BEGIN { FS=" " } NR > 1 { n++ } END { print n }')
@@ -14,7 +18,7 @@ mean=$(cat $path_table_original | awk -v column=$column 'BEGIN { FS=" " } NR > 1
 variations=$(cat $path_table_original | awk -v column="$column" -v mean="$mean" \
 'BEGIN { FS=" " } NR > 1 { value += (($column - mean)^2) } END { print value }')
 # The following formulas for standard deviation are equivalent.
-standard_deviation=$(bc -l <<< "sqrt(($sum_squares - (($sum^2)/$count))/($count - 1))")
+standard_deviation=$((bc -l <<< "sqrt(($sum_squares - (($sum^2)/$count))/($count - 1))"))
 #standard_deviation=$(bc -l <<< "sqrt(($variations)/($count - 1))")
 
 # Report statistics.
