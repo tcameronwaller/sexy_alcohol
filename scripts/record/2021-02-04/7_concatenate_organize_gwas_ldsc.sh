@@ -65,7 +65,8 @@ if [ "$suffix" = "linear" ]; then
     # probability (p-value): .................. "P" ............. "P"
     cat $path_report | awk 'NR > 1 {print $3, $6, $4, $8, $9, $12}' >> $path_raw
   done
-
+  echo "after concatenation... before z-score"
+  head -30 $path_raw
   # Calculate Z-score standardization of Beta coefficients.
   /usr/bin/bash $path_calculate_z_score 5 $path_raw $path_concatenation
 fi
