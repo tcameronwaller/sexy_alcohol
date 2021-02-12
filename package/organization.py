@@ -32,7 +32,11 @@ pandas.options.mode.chained_assignment = None # default = "warn"
 
 # Custom
 import promiscuity.utility as utility
-import promiscuity.plot as plot
+#import promiscuity.plot as plot
+import uk_biobank.assembly
+import uk_biobank.organization
+
+
 
 ###############################################################################
 # Functionality
@@ -180,462 +184,6 @@ def read_source(
         "table_assembly": table_assembly,
         "table_ukb_samples": table_ukb_samples,
     }
-
-
-##########
-# Sex hormones
-
-
-def determine_sex_text(
-    sex=None,
-):
-    """
-    Translate information from UK Biobank about whether person
-    never consumes any alcohol.
-
-    Accommodate inexact float values.
-
-    arguments:
-        sex (float): person's sex, UK Biobank field 31
-
-    raises:
-
-    returns:
-        (str): text representation of person's sex
-
-    """
-
-    # Determine whether the variable has a valid (non-missing) value.
-    if (
-        (not pandas.isna(sex)) and
-        (-0.5 <= sex and sex < 1.5)
-    ):
-        # The variable has a valid value.
-        if (-0.5 <= sex and sex < 0.5):
-            # "female"
-            sex_text = "female"
-        elif (0.5 <= sex and sex < 1.5):
-            # "male"
-            sex_text = "male"
-    else:
-        # null
-        sex_text = float("nan")
-    # Return information.
-    return sex_text
-
-
-def organize_general_attribute_variables(
-    table=None,
-    report=None,
-):
-    """
-    Organizes information about general attributes.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict): collection of information about phenotype variables
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Translate column names.
-    translations = dict()
-    #translations["31-0.0"] = "sex"
-    # Use genotypic sex to avoid data entry errors or confusion with gender.
-    translations["22001-0.0"] = "sex"
-    translations["21022-0.0"] = "age"
-    translations["21001-0.0"] = "body_mass_index"
-    table.rename(
-        columns=translations,
-        inplace=True,
-    )
-    # Convert variable types.
-    columns_type = [
-        "sex", "age", "body_mass_index"
-    ]
-    table_type = convert_table_columns_variables_types_float(
-        columns=columns_type,
-        table=table,
-    )
-    # Determine text representation of person's sex.
-    table["sex_text"] = table.apply(
-        lambda row:
-            determine_sex_text(
-                sex=row["sex"],
-            ),
-        axis="columns", # apply across rows
-    )
-    # Report.
-    if report:
-        # Column name translations.
-        utility.print_terminal_partition(level=2)
-        print("translations of general attribute column names...")
-        for old in translations.keys():
-            print("   " + old + ": " + translations[old])
-        utility.print_terminal_partition(level=3)
-        # Organize data for report.
-        table_report = table.copy(deep=True)
-        table_report = table_report.loc[
-            :, table_report.columns.isin([
-                "eid", "IID",
-                "sex", "sex_text", "age", "body_mass_index",
-            ])
-        ]
-        utility.print_terminal_partition(level=2)
-        print("Translation of columns for general attributes: ")
-        print(table_report)
-        utility.print_terminal_partition(level=3)
-        # Variable types.
-        utility.print_terminal_partition(level=2)
-        print("After type conversion")
-        print(table_report.dtypes)
-        utility.print_terminal_partition(level=3)
-    # Return information.
-    return table
-
-
-##########
-# Genotype
-
-
-def match_column_field(
-    column=None,
-    field=None,
-):
-    """
-    Determine whether a column represents an original instance of a field.
-
-    arguments:
-        column (str): name of column
-        field (str): identifier of field for which to collect columns
-
-    raises:
-
-    returns:
-        (bool): whether column name matches field
-
-    """
-
-    # Determine whether column matches format of an original field instance.
-    if ("-" in str(column)):
-        # Column is an original instance of the field.
-        # Only original instance columns have the "-" delimiter.
-        column_field = str(column).split("-")[0].strip()
-        if (str(column_field) == str(field)):
-            match = True
-        else:
-            match = False
-    else:
-        match = False
-    # Return information.
-    return match
-
-
-def collect_sort_table_field_instance_columns(
-    field=None,
-    table=None,
-    report=None,
-):
-    """
-    Collects names of columns that represent instances of a specific field.
-
-    arguments:
-        field (str): identifier of field for which to collect columns
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (list<str>): names of columns
-
-    """
-
-    # Extract table columns.
-    columns = copy.deepcopy(table.columns.to_list())
-    # Collect columns that represent instances of the field.
-    columns_field = list(filter(
-        lambda column: match_column_field(column=column, field=field),
-        columns
-    ))
-    # Sort columns.
-    # Be careful to sort by the integer value of the instance.
-    #columns_sort = sorted(columns_field, reverse=False)
-    columns_instance = list()
-    for column in columns_field:
-        column_instance = str(column).split("-")[1].strip()
-        columns_instance.append(column_instance)
-    columns_integer = list()
-    for column in columns_instance:
-        column_integer = str(column).split(".")[1].strip()
-        columns_integer.append(int(column_integer))
-    table_columns = pandas.DataFrame(
-        data={
-            "column_name": columns_field,
-            "column_instance": columns_instance,
-            "column_integer": columns_integer,
-        }
-    )
-    # Sort table rows.
-    table_columns.sort_values(
-        by=["column_integer"],
-        axis="index",
-        ascending=True,
-        inplace=True,
-    )
-    columns_sort = table_columns["column_name"].to_list()
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("Sorted column names")
-        print(table_columns)
-    # Return information.
-    return columns_sort
-
-
-def translate_column_field_instance_names(
-    columns=None,
-    prefix=None,
-    base=None,
-):
-    """
-    Translates names of columns.
-
-    arguments:
-        columns (list<str>): names of columns for field instances
-        prefix (str): prefix for translations of column names
-        base (int): initial integer for index
-
-    raises:
-
-    returns:
-        (list<str>): names of columns
-
-    """
-
-    index = base
-    translations = dict()
-    for column in columns:
-        translations[str(column)] = str(prefix + str(index))
-        index += 1
-    return translations
-
-
-def convert_table_columns_variables_types_float(
-    columns=None,
-    table=None,
-):
-    """
-    Converts data variable types.
-
-    arguments:
-        columns (list<str>): names of columns
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Convert data variable types.
-    for column in columns:
-        table[column] = pandas.to_numeric(
-            table[column],
-            errors="coerce", # force any invalid values to missing or null
-            downcast="float",
-        )
-    # Return information.
-    return table
-
-
-def convert_table_prefix_columns_variables_types_float(
-    prefix=None,
-    table=None,
-):
-    """
-    Converts data variable types.
-
-    The UK Biobank encodes several nominal variables with integers. Missing
-    values for these variables necessitates some attention to type conversion
-    from string to float for analysis.
-
-    arguments:
-        prefix (str): prefix for translations of column names
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Determine which columns to convert.
-    columns = table.columns.to_list()
-    columns_match = list(filter(
-        lambda column: (str(prefix) in str(column)),
-        columns
-    ))
-    # Convert data variable types.
-    table_type = convert_table_columns_variables_types_float(
-        columns=columns_match,
-        table=table,
-    )
-    # Return information.
-    return table_type
-
-
-def organize_genotype_principal_component_variables(
-    table=None,
-    report=None,
-):
-    """
-    Organizes information about principal components on genotypes.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict): collection of information about phenotype variables
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Extract columns for genotype principal components.
-    columns = collect_sort_table_field_instance_columns(
-        field="22009",
-        table=table,
-        report=report,
-    )
-    # Translate column names.
-    translations = translate_column_field_instance_names(
-        columns=columns,
-        prefix="genotype_pc_",
-        base=1,
-    )
-    table.rename(
-        columns=translations,
-        inplace=True,
-    )
-    # Convert variable types.
-    table = convert_table_prefix_columns_variables_types_float(
-        prefix="genotype_pc_",
-        table=table,
-    )
-    # Report.
-    if report:
-        # Column name translations.
-        utility.print_terminal_partition(level=2)
-        print("translations of genotype PC column names...")
-        for old in translations.keys():
-            print("   " + old + ": " + translations[old])
-        utility.print_terminal_partition(level=3)
-        # Column names and values.
-        table_report = table.loc[
-            :, table.columns.str.startswith("genotype_pc_")
-        ]
-        utility.print_terminal_partition(level=2)
-        print("Translation of columns for genotype principal components: ")
-        print(table_report)
-        utility.print_terminal_partition(level=3)
-        # Variable types.
-        utility.print_terminal_partition(level=2)
-        print("After type conversion")
-        print(table_report.dtypes)
-        utility.print_terminal_partition(level=3)
-    # Return information.
-    return table
-
-
-##########
-# Sex hormones
-
-
-def organize_sex_hormone_variables(
-    table=None,
-    report=None,
-):
-    """
-    Organizes information about sex hormones.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict): collection of information about phenotype variables
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Translate column names.
-    translations = dict()
-    translations["30600-0.0"] = "albumin"
-    translations["30830-0.0"] = "steroid_globulin"
-    translations["30850-0.0"] = "testosterone"
-    translations["30800-0.0"] = "oestradiol"
-    table.rename(
-        columns=translations,
-        inplace=True,
-    )
-    # Convert variable types.
-    columns_hormones = [
-        "albumin", "steroid_globulin", "testosterone", "oestradiol"
-    ]
-    table_type = convert_table_columns_variables_types_float(
-        columns=columns_hormones,
-        table=table,
-    )
-    # Report.
-    if report:
-        # Column name translations.
-        utility.print_terminal_partition(level=2)
-        print("translations of hormone column names...")
-        for old in translations.keys():
-            print("   " + old + ": " + translations[old])
-        utility.print_terminal_partition(level=3)
-        # Column names and values.
-        table_report = table.loc[
-            :, table.columns.isin(columns_hormones)
-        ]
-        utility.print_terminal_partition(level=2)
-        print("Translation of columns for hormones: ")
-        print(table_report)
-        utility.print_terminal_partition(level=3)
-        # Variable types.
-        utility.print_terminal_partition(level=2)
-        print("After type conversion")
-        print(table_report.dtypes)
-        utility.print_terminal_partition(level=3)
-    # Return information.
-    return table
 
 
 ##########
@@ -858,6 +406,7 @@ def determine_previous_alcohol_consumption(
         alcohol_previous = float("nan")
     # Return information.
     return alcohol_previous
+
 
 # TODO: code alcohol_none as True / False / None
 def determine_alcohol_none(
@@ -4644,6 +4193,12 @@ def write_product(
 ###############################################################################
 # Procedure
 
+# TODO: call general functions from uk_biobank
+# TODO: normalize distributions for sex hormones
+# TODO: plot sex hormone distributions
+# TODO: set up cohorts for individual hormones without sex stratification
+
+
 
 def execute_procedure(
     path_dock=None,
@@ -4678,83 +4233,82 @@ def execute_procedure(
         path_dock=path_dock,
         report=True,
     )
-    # Organize information about general attributes.
-    table_attribute = organize_general_attribute_variables(
-        table=source["table_assembly"],
-        report=False,
-    )
-    # Organize information about genotype principal components.
-    table_genotype = organize_genotype_principal_component_variables(
-        table=table_attribute,
-        report=False,
-    )
-    # Organize information about hormones.
-    table_hormone = organize_sex_hormone_variables(
-        table=table_genotype,
-        report=False,
-    )
-    # Organize information about alcohol consumption.
-    pail_alcohol_consumption = organize_alcohol_consumption_variables(
-        table=table_hormone,
-        report=False,
-    )
-    #print(pail_alcohol_consumption["quantity"]["table_clean"])
-
-    # Organize Alchol Use Disorders Identification Test (AUDIT) questionnaire
-    # variables, including separate scores for AUDIT-Consumption (AUDIT-C) and
-    # AUDIT-Problem (AUDIT-P) portions of the questionnaire.
-    pail_audit = organize_alcohol_audit_questionnaire_variables(
-        table=pail_alcohol_consumption["quantity"]["table_clean"],
-        report=False,
-    )
-    #print(pail_audit["audit"]["table_clean"])
-
-    # Organize International Classification of Disease (ICD) ICD9 and ICD10
-    # codes for diagnoses relevant to alcoholism.
-    # Organize codes for self diagnoses relevant to alcoholism.
-    pail_diagnosis = organize_alcoholism_diagnosis_variables(
-        table=pail_audit["audit"]["table_clean"],
-        report=False,
-    )
-    #print(pail_diagnosis["table_clean"])
-
-    # Organize alcoholism cases and controls.
-    # Report females and males who consume alcohol and are candidates for
-    # either controls or cases of alcoholism.
-    pail_alcoholism = organize_alcoholism_cases_controls_variables(
-        table=pail_diagnosis["table_clean"],
+    # Organize variables for persons' genotypes, sex, age, and body mass index
+    # across the UK Biobank.
+    table_basis = uk_biobank.organization.execute_genotype_sex_age_body(
+        table=source["table_phenotypes"],
         report=True,
     )
-    #print(pail_alcoholism["table_clean"])
-
-    # Select and organize variables across cohorts.
-    # Organize phenotypes and covariates in format for analysis in PLINK.
-    pail_cohorts = organize_plink_cohorts_variables_by_sex_alcoholism_split(
-        table=pail_alcoholism["table_clean"],
+    # Organize variables for persons' sex hormones across the UK Biobank.
+    table_hormone = uk_biobank.organization.execute_sex_hormones(
+        table=table_basis,
         report=True,
     )
 
-    # Collect information.
-    information = dict()
-    information["quality"] = dict()
-    information["quality"]["table_auditc"] = (
-        pail_audit["auditc"]["table_report"]
-    )
-    information["quality"]["table_audit"] = (
-        pail_audit["audit"]["table_report"]
-    )
-    information["quality"]["table_diagnosis"] = (
-        pail_diagnosis["table_report"]
-    )
-    information["quality"]["table_alcoholism"] = (
-        pail_alcoholism["table_report"]
-    )
-    information["cohorts"] = pail_cohorts
-    # Write product information to file.
-    write_product(
-        paths=paths,
-        information=information
-    )
+
+    if False:
+        # Organize information about alcohol consumption.
+        pail_alcohol_consumption = organize_alcohol_consumption_variables(
+            table=table_hormone,
+            report=False,
+        )
+        #print(pail_alcohol_consumption["quantity"]["table_clean"])
+
+        # Organize Alchol Use Disorders Identification Test (AUDIT) questionnaire
+        # variables, including separate scores for AUDIT-Consumption (AUDIT-C) and
+        # AUDIT-Problem (AUDIT-P) portions of the questionnaire.
+        pail_audit = organize_alcohol_audit_questionnaire_variables(
+            table=pail_alcohol_consumption["quantity"]["table_clean"],
+            report=False,
+        )
+        #print(pail_audit["audit"]["table_clean"])
+
+        # Organize International Classification of Disease (ICD) ICD9 and ICD10
+        # codes for diagnoses relevant to alcoholism.
+        # Organize codes for self diagnoses relevant to alcoholism.
+        pail_diagnosis = organize_alcoholism_diagnosis_variables(
+            table=pail_audit["audit"]["table_clean"],
+            report=False,
+        )
+        #print(pail_diagnosis["table_clean"])
+
+        # Organize alcoholism cases and controls.
+        # Report females and males who consume alcohol and are candidates for
+        # either controls or cases of alcoholism.
+        pail_alcoholism = organize_alcoholism_cases_controls_variables(
+            table=pail_diagnosis["table_clean"],
+            report=True,
+        )
+        #print(pail_alcoholism["table_clean"])
+
+        # Select and organize variables across cohorts.
+        # Organize phenotypes and covariates in format for analysis in PLINK.
+        pail_cohorts = organize_plink_cohorts_variables_by_sex_alcoholism_split(
+            table=pail_alcoholism["table_clean"],
+            report=True,
+        )
+
+        # Collect information.
+        information = dict()
+        information["quality"] = dict()
+        information["quality"]["table_auditc"] = (
+            pail_audit["auditc"]["table_report"]
+        )
+        information["quality"]["table_audit"] = (
+            pail_audit["audit"]["table_report"]
+        )
+        information["quality"]["table_diagnosis"] = (
+            pail_diagnosis["table_report"]
+        )
+        information["quality"]["table_alcoholism"] = (
+            pail_alcoholism["table_report"]
+        )
+        information["cohorts"] = pail_cohorts
+        # Write product information to file.
+        write_product(
+            paths=paths,
+            information=information
+        )
 
     if False:
         # Match UKB genotype sample identifiers to phenotype identifiers.
