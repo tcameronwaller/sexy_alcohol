@@ -4237,7 +4237,7 @@ def execute_procedure(
     # across the UK Biobank.
     table_basis = uk_biobank.organization.execute_genotype_sex_age_body(
         table=source["table_phenotypes"],
-        report=True,
+        report=False,
     )
     # Organize variables for persons' sex hormones across the UK Biobank.
     table_hormone = uk_biobank.organization.execute_sex_hormones(
