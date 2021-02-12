@@ -163,15 +163,15 @@ def read_source(
     """
 
     # Specify directories and files.
-    path_table_assembly = os.path.join(
+    path_table_phenotypes = os.path.join(
         path_dock, "assembly", "table_phenotypes.pickle"
     )
     path_table_ukb_samples = os.path.join(
         path_dock, "access", "ukb46237_imp_chr21_v3_s487320.sample"
     )
     # Read information from file.
-    table_assembly = pandas.read_pickle(
-        path_table_assembly
+    table_phenotypes = pandas.read_pickle(
+        path_table_phenotypes
     )
     table_ukb_samples = pandas.read_csv(
         path_table_ukb_samples,
@@ -181,7 +181,7 @@ def read_source(
     )
     # Compile and return information.
     return {
-        "table_assembly": table_assembly,
+        "table_phenotypes": table_phenotypes,
         "table_ukb_samples": table_ukb_samples,
     }
 
