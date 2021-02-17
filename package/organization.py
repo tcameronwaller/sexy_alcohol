@@ -32,7 +32,7 @@ pandas.options.mode.chained_assignment = None # default = "warn"
 
 # Custom
 import promiscuity.utility as utility
-#import promiscuity.plot as plot
+import promiscuity.plot as plot
 import uk_biobank.assembly
 import uk_biobank.organization
 
@@ -118,6 +118,9 @@ def initialize_directories(
     paths["cohorts"] = os.path.join(
         path_dock, "organization", "cohorts"
     )
+    paths["plots"] = os.path.join(
+        path_dock, "organization", "plots"
+    )
 
     # Remove previous files to avoid version or batch confusion.
     if restore:
@@ -131,6 +134,9 @@ def initialize_directories(
     )
     utility.create_directories(
         path=paths["cohorts"]
+    )
+    utility.create_directories(
+        path=paths["plots"]
     )
     # Return information.
     return paths
@@ -2035,119 +2041,6 @@ def organize_auditc_questionnaire_alcoholism_variables(
 
 
 ##########
-# Plot
-
-
-def plot_variable_series_histogram(
-    series=None,
-    bins=None,
-    file=None,
-    path_directory=None,
-):
-    """
-    Plots charts from the analysis process.
-
-    arguments:
-        comparison (dict): information for chart
-        path_directory (str): path for directory
-
-    raises:
-
-    returns:
-
-    """
-
-    # Specify path to directory and file.
-    path_file = os.path.join(
-        path_directory, file
-    )
-
-    # Define fonts.
-    fonts = plot.define_font_properties()
-    # Define colors.
-    colors = plot.define_color_properties()
-
-    # Report.
-    utility.print_terminal_partition(level=1)
-    print(file)
-    print(len(series))
-    # Create figure.
-    figure = plot.plot_distribution_histogram(
-        series=series,
-        name="",
-        bin_method="count",
-        bin_count=bins,
-        label_bins="values",
-        label_counts="counts of persons per bin",
-        fonts=fonts,
-        colors=colors,
-        line=False,
-        position=1,
-        text="",
-    )
-    # Write figure.
-    plot.write_figure_png(
-        path=path_file,
-        figure=figure
-    )
-
-    pass
-
-
-def organize_plot_variable_histogram_summary_charts(
-    table=None,
-    paths=None,
-):
-    """
-    Organizes information about alcoholism from the AUDIT-C questionnaire.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        paths (dict<str>): collection of paths to directories for procedure's
-            files
-
-    raises:
-
-    returns:
-        (dict): collection of information about quantity of alcohol consumption
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-
-    # Specify directories and files.
-    # Create figures.
-    plot_variable_series_histogram(
-        series=table["alcohol_frequency"].dropna().to_list(),
-        bins=6,
-        file="histogram_alcohol_frequency.png",
-        path_directory=paths["plot"],
-    )
-    plot_variable_series_histogram(
-        series=table["alcohol_previous"].dropna().to_list(),
-        bins=4,
-        file="histogram_alcohol_previous.png",
-        path_directory=paths["plot"],
-    )
-    plot_variable_series_histogram(
-        series=table["alcohol_drinks_monthly"].dropna().to_list(),
-        bins=50,
-        file="histogram_alcohol_drinks_monthly.png",
-        path_directory=paths["plot"],
-    )
-    plot_variable_series_histogram(
-        series=table["alcoholism"].dropna().to_list(),
-        bins=15,
-        file="histogram_alcoholism.png",
-        path_directory=paths["plot"],
-    )
-
-    pass
-
-
-##########
 # Write
 
 
@@ -2268,6 +2161,65 @@ def write_product_cohorts(
     pass
 
 
+def write_product_plot_figure(
+    figure=None,
+    file_name=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        figure (object): figure object to write to file
+        file_name (str): base name for file
+        path_parent (str): path to parent directory
+
+    raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_file = os.path.join(
+        path_parent, str(file_name + ".png")
+    )
+    # Write information to file.
+    plot.write_figure(
+        figure=figure,
+        format="png",
+        resolution=300,
+        path=path_file,
+    )
+    pass
+
+
+def write_product_plots(
+    information=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        path_parent (str): path to parent directory
+
+    raises:
+
+    returns:
+
+    """
+
+    for key in information.keys():
+        write_product_plot_figure(
+            figure=information[key]["figure"],
+            file_name=information[key]["name"],
+            path_parent=path_parent,
+        )
+    pass
+
+
 def write_product_trial(
     information=None,
     path_parent=None,
@@ -2323,17 +2275,23 @@ def write_product(
 
     """
 
+    # Plots.
+    write_product_plots(
+        information=information["plots"],
+        path_parent=paths["plots"],
+    )
     # Quality control reports.
-    write_product_quality(
-        information=information["quality"],
-        path_parent=paths["quality"],
-    )
+    if False:
+        write_product_quality(
+            information=information["quality"],
+            path_parent=paths["quality"],
+        )
     # Cohort tables in PLINK format.
-    write_product_cohorts(
-        information=information["cohorts"],
-        path_parent=paths["cohorts"],
-    )
-
+    if False:
+        write_product_cohorts(
+            information=information["cohorts"],
+            path_parent=paths["cohorts"],
+        )
     # Trial organization.
     if False:
         write_product_trial(
@@ -2399,13 +2357,27 @@ def execute_procedure(
         table=table_basis,
         report=True,
     )
+    pail_figures_hormone = uk_biobank.organization.execute_plot_hormones(
+        table=table_hormone,
+        report=True,
+    )
+    # Collect information.
+    information = dict()
+    information["plots"] = pail_figures_hormone
+    #information["cohorts"] = pail_cohorts
+    # Write product information to file.
+    write_product(
+        paths=paths,
+        information=information
+    )
+
+
     # Organize variables for persons' alcohol consumption across the UK Biobank.
     if False:
         table_alcohol = uk_biobank.organization.execute_alcohol(
             table=table_hormone,
             report=None,
         )
-
 
     if False:
         # Select and organize variables across cohorts.
