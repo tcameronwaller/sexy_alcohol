@@ -45,11 +45,12 @@ set +x
 
 if true; then
 
+  # observation:
   # Parameters.
-  cohort_comparison="alcoholism_male_testosterone"
-  hormone="testosterone_log" # name of original phenotype variable
+  cohort_comparison="alcoholism_female_oestradiol"
+  hormone="oestradiol_log" # name of original phenotype variable
   type_regression_hormone="linear"
-  path_gwas_hormone="$path_gwas/male_testosterone"
+  path_gwas_hormone="$path_gwas/female_oestradiol"
   /usr/bin/bash "$path_scripts/7_regress_genetic_correlation_cohort_comparison.sh" \
   $cohort_comparison \
   $hormone \
@@ -87,6 +88,24 @@ if false; then
   hormone="testosterone_log" # name of original phenotype variable
   type_regression_hormone="linear"
   path_gwas_hormone="$path_gwas/female_testosterone"
+  /usr/bin/bash "$path_scripts/7_regress_genetic_correlation_cohort_comparison.sh" \
+  $cohort_comparison \
+  $hormone \
+  $type_regression_hormone \
+  $path_gwas_hormone \
+  $path_gwas_alcoholism\
+  $path_genetic_correlation \
+  $path_scripts \
+  $path_ldsc \
+  $path_alleles \
+  $path_disequilibrium
+
+  # observation: significant correlation!
+  # Parameters.
+  cohort_comparison="alcoholism_male_testosterone"
+  hormone="testosterone_log" # name of original phenotype variable
+  type_regression_hormone="linear"
+  path_gwas_hormone="$path_gwas/male_testosterone"
   /usr/bin/bash "$path_scripts/7_regress_genetic_correlation_cohort_comparison.sh" \
   $cohort_comparison \
   $hormone \
