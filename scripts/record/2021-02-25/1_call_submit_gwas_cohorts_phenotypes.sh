@@ -32,10 +32,7 @@ if [ ! -d $path_gwas ]; then
     mkdir -p $path_gwas
 fi
 
-# TODO: pass a variable with names of columns to include as covariates in each GWAS!!!
-
 # Covariates: sex, age, body_mass_index_log
-
 # table_female_male_oestradiol.tsv ... "oestradiol_log"
 # table_female_male_testosterone.tsv ... "testosterone_log"
 # table_female_male_steroid_globulin.tsv ... "steroid_globulin_log"
@@ -45,15 +42,43 @@ if false; then
 
   # Jobs: ___, ___
   # Parameters.
-  table_name="table_female_alcoholism-1_albumin.tsv"
-  cohort_comparison="female_alcoholism-1_albumin"
-  alcoholism="alcoholism_1"
-  hormone="albumin"
+  table_name="table_female_male_testosterone.tsv"
+  cohort_comparison="female_male_testosterone"
+  hormone="testosterone_log"
+  covariates="sex,age,body_mass_index_log,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
   /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
   $table_name \
   $cohort_comparison \
-  $alcoholism \
   $hormone \
+  $covariates \
+  $path_scripts \
+  $path_dock
+
+  # Jobs: ___, ___
+  # Parameters.
+  table_name="table_female_male_steroid_globulin.tsv"
+  cohort_comparison="female_male_steroid_globulin"
+  hormone="steroid_globulin_log"
+  covariates="sex,age,body_mass_index_log,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $table_name \
+  $cohort_comparison \
+  $hormone \
+  $covariates \
+  $path_scripts \
+  $path_dock
+
+  # Jobs: ___, ___
+  # Parameters.
+  table_name="table_female_male_albumin.tsv"
+  cohort_comparison="female_male_albumin"
+  hormone="albumin_log"
+  covariates="sex,age,body_mass_index_log,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $table_name \
+  $cohort_comparison \
+  $hormone \
+  $covariates \
   $path_scripts \
   $path_dock
 
@@ -63,15 +88,15 @@ if true; then
 
   # Jobs: ___, ___
   # Parameters.
-  table_name="table_male_alcoholism-1_albumin.tsv"
-  cohort_comparison="male_alcoholism-1_albumin"
-  alcoholism="alcoholism_1"
-  hormone="albumin"
+  table_name="table_female_male_oestradiol.tsv"
+  cohort_comparison="female_male_oestradiol"
+  hormone="oestradiol_log"
+  covariates="sex,age,body_mass_index_log,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
   /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
   $table_name \
   $cohort_comparison \
-  $alcoholism \
   $hormone \
+  $covariates \
   $path_scripts \
   $path_dock
 
