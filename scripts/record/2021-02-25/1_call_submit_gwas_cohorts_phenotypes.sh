@@ -32,11 +32,6 @@ if [ ! -d $path_gwas ]; then
     mkdir -p $path_gwas
 fi
 
-# Covariates: age, body_mass_index_log
-# table_female_postmenopause_oestradiol.tsv ... "oestradiol_log"
-# table_female_postmenopause_testosterone.tsv ... "testosterone_log"
-# table_female_postmenopause_steroid_globulin.tsv ... "steroid_globulin_log"
-# table_female_postmenopause_albumin.tsv ... "albumin_log"
 
 if false; then
 
@@ -165,6 +160,69 @@ if false; then
   $path_dock
 
   # Covariates: age, body_mass_index_log
+  # table_female_premenopause_oestradiol.tsv ... "oestradiol_log"
+  # table_female_premenopause_testosterone.tsv ... "testosterone_log"
+  # table_female_premenopause_steroid_globulin.tsv ... "steroid_globulin_log"
+  # table_female_premenopause_albumin.tsv ... "albumin_log"
+
+  # Jobs: ___, ___
+  # Parameters.
+  table_name="table_female_premenopause_oestradiol.tsv"
+  cohort_comparison="female_premenopause_oestradiol"
+  hormone="oestradiol_log"
+  covariates="age,body_mass_index_log,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $table_name \
+  $cohort_comparison \
+  $hormone \
+  $covariates \
+  $path_scripts \
+  $path_dock
+
+  # Jobs: ___, ___
+  # Parameters.
+  table_name="table_female_premenopause_testosterone.tsv"
+  cohort_comparison="female_premenopause_testosterone"
+  hormone="testosterone_log"
+  covariates="age,body_mass_index_log,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $table_name \
+  $cohort_comparison \
+  $hormone \
+  $covariates \
+  $path_scripts \
+  $path_dock
+
+  # Jobs: ___, ___
+  # Parameters.
+  table_name="table_female_premenopause_steroid_globulin.tsv"
+  cohort_comparison="female_premenopause_steroid_globulin"
+  hormone="steroid_globulin_log"
+  covariates="age,body_mass_index_log,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $table_name \
+  $cohort_comparison \
+  $hormone \
+  $covariates \
+  $path_scripts \
+  $path_dock
+
+  # Jobs: ___, ___
+  # Parameters.
+  table_name="table_female_premenopause_albumin.tsv"
+  cohort_comparison="female_premenopause_albumin"
+  hormone="albumin_log"
+  covariates="age,body_mass_index_log,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $table_name \
+  $cohort_comparison \
+  $hormone \
+  $covariates \
+  $path_scripts \
+  $path_dock
+
+
+  # Covariates: age, body_mass_index_log
   # table_male_oestradiol.tsv ... "oestradiol_log"
   # table_male_testosterone.tsv ... "testosterone_log"
   # table_male_steroid_globulin.tsv ... "steroid_globulin_log"
@@ -232,15 +290,15 @@ fi
 if true; then
 
   # Covariates: age, body_mass_index_log
-  # table_female_premenopause_oestradiol.tsv ... "oestradiol_log"
-  # table_female_premenopause_testosterone.tsv ... "testosterone_log"
-  # table_female_premenopause_steroid_globulin.tsv ... "steroid_globulin_log"
-  # table_female_premenopause_albumin.tsv ... "albumin_log"
+  # table_female_postmenopause_oestradiol.tsv ... "oestradiol_log"
+  # table_female_postmenopause_testosterone.tsv ... "testosterone_log"
+  # table_female_postmenopause_steroid_globulin.tsv ... "steroid_globulin_log"
+  # table_female_postmenopause_albumin.tsv ... "albumin_log"
 
   # Jobs: ___, ___
   # Parameters.
-  table_name="table_female_premenopause_oestradiol.tsv"
-  cohort_comparison="female_premenopause_oestradiol"
+  table_name="table_female_postmenopause_oestradiol.tsv"
+  cohort_comparison="female_postmenopause_oestradiol"
   hormone="oestradiol_log"
   covariates="age,body_mass_index_log,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
   /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
@@ -253,8 +311,8 @@ if true; then
 
   # Jobs: ___, ___
   # Parameters.
-  table_name="table_female_premenopause_testosterone.tsv"
-  cohort_comparison="female_premenopause_testosterone"
+  table_name="table_female_postmenopause_testosterone.tsv"
+  cohort_comparison="female_postmenopause_testosterone"
   hormone="testosterone_log"
   covariates="age,body_mass_index_log,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
   /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
@@ -267,8 +325,8 @@ if true; then
 
   # Jobs: ___, ___
   # Parameters.
-  table_name="table_female_premenopause_steroid_globulin.tsv"
-  cohort_comparison="female_premenopause_steroid_globulin"
+  table_name="table_female_postmenopause_steroid_globulin.tsv"
+  cohort_comparison="female_postmenopause_steroid_globulin"
   hormone="steroid_globulin_log"
   covariates="age,body_mass_index_log,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
   /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
@@ -281,8 +339,8 @@ if true; then
 
   # Jobs: ___, ___
   # Parameters.
-  table_name="table_female_premenopause_albumin.tsv"
-  cohort_comparison="female_premenopause_albumin"
+  table_name="table_female_postmenopause_albumin.tsv"
+  cohort_comparison="female_postmenopause_albumin"
   hormone="albumin_log"
   covariates="age,body_mass_index_log,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
   /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
