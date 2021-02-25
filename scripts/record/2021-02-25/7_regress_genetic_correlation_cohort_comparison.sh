@@ -69,7 +69,7 @@ $path_scripts \
 ###########################################################################
 # Munge GWAS summary statistics for LDSC.
 
-path_gwas_hormone_concatenation="$path_gwas_hormone/concatenation.${hormone}.glm.${type_hormone}"
+path_gwas_hormone_concatenation="$path_gwas_hormone/concatenation.${hormone}.glm.${type_regression_hormone}"
 
 /usr/bin/bash "$path_scripts/9_munge_gwas_genetic_correlation_ldsc.sh" \
 $path_gwas_alcoholism \
