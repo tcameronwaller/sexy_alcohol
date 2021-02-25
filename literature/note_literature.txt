@@ -13,14 +13,57 @@ Genetics of Alcohol Use Disorder
 --------------------------------------------------
 --------------------------------------------------
 
+
 --------------------------------------------------
 PubMed: 32451486
-Date: 25 May 2020
-Journal: Nature Neuroscience
-Authors: Zhou, ..., Gelernter
-Title: "Genome-wide meta-analysis of problematic alcohol use in 435,563 individuals yields insights into biology and relationships with other traits"
-Note:
+title: "Genome-wide meta-analysis of problematic alcohol use in 435,563 individuals yields insights into biology and relationships with other traits"
+date: 25 May 2020
+journal: Nature Neuroscience
+authors: Hang Zhou, ..., Joel Gelernter
+note:
+- Problematic Alcohol Use (PAU) ... how did they define this phenotype?
 
+
+--------------------------------------------------
+PubMed: 30482948
+title: "Transancestral GWAS of alcohol dependence reveals common genetic underpinnings with psychiatric disorders"
+date: 26 November 2018
+journal: Nature Neuroscience
+authors: Raymond K. Walters, ..., Sandra Sanchez-Roige, ..., Mark A. Frye, ..., Victor M. Karpyak, ..., Abraham A. Palmer, ..., Arpana Agrawal
+note:
+- 14,904 persons with Alcohol Dependence
+- 37,944 persons control
+- "AD was defined as meeting criteria for a DSM-IV (or, for one cohort, DSM-IIIR; a very similar construct; Supplementary Note B1) diagnosis of AD. Diagnoses were derived either from clinician ratings or semi-structured interviews." (Methods)
+- SNP heritability of Alcohol Dependence: 0.09 (SE=0.019, p=8.02E-7)
+- Genetic correlations between Alcohol Dependence and other phenotypes (Table S6):
+- - Depressive Symptoms: 0.6025 (SE=0.1169, p=2.55E-7)
+- - Major Depressive Disorder: 0.5612 (SE=0.0847, p=3.47E-11)
+- - Neuroticism: 0.4412 (SE=0.1032, p=1.90E-5)
+- - Alcohol Consumption: 0.3706 (SE=0.0916, p=5.22E-5)
+- - AUDIT score: 0.0764 (SE=0.1714, p=6.56E-1)
+- Whereas Alcohol Dependence shared significant genetic correlation with two other studies of Alcohol Consumption, it did not share significant genetic correlation with AUDIT score.
+- The Alcohol Dependence phenotype DID NOT share significant genetic correlation with the AUDIT score from a 2019 GWAS on 23andMe cohort (n=23,217; rg=0.0764; SE=0.1714; p=6.56E-1).
+In contrast, Alcohol Dependence DID share significant genetic correlation with Alcohol Consumption phenotypes from two other GWAS studies.
+- GWAS summary statistics
+- - http://www.med.unc.edu/pgc/results-and-downloads
+- - https://www.med.unc.edu/pgc/data-index/
+- - "Alcohol Dependence (ALCDEP)"
+- - file: "pgc_alcdep.discovery.aug2018_release.txt.gz" (14,904 cases; 37,944 controls)
+
+
+--------------------------------------------------
+PubMed: 30336701
+title: "Genome-Wide Association Study Meta-Analysis of the Alcohol Use Disorders Identification Test (AUDIT) in Two Population-Based Cohorts"
+date: 19 October 2018
+journal: American Journal of Psychiatry
+authors: Sandra Sanchez-Roige, Abraham A. Palmer, ..., David M. Howard, ..., Toni-Kim Clarke
+note:
+- heritability estimates
+- - AUDIT total score: 12% (SE=0.48%; p=4.6E-273; GCTA); 8.6% (SE=0.50%; LDSC) (PubMed:30336701)
+- - AUDIT-C score: 11% (SE=0.47%; p=1.5E-211; GCTA); 8.4% (SE=0.55%; LDSC) (PubMed:30336701)
+- - AUDIT-P score: 9% (SE=0.46%; p=2.0E-178; GCTA); 5.9% (SE=0.48%; LDSC) (PubMed:30336701)
+- AUDIT-C genetic correlation with Depressive Symptoms: -0.192 (p=5.57E-05) (Table S4)
+- AUDIT-P genetic correlation with Depressive Symptoms: 0.303 (p=2.98E-08) (Table S5)
 
 --------------------------------------------------
 --------------------------------------------------
@@ -35,13 +78,33 @@ Population heterogeneity and heritability of sex hormones
 --------------------------------------------------
 
 --------------------------------------------------
-PubMed:32042192
-Date: 10 February 2020
-Journal: Nature Medicine
-Title: "Using human genetics to understand the disease impacts of testosterone in men and women"
-Note:
+PubMed: 32873964
+Date: 1 September 2020
+title: "Sex-specific genetic effects across biomarkers"
+journal: European Journal of Human Genetics
+authors: Emily Flynn, ..., Manuel A. Rivas
+note:
+- UK Biobank cohort
+- analysis of sex-specific genetic determinants in variation of testosterone
+- 119 female-specific variants
+- 445 male-specific variants
+
+--------------------------------------------------
+PubMed: 32042192
+date: 10 February 2020
+journal: Nature Medicine
+title: "Using human genetics to understand the disease impacts of testosterone in men and women"
+authors: Katherine S. Ruth, ..., John R. B. Perry
+note:
 - Stacey J. Winham recommended and shared on 21 September 2020
-- authors defined genetic features that associate with testosterone levels in UK Biobank
+- UK Biobank
+- authors calculated bioavailable testosterone using "Vermeulen equation" (Table S1)
+- Bioavailable testosterone shows heritability > 12% in both females and males, suggesting that genetic factors describe a substantial proportion of variance in testosterone, steroid globulin, and albumin. However, the genetic correlation for bioavailable testosterone between females and males is actually negative (Table 1 in PubMed:32042192), suggesting that the aforementioned genetic factors are substantially different between females and males.
+- heritability estimates
+- - oestradiol: 1.6% (1.0) in females; 2% (0.4) in males
+- - testosterone: 13% (0.8) in females; 17% (1.0) in males
+- - steroid globulin: 20% (0.01) in females; 21% (1.2) in males
+- - bioavailable testosterone: 14% (0.8) in females; 12% (0.7) in males
 
 
 --------------------------------------------------
@@ -135,6 +198,34 @@ Sex hormones and alcohol use
 --------------------------------------------------
 --------------------------------------------------
 
+reports of pleiotropy between sex hormones and alcohol use disorder
+
+
+--------------------------------------------------
+PubMed: 
+title: "Examining sex-differentiated genetic effects across neuropsychiatric and behavioral traits"
+date: 8 January 2021
+journal: Biological Psychiatry
+authors: Joanna Martin, ..., Lea K. Davis
+note:
+- Table S11
+- - sex-specific, between-phenotype genetic correlations
+- - includes genetic correlations for Alcohol Consumption
+
+--------------------------------------------------
+PubMed: 33407712
+title: "Evaluating the genetic effects of sex hormone traits on the development of mental traits: a polygenic score analysis and gene-environment-wide interaction study in UK Biobank cohort"
+date: 6 January 2021
+journal: Molecular Brain
+authors: Xiao Liang, ..., Feng Zhang
+note:
+- phenotypic associations between sex hormones and alcohol use in UK Biobank
+- authors calculated bioavailable testosterone but did not explain how they did so
+- authors did not look at genetic correlations
+- authors' primary phenotype of interest is alcohol consumption
+- - importantly, 
+
+
 --------------------------------------------------
 PubMed:30840924
 Date: 1 April 2019
@@ -153,4 +244,46 @@ Date: 27 October 2015
 Journal: Scientific Reports
 Title: "Associations of prodynorphin sequence variation with alcohol dependence and related traits are phenotype-specific and sex-dependent"
 
+
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+Sex differences and Sex hormones
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+
+--------------------------------------------------
+PubMed: 32042192
+title: "Using human genetics to understand the disease impacts of testosterone in men and women"
+authors: Katherine S. Ruth, ..., John R. B. Perry
+journal: Nature Medicine
+date: 10 February 2020
+note:
+- used the "Vermeulen equation" to calculate bioavailable testosterone
+- authors report evidence of distinct genetic regulation of testosterone in females and males
+- bioavailable testosterone shows heritability > 12% in both females and males... but the genetic correlation between females and males is actually negative (Table 1 in PubMed:32042192)
+
+--------------------------------------------------
+PubMed: 32873964
+title: "Sex-specific genetic effects across biomarkers"
+date: January 2021
+authors: Emily Flynn, ..., Manuel A. Rivas
+journal: European Journal of Human Genetics
+note:
+- authors report evidence of distinct genetic regulation of testosterone in females and males
+- 119 female-specific genetic variants
+- 445 male-specific genetic variants
+
+--------------------------------------------------
+PubMed: 30581192
+title: "The role of sex in the genomics of human complex traits"
+authors: Ekaterina A. Khramtsova, Lea K. Davis, Barbara E. Stranger
+journal: Nature Reviews Genetics
+date: 23 December 2018
+type: review
 

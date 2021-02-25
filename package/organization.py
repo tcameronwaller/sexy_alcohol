@@ -33,8 +33,8 @@ pandas.options.mode.chained_assignment = None # default = "warn"
 # Custom
 import promiscuity.utility as utility
 import promiscuity.plot as plot
-import uk_biobank.assembly
-import uk_biobank.organization
+import uk_biobank.assembly as ukb.assembly
+import uk_biobank.organization as ukb.organization
 
 
 
@@ -1159,85 +1159,10 @@ def organize_alcoholism_cases_controls_variables(
     return pail
 
 
-#########################
-# TODO: some of this might fit in the general uk_biobank package...
-########################
-
-
 ##########
-# Cohort selection
+# Cohort selection, hormone and alcoholism
 
 
-def select_valid_records_all_specific_variables(
-    names=None,
-    prefixes=None,
-    table=None,
-    drop_columns=None,
-    report=None,
-):
-    """
-    Selects variable columns and record rows with valid values across all
-    variables.
-
-    arguments:
-        names (list<str>): explicit names of columns to keep
-        prefixes (list<str>): prefixes of names of columns to keep
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        drop_columns (bool): whether to drop other columns
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
-
-    """
-
-    # Extract table columns.
-    columns_all = copy.deepcopy(table.columns.to_list())
-    # Collect columns to keep.
-    columns_keep = list()
-    columns_names = list(filter(
-        lambda column: (str(column) in names),
-        columns_all
-    ))
-    columns_keep.extend(columns_names)
-    for prefix in prefixes:
-        columns_prefix = list(filter(
-            lambda column: (str(prefix) in str(column)),
-            columns_all
-        ))
-        columns_keep.extend(columns_prefix)
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("Columns to keep: ")
-        print(columns_keep)
-    # Select columns.
-    if drop_columns:
-        table = table.loc[
-            :, table.columns.isin(columns_keep)
-        ]
-    # Remove any record rows with null values.
-    table.dropna(
-        axis="index",
-        how="any",
-        subset=columns_keep,
-        inplace=True,
-    )
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("After dropping rows with null values in specific columns.")
-        print("Selection of table columns and rows: ")
-        print(table)
-    # Return information.
-    return table
-
-
-# TODO: do not switch "alcohol_none" to boolean...
 def select_sex_alcoholism_cohort_variables_valid_records(
     sex_text=None,
     alcohol_consumption=None,
@@ -1277,7 +1202,7 @@ def select_sex_alcoholism_cohort_variables_valid_records(
     table = table.copy(deep=True)
     # Select records with valid (non-null) values of relevant variables.
     # Exclude missing values first to avoid interpretation of "None" as False.
-    table = select_valid_records_all_specific_variables(
+    table = ukb.organization.select_valid_records_all_specific_variables(
         names=variables_names_valid,
         prefixes=variables_prefixes_valid,
         table=table,
@@ -1309,213 +1234,6 @@ def select_sex_alcoholism_cohort_variables_valid_records(
             table = table.loc[(~table[alcoholism]), :]
     # Return information.
     return table
-
-
-def translate_boolean_phenotype_plink(
-    boolean_value=None,
-):
-    """
-    Translate information from simple binary representation to plink
-    representation.
-
-    Accommodate inexact float values and null values.
-
-    https://www.cog-genomics.org/plink/1.9/input
-    Section: "Phenotypes"
-    Subsection: "Phenotype encoding"
-        "Missing phenotypes are normally expected to be encoded as -9. You can
-        change this to another integer with --missing-phenotype. (This is a
-        slight change from PLINK 1.07: floating point values are now disallowed
-        due to rounding issues, and nonnumeric values such as 'NA' are rejected
-        since they're treated as missing phenotypes no matter what. Note that
-        --output-missing-phenotype can be given a nonnumeric string.)
-
-        Case/control phenotypes are expected to be encoded as 1=unaffected
-        (control), 2=affected (case); 0 is accepted as an alternate missing
-        value encoding. If you use the --1 flag, 0 is interpreted as unaffected
-        status instead, while 1 maps to affected. This also forces phenotypes to
-        be interpreted as case/control."
-
-    arguments:
-        boolean_value (float): boolean (False, True) representation of a
-            phenotype
-
-    raises:
-
-    returns:
-        (float): plink binary representation of a phenotype
-
-    """
-
-    # Determine whether the variable has a valid (non-missing) value.
-    if (not pandas.isna(boolean_value)):
-        # The variable has a valid value.
-        if (not boolean_value):
-            # control, original value: False
-            # control, Plink translation: 1
-            value = 1
-        elif (boolean_value):
-            # case, original value: True
-            # case, Plink translation: 2
-            value = 2
-    else:
-        # null
-        value = float("nan")
-    # Return information.
-    return value
-
-
-def translate_binary_phenotype_plink(
-    binary_value=None,
-):
-    """
-    Translate information from simple binary representation to plink
-    representation.
-
-    Accommodate inexact float values and null values.
-
-    https://www.cog-genomics.org/plink/1.9/input
-    Section: "Phenotypes"
-    Subsection: "Phenotype encoding"
-        "Missing phenotypes are normally expected to be encoded as -9. You can
-        change this to another integer with --missing-phenotype. (This is a
-        slight change from PLINK 1.07: floating point values are now disallowed
-        due to rounding issues, and nonnumeric values such as 'NA' are rejected
-        since they're treated as missing phenotypes no matter what. Note that
-        --output-missing-phenotype can be given a nonnumeric string.)
-
-        Case/control phenotypes are expected to be encoded as 1=unaffected
-        (control), 2=affected (case); 0 is accepted as an alternate missing
-        value encoding. If you use the --1 flag, 0 is interpreted as unaffected
-        status instead, while 1 maps to affected. This also forces phenotypes to
-        be interpreted as case/control."
-
-    arguments:
-        binary_value (float): binary (0, 1) representation of a phenotype
-
-    raises:
-
-    returns:
-        (float): plink binary representation of a phenotype
-
-    """
-
-    # Determine whether the variable has a valid (non-missing) value.
-    if (
-        (not math.isnan(binary_value)) and
-        (-0.5 <= binary_value and binary_value < 1.5)
-    ):
-        # The variable has a valid value.
-        if (-0.5 <= binary_value and binary_value < 0.5):
-            # control, original value: 0
-            # control, Plink translation: 1
-            value = 1
-        elif (0.5 <= binary_value and binary_value < 1.5):
-            # case, original value: 1
-            # case, Plink translation: 2
-            value = 2
-    else:
-        # null
-        value = float("nan")
-    # Return information.
-    return value
-
-
-def organize_phenotype_covariate_table_plink_format(
-    boolean_phenotypes=None,
-    binary_phenotypes=None,
-    continuous_variables=None,
-    table=None,
-):
-    """
-    Organize table for phenotypes and covariates in format for PLINK.
-
-    1. Remove any rows with missing, empty values.
-    PLINK cannot accommodate rows with empty cells.
-
-    2. Introduce family identifiers.
-    Family (FID) and individual (IID) identifiers must match the ID_1 and ID_2
-    columns in the sample table.
-
-    3. Sort column sequence.
-    PLINK requires FID and IID columns to come first.
-
-    arguments:
-        boolean_phenotypes (list<str>): names of columns with discrete boolean
-            case-control phenotypes (control: False, case: True) that need
-            conversion to PLINK format (control: 1, case: 2)
-        binary_phenotypes (list<str>): names of columns with discrete binary
-            case-control phenotypes (control: 0, case: 1) that need conversion
-            to PLINK format (control: 1, case: 2)
-        continuous_variables (list<str>): names of columns that PLINK ought
-            to interpret as continuous variables (ordinal discrete, interval
-            continuous, or ratio continuous)
-        table (object): Pandas data frame of information about phenotype and
-            covariate variables for GWAS
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of information about phenotype and
-            covariate variables in format for GWAS in PLINK
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Translate binary phenotype variables.
-    for boolean_phenotype in boolean_phenotypes:
-        table[boolean_phenotype] = table.apply(
-            lambda row:
-                translate_boolean_phenotype_plink(
-                    boolean_value=row[boolean_phenotype],
-                ),
-            axis="columns", # apply across rows
-        )
-        pass
-    # Translate binary phenotype variables.
-    for binary_phenotype in binary_phenotypes:
-        table[binary_phenotype] = table.apply(
-            lambda row:
-                translate_binary_phenotype_plink(
-                    binary_value=row[binary_phenotype],
-                ),
-            axis="columns", # apply across rows
-        )
-        pass
-    # Translate continuous variables, whether they are phenotypes or covariates.
-    table_type = convert_table_columns_variables_types_float(
-        columns=continuous_variables,
-        table=table,
-    )
-    # Organize.
-    table.reset_index(
-        level=None,
-        inplace=True
-    )
-    # Remove table rows with any empty cells or missing values.
-    table.dropna(
-        axis="index",
-        how="any",
-        subset=None,
-        inplace=True,
-    )
-    # Introduce family identifier.
-    table["FID"] = table["IID"]
-    # Sort column sequence.
-    columns = table.columns.to_list()
-    columns_sequence = list(filter(
-        lambda element: element not in ["eid", "IID", "FID"],
-        columns
-    ))
-    columns_sequence.insert(0, "IID") # second column
-    columns_sequence.insert(0, "FID") # first column
-    table_columns = table.loc[
-        :, table.columns.isin(columns_sequence)
-    ]
-    table_sequence = table_columns[[*columns_sequence]]
-    # Return information.
-    return table_sequence
 
 
 def organize_plink_cohort_variables_by_sex_alcoholism_split(
@@ -1575,22 +1293,24 @@ def organize_plink_cohort_variables_by_sex_alcoholism_split(
 
     # Translate variable encodings and table format for analysis in PLINK.
     if (str(alcoholism_split) == "all"):
-        table_format = organize_phenotype_covariate_table_plink_format(
-            boolean_phenotypes=[phenotype_1],
-            binary_phenotypes=[],
-            continuous_variables=[phenotype_2],
-            table=table_valid,
-        )
+        table_format = (
+            ukb.organization.organize_phenotype_covariate_table_plink_format(
+                boolean_phenotypes=[phenotype_1],
+                binary_phenotypes=[],
+                continuous_variables=[phenotype_2],
+                table=table_valid,
+        ))
     elif (
         (str(alcoholism_split) == "case") or
         (str(alcoholism_split) == "control")
     ):
-        table_format = organize_phenotype_covariate_table_plink_format(
-            boolean_phenotypes=[],
-            binary_phenotypes=[],
-            continuous_variables=[phenotype_1, phenotype_2],
-            table=table_valid,
-        )
+        table_format = (
+            ukb.organization.organize_phenotype_covariate_table_plink_format(
+                boolean_phenotypes=[],
+                binary_phenotypes=[],
+                continuous_variables=[phenotype_1, phenotype_2],
+                table=table_valid,
+        ))
         pass
     # Report.
     if report:
@@ -1837,6 +1557,249 @@ def scrap_record_cohorts_variables_by_sex_alcoholism_split(
     return pail
 
 
+##########
+# Cohort selection, hormone
+
+    pail["table_female_male_oestradiol"] = (
+        organize_plink_cohort_variables_by_sex_hormone(
+            sex_text="both",
+            exclude_pregnancy=True,
+            menopause="both", # "both", "pre", "post"
+            hormone="oestradiol_log",
+            table=table,
+            report=report,
+    ))
+
+
+##########
+# Cohort selection, hormone alone
+
+
+def select_sex_pregnancy_menopause_cohort_variables_valid_records(
+    sex_text=None,
+    exclude_pregnancy=None,
+    menopause=None,
+    variables_names_valid=None,
+    variables_prefixes_valid=None,
+    table=None,
+):
+    """
+    Selects cohort by multiple criteria.
+
+    arguments:
+        sex_text (str): textual representation of sex selection: "both",
+            "female", or "male"
+        exclude_pregnancy (bool): whether to filter females to exclude those who
+            were pregnant
+        menopause (str): which menopausal categories to include for females:
+            "both", "pre", or "post"
+        variables_names_valid (list<str>): names of columns for variables in
+            which rows must have valid values
+        variables_prefixes_valid (list<str>): prefixes of columns for variables
+            in which rows must have valid values
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+    # Select records with valid (non-null) values of relevant variables.
+    # Exclude missing values first to avoid interpretation of "None" as False.
+    table = ukb.organization.select_valid_records_all_specific_variables(
+        names=variables_names_valid,
+        prefixes=variables_prefixes_valid,
+        table=table,
+        drop_columns=True,
+        report=False,
+    )
+
+    # Select cohort.
+    # Determine whether to filter by sex.
+    if (str(sex_text) == "male"):
+        # Filter to males.
+        table = table.loc[
+            (table["sex_text"] == "male"), :
+        ]
+    elif (str(sex_text) == "female"):
+        # Filter to females.
+        table = table.loc[
+            (table["sex_text"] == "female"), :
+        ]
+    # Determine whether to filter by pregnancy or by menopause.
+    if (
+        (str(sex_text) == "both") or
+        (str(sex_text) == "female")
+    ):
+        # Determine whether to filter by pregnancy.
+        if (exclude_pregnancy):
+            # Filter to non-pregnant females.
+            table = table.loc[
+                (table["pregnancy"] < 0.5), :
+            ]
+        # Determine whether to filter by menopause.
+        if (menopause == "pre"):
+            # Filter to pre-menopausal females.
+            table = table.loc[
+                (table["menopause"] < 0.5), :
+            ]
+        elif (menopause == "post"):
+            # Filter to post-menopausal females.
+            table = table.loc[
+                (table["menopause"] >= 0.5), :
+            ]
+        pass
+    # Return information.
+    return table
+
+
+def organize_plink_cohort_variables_by_sex_hormone(
+    sex_text=None,
+    exclude_pregnancy=None,
+    menopause=None,
+    hormone=None,
+    table=None,
+    report=None,
+):
+    """
+    Organizes tables for specific cohorts in format for GWAS in PLINK.
+
+    Exclude females who are pregnant.
+
+    As written, this procedure requires males to have valid (non-null) values
+    for pregnancy and menopause variables. This gives potential to include these
+    variables as covariates in GWAS (obviously in female-only cohorts).
+
+    arguments:
+        sex_text (str): textual representation of sex selection: "both",
+            "female", or "male"
+        exclude_pregnancy (bool): whether to filter females to exclude those who
+            were pregnant
+        menopause (str): which menopausal categories to include for females:
+            "both", "pre", or "post"
+        hormone (str): name of a column for hormone phenotype variable
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Select cohort's variables and records with valid values.
+    table_valid = select_sex_pregnancy_menopause_cohort_variables_valid_records(
+        sex_text=sex_text,
+        exclude_pregnancy=exclude_pregnancy,
+        menopause=menopause,
+        variables_names_valid=[
+            "eid", "IID",
+            "sex", "sex_text", "age", "body_mass_index",
+            "pregnancy", "menopause",
+            hormone,
+        ],
+        variables_prefixes_valid=["genotype_pc_",],
+        table=table,
+    )
+    # Translate variable encodings and table format for analysis in PLINK.
+    table_format = organize_phenotype_covariate_table_plink_format(
+        boolean_phenotypes=[],
+        binary_phenotypes=[],
+        continuous_variables=[hormone],
+        table=table_valid,
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("... phenotype covariate table in format for PLINK ...")
+        print("sex: " + str(sex_text))
+        print("exclude pregnancy: " + str(exclude_pregnancy))
+        print("menopause: " + str(menopause))
+        print("hormone: " + str(hormone))
+        print("table shape: " + str(table_format.shape))
+        print(table_format)
+        utility.print_terminal_partition(level=4)
+    # Return information.
+    return table_format
+
+
+def organize_plink_cohorts_variables_by_sex_hormone(
+    table=None,
+    report=None,
+):
+    """
+    Organizes tables for specific cohorts in format for GWAS in PLINK.
+
+    Exclude females who are pregnant.
+
+    As written, this procedure requires males to have valid (non-null) values
+    for pregnancy and menopause variables. This gives potential to include these
+    variables as covariates in GWAS (obviously in female-only cohorts).
+
+    TODO: Exclude males and females who are on hormone therapy?
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Compile information.
+    pail = dict()
+    # Select and organize variables across cohorts.
+    pail["table_female_male_oestradiol"] = (
+        organize_plink_cohort_variables_by_sex_hormone(
+            sex_text="both", # "both", "female", "male"
+            exclude_pregnancy=True,
+            menopause="both", # "both", "pre", "post"
+            hormone="oestradiol_log",
+            table=table,
+            report=report,
+    ))
+    pail["table_female_male_testosterone"] = (
+        organize_plink_cohort_variables_by_sex_hormone(
+            sex_text="both", # "both", "female", "male"
+            exclude_pregnancy=True,
+            menopause="both", # "both", "pre", "post"
+            hormone="testosterone_log",
+            table=table,
+            report=report,
+    ))
+    pail["table_female_male_steroid_globulin"] = (
+        organize_plink_cohort_variables_by_sex_hormone(
+            sex_text="both", # "both", "female", "male"
+            exclude_pregnancy=True,
+            menopause="both", # "both", "pre", "post"
+            hormone="steroid_globulin_log",
+            table=table,
+            report=report,
+    ))
+    pail["table_female_male_albumin"] = (
+        organize_plink_cohort_variables_by_sex_hormone(
+            sex_text="both", # "both", "female", "male"
+            exclude_pregnancy=True,
+            menopause="both", # "both", "pre", "post"
+            hormone="albumin_log",
+            table=table,
+            report=report,
+    ))
+    # Return information.
+    return pail
 
 
 ##########
@@ -2287,11 +2250,10 @@ def write_product(
             path_parent=paths["quality"],
         )
     # Cohort tables in PLINK format.
-    if False:
-        write_product_cohorts(
-            information=information["cohorts"],
-            path_parent=paths["cohorts"],
-        )
+    write_product_cohorts(
+        information=information["cohorts"],
+        path_parent=paths["cohorts"],
+    )
     # Trial organization.
     if False:
         write_product_trial(
@@ -2304,12 +2266,6 @@ def write_product(
 ###############################################################################
 # Procedure
 
-# TODO: call general functions from uk_biobank
-# TODO: normalize distributions for sex hormones
-# TODO: plot sex hormone distributions (histograms)
-# TODO: - - - example: testosterone across females and males together
-# TODO: - - - example: testosterone in females and males separately
-# TODO: - - - example: testosterone in pre- and post-menopausal femalse separately
 # TODO: set up cohorts for individual hormones without sex stratification
 
 
@@ -2348,23 +2304,37 @@ def execute_procedure(
     )
     # Organize variables for persons' genotypes, sex, age, and body mass index
     # across the UK Biobank.
-    table_basis = uk_biobank.organization.execute_genotype_sex_age_body(
+    table_basis = ukb.organization.execute_genotype_sex_age_body(
         table=source["table_phenotypes"],
         report=False,
     )
     # Organize variables for persons' sex hormones across the UK Biobank.
-    table_hormone = uk_biobank.organization.execute_sex_hormones(
+    table_hormone = ukb.organization.execute_sex_hormones(
         table=table_basis,
         report=True,
     )
-    pail_figures_hormone = uk_biobank.organization.execute_plot_hormones(
+    # Plot figures for hormones.
+    pail_figures_hormone = ukb.organization.execute_plot_hormones(
         table=table_hormone,
         report=True,
     )
+
+    # Select and organize variables across cohorts.
+    # Organize phenotypes and covariates in format for analysis in PLINK.
+    if False:
+        pail_cohorts = organize_plink_cohorts_variables_by_sex_alcoholism_split(
+            table=pail_alcoholism["table_clean"],
+            report=True,
+        )
+    pail_cohorts = organize_plink_cohorts_variables_by_sex_hormone(
+        table=table_hormone,
+        report=True,
+    )
+
     # Collect information.
     information = dict()
     information["plots"] = pail_figures_hormone
-    #information["cohorts"] = pail_cohorts
+    information["cohorts"] = pail_cohorts
     # Write product information to file.
     write_product(
         paths=paths,
@@ -2374,19 +2344,12 @@ def execute_procedure(
 
     # Organize variables for persons' alcohol consumption across the UK Biobank.
     if False:
-        table_alcohol = uk_biobank.organization.execute_alcohol(
+        table_alcohol = ukb.organization.execute_alcohol(
             table=table_hormone,
             report=None,
         )
 
     if False:
-        # Select and organize variables across cohorts.
-        # Organize phenotypes and covariates in format for analysis in PLINK.
-        pail_cohorts = organize_plink_cohorts_variables_by_sex_alcoholism_split(
-            table=pail_alcoholism["table_clean"],
-            report=True,
-        )
-
         # Collect information.
         information = dict()
         information["quality"] = dict()
