@@ -2266,8 +2266,6 @@ def write_product(
 ###############################################################################
 # Procedure
 
-# TODO: set up cohorts for individual hormones without sex stratification
-
 
 def execute_procedure(
     path_dock=None,
@@ -2287,7 +2285,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 5")
+    print("version check: 1")
     # Pause procedure.
     time.sleep(5.0)
 
