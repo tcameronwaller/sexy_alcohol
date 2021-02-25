@@ -33,8 +33,7 @@ pandas.options.mode.chained_assignment = None # default = "warn"
 # Custom
 import promiscuity.utility as utility
 import promiscuity.plot as plot
-import uk_biobank.assembly as ukb.assembly
-import uk_biobank.organization as ukb.organization
+import uk_biobank.organization as ukb_organization
 
 
 
@@ -1202,7 +1201,7 @@ def select_sex_alcoholism_cohort_variables_valid_records(
     table = table.copy(deep=True)
     # Select records with valid (non-null) values of relevant variables.
     # Exclude missing values first to avoid interpretation of "None" as False.
-    table = ukb.organization.select_valid_records_all_specific_variables(
+    table = ukb_organization.select_valid_records_all_specific_variables(
         names=variables_names_valid,
         prefixes=variables_prefixes_valid,
         table=table,
@@ -1294,7 +1293,7 @@ def organize_plink_cohort_variables_by_sex_alcoholism_split(
     # Translate variable encodings and table format for analysis in PLINK.
     if (str(alcoholism_split) == "all"):
         table_format = (
-            ukb.organization.organize_phenotype_covariate_table_plink_format(
+            ukb_organization.organize_phenotype_covariate_table_plink_format(
                 boolean_phenotypes=[phenotype_1],
                 binary_phenotypes=[],
                 continuous_variables=[phenotype_2],
@@ -1305,7 +1304,7 @@ def organize_plink_cohort_variables_by_sex_alcoholism_split(
         (str(alcoholism_split) == "control")
     ):
         table_format = (
-            ukb.organization.organize_phenotype_covariate_table_plink_format(
+            ukb_organization.organize_phenotype_covariate_table_plink_format(
                 boolean_phenotypes=[],
                 binary_phenotypes=[],
                 continuous_variables=[phenotype_1, phenotype_2],
@@ -1612,7 +1611,7 @@ def select_sex_pregnancy_menopause_cohort_variables_valid_records(
     table = table.copy(deep=True)
     # Select records with valid (non-null) values of relevant variables.
     # Exclude missing values first to avoid interpretation of "None" as False.
-    table = ukb.organization.select_valid_records_all_specific_variables(
+    table = ukb_organization.select_valid_records_all_specific_variables(
         names=variables_names_valid,
         prefixes=variables_prefixes_valid,
         table=table,
@@ -2304,17 +2303,17 @@ def execute_procedure(
     )
     # Organize variables for persons' genotypes, sex, age, and body mass index
     # across the UK Biobank.
-    table_basis = ukb.organization.execute_genotype_sex_age_body(
+    table_basis = ukb_organization.execute_genotype_sex_age_body(
         table=source["table_phenotypes"],
         report=False,
     )
     # Organize variables for persons' sex hormones across the UK Biobank.
-    table_hormone = ukb.organization.execute_sex_hormones(
+    table_hormone = ukb_organization.execute_sex_hormones(
         table=table_basis,
         report=True,
     )
     # Plot figures for hormones.
-    pail_figures_hormone = ukb.organization.execute_plot_hormones(
+    pail_figures_hormone = ukb_organization.execute_plot_hormones(
         table=table_hormone,
         report=True,
     )
@@ -2344,7 +2343,7 @@ def execute_procedure(
 
     # Organize variables for persons' alcohol consumption across the UK Biobank.
     if False:
-        table_alcohol = ukb.organization.execute_alcohol(
+        table_alcohol = ukb_organization.execute_alcohol(
             table=table_hormone,
             report=None,
         )
