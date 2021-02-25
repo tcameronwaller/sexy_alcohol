@@ -34,7 +34,10 @@
 ### -t 1-100:1
 # Limit on concurrent processes.
 # Process this count of chromosomes at a time for each job.
-#$ -tc 5
+# For large cohorts (20,000 - 500,000), limit to 20 total simultaneous GWAS on
+# NCSA.
+# Beyond 20 simultaneous GWAS, PLINK2 begins to use more than 2 TB storage.
+#$ -tc 2
 
 # http://gridscheduler.sourceforge.net/htmlman/htmlman1/qsub.html
 
