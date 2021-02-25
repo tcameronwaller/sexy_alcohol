@@ -1710,12 +1710,13 @@ def organize_plink_cohort_variables_by_sex_hormone(
         table=table,
     )
     # Translate variable encodings and table format for analysis in PLINK.
-    table_format = organize_phenotype_covariate_table_plink_format(
-        boolean_phenotypes=[],
-        binary_phenotypes=[],
-        continuous_variables=[hormone],
-        table=table_valid,
-    )
+    table_format = (
+        ukb_organization.organize_phenotype_covariate_table_plink_format(
+            boolean_phenotypes=[],
+            binary_phenotypes=[],
+            continuous_variables=[hormone],
+            table=table_valid,
+    ))
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
