@@ -46,10 +46,10 @@ set +x
 if true; then
 
   # Parameters.
-  cohort_comparison="alcoholism_female_testosterone"
+  cohort_comparison="alcoholism_male_testosterone"
   hormone="testosterone_log" # name of original phenotype variable
   type_regression_hormone="linear"
-  path_gwas_hormone="$path_gwas/female_testosterone"
+  path_gwas_hormone="$path_gwas/male_testosterone"
   /usr/bin/bash "$path_scripts/7_regress_genetic_correlation_cohort_comparison.sh" \
   $cohort_comparison \
   $hormone \
@@ -81,4 +81,22 @@ if false; then
   $path_ldsc \
   $path_alleles \
   $path_disequilibrium
+
+  # Parameters.
+  cohort_comparison="alcoholism_female_testosterone"
+  hormone="testosterone_log" # name of original phenotype variable
+  type_regression_hormone="linear"
+  path_gwas_hormone="$path_gwas/female_testosterone"
+  /usr/bin/bash "$path_scripts/7_regress_genetic_correlation_cohort_comparison.sh" \
+  $cohort_comparison \
+  $hormone \
+  $type_regression_hormone \
+  $path_gwas_hormone \
+  $path_gwas_alcoholism\
+  $path_genetic_correlation \
+  $path_scripts \
+  $path_ldsc \
+  $path_alleles \
+  $path_disequilibrium
+
 fi
