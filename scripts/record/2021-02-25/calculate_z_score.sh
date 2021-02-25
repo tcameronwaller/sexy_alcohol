@@ -6,6 +6,8 @@ path_table_original=$2 # original table
 path_table_novel=$3 # novel table
 
 echo "----------"
+echo "Note that this program currently is hard-coded for 6 column tables with"
+echo "the column to z-score in the 5th column. Not ideal."
 echo "----------"
 echo "----------"
 
