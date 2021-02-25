@@ -1702,7 +1702,7 @@ def organize_plink_cohort_variables_by_sex_hormone(
         menopause=menopause,
         variables_names_valid=[
             "eid", "IID",
-            "sex", "sex_text", "age", "body_mass_index",
+            "sex", "sex_text", "age", "body_mass_index_log",
             "pregnancy", "menopause",
             hormone,
         ],
@@ -2285,7 +2285,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 2")
     # Pause procedure.
     time.sleep(5.0)
 
