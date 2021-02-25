@@ -2,21 +2,15 @@
 
 # Organize variables.
 cohort_comparison=${1} # name of cohort and comparison
-alcoholism=${2} # name of definition of alcoholism
-hormone=${3} # name of hormone
-type_alcoholism=${4} # type of regression for alcoholism, either "logistic" or "linear"
-type_hormone=${5} # type of regression for hormone, either "logistic" or "linear"
-path_gwas=${6} # path to directory for GWAS summary statistics
-path_genetic_correlation=${7} # path to directory for genetic correlations
-path_gwas_scripts=${8} # path to directory with utility scripts for GWAS
-path_correlation_scripts=${9} # path to directory with utility scripts for genetic correlation
-path_ldsc=${10} # path to LDSC
-path_alleles=${11} # path to reference for alleles
-path_disequilibrium=${12} # path to reference for linkage disequilibrium
-
-# Paths to GWAS summary statistics.
-path_gwas_alcoholism="$path_gwas/$cohort_comparison/$alcoholism"
-path_gwas_hormone="$path_gwas/$cohort_comparison/$hormone"
+hormone=${2} # name of hormone
+type_regression_hormone=${3} # type of regression for hormone, either "logistic" or "linear"
+path_gwas_hormone=${4} # path to directory for GWAS summary statistics files for hormone
+path_gwas_alcoholism=${5} # path to file of GWAS summary statistics for alcoholism in format
+path_genetic_correlation=${6} # path to directory for genetic correlations
+path_scripts=${7} # path to directory with relevant scripts
+path_ldsc=${8} # path to LDSC
+path_alleles=${9} # path to reference for alleles
+path_disequilibrium=${10} # path to reference for linkage disequilibrium
 
 # Paths for organization and genetic correlation.
 path_cohort_comparison="$path_genetic_correlation/$cohort_comparison"
@@ -28,9 +22,8 @@ path_munge="$path_genetic_correlation/$cohort_comparison/munge"
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
-echo "Report from: 6_regress_genetic_correlation_sex_hormone.sh"
+echo "Report from: 7_regress_genetic_correlation_sex_hormone.sh"
 echo "cohort_comparison: ${cohort_comparison}"
-echo "alcoholism: ${alcoholism}"
 echo "hormone: ${hormone}"
 echo "----------------------------------------------------------------------"
 echo "----------------------------------------------------------------------"
@@ -65,35 +58,25 @@ set +x
 # Organize GWAS summary statistics for LDSC.
 
 # Access phenotype variables and auxiliary information from UKBiobank.
-/usr/bin/bash "$path_gwas_scripts/7_concatenate_organize_gwas_ldsc.sh" \
-$path_gwas_alcoholism \
-"report" \
-$alcoholism \
-$type_alcoholism \
-22 \
-$path_gwas_scripts \
-
-# Access phenotype variables and auxiliary information from UKBiobank.
-/usr/bin/bash "$path_gwas_scripts/7_concatenate_organize_gwas_ldsc.sh" \
+/usr/bin/bash "$path_scripts/8_concatenate_organize_gwas_ldsc.sh" \
 $path_gwas_hormone \
 "report" \
 $hormone \
-$type_hormone \
+$type_regression_hormone \
 22 \
-$path_gwas_scripts \
+$path_scripts \
 
 ###########################################################################
 # Munge GWAS summary statistics for LDSC.
 
-path_gwas_alcoholism_concatenation="$path_gwas_alcoholism/concatenation.${alcoholism}.glm.${type_alcoholism}"
 path_gwas_hormone_concatenation="$path_gwas_hormone/concatenation.${hormone}.glm.${type_hormone}"
 
-/usr/bin/bash "$path_correlation_scripts/8_munge_gwas_genetic_correlation_ldsc.sh" \
-$path_gwas_alcoholism_concatenation \
+/usr/bin/bash "$path_scripts/9_munge_gwas_genetic_correlation_ldsc.sh" \
+$path_gwas_alcoholism \
 $path_gwas_hormone_concatenation \
 $path_munge \
 $path_cohort_comparison \
-$alcoholism \
+"alcoholism" \
 $hormone \
 $path_alleles \
 $path_disequilibrium \

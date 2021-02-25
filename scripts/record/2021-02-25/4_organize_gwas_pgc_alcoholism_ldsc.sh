@@ -69,7 +69,7 @@ zcat $path_gwas_alcohol_raw | awk 'NR > 1 {split($2,a,":"); print a[1], toupper(
 #/usr/bin/bash $path_calculate_z_score 5 $path_gwas_alcohol_format $path_gwas_alcohol_format
 gzip $path_gwas_alcohol_format
 echo "after format..."
-head -30 $path_gwas_alcohol_format
+head -30 "$path_gwas_alcohol_format.gz"
 
 echo "----------"
 echo "----------"
