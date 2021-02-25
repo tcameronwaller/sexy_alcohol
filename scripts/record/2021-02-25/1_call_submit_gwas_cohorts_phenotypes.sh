@@ -56,6 +56,24 @@ if false; then
 
   # Jobs: ___, ___
   # Parameters.
+  table_name="table_female_male_testosterone.tsv"
+  cohort_comparison="female_male_testosterone"
+  hormone="testosterone_log"
+  covariates="sex,age,body_mass_index_log,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
+  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
+  $table_name \
+  $cohort_comparison \
+  $hormone \
+  $covariates \
+  $path_scripts \
+  $path_dock
+
+fi
+
+if true; then
+
+  # Jobs: ___, ___
+  # Parameters.
   table_name="table_female_male_steroid_globulin.tsv"
   cohort_comparison="female_male_steroid_globulin"
   hormone="steroid_globulin_log"
@@ -81,23 +99,5 @@ if false; then
   $covariates \
   $path_scripts \
   $path_dock
-
-fi
-
-if true; then
-  # Jobs: ___, ___
-  # Parameters.
-  table_name="table_female_male_testosterone.tsv"
-  cohort_comparison="female_male_testosterone"
-  hormone="testosterone_log"
-  covariates="sex,age,body_mass_index_log,genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
-  /usr/bin/bash "$path_scripts/2_submit_gwas_cohorts_phenotypes.sh" \
-  $table_name \
-  $cohort_comparison \
-  $hormone \
-  $covariates \
-  $path_scripts \
-  $path_dock
-
 
 fi
