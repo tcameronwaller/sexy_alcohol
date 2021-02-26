@@ -25,6 +25,16 @@ note:
 
 
 --------------------------------------------------
+PubMed: 30940813
+title: "Genome-wide association study of alcohol consumption and use disorder in 274,424 individuals from multiple populations"
+date: 2019
+authors: Henry R. Kranzler, ..., Joel Gelernter
+note:
+- alcohol consumption (AUDIT-C) GWAS in Million Veteran Program
+- summary statistics available from dbGAP
+
+
+--------------------------------------------------
 PubMed: 30482948
 title: "Transancestral GWAS of alcohol dependence reveals common genetic underpinnings with psychiatric disorders"
 date: 26 November 2018
@@ -41,9 +51,8 @@ note:
 - - Neuroticism: 0.4412 (SE=0.1032, p=1.90E-5)
 - - Alcohol Consumption: 0.3706 (SE=0.0916, p=5.22E-5)
 - - AUDIT score: 0.0764 (SE=0.1714, p=6.56E-1)
-- Whereas Alcohol Dependence shared significant genetic correlation with two other studies of Alcohol Consumption, it did not share significant genetic correlation with AUDIT score.
 - The Alcohol Dependence phenotype DID NOT share significant genetic correlation with the AUDIT score from a 2019 GWAS on 23andMe cohort (n=23,217; rg=0.0764; SE=0.1714; p=6.56E-1).
-In contrast, Alcohol Dependence DID share significant genetic correlation with Alcohol Consumption phenotypes from two other GWAS studies.
+- In contrast, Alcohol Dependence DID share significant genetic correlation with Alcohol Consumption phenotypes from two other GWAS studies.
 - GWAS summary statistics
 - - http://www.med.unc.edu/pgc/results-and-downloads
 - - https://www.med.unc.edu/pgc/data-index/
@@ -64,6 +73,16 @@ note:
 - - AUDIT-P score: 9% (SE=0.46%; p=2.0E-178; GCTA); 5.9% (SE=0.48%; LDSC) (PubMed:30336701)
 - AUDIT-C genetic correlation with Depressive Symptoms: -0.192 (p=5.57E-05) (Table S4)
 - AUDIT-P genetic correlation with Depressive Symptoms: 0.303 (p=2.98E-08) (Table S5)
+
+--------------------------------------------------
+PubMed: 28937693
+title: "Genome-wide association study of alcohol consumption and genetic overlap with other health-related traits in UK Biobank (N=112 117)"
+date: 2017
+authors: T. K. Clarke, ..., A. M. McIntosh
+note:
+- alcohol consumption GWAS on UK Biobank
+
+
 
 --------------------------------------------------
 --------------------------------------------------
