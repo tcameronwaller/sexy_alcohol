@@ -47,10 +47,10 @@ if true; then
 
   # observation: error (chi-square too small)
   # Parameters.
-  cohort_comparison="alcoholism_female_premenopause_oestradiol"
+  cohort_comparison="alcoholism_female_postmenopause_oestradiol"
   hormone="oestradiol_log" # name of original phenotype variable
   type_regression_hormone="linear"
-  path_gwas_hormone="$path_gwas/female_premenopause_oestradiol"
+  path_gwas_hormone="$path_gwas/female_postmenopause_oestradiol"
   /usr/bin/bash "$path_scripts/7_regress_genetic_correlation_cohort_comparison.sh" \
   $cohort_comparison \
   $hormone \
@@ -64,10 +64,10 @@ if true; then
   $path_disequilibrium
 
   # Parameters.
-  cohort_comparison="alcoholism_female_premenopause_testosterone"
+  cohort_comparison="alcoholism_female_postmenopause_testosterone"
   hormone="testosterone_log" # name of original phenotype variable
   type_regression_hormone="linear"
-  path_gwas_hormone="$path_gwas/female_premenopause_testosterone"
+  path_gwas_hormone="$path_gwas/female_postmenopause_testosterone"
   /usr/bin/bash "$path_scripts/7_regress_genetic_correlation_cohort_comparison.sh" \
   $cohort_comparison \
   $hormone \
@@ -81,10 +81,10 @@ if true; then
   $path_disequilibrium
 
   # Parameters.
-  cohort_comparison="alcoholism_female_premenopause_steroid_globulin"
+  cohort_comparison="alcoholism_female_postmenopause_steroid_globulin"
   hormone="steroid_globulin_log" # name of original phenotype variable
   type_regression_hormone="linear"
-  path_gwas_hormone="$path_gwas/female_premenopause_steroid_globulin"
+  path_gwas_hormone="$path_gwas/female_postmenopause_steroid_globulin"
   /usr/bin/bash "$path_scripts/7_regress_genetic_correlation_cohort_comparison.sh" \
   $cohort_comparison \
   $hormone \
@@ -98,10 +98,10 @@ if true; then
   $path_disequilibrium
 
   # Parameters.
-  cohort_comparison="alcoholism_female_premenopause_albumin"
+  cohort_comparison="alcoholism_female_postmenopause_albumin"
   hormone="albumin_log" # name of original phenotype variable
   type_regression_hormone="linear"
-  path_gwas_hormone="$path_gwas/female_premenopause_albumin"
+  path_gwas_hormone="$path_gwas/female_postmenopause_albumin"
   /usr/bin/bash "$path_scripts/7_regress_genetic_correlation_cohort_comparison.sh" \
   $cohort_comparison \
   $hormone \
