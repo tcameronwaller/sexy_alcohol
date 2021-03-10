@@ -44,7 +44,9 @@ note:
 - 14,904 persons with Alcohol Dependence
 - 37,944 persons control
 - "AD was defined as meeting criteria for a DSM-IV (or, for one cohort, DSM-IIIR; a very similar construct; Supplementary Note B1) diagnosis of AD. Diagnoses were derived either from clinician ratings or semi-structured interviews." (Methods)
-- SNP heritability of Alcohol Dependence: 0.09 (SE=0.019, p=8.02E-7)
+- SNP heritability of Alcohol Dependence: 0.090 (SE=0.019, p=8.02E-7)
+- - “liability-scale”
+- - meta analysis on unrelated persons of European ancestry
 - Genetic correlations between Alcohol Dependence and other phenotypes (Table S6):
 - - Depressive Symptoms: 0.6025 (SE=0.1169, p=2.55E-7)
 - - Major Depressive Disorder: 0.5612 (SE=0.0847, p=3.47E-11)
@@ -124,7 +126,15 @@ note:
 - - testosterone: 13% (0.8) in females; 17% (1.0) in males
 - - steroid globulin: 20% (0.01) in females; 21% (1.2) in males
 - - bioavailable testosterone: 14% (0.8) in females; 12% (0.7) in males
-
+- bioavailable testosterone
+- - Vermeulen equation (PubMed:10523012)
+- - testosterone (30850)
+- - oestradiol (30800)
+- - SHBG (30830)
+- - albumin (30600)
+- authors excluded females and males who self-reported hormone medication, including hormone replacement therapy and oral contraception (Data Fields 30850, 20003)
+- testosterone below lower limit (30856)
+- oestradiol below lower limit (30806)
 
 --------------------------------------------------
 PubMed:____?___
