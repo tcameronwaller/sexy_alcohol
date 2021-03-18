@@ -1658,6 +1658,12 @@ def select_sex_pregnancy_menopause_cohort_variables_valid_records(
     return table
 
 
+# TODO: I need to accommodate "menstruation_day", "oral_contraception", and "hormone_therapy"
+# TODO: it makes sense to have missing values in these variables... but... need to consider sex before dropping nulls
+# TODO: YES: consider sex=="female" BEFORE dropping nulls...
+# TODO: maybe create a female-specific variables list?
+
+
 def organize_plink_cohort_variables_by_sex_hormone(
     sex_text=None,
     exclude_pregnancy=None,
@@ -1771,6 +1777,15 @@ def organize_plink_cohorts_variables_by_sex_hormone(
             table=table,
             report=report,
     ))
+    pail["table_female_male_oestradiol_free"] = (
+        organize_plink_cohort_variables_by_sex_hormone(
+            sex_text="both", # "both", "female", "male"
+            exclude_pregnancy=True,
+            menopause="both", # "both", "pre", "post"
+            hormone="oestradiol_free_log",
+            table=table,
+            report=report,
+    ))
     pail["table_female_male_testosterone"] = (
         organize_plink_cohort_variables_by_sex_hormone(
             sex_text="both", # "both", "female", "male"
@@ -1780,24 +1795,17 @@ def organize_plink_cohorts_variables_by_sex_hormone(
             table=table,
             report=report,
     ))
-    pail["table_female_male_steroid_globulin"] = (
+    pail["table_female_male_testosterone_free"] = (
         organize_plink_cohort_variables_by_sex_hormone(
             sex_text="both", # "both", "female", "male"
             exclude_pregnancy=True,
             menopause="both", # "both", "pre", "post"
-            hormone="steroid_globulin_log",
+            hormone="testosterone_free_log",
             table=table,
             report=report,
     ))
-    pail["table_female_male_albumin"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="both", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="both", # "both", "pre", "post"
-            hormone="albumin_log",
-            table=table,
-            report=report,
-    ))
+
+
 
     pail["table_female_oestradiol"] = (
         organize_plink_cohort_variables_by_sex_hormone(
@@ -1805,6 +1813,15 @@ def organize_plink_cohorts_variables_by_sex_hormone(
             exclude_pregnancy=True,
             menopause="both", # "both", "pre", "post"
             hormone="oestradiol_log",
+            table=table,
+            report=report,
+    ))
+    pail["table_female_oestradiol_free"] = (
+        organize_plink_cohort_variables_by_sex_hormone(
+            sex_text="female", # "both", "female", "male"
+            exclude_pregnancy=True,
+            menopause="both", # "both", "pre", "post"
+            hormone="oestradiol_free_log",
             table=table,
             report=report,
     ))
@@ -1817,24 +1834,17 @@ def organize_plink_cohorts_variables_by_sex_hormone(
             table=table,
             report=report,
     ))
-    pail["table_female_steroid_globulin"] = (
+    pail["table_female_testosterone_free"] = (
         organize_plink_cohort_variables_by_sex_hormone(
             sex_text="female", # "both", "female", "male"
             exclude_pregnancy=True,
             menopause="both", # "both", "pre", "post"
-            hormone="steroid_globulin_log",
+            hormone="testosterone_free_log",
             table=table,
             report=report,
     ))
-    pail["table_female_albumin"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="female", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="both", # "both", "pre", "post"
-            hormone="albumin_log",
-            table=table,
-            report=report,
-    ))
+
+
 
     pail["table_female_premenopause_oestradiol"] = (
         organize_plink_cohort_variables_by_sex_hormone(
@@ -1842,6 +1852,15 @@ def organize_plink_cohorts_variables_by_sex_hormone(
             exclude_pregnancy=True,
             menopause="pre", # "both", "pre", "post"
             hormone="oestradiol_log",
+            table=table,
+            report=report,
+    ))
+    pail["table_female_premenopause_oestradiol_free"] = (
+        organize_plink_cohort_variables_by_sex_hormone(
+            sex_text="female", # "both", "female", "male"
+            exclude_pregnancy=True,
+            menopause="pre", # "both", "pre", "post"
+            hormone="oestradiol_free_log",
             table=table,
             report=report,
     ))
@@ -1854,24 +1873,17 @@ def organize_plink_cohorts_variables_by_sex_hormone(
             table=table,
             report=report,
     ))
-    pail["table_female_premenopause_steroid_globulin"] = (
+    pail["table_female_premenopause_testosterone_free"] = (
         organize_plink_cohort_variables_by_sex_hormone(
             sex_text="female", # "both", "female", "male"
             exclude_pregnancy=True,
             menopause="pre", # "both", "pre", "post"
-            hormone="steroid_globulin_log",
+            hormone="testosterone_free_log",
             table=table,
             report=report,
     ))
-    pail["table_female_premenopause_albumin"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="female", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="pre", # "both", "pre", "post"
-            hormone="albumin_log",
-            table=table,
-            report=report,
-    ))
+
+
 
     pail["table_female_postmenopause_oestradiol"] = (
         organize_plink_cohort_variables_by_sex_hormone(
@@ -1879,6 +1891,15 @@ def organize_plink_cohorts_variables_by_sex_hormone(
             exclude_pregnancy=True,
             menopause="post", # "both", "pre", "post"
             hormone="oestradiol_log",
+            table=table,
+            report=report,
+    ))
+    pail["table_female_postmenopause_oestradiol_free"] = (
+        organize_plink_cohort_variables_by_sex_hormone(
+            sex_text="female", # "both", "female", "male"
+            exclude_pregnancy=True,
+            menopause="post", # "both", "pre", "post"
+            hormone="oestradiol_free_log",
             table=table,
             report=report,
     ))
@@ -1891,24 +1912,17 @@ def organize_plink_cohorts_variables_by_sex_hormone(
             table=table,
             report=report,
     ))
-    pail["table_female_postmenopause_steroid_globulin"] = (
+    pail["table_female_postmenopause_testosterone_free"] = (
         organize_plink_cohort_variables_by_sex_hormone(
             sex_text="female", # "both", "female", "male"
             exclude_pregnancy=True,
             menopause="post", # "both", "pre", "post"
-            hormone="steroid_globulin_log",
+            hormone="testosterone_free_log",
             table=table,
             report=report,
     ))
-    pail["table_female_postmenopause_albumin"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="female", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="post", # "both", "pre", "post"
-            hormone="albumin_log",
-            table=table,
-            report=report,
-    ))
+
+
 
     pail["table_male_oestradiol"] = (
         organize_plink_cohort_variables_by_sex_hormone(
@@ -1916,6 +1930,15 @@ def organize_plink_cohorts_variables_by_sex_hormone(
             exclude_pregnancy=True,
             menopause="both", # "both", "pre", "post"
             hormone="oestradiol_log",
+            table=table,
+            report=report,
+    ))
+    pail["table_male_oestradiol_free"] = (
+        organize_plink_cohort_variables_by_sex_hormone(
+            sex_text="male", # "both", "female", "male"
+            exclude_pregnancy=True,
+            menopause="both", # "both", "pre", "post"
+            hormone="oestradiol_free_log",
             table=table,
             report=report,
     ))
@@ -1928,21 +1951,12 @@ def organize_plink_cohorts_variables_by_sex_hormone(
             table=table,
             report=report,
     ))
-    pail["table_male_steroid_globulin"] = (
+    pail["table_male_testosterone_free"] = (
         organize_plink_cohort_variables_by_sex_hormone(
             sex_text="male", # "both", "female", "male"
             exclude_pregnancy=True,
             menopause="both", # "both", "pre", "post"
-            hormone="steroid_globulin_log",
-            table=table,
-            report=report,
-    ))
-    pail["table_male_albumin"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="male", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="both", # "both", "pre", "post"
-            hormone="albumin_log",
+            hormone="testosterone_free_log",
             table=table,
             report=report,
     ))
@@ -2463,7 +2477,7 @@ def execute_procedure(
     # Plot figures for hormones.
     pail_figures_hormone = ukb_organization.execute_plot_hormones(
         table=table_hormone,
-        report=True,
+        report=False,
     )
 
     # Select and organize variables across cohorts.
@@ -2475,7 +2489,7 @@ def execute_procedure(
         )
     pail_cohorts = organize_plink_cohorts_variables_by_sex_hormone(
         table=table_hormone,
-        report=True,
+        report=False,
     )
 
     # Collect information.
