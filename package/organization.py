@@ -111,8 +111,8 @@ def initialize_directories(
     # Define paths to directories.
     paths["dock"] = path_dock
     paths["organization"] = os.path.join(path_dock, "organization")
-    paths["quality"] = os.path.join(
-        path_dock, "organization", "quality"
+    paths["export"] = os.path.join(
+        path_dock, "organization", "export"
     )
     paths["cohorts"] = os.path.join(
         path_dock, "organization", "cohorts"
@@ -129,7 +129,7 @@ def initialize_directories(
         path=paths["organization"]
     )
     utility.create_directories(
-        path=paths["quality"]
+        path=paths["export"]
     )
     utility.create_directories(
         path=paths["cohorts"]
@@ -2287,6 +2287,65 @@ def write_product_cohorts(
     pass
 
 
+def write_product_export_table(
+    name=None,
+    information=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        name (str): base name for file
+        information (object): information to write to file
+        path_parent (str): path to parent directory
+
+    raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_table = os.path.join(
+        path_parent, str(name + ".tsv")
+    )
+    # Write information to file.
+    information.to_csv(
+        path_or_buf=path_table,
+        sep="\t",
+        header=True,
+        index=True,
+    )
+    pass
+
+
+def write_product_export(
+    information=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        path_parent (str): path to parent directory
+
+    raises:
+
+    returns:
+
+    """
+
+    for name in information.keys():
+        write_product_cohort_table(
+            name=name,
+            information=information[name],
+            path_parent=path_parent,
+        )
+    pass
+
+
 def write_product_plot_figure(
     figure=None,
     file_name=None,
@@ -2406,12 +2465,17 @@ def write_product(
         information=information["plots"],
         path_parent=paths["plots"],
     )
-    # Quality control reports.
+    # Export information.
     if False:
         write_product_quality(
             information=information["quality"],
             path_parent=paths["quality"],
         )
+    # Export information.
+    write_product_export(
+        information=information["export"],
+        path_parent=paths["export"],
+    )
     # Cohort tables in PLINK format.
     write_product_cohorts(
         information=information["cohorts"],
@@ -2492,8 +2556,13 @@ def execute_procedure(
         report=False,
     )
 
+
+    # TODO: Also write "table_hormone" to file as a .tsv
+
     # Collect information.
     information = dict()
+    information["export"] = dict()
+    information["export"]["table_hormones"] = table_hormone
     information["plots"] = pail_figures_hormone
     information["cohorts"] = pail_cohorts
     # Write product information to file.
