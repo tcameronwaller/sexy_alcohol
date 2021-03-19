@@ -1661,7 +1661,7 @@ def select_sex_pregnancy_menopause_cohort_variables_valid_records(
 # TODO: I need to accommodate "menstruation_day", "oral_contraception", and "hormone_therapy"
 # TODO: it makes sense to have missing values in these variables... but... need to consider sex before dropping nulls
 # TODO: YES: consider sex=="female" BEFORE dropping nulls...
-# TODO: maybe create a female-specific variables list?
+# TODO: --> MAYBE CREATE A FEMALE-SPECIFIC VARIABLES LIST AND HANDLE THOSE DIFFERENTLY?
 
 
 def organize_plink_cohort_variables_by_sex_hormone(
@@ -2014,6 +2014,9 @@ def organize_hormone_export_table(
         print("table shape (rows, columns): " + str(table.shape))
     # Return information.
     return table
+
+
+
 
 
 
@@ -2529,10 +2532,11 @@ def write_product(
         path_parent=paths["export"],
     )
     # Cohort tables in PLINK format.
-    write_product_cohorts(
-        information=information["cohorts"],
-        path_parent=paths["cohorts"],
-    )
+    if False:
+        write_product_cohorts(
+            information=information["cohorts"],
+            path_parent=paths["cohorts"],
+        )
     # Trial organization.
     if False:
         write_product_trial(
@@ -2603,10 +2607,10 @@ def execute_procedure(
             table=pail_alcoholism["table_clean"],
             report=True,
         )
-    pail_cohorts = organize_plink_cohorts_variables_by_sex_hormone(
-        table=table_hormone,
-        report=False,
-    )
+        pail_cohorts = organize_plink_cohorts_variables_by_sex_hormone(
+            table=table_hormone,
+            report=False,
+        )
 
     # Organize information for export.
     table_hormone_export = organize_hormone_export_table(
@@ -2620,7 +2624,7 @@ def execute_procedure(
     information["export"] = dict()
     information["export"]["table_hormone_export"] = table_hormone_export
     information["plots"] = pail_figures_hormone
-    information["cohorts"] = pail_cohorts
+    #information["cohorts"] = pail_cohorts
     # Write product information to file.
     write_product(
         paths=paths,
