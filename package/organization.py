@@ -2011,7 +2011,7 @@ def organize_hormone_export_table(
         print("report: organize_hormone_export_table()")
         utility.print_terminal_partition(level=3)
         print(table)
-        print("table shape: " + str(table_valid.shape))
+        print("table shape (rows, columns): " + str(table.shape))
     # Return information.
     return table
 
