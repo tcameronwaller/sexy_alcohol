@@ -1965,6 +1965,57 @@ def organize_plink_cohorts_variables_by_sex_hormone(
     return pail
 
 
+def organize_hormone_export_table(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information for export.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+
+    """
+
+    table = table.copy(deep=True)
+    columns_export = [
+        #"eid",
+        "IID",
+        "sex", "sex_text", "age", "body_mass_index", "body_mass_index_log",
+        "menopause",
+        "pregnancy_broad", "pregnancy",
+        "menstruation_day",
+        "oral_contraception",
+        "hormone_therapy",
+        "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
+        "oestradiol", "oestradiol_log",
+        "oestradiol_free", "oestradiol_free_log",
+        "testosterone", "testosterone_log",
+        "testosterone_free", "testosterone_free_log",
+    ]
+    table = table.loc[
+        :, table.columns.isin(columns_export)
+    ]
+    table = table[[*columns_export]]
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        print("report: organize_hormone_export_table()")
+        utility.print_terminal_partition(level=3)
+        print(table)
+    # Return information.
+    return table
+
+
+
 ##########
 # ... in progress...
 
@@ -2338,7 +2389,7 @@ def write_product_export(
     """
 
     for name in information.keys():
-        write_product_cohort_table(
+        write_product_export_table(
             name=name,
             information=information[name],
             path_parent=path_parent,
@@ -2556,13 +2607,17 @@ def execute_procedure(
         report=False,
     )
 
+    # Organize information for export.
+    table_hormone_export = organize_hormone_export_table(
+        table=table_hormone,
+        report=True,
+    )
 
-    # TODO: Also write "table_hormone" to file as a .tsv
 
     # Collect information.
     information = dict()
     information["export"] = dict()
-    information["export"]["table_hormones"] = table_hormone
+    information["export"]["table_hormone_export"] = table_hormone_export
     information["plots"] = pail_figures_hormone
     information["cohorts"] = pail_cohorts
     # Write product information to file.
