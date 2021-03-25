@@ -1618,6 +1618,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             male_prefixes=["genotype_pc_",],
             table=table,
     ))
+    # TODO: I suppose that I'm somehow losing the records for males in the PLINK step...
     pail[str("table_female_male_" + hormone)] = (
         ukb_organization.organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
