@@ -2419,6 +2419,7 @@ def execute_procedure(
     # Organize phenotypes and covariates in format for analysis in PLINK.
     pail_cohorts = select_organize_plink_cohorts_variables_by_sex_hormones(
         table=table_hormone,
+        report=True,
     )
 
     # Organize information for export.
