@@ -1729,6 +1729,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
 
 def select_organize_plink_cohorts_variables_by_sex_hormones(
     table=None,
+    report=None,
 ):
     """
     Organizes tables for specific cohorts in format for GWAS in PLINK.
@@ -1758,6 +1759,18 @@ def select_organize_plink_cohorts_variables_by_sex_hormones(
         table=table,
     )
     pail.update(pail_testosterone)
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print(
+            "report: select_organize_plink_cohorts_variables_by_sex_hormones()"
+        )
+        for table_name in pail.keys():
+            utility.print_terminal_partition(level=3)
+            print(table_name)
+            print(
+                "Count records: " + str(pail[table_name].shape[0])
+            )
     # Return information.
     return pail
 
