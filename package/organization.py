@@ -2201,7 +2201,7 @@ def execute_procedure(
     # Organize variables for persons' sex hormones across the UK Biobank.
     table_hormone = ukb_organization.execute_sex_hormones(
         table=table_basis,
-        report=False,
+        report=True,
     )
     # Plot figures for hormones.
     if False:
@@ -2215,7 +2215,7 @@ def execute_procedure(
     pail_cohorts = (
         ukb_organization.select_organize_plink_cohorts_by_sex_hormones(
             table=table_hormone,
-            report=True,
+            report=False,
     ))
 
     # Organize information for export.
