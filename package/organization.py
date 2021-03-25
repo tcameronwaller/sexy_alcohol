@@ -1625,6 +1625,8 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             continuous_variables=[hormone],
             table=table_female_male,
     ))
+    print("pail table...")
+    print("Count records: " + str(table_female_male.shape[0]))
     table_female = (
         ukb_organization.select_records_by_sex_specific_valid_variables_values(
             female=True,
@@ -1650,6 +1652,8 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             continuous_variables=[hormone],
             table=table_female,
     ))
+    print("pail table...")
+    print("Count records: " + str(table_female.shape[0]))
     table_female_premenopause = (
         ukb_organization.select_records_by_sex_specific_valid_variables_values(
             female=True,
