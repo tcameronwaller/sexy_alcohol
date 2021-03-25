@@ -1574,87 +1574,6 @@ def scrap_record_cohorts_variables_by_sex_alcoholism_split(
 # Cohort selection, hormone alone
 
 
-
-def select_organize_plink_cohorts_variables_by_sex_hormone(
-    sex_text=None,
-    exclude_pregnancy=None,
-    menopause=None,
-    hormone=None,
-    table=None,
-    report=None,
-):
-    """
-    Organizes tables for specific cohorts in format for GWAS in PLINK.
-
-    Exclude females who are pregnant.
-
-    As written, this procedure requires males to have valid (non-null) values
-    for pregnancy and menopause variables. This gives potential to include these
-    variables as covariates in GWAS (obviously in female-only cohorts).
-
-    arguments:
-        sex_text (str): textual representation of sex selection: "both",
-            "female", or "male"
-        exclude_pregnancy (bool): whether to filter females to exclude those who
-            were pregnant
-        menopause (str): which menopausal categories to include for females:
-            "both", "pre", or "post"
-        hormone (str): name of a column for hormone phenotype variable
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
-
-    """
-
-    # Select cohort's variables and records with valid values.
-    table_valid = select_sex_pregnancy_menopause_cohort_variables_valid_records(
-        sex_text=sex_text,
-        exclude_pregnancy=exclude_pregnancy,
-        menopause=menopause,
-        variables_names_valid=[
-            "eid", "IID",
-            "sex", "sex_text", "age", "body_mass_index_log",
-            "pregnancy", "menopause",
-            hormone,
-        ],
-        variables_prefixes_valid=["genotype_pc_",],
-        table=table,
-    )
-    # Translate variable encodings and table format for analysis in PLINK.
-    table_format = (
-        ukb_organization.organize_phenotype_covariate_table_plink_format(
-            boolean_phenotypes=[],
-            binary_phenotypes=[],
-            continuous_variables=[hormone],
-            table=table_valid,
-    ))
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("... phenotype covariate table in format for PLINK ...")
-        print("sex: " + str(sex_text))
-        print("exclude pregnancy: " + str(exclude_pregnancy))
-        print("menopause: " + str(menopause))
-        print("hormone: " + str(hormone))
-        print("table shape: " + str(table_format.shape))
-        print(table_format)
-        utility.print_terminal_partition(level=4)
-    # Return information.
-    return table_format
-
-
-
-
-
-# TODO: continue working on the main worker function in the UKB organization module
-
-
 def select_organize_plink_cohorts_variables_by_sex_hormone(
     hormone=None,
     table=None,
@@ -1683,7 +1602,6 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             female=True,
             female_menopause="both",
             female_pregnancy=False,
-            female_hormone_alteration=True,
             female_variables=[
                 "eid", "IID",
                 "sex", "sex_text", "age", "body_mass_index_log",
@@ -1712,7 +1630,6 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             female=True,
             female_menopause="both",
             female_pregnancy=False,
-            female_hormone_alteration=True,
             female_variables=[
                 "eid", "IID",
                 "sex", "sex_text", "age", "body_mass_index_log",
@@ -1738,7 +1655,6 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             female=True,
             female_menopause="pre",
             female_pregnancy=False,
-            female_hormone_alteration=True,
             female_variables=[
                 "eid", "IID",
                 "sex", "sex_text", "age", "body_mass_index_log",
@@ -1764,7 +1680,6 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             female=True,
             female_menopause="post",
             female_pregnancy=False,
-            female_hormone_alteration=True,
             female_variables=[
                 "eid", "IID",
                 "sex", "sex_text", "age", "body_mass_index_log",
@@ -1790,7 +1705,6 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             female=False,
             female_menopause="both",
             female_pregnancy=False,
-            female_hormone_alteration=True,
             female_variables=[],
             female_prefixes=[],
             male=True,
