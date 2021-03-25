@@ -2317,10 +2317,11 @@ def write_product(
     """
 
     # Plots.
-    write_product_plots(
-        information=information["plots"],
-        path_parent=paths["plots"],
-    )
+    if False:
+        write_product_plots(
+            information=information["plots"],
+            path_parent=paths["plots"],
+        )
     # Export information.
     if False:
         write_product_quality(
