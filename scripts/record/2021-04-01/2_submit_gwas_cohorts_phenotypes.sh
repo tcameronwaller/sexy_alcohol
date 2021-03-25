@@ -48,7 +48,7 @@ echo "Submit array batch to Sun Grid Engine."
 echo "----------------------------------------------------------------------"
 qsub -t 1-${chromosomes}:1 \
 -o "$path_cohort_phenotype/out.txt" -e "$path_cohort_phenotype/error.txt" \
-$path_scripts_record/3_run_gwas.sh \
+$path_scripts_record/3_run_batch_gwas.sh \
 $path_table_phenotypes_covariates \
 $path_cohort_phenotype \
 $cohort_phenotype \
