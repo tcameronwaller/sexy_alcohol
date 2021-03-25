@@ -1766,7 +1766,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormones(
             "report: select_organize_plink_cohorts_variables_by_sex_hormones()"
         )
         for table_name in pail.keys():
-            utility.print_terminal_partition(level=4)
+            utility.print_terminal_partition(level=5)
             print(table_name)
             print(
                 "Count records: " + str(pail[table_name].shape[0])
@@ -2395,7 +2395,7 @@ def execute_procedure(
     # Exclusion identifiers are "eid".
     source = read_source(
         path_dock=path_dock,
-        report=True,
+        report=False,
     )
     # Organize variables for persons' genotypes, sex, age, and body mass index
     # across the UK Biobank.
@@ -2406,7 +2406,7 @@ def execute_procedure(
     # Organize variables for persons' sex hormones across the UK Biobank.
     table_hormone = ukb_organization.execute_sex_hormones(
         table=table_basis,
-        report=True,
+        report=False,
     )
     # Plot figures for hormones.
     if False:
@@ -2425,7 +2425,7 @@ def execute_procedure(
     # Organize information for export.
     table_hormone_export = organize_hormone_export_table(
         table=table_hormone,
-        report=True,
+        report=False,
     )
 
 
