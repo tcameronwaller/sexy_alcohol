@@ -1766,7 +1766,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormones(
             "report: select_organize_plink_cohorts_variables_by_sex_hormones()"
         )
         for table_name in pail.keys():
-            utility.print_terminal_partition(level=3)
+            utility.print_terminal_partition(level=4)
             print(table_name)
             print(
                 "Count records: " + str(pail[table_name].shape[0])
