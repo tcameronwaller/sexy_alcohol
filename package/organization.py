@@ -1581,6 +1581,12 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
     """
     Organizes tables for specific cohorts in format for GWAS in PLINK.
 
+    Notice that different variables are relevant for females and males.
+    Combination of tables for females and males introduces missing or null
+    values for these sex-specific variables.
+    Remove records with null values separately for females and males but not
+    after combination.
+
     arguments:
         hormone (str): name of column for hormone variable
         table (object): Pandas data frame of phenotype variables across UK
@@ -1618,19 +1624,14 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             male_prefixes=["genotype_pc_",],
             table=table,
     ))
-    # TODO: I suppose that I'm somehow losing the records for males in the PLINK step...
     pail[str("table_female_male_" + hormone)] = (
         ukb_organization.organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
             continuous_variables=[hormone],
+            remove_null_records=False,
             table=table_female_male,
     ))
-    print("collection handle table...")
-    print("Count records: " + str(table_female_male.shape[0]))
-    print("pail table...")
-    print(str("table_female_male_" + hormone))
-    print("Count records: " + str(pail[str("table_female_male_" + hormone)].shape[0]))
     table_female = (
         ukb_organization.select_records_by_sex_specific_valid_variables_values(
             female=True,
@@ -1654,13 +1655,9 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             boolean_phenotypes=[],
             binary_phenotypes=[],
             continuous_variables=[hormone],
+            remove_null_records=False,
             table=table_female,
     ))
-    print("collection handle table...")
-    print("Count records: " + str(table_female.shape[0]))
-    print("pail table...")
-    print(str("table_female_" + hormone))
-    print("Count records: " + str(pail[str("table_female_" + hormone)].shape[0]))
     table_female_premenopause = (
         ukb_organization.select_records_by_sex_specific_valid_variables_values(
             female=True,
@@ -1684,6 +1681,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             boolean_phenotypes=[],
             binary_phenotypes=[],
             continuous_variables=[hormone],
+            remove_null_records=False,
             table=table_female_premenopause,
     ))
     table_female_postmenopause = (
@@ -1709,6 +1707,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             boolean_phenotypes=[],
             binary_phenotypes=[],
             continuous_variables=[hormone],
+            remove_null_records=False,
             table=table_female_postmenopause,
     ))
     table_male = (
@@ -1732,6 +1731,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             boolean_phenotypes=[],
             binary_phenotypes=[],
             continuous_variables=[hormone],
+            remove_null_records=False,
             table=table_male,
     ))
     # Return information.
