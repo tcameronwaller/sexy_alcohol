@@ -1159,7 +1159,7 @@ def organize_alcoholism_cases_controls_variables(
 
 
 ##########
-# Cohort selection, hormone and alcoholism
+# Cohort selection, hormone and alcoholism in matching cohort
 
 
 def select_sex_alcoholism_cohort_variables_valid_records(
@@ -1574,97 +1574,8 @@ def scrap_record_cohorts_variables_by_sex_alcoholism_split(
 # Cohort selection, hormone alone
 
 
-def select_sex_pregnancy_menopause_cohort_variables_valid_records(
-    sex_text=None,
-    exclude_pregnancy=None,
-    menopause=None,
-    variables_names_valid=None,
-    variables_prefixes_valid=None,
-    table=None,
-):
-    """
-    Selects cohort by multiple criteria.
 
-    arguments:
-        sex_text (str): textual representation of sex selection: "both",
-            "female", or "male"
-        exclude_pregnancy (bool): whether to filter females to exclude those who
-            were pregnant
-        menopause (str): which menopausal categories to include for females:
-            "both", "pre", or "post"
-        variables_names_valid (list<str>): names of columns for variables in
-            which rows must have valid values
-        variables_prefixes_valid (list<str>): prefixes of columns for variables
-            in which rows must have valid values
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
-
-    """
-
-    # Copy information.
-    table = table.copy(deep=True)
-    # Select records with valid (non-null) values of relevant variables.
-    # Exclude missing values first to avoid interpretation of "None" as False.
-    table = ukb_organization.select_valid_records_all_specific_variables(
-        names=variables_names_valid,
-        prefixes=variables_prefixes_valid,
-        table=table,
-        drop_columns=True,
-        report=False,
-    )
-
-    # Select cohort.
-    # Determine whether to filter by sex.
-    if (str(sex_text) == "male"):
-        # Filter to males.
-        table = table.loc[
-            (table["sex_text"] == "male"), :
-        ]
-    elif (str(sex_text) == "female"):
-        # Filter to females.
-        table = table.loc[
-            (table["sex_text"] == "female"), :
-        ]
-    # Determine whether to filter by pregnancy or by menopause.
-    if (
-        (str(sex_text) == "both") or
-        (str(sex_text) == "female")
-    ):
-        # Determine whether to filter by pregnancy.
-        if (exclude_pregnancy):
-            # Filter to non-pregnant females.
-            table = table.loc[
-                (table["pregnancy"] < 0.5), :
-            ]
-        # Determine whether to filter by menopause.
-        if (menopause == "pre"):
-            # Filter to pre-menopausal females.
-            table = table.loc[
-                (table["menopause"] < 0.5), :
-            ]
-        elif (menopause == "post"):
-            # Filter to post-menopausal females.
-            table = table.loc[
-                (table["menopause"] >= 0.5), :
-            ]
-        pass
-    # Return information.
-    return table
-
-
-# TODO: I need to accommodate "menstruation_day", "oral_contraception", and "hormone_therapy"
-# TODO: it makes sense to have missing values in these variables... but... need to consider sex before dropping nulls
-# TODO: YES: consider sex=="female" BEFORE dropping nulls...
-# TODO: --> MAYBE CREATE A FEMALE-SPECIFIC VARIABLES LIST AND HANDLE THOSE DIFFERENTLY?
-
-
-def organize_plink_cohort_variables_by_sex_hormone(
+def select_organize_plink_cohorts_variables_by_sex_hormone(
     sex_text=None,
     exclude_pregnancy=None,
     menopause=None,
@@ -1738,20 +1649,175 @@ def organize_plink_cohort_variables_by_sex_hormone(
     return table_format
 
 
-def organize_plink_cohorts_variables_by_sex_hormone(
+
+
+
+# TODO: continue working on the main worker function in the UKB organization module
+
+
+def select_organize_plink_cohorts_variables_by_sex_hormone(
+    hormone=None,
     table=None,
-    report=None,
 ):
     """
     Organizes tables for specific cohorts in format for GWAS in PLINK.
 
-    Exclude females who are pregnant.
+    arguments:
+        hormone (str): name of column for hormone variable
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
 
-    As written, this procedure requires males to have valid (non-null) values
-    for pregnancy and menopause variables. This gives potential to include these
-    variables as covariates in GWAS (obviously in female-only cohorts).
+    raises:
 
-    TODO: Exclude males and females who are on hormone therapy?
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Compile information.
+    pail = dict()
+    # Select and organize variables across cohorts.
+    # Translate variable encodings and table format for analysis in PLINK.
+    table_female_male = (
+        ukb_organization.select_records_by_sex_specific_valid_variables_values(
+            female=True,
+            female_menopause="both",
+            female_pregnancy=False,
+            female_hormone_alteration=True,
+            female_variables=[
+                "eid", "IID",
+                "sex", "sex_text", "age", "body_mass_index_log",
+                "pregnancy",
+                hormone,
+            ],
+            female_prefixes=["genotype_pc_",],
+            male=True,
+            male_variables=[
+                "eid", "IID",
+                "sex", "sex_text", "age", "body_mass_index_log",
+                hormone,
+            ],
+            male_prefixes=["genotype_pc_",],
+            table=table,
+    ))
+    pail[str("table_female_male_" + hormone)] = (
+        ukb_organization.organize_phenotype_covariate_table_plink_format(
+            boolean_phenotypes=[],
+            binary_phenotypes=[],
+            continuous_variables=[hormone],
+            table=table_female_male,
+    ))
+    table_female = (
+        ukb_organization.select_records_by_sex_specific_valid_variables_values(
+            female=True,
+            female_menopause="both",
+            female_pregnancy=False,
+            female_hormone_alteration=True,
+            female_variables=[
+                "eid", "IID",
+                "sex", "sex_text", "age", "body_mass_index_log",
+                "pregnancy", "menopause",
+                "hormone_alteration",
+                hormone,
+            ],
+            female_prefixes=["genotype_pc_", "menopause_hormone_category_"],
+            male=False,
+            male_variables=[],
+            male_prefixes=[],
+            table=table,
+    ))
+    pail[str("table_female_" + hormone)] = (
+        ukb_organization.organize_phenotype_covariate_table_plink_format(
+            boolean_phenotypes=[],
+            binary_phenotypes=[],
+            continuous_variables=[hormone],
+            table=table_female,
+    ))
+    table_female_premenopause = (
+        ukb_organization.select_records_by_sex_specific_valid_variables_values(
+            female=True,
+            female_menopause="pre",
+            female_pregnancy=False,
+            female_hormone_alteration=True,
+            female_variables=[
+                "eid", "IID",
+                "sex", "sex_text", "age", "body_mass_index_log",
+                "pregnancy", "menopause", "menstruation_day",
+                "hormone_alteration",
+                hormone,
+            ],
+            female_prefixes=["genotype_pc_",],
+            male=False,
+            male_variables=[],
+            male_prefixes=[],
+            table=table,
+    ))
+    pail[str("table_female_premenopause_" + hormone)] = (
+        ukb_organization.organize_phenotype_covariate_table_plink_format(
+            boolean_phenotypes=[],
+            binary_phenotypes=[],
+            continuous_variables=[hormone],
+            table=table_female_premenopause,
+    ))
+    table_female_postmenopause = (
+        ukb_organization.select_records_by_sex_specific_valid_variables_values(
+            female=True,
+            female_menopause="post",
+            female_pregnancy=False,
+            female_hormone_alteration=True,
+            female_variables=[
+                "eid", "IID",
+                "sex", "sex_text", "age", "body_mass_index_log",
+                "pregnancy", "menopause",
+                "hormone_alteration",
+                hormone,
+            ],
+            female_prefixes=["genotype_pc_",],
+            male=False,
+            male_variables=[],
+            male_prefixes=[],
+            table=table,
+    ))
+    pail[str("table_female_postmenopause_" + hormone)] = (
+        ukb_organization.organize_phenotype_covariate_table_plink_format(
+            boolean_phenotypes=[],
+            binary_phenotypes=[],
+            continuous_variables=[hormone],
+            table=table_female_postmenopause,
+    ))
+    table_male = (
+        ukb_organization.select_records_by_sex_specific_valid_variables_values(
+            female=False,
+            female_menopause="both",
+            female_pregnancy=False,
+            female_hormone_alteration=True,
+            female_variables=[],
+            female_prefixes=[],
+            male=True,
+            male_variables=[
+                "eid", "IID",
+                "sex", "sex_text", "age", "body_mass_index_log",
+                hormone,
+            ],
+            male_prefixes=["genotype_pc_",],
+            table=table,
+    ))
+    pail[str("table_male_" + hormone)] = (
+        ukb_organization.organize_phenotype_covariate_table_plink_format(
+            boolean_phenotypes=[],
+            binary_phenotypes=[],
+            continuous_variables=[hormone],
+            table=table_male,
+    ))
+    # Return information.
+    return pail
+
+
+def select_organize_plink_cohorts_variables_by_sex_hormones(
+    table=None,
+):
+    """
+    Organizes tables for specific cohorts in format for GWAS in PLINK.
 
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
@@ -1768,201 +1834,22 @@ def organize_plink_cohorts_variables_by_sex_hormone(
     # Compile information.
     pail = dict()
     # Select and organize variables across cohorts.
-    pail["table_female_male_oestradiol"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="both", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="both", # "both", "pre", "post"
-            hormone="oestradiol_log",
-            table=table,
-            report=report,
-    ))
-    pail["table_female_male_oestradiol_free"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="both", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="both", # "both", "pre", "post"
-            hormone="oestradiol_free_log",
-            table=table,
-            report=report,
-    ))
-    pail["table_female_male_testosterone"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="both", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="both", # "both", "pre", "post"
-            hormone="testosterone_log",
-            table=table,
-            report=report,
-    ))
-    pail["table_female_male_testosterone_free"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="both", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="both", # "both", "pre", "post"
-            hormone="testosterone_free_log",
-            table=table,
-            report=report,
-    ))
-
-
-
-    pail["table_female_oestradiol"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="female", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="both", # "both", "pre", "post"
-            hormone="oestradiol_log",
-            table=table,
-            report=report,
-    ))
-    pail["table_female_oestradiol_free"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="female", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="both", # "both", "pre", "post"
-            hormone="oestradiol_free_log",
-            table=table,
-            report=report,
-    ))
-    pail["table_female_testosterone"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="female", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="both", # "both", "pre", "post"
-            hormone="testosterone_log",
-            table=table,
-            report=report,
-    ))
-    pail["table_female_testosterone_free"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="female", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="both", # "both", "pre", "post"
-            hormone="testosterone_free_log",
-            table=table,
-            report=report,
-    ))
-
-
-
-    pail["table_female_premenopause_oestradiol"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="female", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="pre", # "both", "pre", "post"
-            hormone="oestradiol_log",
-            table=table,
-            report=report,
-    ))
-    pail["table_female_premenopause_oestradiol_free"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="female", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="pre", # "both", "pre", "post"
-            hormone="oestradiol_free_log",
-            table=table,
-            report=report,
-    ))
-    pail["table_female_premenopause_testosterone"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="female", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="pre", # "both", "pre", "post"
-            hormone="testosterone_log",
-            table=table,
-            report=report,
-    ))
-    pail["table_female_premenopause_testosterone_free"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="female", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="pre", # "both", "pre", "post"
-            hormone="testosterone_free_log",
-            table=table,
-            report=report,
-    ))
-
-
-
-    pail["table_female_postmenopause_oestradiol"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="female", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="post", # "both", "pre", "post"
-            hormone="oestradiol_log",
-            table=table,
-            report=report,
-    ))
-    pail["table_female_postmenopause_oestradiol_free"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="female", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="post", # "both", "pre", "post"
-            hormone="oestradiol_free_log",
-            table=table,
-            report=report,
-    ))
-    pail["table_female_postmenopause_testosterone"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="female", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="post", # "both", "pre", "post"
-            hormone="testosterone_log",
-            table=table,
-            report=report,
-    ))
-    pail["table_female_postmenopause_testosterone_free"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="female", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="post", # "both", "pre", "post"
-            hormone="testosterone_free_log",
-            table=table,
-            report=report,
-    ))
-
-
-
-    pail["table_male_oestradiol"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="male", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="both", # "both", "pre", "post"
-            hormone="oestradiol_log",
-            table=table,
-            report=report,
-    ))
-    pail["table_male_oestradiol_free"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="male", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="both", # "both", "pre", "post"
-            hormone="oestradiol_free_log",
-            table=table,
-            report=report,
-    ))
-    pail["table_male_testosterone"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="male", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="both", # "both", "pre", "post"
-            hormone="testosterone_log",
-            table=table,
-            report=report,
-    ))
-    pail["table_male_testosterone_free"] = (
-        organize_plink_cohort_variables_by_sex_hormone(
-            sex_text="male", # "both", "female", "male"
-            exclude_pregnancy=True,
-            menopause="both", # "both", "pre", "post"
-            hormone="testosterone_free_log",
-            table=table,
-            report=report,
-    ))
-
+    pail_oestradiol = select_organize_plink_cohorts_variables_by_sex_hormone(
+        hormone="oestradiol_free_log",
+        table=table,
+    )
+    pail.update(pail_oestradiol)
+    pail_testosterone = select_organize_plink_cohorts_variables_by_sex_hormone(
+        hormone="testosterone_free_log",
+        table=table,
+    )
+    pail.update(pail_testosterone)
     # Return information.
     return pail
+
+
+##########
+# Data export
 
 
 def organize_hormone_export_table(
@@ -2532,11 +2419,10 @@ def write_product(
         path_parent=paths["export"],
     )
     # Cohort tables in PLINK format.
-    if False:
-        write_product_cohorts(
-            information=information["cohorts"],
-            path_parent=paths["cohorts"],
-        )
+    write_product_cohorts(
+        information=information["cohorts"],
+        path_parent=paths["cohorts"],
+    )
     # Trial organization.
     if False:
         write_product_trial(
@@ -2595,22 +2481,17 @@ def execute_procedure(
         report=True,
     )
     # Plot figures for hormones.
-    pail_figures_hormone = ukb_organization.execute_plot_hormones(
-        table=table_hormone,
-        report=False,
-    )
-
-    # Select and organize variables across cohorts.
-    # Organize phenotypes and covariates in format for analysis in PLINK.
     if False:
-        pail_cohorts = organize_plink_cohorts_variables_by_sex_alcoholism_split(
-            table=pail_alcoholism["table_clean"],
-            report=True,
-        )
-        pail_cohorts = organize_plink_cohorts_variables_by_sex_hormone(
+        pail_figures_hormone = ukb_organization.execute_plot_hormones(
             table=table_hormone,
             report=False,
         )
+
+    # Select and organize variables across cohorts.
+    # Organize phenotypes and covariates in format for analysis in PLINK.
+    pail_cohorts = select_organize_plink_cohorts_variables_by_sex_hormones(
+        table=table_hormone,
+    )
 
     # Organize information for export.
     table_hormone_export = organize_hormone_export_table(
@@ -2623,8 +2504,8 @@ def execute_procedure(
     information = dict()
     information["export"] = dict()
     information["export"]["table_hormone_export"] = table_hormone_export
-    information["plots"] = pail_figures_hormone
-    #information["cohorts"] = pail_cohorts
+    #information["plots"] = pail_figures_hormone
+    information["cohorts"] = pail_cohorts
     # Write product information to file.
     write_product(
         paths=paths,
