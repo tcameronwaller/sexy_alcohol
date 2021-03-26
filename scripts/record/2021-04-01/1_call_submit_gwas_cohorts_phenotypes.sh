@@ -39,14 +39,14 @@ mkdir -p $path_gwas
 
 ##########
 # Phenotypes
-# "oestradiol_log"
-# "oestradiol_free_log"
+# "oestradiol_log" (batch almost complete)
+# "oestradiol_free_log" (batch submitted at 22:20)
 # "testosterone_log"
 # "testosterone_free_log"
 
 if true; then
 
-  phenotype="oestradiol_free_log" # "oestradiol_log", "oestradiol_free_log", "testosterone_log", "testosterone_free_log"
+  phenotype="testosterone_log" # "oestradiol_log", "oestradiol_free_log", "testosterone_log", "testosterone_free_log"
 
   # Jobs: ___, ___
   # Parameters.
