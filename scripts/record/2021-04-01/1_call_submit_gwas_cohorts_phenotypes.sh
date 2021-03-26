@@ -46,7 +46,7 @@ mkdir -p $path_gwas
 
 if true; then
 
-  phenotype="testosterone_log" # "oestradiol_log", "oestradiol_free_log", "testosterone_log", "testosterone_free_log"
+  phenotype="testosterone_free_log" # "oestradiol_log", "oestradiol_free_log", "testosterone_log", "testosterone_free_log"
 
   # Jobs: ___, ___
   # Parameters.
