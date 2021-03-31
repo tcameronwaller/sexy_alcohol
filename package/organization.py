@@ -1621,6 +1621,7 @@ def organize_hormone_export_table(
         utility.print_terminal_partition(level=3)
         print(table)
         print("table shape (rows, columns): " + str(table.shape))
+        print(table.columns.to_list())
     # Return information.
     return table
 
@@ -2201,11 +2202,11 @@ def execute_procedure(
     # Organize variables for persons' sex hormones across the UK Biobank.
     table_hormone = ukb_organization.execute_sex_hormones(
         table=table_basis,
-        clean=False, # whether to remove original, raw UK Biobank variables
+        clean=True, # whether to remove original, raw UK Biobank variables
         report=True,
     )
     # Plot figures for hormones.
-    if False:
+    if True:
         pail_figures_hormone = ukb_organization.execute_plot_hormones(
             table=table_hormone,
             report=False,
@@ -2225,13 +2226,12 @@ def execute_procedure(
             table=table_hormone,
             report=False,
         )
-    print(table_hormone.columns.to_list())
 
     # Collect information.
     information = dict()
     information["export"] = dict()
     information["export"]["table_hormone_export"] = table_hormone
-    #information["plots"] = pail_figures_hormone
+    information["plots"] = pail_figures_hormone
     information["cohorts"] = pail_cohorts
     # Write product information to file.
     write_product(
