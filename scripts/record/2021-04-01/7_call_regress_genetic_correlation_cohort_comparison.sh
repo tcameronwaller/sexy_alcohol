@@ -37,13 +37,24 @@ set +x
 ###########################################################################
 # ...
 
-# alcoholism_female_male_oestradiol
-# alcoholism_female_oestradiol
-# alcoholism_female_premenopause_oestradiol
-# alcoholism_female_postmenopause_oestradiol
-# alcoholism_male_oestradiol
+cohorts_hormones=()
+cohorts_hormones+=( "female_male_oestradiol_log" "female_male_oestradiol_free_log")
+cohorts_hormones+=( "female_male_testosterone_log" "female_male_testosterone_free_log")
+cohorts_hormones+=( "female_oestradiol_log" "female_oestradiol_free_log")
+cohorts_hormones+=( "female_testosterone_log" "female_testosterone_free_log")
+cohorts_hormones+=( "female_premenopause_oestradiol_log" "female_premenopause_oestradiol_free_log")
+cohorts_hormones+=( "female_premenopause_testosterone_log" "female_premenopause_testosterone_free_log")
+cohorts_hormones+=( "female_postmenopause_oestradiol_log" "female_postmenopause_oestradiol_free_log")
+cohorts_hormones+=( "female_postmenopause_testosterone_log" "female_postmenopause_testosterone_free_log")
+cohorts_hormones+=( "male_oestradiol_log" "male_oestradiol_free_log")
+cohorts_hormones+=( "male_testosterone_log" "male_testosterone_free_log")
 
-if true; then
+for cohort_hormone in "${cohorts_hormones[@]}"; do
+  echo ${cohort_hormone}
+done
+
+
+if false; then
 
   # observation: error (chi-square too small)
   # Parameters.
@@ -51,57 +62,6 @@ if true; then
   hormone="oestradiol_log" # name of original phenotype variable
   type_regression_hormone="linear"
   path_gwas_hormone="$path_gwas/female_postmenopause_oestradiol"
-  /usr/bin/bash "$path_scripts/7_regress_genetic_correlation_cohort_comparison.sh" \
-  $cohort_comparison \
-  $hormone \
-  $type_regression_hormone \
-  $path_gwas_hormone \
-  $path_gwas_alcoholism\
-  $path_genetic_correlation \
-  $path_scripts \
-  $path_ldsc \
-  $path_alleles \
-  $path_disequilibrium
-
-  # Parameters.
-  cohort_comparison="alcoholism_female_postmenopause_testosterone"
-  hormone="testosterone_log" # name of original phenotype variable
-  type_regression_hormone="linear"
-  path_gwas_hormone="$path_gwas/female_postmenopause_testosterone"
-  /usr/bin/bash "$path_scripts/7_regress_genetic_correlation_cohort_comparison.sh" \
-  $cohort_comparison \
-  $hormone \
-  $type_regression_hormone \
-  $path_gwas_hormone \
-  $path_gwas_alcoholism\
-  $path_genetic_correlation \
-  $path_scripts \
-  $path_ldsc \
-  $path_alleles \
-  $path_disequilibrium
-
-  # Parameters.
-  cohort_comparison="alcoholism_female_postmenopause_steroid_globulin"
-  hormone="steroid_globulin_log" # name of original phenotype variable
-  type_regression_hormone="linear"
-  path_gwas_hormone="$path_gwas/female_postmenopause_steroid_globulin"
-  /usr/bin/bash "$path_scripts/7_regress_genetic_correlation_cohort_comparison.sh" \
-  $cohort_comparison \
-  $hormone \
-  $type_regression_hormone \
-  $path_gwas_hormone \
-  $path_gwas_alcoholism\
-  $path_genetic_correlation \
-  $path_scripts \
-  $path_ldsc \
-  $path_alleles \
-  $path_disequilibrium
-
-  # Parameters.
-  cohort_comparison="alcoholism_female_postmenopause_albumin"
-  hormone="albumin_log" # name of original phenotype variable
-  type_regression_hormone="linear"
-  path_gwas_hormone="$path_gwas/female_postmenopause_albumin"
   /usr/bin/bash "$path_scripts/7_regress_genetic_correlation_cohort_comparison.sh" \
   $cohort_comparison \
   $hormone \
