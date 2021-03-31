@@ -2220,16 +2220,16 @@ def execute_procedure(
     ))
 
     # Organize information for export.
-    table_hormone_export = organize_hormone_export_table(
-        table=table_hormone,
-        report=False,
-    )
-
+    if False:
+        table_hormone_export = organize_hormone_export_table(
+            table=table_hormone,
+            report=False,
+        )
 
     # Collect information.
     information = dict()
     information["export"] = dict()
-    information["export"]["table_hormone_export"] = table_hormone_export
+    information["export"]["table_hormone_export"] = table_hormone
     #information["plots"] = pail_figures_hormone
     information["cohorts"] = pail_cohorts
     # Write product information to file.
