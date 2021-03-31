@@ -2177,7 +2177,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 1")
     # Pause procedure.
     time.sleep(5.0)
 
@@ -2201,6 +2201,7 @@ def execute_procedure(
     # Organize variables for persons' sex hormones across the UK Biobank.
     table_hormone = ukb_organization.execute_sex_hormones(
         table=table_basis,
+        clean=False,
         report=True,
     )
     # Plot figures for hormones.
