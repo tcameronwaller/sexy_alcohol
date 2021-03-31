@@ -51,7 +51,7 @@ cohorts_hormones+=( "male;testosterone_log" "male;testosterone_free_log")
 
 for pair in "${cohorts_hormones[@]}"; do
   # Separate fields from pair.
-  IFS=";" read -r -a array <<< "${page}"
+  IFS=";" read -r -a array <<< "${pair}"
   cohort="${array[0]}"
   hormone="${array[1]}"
   cohort_hormone="${cohort}_${hormone}"
