@@ -38,18 +38,23 @@ set +x
 # ...
 
 cohorts_hormones=()
-cohorts_hormones+=( "female_male_oestradiol_log" "female_male_oestradiol_free_log")
-cohorts_hormones+=( "female_male_testosterone_log" "female_male_testosterone_free_log")
-cohorts_hormones+=( "female_oestradiol_log" "female_oestradiol_free_log")
-cohorts_hormones+=( "female_testosterone_log" "female_testosterone_free_log")
-cohorts_hormones+=( "female_premenopause_oestradiol_log" "female_premenopause_oestradiol_free_log")
-cohorts_hormones+=( "female_premenopause_testosterone_log" "female_premenopause_testosterone_free_log")
-cohorts_hormones+=( "female_postmenopause_oestradiol_log" "female_postmenopause_oestradiol_free_log")
-cohorts_hormones+=( "female_postmenopause_testosterone_log" "female_postmenopause_testosterone_free_log")
-cohorts_hormones+=( "male_oestradiol_log" "male_oestradiol_free_log")
-cohorts_hormones+=( "male_testosterone_log" "male_testosterone_free_log")
+cohorts_hormones+=( "female_male;oestradiol_log" "female_male;oestradiol_free_log")
+cohorts_hormones+=( "female_male;testosterone_log" "female_male;testosterone_free_log")
+cohorts_hormones+=( "female;oestradiol_log" "female;oestradiol_free_log")
+cohorts_hormones+=( "female;testosterone_log" "female;testosterone_free_log")
+cohorts_hormones+=( "female_premenopause;oestradiol_log" "female_premenopause;oestradiol_free_log")
+cohorts_hormones+=( "female_premenopause;testosterone_log" "female_premenopause;testosterone_free_log")
+cohorts_hormones+=( "female_postmenopause;oestradiol_log" "female_postmenopause;oestradiol_free_log")
+cohorts_hormones+=( "female_postmenopause;testosterone_log" "female_postmenopause;testosterone_free_log")
+cohorts_hormones+=( "male;oestradiol_log" "male;oestradiol_free_log")
+cohorts_hormones+=( "male;testosterone_log" "male;testosterone_free_log")
 
-for cohort_hormone in "${cohorts_hormones[@]}"; do
+for pair in "${cohorts_hormones[@]}"; do
+  # Separate fields from pair.
+  IFS=";" read -r -a array <<< "${page}"
+  cohort="${array[0]}"
+  hormone="${array[1]}"
+  cohort_hormone="${cohort}_${hormone}"
   echo ${cohort_hormone}
 done
 

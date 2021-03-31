@@ -8,40 +8,63 @@
 ###########################################################################
 ###########################################################################
 
-echo "----------------------------------------------------------------------"
-echo "----------------------------------------------------------------------"
-echo "----------------------------------------------------------------------"
-echo "Concatenate GWAS summary statistics across chromosomes."
-echo "version 1"
-echo "----------------------------------------------------------------------"
-echo "----------------------------------------------------------------------"
-echo "----------------------------------------------------------------------"
-echo ""
-echo ""
-echo ""
+################################################################################
+# Organize arguments.
+cohort_hormone=${1} # unique identifier of GWAS study for cohort and hormone
+hormone=${2} # identifier of hormone phenotype for GWAS
+path_source_directory=${3} # full path to source directory with GWAS summary statistics for a single cohort and hormone
+regression_type=${4} # type of regression for GWAS, either "logistic" or "linear"
+path_gwas_collection=${5} # full path to temporary file for collection of GWAS summary statistics
+path_gwas_format=${6} # full path to file for formatted GWAS summary statistics
+path_gwas_format_compress=${7} # full path to file for formatted GWAS summary statistics after compression
+path_promiscuity_scripts=${8} # complete path to directory of scripts for z-score standardization
+report=${9} # whether to print reports
 
+################################################################################
 # Organize variables.
-path_gwas=$1 # path to directory with GWAS report files
-prefix=$2 # prefix for GWAS report files
-phenotype=$3 # name of phenotype in names of GWAS report files
-suffix=$4 # suffix for GWAS report files
-chromosomes=$5 # count of chromosomes
-path_scripts=$6 # scripts
 
-path_calculate_z_score="$path_scripts/calculate_z_score.sh"
+#path_calculate_z_score="$path_promiscuity_scripts/calculate_z_score_column_4_of_5.sh"
+path_calculate_z_score="$path_promiscuity_scripts/calculate_z_score_column_5_of_6.sh"
+
+###########################################################################
+# Execute procedure.
+
+# Report.
+if [[ "$report" == "true" ]]; then
+  echo "----------"
+  echo "cohort and hormone: " $cohort_hormone
+  echo "hormone: " $hormone
+  echo "path to original directory: " $path_source_directory
+  echo "path to new file: " $path_gwas_format
+fi
+
+# Format of GWAS summary statistics for LDSC.
+# https://github.com/bulik/ldsc/wiki/Heritability-and-Genetic-Correlation#reformatting-summary-statistics
+# description: ............................ LDSC column ........... source column .......... position
+# variant identifier (RS ID): .............  "SNP" ................  "SNP" ................. 2
+# alternate allele (effect allele): .......  "A1" .................  "A1" .................. 4
+# reference allele (non-effect allele): ...  "A2" .................  "A2" .................. 5
+# sample size: ............................  "N" ..................  None .................. [samples = 52,848]
+# effect (coefficient or odds ratio): .....  "BETA" or "OR" .......  "Z" ................... 6
+# probability (p-value): ..................  "P" ..................  "P" ................... 7
+
+# Remove any previous versions of temporary files.
+rm $path_gwas_collection
+rm $path_gwas_format
+
+
+# TODO: need to update variable names below...
+
 
 # Concatenate GWAS reports from all chromosomes.
 # Extract relevant information and format for LDSC.
 # Initialize concatenation.
 cd $path_gwas
 
-# dock/gwas/female_alcoholism_1_testosterone/testosterone/chromosome_1/report.testosterone.glm.linear
-# dock/gwas/female_alcoholism_1_testosterone/alcoholism_1/chromosome_1/report.alcoholism_1.glm.linear
-
 echo "interpreting ${phenotype} as ${suffix}..."
 
 # Organize and concatenate information from linear GWAS.
-if [ "$suffix" = "linear" ]; then
+if [ "$regression_type" = "linear" ]; then
   path_concatenation="$path_gwas/concatenation.${phenotype}.glm.${suffix}"
   rm $path_concatenation
   path_raw="$path_gwas/concatenation.${phenotype}.glm.${suffix}_raw"
@@ -72,7 +95,7 @@ if [ "$suffix" = "linear" ]; then
 fi
 
 # Organize and concatenate information from logistic GWAS.
-if [ "$suffix" = "logistic" ]; then
+if [ "$regression_type" = "logistic" ]; then
   path_concatenation="$path_gwas/concatenation.${phenotype}.glm.${suffix}"
   rm $path_concatenation
   echo "SNP A1 A2 N OR P" > $path_concatenation

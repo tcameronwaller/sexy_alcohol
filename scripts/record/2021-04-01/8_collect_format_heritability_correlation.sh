@@ -12,18 +12,16 @@
 # Organize argument variables.
 
 phenotype_study=${1} # identifier of GWAS study for phenotype
-metabolite_study=${2} # identifier of GWAS study for metabolites
-path_source_file=${3} # full path to source file with GWAS summary statistics for a single metabolite
-name_prefix=${4} # file name prefix before metabolite identifier or "null"
-name_suffix=${5} # file name suffix after metabolite identifier or "null"
-path_genetic_reference=${6} # full path to parent directory with genetic reference files for LDSC
-path_phenotype_gwas=${7} # full path to parent directory for formatted GWAS summary statistics for phenotype
-path_study_gwas=${8} # full path to parent directory for formatted GWAS summary statistics for metabolites in study
-path_study_heritability=${9} # full path to parent directory for LDSC heritability estimation for metabolites in study
-path_study_genetic_correlation=${10} # full path to parent directory for LDSC genetic correlation for metabolites in study
-path_script_gwas_format=${11} # full path to script to use to organize format of GWAS summary statistics for metabolites in study
-path_promiscuity_scripts=${12} # complete path to directory of scripts for z-score standardization
-report=${13} # whether to print reports
+cohort_hormone=${2} # identifier of GWAS study for cohort and hormone
+path_source_directory=${3} # full path to source directory with GWAS summary statistics for a single cohort and hormone
+path_genetic_reference=${4} # full path to parent directory with genetic reference files for LDSC
+path_phenotype_gwas=${5} # full path to parent directory for formatted GWAS summary statistics for phenotype
+path_study_gwas=${6} # full path to parent directory for formatted GWAS summary statistics for metabolites in study
+path_study_heritability=${7} # full path to parent directory for LDSC heritability estimation for metabolites in study
+path_study_genetic_correlation=${8} # full path to parent directory for LDSC genetic correlation for metabolites in study
+path_scripts_record=${9} # full path to pipeline scripts
+path_promiscuity_scripts=${10} # complete path to directory of scripts for z-score standardization
+report=${11} # whether to print reports
 
 ################################################################################
 # Derive variables.
@@ -33,33 +31,13 @@ if [[ "$report" == "true" ]]; then
   echo "----------------------------------------------------------------------"
   echo "----------------------------------------------------------------------"
   echo "----------------------------------------------------------------------"
-  echo "7_execute_procedure_metabolite.sh"
-fi
-
-# Determine file name.
-#file_name=$source_file
-file_name="$(basename -- $path_source_file)"
-# Determine metabolite identifier.
-# Refer to documnetation for test: https://www.freebsd.org/cgi/man.cgi?test
-# Bash script more or less ignores empty string argument.
-# if [[ ! -z "$name_prefix" ]]; then
-metabolite=${file_name}
-if [[ "$name_prefix" != "null" ]]; then
-  metabolite=${metabolite/$name_prefix/""}
-fi
-if [[ "$name_suffix" != "null" ]]; then
-  metabolite=${metabolite/$name_suffix/""}
-fi
-# Report.
-if [[ "$report" == "true" ]]; then
+  echo "8_collect_format_heritability_correlation.sh"
   echo "----------------------------------------------------------------------"
   echo "----------------------------------------------------------------------"
   echo "----------------------------------------------------------------------"
   echo "phenotype study: " $phenotype_study
-  echo "metabolite study: " $metabolite_study
-  echo "path to metabolite file: " $path_source_file
-  echo "file: " $file_name
-  echo "metabolite: " $metabolite
+  echo "cohort and hormone: " $cohort_hormone
+  echo "path to cohort and hormone GWAS source: " $path_source_directory
   echo "----------"
 fi
 
@@ -77,31 +55,29 @@ path_frequencies="$path_genetic_reference/frequencies"
 
 path_phenotype_gwas_munge_suffix="${path_phenotype_gwas}/gwas_munge.sumstats.gz"
 
-# Even temporary files need to have names specific to each metabolite.
-# During parallel processing, multiple temporary files will exist
-# simultaneously.
-path_gwas_collection="${path_study_gwas}/gwas_collection_${metabolite}.txt"
-path_gwas_format="${path_study_gwas}/gwas_format_${metabolite}.txt"
+path_gwas_collection="${path_study_gwas}/gwas_collection.txt"
+path_gwas_format="${path_study_gwas}/gwas_format.txt"
 path_gwas_format_compress="${path_gwas_format}.gz"
-path_gwas_munge="${path_study_gwas}/gwas_munge_${metabolite}"
+path_gwas_munge="${path_study_gwas}/gwas_munge"
 path_gwas_munge_suffix="${path_gwas_munge}.sumstats.gz"
 path_gwas_munge_log="${path_gwas_munge}.log"
 
-path_heritability_report="${path_study_heritability}/heritability_${metabolite}"
+path_heritability_report="${path_study_heritability}/heritability"
 path_heritability_report_suffix="${path_heritability_report}.log"
 
-path_genetic_correlation_report="${path_study_genetic_correlation}/correlation_${metabolite}"
+path_genetic_correlation_report="${path_study_genetic_correlation}/correlation"
 path_genetic_correlation_report_suffix="${path_genetic_correlation_report}.log"
 
 ###########################################################################
 # Execute procedure.
 
+# Collect information across chromosomes.
 # Organize information in format for LDSC.
 # Parameters.
 #report="false" # "true" or "false"
-/usr/bin/bash "$path_script_gwas_format" \
-$metabolite \
-$path_source_file \
+/usr/bin/bash "$path_scripts_record/9_collect_format_gwas_ldsc.sh" \
+$path_source_directory \
+$regression_type \
 $path_gwas_collection \
 $path_gwas_format \
 $path_gwas_format_compress \
