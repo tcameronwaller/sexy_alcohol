@@ -2201,7 +2201,7 @@ def execute_procedure(
     # Organize variables for persons' sex hormones across the UK Biobank.
     table_hormone = ukb_organization.execute_sex_hormones(
         table=table_basis,
-        clean=False,
+        clean=False, # whether to remove original, raw UK Biobank variables
         report=True,
     )
     # Plot figures for hormones.
@@ -2225,6 +2225,7 @@ def execute_procedure(
             table=table_hormone,
             report=False,
         )
+    print(table_hormone.columns.to_list())
 
     # Collect information.
     information = dict()
