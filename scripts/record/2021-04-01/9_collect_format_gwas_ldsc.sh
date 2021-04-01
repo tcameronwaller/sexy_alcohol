@@ -27,6 +27,7 @@ report=${9} # whether to print reports
 path_calculate_z_score="$path_promiscuity_scripts/calculate_z_score_column_5_of_6.sh"
 
 prefix="report"
+chromosomes=22
 
 ###########################################################################
 # Execute procedure.
