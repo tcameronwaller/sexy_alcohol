@@ -73,6 +73,12 @@ path_genetic_correlation_report_suffix="${path_genetic_correlation_report}.log"
 ###########################################################################
 # Execute procedure.
 
+# Initialize directories.
+rm -r $path_study_heritability
+rm -r $path_study_genetic_correlation
+mkdir -p $path_study_heritability
+mkdir -p $path_study_genetic_correlation
+
 # Collect information across chromosomes.
 # Organize information in format for LDSC.
 # Parameters.
