@@ -1,29 +1,22 @@
 #!/bin/bash
 
-###########################################################################
-# Organize general paths.
-###########################################################################
+################################################################################
+# Organize paths.
 # Read private, local file paths.
-#echo "read private file path variables and organize paths..."
+echo "read private file path variables and organize paths..."
 cd ~/paths
-path_ldsc=$(<"./tools_ldsc.txt")
-
 path_temporary=$(<"./processing_sexy_alcohol.txt")
+
 path_waller="$path_temporary/waller"
-path_dock="$path_temporary/waller/dock"
-path_scripts="$path_waller/sexy_alcohol/scripts/record/2021-02-25"
+path_sexy_alcohol="$path_waller/sexy_alcohol"
+path_scripts_record="$path_waller/sexy_alcohol/scripts/record/2021-04-01"
+path_promiscuity_scripts="$path_waller/promiscuity/scripts"
 
-path_gwas="$path_temporary/waller/dock/gwas"
-path_genetic_correlation="$path_temporary/waller/dock/genetic_correlation"
-path_access="$path_temporary/waller/dock/genetic_correlation/access"
-path_disequilibrium="$path_access/disequilibrium"
-path_baseline="$path_access/baseline"
-path_weights="$path_access/weights"
-path_frequencies="$path_access/frequencies"
-path_alleles="$path_access/alleles"
-
-path_gwas_alcohol_format_directory="$path_temporary/waller/dock/gwas/female_male_alcoholism_pgc"
-path_gwas_alcoholism="$path_gwas_alcohol_format_directory/gwas_format_pgc_alcoholism.txt.gz"
+path_dock="$path_waller/dock"
+path_genetic_reference="$path_dock/access/genetic_reference"
+path_gwas="$path_dock/gwas"
+path_heritability="$path_dock/heritability"
+path_genetic_correlation="$path_dock/genetic_correlation"
 
 ###########################################################################
 # Execute procedure.
@@ -34,9 +27,12 @@ path_gwas_alcoholism="$path_gwas_alcohol_format_directory/gwas_format_pgc_alcoho
 # Suppress echo each command to console.
 set +x
 
-###########################################################################
-# ...
+# Organize consistent parameters.
+phenotype_study="30482948_walters_2018"
+path_phenotype_gwas="${path_gwas}/${phenotype_study}"
+regression_type="linear"
 
+# Define multi-dimensional array of cohorts and hormones.
 cohorts_hormones=()
 cohorts_hormones+=( "female_male;oestradiol_log" "female_male;oestradiol_free_log")
 cohorts_hormones+=( "female_male;testosterone_log" "female_male;testosterone_free_log")
@@ -56,27 +52,23 @@ for pair in "${cohorts_hormones[@]}"; do
   hormone="${array[1]}"
   cohort_hormone="${cohort}_${hormone}"
   echo ${cohort_hormone}
-done
-
-
-if false; then
-
-  # observation: error (chi-square too small)
-  # Parameters.
-  cohort_comparison="alcoholism_female_postmenopause_oestradiol"
-  hormone="oestradiol_log" # name of original phenotype variable
-  type_regression_hormone="linear"
-  path_gwas_hormone="$path_gwas/female_postmenopause_oestradiol"
-  /usr/bin/bash "$path_scripts/7_regress_genetic_correlation_cohort_comparison.sh" \
-  $cohort_comparison \
+  path_study_gwas="${path_gwas}/${cohort_hormone}"
+  path_source_directory=$path_study_gwas
+  path_study_heritability="${path_heritability}/${cohort_hormone}"
+  path_study_genetic_correlation="${path_genetic_correlation}/${phenotype_study}/${cohort_hormone}" # notice the directory structure for phenotype and metabolite studies
+  report="true" # "true" or "false"
+  /usr/bin/bash "$path_scripts_record/8_collect_format_heritability_correlation.sh" \
+  $phenotype_study \
+  $cohort_hormone \
   $hormone \
-  $type_regression_hormone \
-  $path_gwas_hormone \
-  $path_gwas_alcoholism\
-  $path_genetic_correlation \
-  $path_scripts \
-  $path_ldsc \
-  $path_alleles \
-  $path_disequilibrium
-
-fi
+  $regression_type \
+  $path_source_directory \
+  $path_genetic_reference \
+  $path_phenotype_gwas \
+  $path_study_gwas \
+  $path_study_heritability \
+  $path_study_genetic_correlation \
+  $path_scripts_record \
+  $path_promiscuity_scripts \
+  $report
+done

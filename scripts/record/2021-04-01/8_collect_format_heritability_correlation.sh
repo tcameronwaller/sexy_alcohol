@@ -13,15 +13,17 @@
 
 phenotype_study=${1} # identifier of GWAS study for phenotype
 cohort_hormone=${2} # identifier of GWAS study for cohort and hormone
-path_source_directory=${3} # full path to source directory with GWAS summary statistics for a single cohort and hormone
-path_genetic_reference=${4} # full path to parent directory with genetic reference files for LDSC
-path_phenotype_gwas=${5} # full path to parent directory for formatted GWAS summary statistics for phenotype
-path_study_gwas=${6} # full path to parent directory for formatted GWAS summary statistics for metabolites in study
-path_study_heritability=${7} # full path to parent directory for LDSC heritability estimation for metabolites in study
-path_study_genetic_correlation=${8} # full path to parent directory for LDSC genetic correlation for metabolites in study
-path_scripts_record=${9} # full path to pipeline scripts
-path_promiscuity_scripts=${10} # complete path to directory of scripts for z-score standardization
-report=${11} # whether to print reports
+hormone=${3} # identifier of hormone phenotype in GWAS study
+regression_type=${4} # type of regression for GWAS, either "logistic" or "linear"
+path_source_directory=${5} # full path to source directory with GWAS summary statistics for a single cohort and hormone
+path_genetic_reference=${6} # full path to parent directory with genetic reference files for LDSC
+path_phenotype_gwas=${7} # full path to parent directory for formatted GWAS summary statistics for phenotype
+path_study_gwas=${8} # full path to parent directory for formatted GWAS summary statistics for metabolites in study
+path_study_heritability=${9} # full path to parent directory for LDSC heritability estimation for metabolites in study
+path_study_genetic_correlation=${10} # full path to parent directory for LDSC genetic correlation for metabolites in study
+path_scripts_record=${11} # full path to pipeline scripts
+path_promiscuity_scripts=${12} # complete path to directory of scripts for z-score standardization
+report=${13} # whether to print reports
 
 ################################################################################
 # Derive variables.
@@ -76,6 +78,8 @@ path_genetic_correlation_report_suffix="${path_genetic_correlation_report}.log"
 # Parameters.
 #report="false" # "true" or "false"
 /usr/bin/bash "$path_scripts_record/9_collect_format_gwas_ldsc.sh" \
+$cohort_hormone \
+$hormone \
 $path_source_directory \
 $regression_type \
 $path_gwas_collection \
