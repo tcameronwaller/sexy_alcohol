@@ -2208,7 +2208,7 @@ def execute_procedure(
     )
     # Organize variables for female menstruation across the UK Biobank.
     table_female = ukb_organization.execute_female_menstruation(
-        table=table_basis,
+        table=table_hormone,
         selection="table_clean", # whether to remove original, raw UK Biobank variables
         report=True,
     )
