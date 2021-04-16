@@ -2198,20 +2198,22 @@ def execute_procedure(
     # across the UK Biobank.
     table_basis = ukb_organization.execute_genotype_sex_age_body(
         table=source["table_phenotypes"],
-        report=False,
-    )
-    # Organize variables for persons' sex hormones across the UK Biobank.
-    table_hormone = ukb_organization.execute_sex_hormones(
-        table=table_basis,
-        selection="table_clean", # whether to remove original, raw UK Biobank variables
         report=True,
     )
-    # Organize variables for female menstruation across the UK Biobank.
-    table_female = ukb_organization.execute_female_menstruation(
-        table=table_hormone,
-        selection="table_clean", # whether to remove original, raw UK Biobank variables
-        report=True,
-    )
+
+    if False:
+        # Organize variables for persons' sex hormones across the UK Biobank.
+        table_hormone = ukb_organization.execute_sex_hormones(
+            table=table_basis,
+            selection="table_clean", # whether to remove original, raw UK Biobank variables
+            report=True,
+        )
+        # Organize variables for female menstruation across the UK Biobank.
+        table_female = ukb_organization.execute_female_menstruation(
+            table=table_hormone,
+            selection="table_clean", # whether to remove original, raw UK Biobank variables
+            report=True,
+        )
 
     # Plot figures for hormones.
     if False:
@@ -2239,7 +2241,7 @@ def execute_procedure(
     # Collect information.
     information = dict()
     information["export"] = dict()
-    information["export"]["table_hormone_export"] = table_hormone
+    information["export"]["table_hormone_export"] = table_basis
     #information["plots"] = pail_figures_hormone
     #information["cohorts"] = pail_cohorts
     # Write product information to file.
