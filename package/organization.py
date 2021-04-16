@@ -2199,22 +2199,20 @@ def execute_procedure(
     table_basis = ukb_organization.execute_genotype_sex_age_body(
         table=source["table_phenotypes"],
         selection="table_clean",
+        report=False,
+    )
+    # Organize variables for persons' sex hormones across the UK Biobank.
+    table_hormone = ukb_organization.execute_sex_hormones(
+        table=table_basis,
+        selection="table_clean", # whether to remove original, raw UK Biobank variables
+        report=False,
+    )
+    # Organize variables for female menstruation across the UK Biobank.
+    table_female = ukb_organization.execute_female_menstruation(
+        table=table_hormone,
+        selection="table_clean", # whether to remove original, raw UK Biobank variables
         report=True,
     )
-
-    if False:
-        # Organize variables for persons' sex hormones across the UK Biobank.
-        table_hormone = ukb_organization.execute_sex_hormones(
-            table=table_basis,
-            selection="table_clean", # whether to remove original, raw UK Biobank variables
-            report=True,
-        )
-        # Organize variables for female menstruation across the UK Biobank.
-        table_female = ukb_organization.execute_female_menstruation(
-            table=table_hormone,
-            selection="table_clean", # whether to remove original, raw UK Biobank variables
-            report=True,
-        )
 
     # Plot figures for hormones.
     if False:
