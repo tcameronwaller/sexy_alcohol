@@ -2198,6 +2198,7 @@ def execute_procedure(
     # across the UK Biobank.
     table_basis = ukb_organization.execute_genotype_sex_age_body(
         table=source["table_phenotypes"],
+        selection="table_clean",
         report=True,
     )
 
