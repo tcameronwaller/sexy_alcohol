@@ -2222,11 +2222,11 @@ def execute_procedure(
 
     # Select and organize variables across cohorts.
     # Organize phenotypes and covariates in format for analysis in PLINK.
-    if False:
+    if True:
         pail_cohorts = (
             ukb_organization.select_organize_plink_cohorts_by_sex_hormones(
-                table=table_hormone,
-                report=False,
+                table=pail_female["table_clean"],
+                report=True,
         ))
 
     # Organize information for export.
@@ -2244,7 +2244,7 @@ def execute_procedure(
         pail_female["table_report_summary"]
     )
     #information["plots"] = pail_figures_hormone
-    #information["cohorts"] = pail_cohorts
+    information["cohorts"] = pail_cohorts
     # Write product information to file.
     write_product(
         paths=paths,
