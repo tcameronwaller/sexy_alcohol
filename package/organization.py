@@ -2208,9 +2208,8 @@ def execute_procedure(
         report=False,
     )
     # Organize variables for female menstruation across the UK Biobank.
-    table_female = ukb_organization.execute_female_menstruation(
+    pail_female = ukb_organization.execute_female_menstruation(
         table=table_hormone,
-        selection="table_clean", # whether to remove original, raw UK Biobank variables
         report=True,
     )
 
@@ -2241,6 +2240,9 @@ def execute_procedure(
     information = dict()
     information["export"] = dict()
     information["export"]["table_hormone_export"] = table_basis
+    information["export"]["table_report_summary_cohorts_hormones"] = (
+        pail_female["table_report_summary"]
+    )
     #information["plots"] = pail_figures_hormone
     #information["cohorts"] = pail_cohorts
     # Write product information to file.
