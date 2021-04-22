@@ -2143,7 +2143,7 @@ def write_product(
         path_parent=paths["export"],
     )
     # Cohort tables in PLINK format.
-    if False:
+    if True:
         write_product_cohorts(
             information=information["cohorts"],
             path_parent=paths["cohorts"],
