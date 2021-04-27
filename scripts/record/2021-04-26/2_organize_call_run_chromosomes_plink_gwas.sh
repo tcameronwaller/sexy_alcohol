@@ -18,12 +18,12 @@
 ### -e "./error"
 # Queue.
 # "1-hour", "1-day", "4-day", "7-day", "30-day", "lg-mem"
-#$ -q 1-day
+#$ -q 1-hour
 # Priority 0-15.
 ### -p -10
 # Memory per iteration.
 # Segmentation errors commonly indicate a memory error.
-#$ -l h_vmem=10G
+#$ -l h_vmem=1G
 # Concurrent threads; assigns value to variable NSLOTS.
 # Important to specify 32 threads to avoid inconsistency with interactive
 # calculations.
@@ -48,7 +48,7 @@ path_batch_instances=${1} # text list of information for each instance in batch
 batch_instances_count=${2} # count of instances in batch
 path_cohorts=${3} # full path to parent directory for tables of variables across cohorts
 path_gwas=${4} # full path to parent directory for GWAS summary statistics
-path_scripts_record=${5}
+path_scripts_record=${5} # full path to parent directory for date-specific record scripts
 
 ###########################################################################
 # Organize variables.
@@ -69,8 +69,9 @@ echo "cohort: " ${cohort}
 echo "covariates: " ${covariates}
 
 # Organize variables.
-path_table_phenotypes_covariates="${path_cohorts}/table_${cohort}_${phenotype}.tsv"
-path_cohort_phenotype="${path_gwas}/${cohort}_${phenotype}"
+cohort_phenotype="${cohort}_${phenotype}"
+path_table_phenotypes_covariates="${path_cohorts}/table_${cohort_phenotype}.tsv"
+path_cohort_phenotype="${path_gwas}/${cohort_phenotype}"
 
 # General parameters.
 threads=32 # 32, needs to match the "pe threaded" argument to scheduler
@@ -83,18 +84,22 @@ chromosomes=22 # 22 # Count of chromosomes on which to run GWAS
 set +x
 
 # Initialize directories.
-rm -r $path_cohort_phenotype
-mkdir -p $path_cohort_phenotype
+#rm -r $path_cohort_phenotype
+if [ ! -d $path_cohort_phenotype ]; then
+    # Directory does not already exist.
+    # Create directory.
+    mkdir -p $path_cohort_phenotype
+fi
 
 ###########################################################################
 # Execute procedure.
 
 path_report=$path_cohort_phenotype
-analysis="${cohort}_${phenotype}"
-/usr/bin/bash "${path_scripts_record}/3_run_plink_gwas.sh" \
+analysis="${cohort_phenotype}"
+/usr/bin/bash "${path_scripts_record}/3_run_chromosomes_plink_gwas.sh" \
 $path_table_phenotypes_covariates \
 $path_report \
-$cohort_phenotype \
+$analysis \
 $phenotype \
 $covariates \
 $threads \

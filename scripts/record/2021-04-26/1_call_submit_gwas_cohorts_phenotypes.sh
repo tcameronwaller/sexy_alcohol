@@ -29,8 +29,6 @@ path_gwas="${path_dock}/gwas"
 #rm -r $path_gwas
 #mkdir -p $path_gwas
 
-# TODO: simplify this array... create a variable for "common covariates", and then append these to all...
-
 # Define covariates common for all cohorts.
 covariates_common="genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
 
@@ -86,7 +84,7 @@ echo "count of batch instances: " $batch_instances_count
 echo "first batch instance: " ${batch_instances[0]} # notice base-zero indexing
 echo "last batch instance: " ${batch_instances[batch_instances_count - 1]}
 
-if false; then
+if true; then
   # Submit array batch to Sun Grid Engine.
   # Array batch indices must start at one (not zero).
   echo "----------------------------------------------------------------------"
@@ -94,7 +92,7 @@ if false; then
   echo "----------------------------------------------------------------------"
   qsub -t 1-${batch_instances_count}:1 \
   -o "${path_gwas}/out.txt" -e "${path_gwas}/error.txt" \
-  "${path_scripts_record}/2_organize_call_run_batch_gwas.sh" \
+  "${path_scripts_record}/2_organize_call_run_chromosomes_plink_gwas.sh" \
   $path_batch_instances \
   $batch_instances_count \
   $path_cohorts \
