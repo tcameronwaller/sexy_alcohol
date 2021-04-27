@@ -35,17 +35,27 @@ path_gwas="${path_dock}/gwas"
 covariates_common="genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
 
 # Define multi-dimensional array of cohorts and covariates.
+
 cohorts_covariates=()
-cohorts_covariates+=("female_male;sex,age,body_mass_index_log")
-cohorts_covariates+=("female;age,body_mass_index_log,menopause_ordinal,hormone_alteration")
-cohorts_covariates+=("female_combination;age,body_mass_index_log,menopause_hormone_category_1,menopause_hormone_category_3,menopause_hormone_category_4")
-cohorts_covariates+=("female_premenopause_binary;age,body_mass_index_log,menstruation_day,hormone_alteration")
-cohorts_covariates+=("female_postmenopause_binary;age,body_mass_index_log,hormone_alteration")
-cohorts_covariates+=("female_premenopause_ordinal;age,body_mass_index_log,menstruation_day,hormone_alteration")
-cohorts_covariates+=("female_perimenopause_ordinal;age,body_mass_index_log,menstruation_day,hormone_alteration")
-cohorts_covariates+=("female_postmenopause_ordinal;age,body_mass_index_log,hormone_alteration")
-cohorts_covariates+=("male;age,body_mass_index_log")
-#cohorts_covariates+=("male_unadjust;table_male_unadjust_;")
+cohorts_covariates+=("female_male;sex,age,body_mass_index_log,")
+cohorts_covariates+=("female;age,body_mass_index_log,menopause_ordinal,hormone_alteration,")
+cohorts_covariates+=("female_combination;age,body_mass_index_log,menopause_hormone_category_1,menopause_hormone_category_3,menopause_hormone_category_4,")
+cohorts_covariates+=("female_premenopause_binary;age,body_mass_index_log,menstruation_day,hormone_alteration,")
+cohorts_covariates+=("female_postmenopause_binary;age,body_mass_index_log,hormone_alteration,")
+cohorts_covariates+=("female_premenopause_ordinal;age,body_mass_index_log,menstruation_day,hormone_alteration,")
+cohorts_covariates+=("female_perimenopause_ordinal;age,body_mass_index_log,menstruation_day,hormone_alteration,")
+cohorts_covariates+=("female_postmenopause_ordinal;age,body_mass_index_log,hormone_alteration,")
+cohorts_covariates+=("male;age,body_mass_index_log,")
+
+cohorts_covariates+=("female_male_unadjust;")
+cohorts_covariates+=("female_unadjust;")
+cohorts_covariates+=("female_combination_unadjust;")
+cohorts_covariates+=("female_premenopause_binary_unadjust;")
+cohorts_covariates+=("female_postmenopause_binary_unadjust;")
+cohorts_covariates+=("female_premenopause_ordinal_unadjust;")
+cohorts_covariates+=("female_perimenopause_ordinal_unadjust;")
+cohorts_covariates+=("female_postmenopause_ordinal_unadjust;")
+cohorts_covariates+=("male_unadjust;")
 
 # Define array of hormones.
 hormones=()
@@ -62,7 +72,7 @@ rm $path_batch_instances
 
 for cohort_covariates in "${cohorts_covariates[@]}"; do
   for hormone in "${hormones[@]}"; do
-    instance="${hormone};${cohort_covariates},${covariates_common}"
+    instance="${hormone};${cohort_covariates}${covariates_common}"
     echo $instance
     echo $instance >> $path_batch_instances
   done
