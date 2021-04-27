@@ -20,7 +20,7 @@ echo "read private file path variables and organize paths..."
 cd ~/paths
 path_temporary=$(<"./processing_sexy_alcohol.txt")
 path_waller="$path_temporary/waller"
-path_scripts_record="$path_waller/sexy_alcohol/scripts/record/2021-04-26"
+path_scripts_record="$path_waller/sexy_alcohol/scripts/record/2021-04-29"
 path_dock="$path_temporary/waller/dock"
 path_cohorts="${path_dock}/organization/cohorts"
 path_gwas="${path_dock}/gwas"
@@ -36,33 +36,33 @@ covariates_common="genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genot
 
 cohorts_covariates=()
 cohorts_covariates+=("female_male;sex,age,body_mass_index_log,")
-cohorts_covariates+=("female;age,body_mass_index_log,menopause_ordinal,hormone_alteration,")
-cohorts_covariates+=("female_combination;age,body_mass_index_log,menopause_hormone_category_1,menopause_hormone_category_3,menopause_hormone_category_4,")
-cohorts_covariates+=("female_premenopause_binary;age,body_mass_index_log,menstruation_day,hormone_alteration,")
-cohorts_covariates+=("female_postmenopause_binary;age,body_mass_index_log,hormone_alteration,")
-cohorts_covariates+=("female_premenopause_ordinal;age,body_mass_index_log,menstruation_day,hormone_alteration,")
-cohorts_covariates+=("female_perimenopause_ordinal;age,body_mass_index_log,menstruation_day,hormone_alteration,")
-cohorts_covariates+=("female_postmenopause_ordinal;age,body_mass_index_log,hormone_alteration,")
-cohorts_covariates+=("male;age,body_mass_index_log,")
+#cohorts_covariates+=("female;age,body_mass_index_log,menopause_ordinal,hormone_alteration,")
+#cohorts_covariates+=("female_combination;age,body_mass_index_log,menopause_hormone_category_1,menopause_hormone_category_3,menopause_hormone_category_4,")
+#cohorts_covariates+=("female_premenopause_binary;age,body_mass_index_log,menstruation_day,hormone_alteration,")
+#cohorts_covariates+=("female_postmenopause_binary;age,body_mass_index_log,hormone_alteration,")
+#cohorts_covariates+=("female_premenopause_ordinal;age,body_mass_index_log,menstruation_day,hormone_alteration,")
+#cohorts_covariates+=("female_perimenopause_ordinal;age,body_mass_index_log,menstruation_day,hormone_alteration,")
+#cohorts_covariates+=("female_postmenopause_ordinal;age,body_mass_index_log,hormone_alteration,")
+#cohorts_covariates+=("male;age,body_mass_index_log,")
 
 cohorts_covariates+=("female_male_unadjust;")
-cohorts_covariates+=("female_unadjust;")
-cohorts_covariates+=("female_combination_unadjust;")
-cohorts_covariates+=("female_premenopause_binary_unadjust;")
-cohorts_covariates+=("female_postmenopause_binary_unadjust;")
-cohorts_covariates+=("female_premenopause_ordinal_unadjust;")
-cohorts_covariates+=("female_perimenopause_ordinal_unadjust;")
-cohorts_covariates+=("female_postmenopause_ordinal_unadjust;")
-cohorts_covariates+=("male_unadjust;")
+#cohorts_covariates+=("female_unadjust;")
+#cohorts_covariates+=("female_combination_unadjust;")
+#cohorts_covariates+=("female_premenopause_binary_unadjust;")
+#cohorts_covariates+=("female_postmenopause_binary_unadjust;")
+#cohorts_covariates+=("female_premenopause_ordinal_unadjust;")
+#cohorts_covariates+=("female_perimenopause_ordinal_unadjust;")
+#cohorts_covariates+=("female_postmenopause_ordinal_unadjust;")
+#cohorts_covariates+=("male_unadjust;")
 
 # Define array of hormones.
 hormones=()
 hormones+=("albumin_log")
-hormones+=("steroid_globulin_log")
-hormones+=("oestradiol_log")
-hormones+=("oestradiol_free_log")
-hormones+=("testosterone_log")
-hormones+=("testosterone_free_log")
+#hormones+=("steroid_globulin_log")
+#hormones+=("oestradiol_log")
+#hormones+=("oestradiol_free_log")
+#hormones+=("testosterone_log")
+#hormones+=("testosterone_free_log")
 
 # Assemble array of batch instance details.
 path_batch_instances="${path_gwas}/batch_instances.txt"

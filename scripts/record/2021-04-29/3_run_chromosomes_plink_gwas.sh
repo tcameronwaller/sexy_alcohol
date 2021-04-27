@@ -21,29 +21,15 @@ cd ~/paths
 path_plink2=$(<"./tools_user_plink2.txt")
 path_ukb_genotype=$(<"./ukbiobank_genotype.txt")
 
-
+# Iterate on chromosomes.
 start=1
 end=$chromosomes
 for (( index=$start; index<=$end; index++ ))
 do
-	echo "chromosome: ${index}"
+
+  #echo "chromosome: ${index}"
   # Set directory.
   path_chromosome="$path_report/chromosome_${index}"
-  # Determine whether the temporary directory structure already exists.
-  if [ ! -d $path_chromosome ]; then
-      # Directory does not already exist.
-      # Create directory.
-      mkdir -p $path_chromosome
-  fi
-  cd $path_chromosome
-
-done
-
-
-if false; then
-
-  # Set directory.
-  path_chromosome="$path_report/chromosome_$chromosome"
   # Determine whether the temporary directory structure already exists.
   if [ ! -d $path_chromosome ]; then
       # Directory does not already exist.
@@ -58,8 +44,8 @@ if false; then
   $path_plink2 \
   --memory 90000 \
   --threads $threads \
-  --bgen $path_ukb_genotype/Chromosome/ukb_imp_chr${chromosome}_v3.bgen \
-  --sample $path_ukb_genotype/Chromosome/ukb46237_imp_chr${chromosome}_v3_s487320.sample \
+  --bgen $path_ukb_genotype/Chromosome/ukb_imp_chr${index}_v3.bgen \
+  --sample $path_ukb_genotype/Chromosome/ukb46237_imp_chr${index}_v3_s487320.sample \
   --keep $path_table_phenotypes_covariates \
   --maf $maf \
   --freq --glm hide-covar \
@@ -68,6 +54,6 @@ if false; then
   --pheno-name $phenotypes \
   --covar $path_table_phenotypes_covariates \
   --covar-name $covariates \
-  --out report \
+  --out report
 
-fi
+done

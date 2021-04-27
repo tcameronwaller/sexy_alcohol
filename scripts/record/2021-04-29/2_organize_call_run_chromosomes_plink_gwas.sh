@@ -11,7 +11,7 @@
 # Contact.
 # "b": beginning, "e": end, "a": abortion, "s": suspension, "n": never
 #$ -M tcameronwaller@gmail.com
-#$ -m ase
+#$ -m as
 # Standard output and error.
 # Specify as arguments when calling qsub.
 ### -o "./out"
@@ -23,7 +23,7 @@
 ### -p -10
 # Memory per iteration.
 # Segmentation errors commonly indicate a memory error.
-#$ -l h_vmem=1G
+#$ -l h_vmem=10G
 # Concurrent threads; assigns value to variable NSLOTS.
 # Important to specify 32 threads to avoid inconsistency with interactive
 # calculations.
@@ -37,7 +37,7 @@
 # For large cohorts (20,000 - 500,000), limit to 10-20 total simultaneous GWAS
 # on NCSA.
 # Beyond 10-20 simultaneous GWAS, PLINK2 begins to use more than 2 TB storage.
-#$ -tc 4
+#$ -tc 10
 
 # http://gridscheduler.sourceforge.net/htmlman/htmlman1/qsub.html
 
