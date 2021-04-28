@@ -27,7 +27,7 @@ path_gwas="${path_dock}/gwas"
 
 # Initialize directories.
 #rm -r $path_gwas
-#mkdir -p $path_gwas
+mkdir -p $path_gwas
 
 # Define covariates common for all cohorts.
 covariates_common="genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
