@@ -38,7 +38,7 @@ do
   fi
   cd $path_chromosome
 
-  if false; then
+  if true; then
     # Call PLINK2.
     # 90,000 Mebibytes (MiB) is 94.372 Gigabytes (GB)
     # --pfilter drops SNPs with null p-values and any beyond threshold (such as 1)

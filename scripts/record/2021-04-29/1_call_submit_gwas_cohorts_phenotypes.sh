@@ -34,31 +34,26 @@ covariates_common="genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genot
 
 # Define multi-dimensional array of cohorts and covariates.
 
-# TODO: for some reason the adjusted analysis crashed too...
-
-# TODO: The "unadjust" analyses need to reference the sample phenotype-covariate table...
-# TODO: need to pass 1. cohort name 2. table name...
-
 cohorts_covariates=()
-cohorts_covariates+=("female_male;table_female_male_;sex,age,body_mass_index_log,")
-cohorts_covariates+=("female;table_female_;age,body_mass_index_log,menopause_ordinal,hormone_alteration,")
-cohorts_covariates+=("female_combination;table_female_combination_;age,body_mass_index_log,menopause_hormone_category_1,menopause_hormone_category_3,menopause_hormone_category_4,")
-cohorts_covariates+=("female_premenopause_binary;table_female_premenopause_binary_;age,body_mass_index_log,menstruation_day,hormone_alteration,")
-cohorts_covariates+=("female_postmenopause_binary;table_female_postmenopause_binary_;age,body_mass_index_log,hormone_alteration,")
-cohorts_covariates+=("female_premenopause_ordinal;table_female_premenopause_ordinal_;age,body_mass_index_log,menstruation_day,hormone_alteration,")
-cohorts_covariates+=("female_perimenopause_ordinal;table_female_perimenopause_ordinal_;age,body_mass_index_log,menstruation_day,hormone_alteration,")
-cohorts_covariates+=("female_postmenopause_ordinal;table_female_postmenopause_ordinal_;age,body_mass_index_log,hormone_alteration,")
-cohorts_covariates+=("male;table_male_;age,body_mass_index_log,")
+cohorts_covariates+=("female_male;table_female_male;sex,age,body_mass_index_log,")
+cohorts_covariates+=("female;table_female;age,body_mass_index_log,menopause_ordinal,hormone_alteration,")
+cohorts_covariates+=("female_combination;table_female_combination;age,body_mass_index_log,menopause_hormone_category_1,menopause_hormone_category_3,menopause_hormone_category_4,")
+cohorts_covariates+=("female_premenopause_binary;table_female_premenopause_binary;age,body_mass_index_log,menstruation_day,hormone_alteration,")
+cohorts_covariates+=("female_postmenopause_binary;table_female_postmenopause_binary;age,body_mass_index_log,hormone_alteration,")
+cohorts_covariates+=("female_premenopause_ordinal;table_female_premenopause_ordinal;age,body_mass_index_log,menstruation_day,hormone_alteration,")
+cohorts_covariates+=("female_perimenopause_ordinal;table_female_perimenopause_ordinal;age,body_mass_index_log,menstruation_day,hormone_alteration,")
+cohorts_covariates+=("female_postmenopause_ordinal;table_female_postmenopause_ordinal;age,body_mass_index_log,hormone_alteration,")
+cohorts_covariates+=("male;table_male;age,body_mass_index_log,")
 
-cohorts_covariates+=("female_male_unadjust;table_female_male_;")
-cohorts_covariates+=("female_unadjust;table_female_;")
-cohorts_covariates+=("female_combination_unadjust;table_female_combination_;")
-cohorts_covariates+=("female_premenopause_binary_unadjust;table_female_premenopause_binary_;")
-cohorts_covariates+=("female_postmenopause_binary_unadjust;table_female_postmenopause_binary_;")
-cohorts_covariates+=("female_premenopause_ordinal_unadjust;table_female_premenopause_ordinal_;")
-cohorts_covariates+=("female_perimenopause_ordinal_unadjust;table_female_perimenopause_ordinal_;")
-cohorts_covariates+=("female_postmenopause_ordinal_unadjust;table_postmenopause_ordinal_;")
-cohorts_covariates+=("male_unadjust;table_male_;")
+cohorts_covariates+=("female_male_unadjust;table_female_male;")
+cohorts_covariates+=("female_unadjust;table_female;")
+cohorts_covariates+=("female_combination_unadjust;table_female_combination;")
+cohorts_covariates+=("female_premenopause_binary_unadjust;table_female_premenopause_binary;")
+cohorts_covariates+=("female_postmenopause_binary_unadjust;table_female_postmenopause_binary;")
+cohorts_covariates+=("female_premenopause_ordinal_unadjust;table_female_premenopause_ordinal;")
+cohorts_covariates+=("female_perimenopause_ordinal_unadjust;table_female_perimenopause_ordinal;")
+cohorts_covariates+=("female_postmenopause_ordinal_unadjust;table_postmenopause_ordinal;")
+cohorts_covariates+=("male_unadjust;table_male;")
 
 # Define array of hormones.
 hormones=()
