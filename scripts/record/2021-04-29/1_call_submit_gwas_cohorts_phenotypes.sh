@@ -18,15 +18,15 @@
 # Read private, local file paths.
 echo "read private file path variables and organize paths..."
 cd ~/paths
-path_temporary=$(<"./processing_sexy_alcohol.txt")
-path_waller="$path_temporary/waller"
+path_process=$(<"./process_sexy_alcohol.txt")
+path_waller="$path_process/waller"
 path_scripts_record="$path_waller/sexy_alcohol/scripts/record/2021-04-29"
-path_dock="$path_temporary/waller/dock"
+path_dock="$path_process/waller/dock"
 path_cohorts="${path_dock}/organization/cohorts"
-path_gwas="${path_dock}/gwas"
+path_gwas="${path_dock}/gwas/cohorts_hormones"
 
 # Initialize directories.
-#rm -r $path_gwas
+rm -r $path_gwas
 mkdir -p $path_gwas
 
 # Define covariates common for all cohorts.

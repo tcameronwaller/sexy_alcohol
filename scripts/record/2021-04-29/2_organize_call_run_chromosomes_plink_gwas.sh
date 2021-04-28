@@ -18,7 +18,7 @@
 ### -e "./error"
 # Queue.
 # "1-hour", "1-day", "4-day", "7-day", "30-day", "lg-mem"
-#$ -q 1-hour
+#$ -q 7-day
 # Priority 0-15.
 ### -p -10
 # Memory per iteration.
@@ -37,7 +37,7 @@
 # For large cohorts (20,000 - 500,000), limit to 10-20 total simultaneous GWAS
 # on NCSA.
 # Beyond 10-20 simultaneous GWAS, PLINK2 begins to use more than 2 TB storage.
-#$ -tc 8
+#$ -tc 15
 
 # http://gridscheduler.sourceforge.net/htmlman/htmlman1/qsub.html
 

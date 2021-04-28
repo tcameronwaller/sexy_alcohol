@@ -5,16 +5,16 @@
 ###########################################################################
 # Organize script parameters.
 project="sexy_alcohol"
-#project="bipolar_metabolism"
+#project="psychiatric_metabolism"
 
 # Read private, local file paths.
 echo "read private file path variables..."
 cd ~/paths
-path_temporary=$(<"./processing_${project}.txt")
-path_repository="$path_temporary/waller/${project}"
-path_uk_biobank="$path_temporary/waller/uk_biobank"
-path_promiscuity="$path_temporary/waller/promiscuity"
-path_parameters="$path_temporary/waller/dock/parameters"
+path_process=$(<"./process_${project}.txt")
+path_repository="$path_process/${project}"
+path_uk_biobank="$path_process/uk_biobank"
+path_promiscuity="$path_process/promiscuity"
+path_parameters="$path_process/dock/parameters"
 
 # Echo each command to console.
 set -x
@@ -31,7 +31,7 @@ rm -r $path_parameters
 # Access and organize current version of the main repository.
 
 echo "access current version of the ${project} repository..."
-cd $path_waller
+cd $path_process
 wget "https://github.com/tcameronwaller/${project}/archive/main.zip"
 unzip main.zip
 rm main.zip
@@ -45,7 +45,7 @@ mv "$path_repository/package" "$path_repository/${project}"
 # Scripts remain within original repository's structure.
 # Python code transfers to a sub-package within main package.
 echo "access current version of the uk_biobank repository..."
-cd $path_waller
+cd $path_process
 wget https://github.com/tcameronwaller/uk_biobank/archive/main.zip
 unzip main.zip
 rm main.zip
@@ -57,7 +57,7 @@ cp -r "$path_uk_biobank/uk_biobank" "$path_repository/${project}/uk_biobank"
 # Scripts remain within original repository's structure.
 # Python code transfers to sub-package.
 echo "access current version of the promiscuity repository..."
-cd $path_waller
+cd $path_process
 wget https://github.com/tcameronwaller/promiscuity/archive/main.zip
 unzip main.zip
 rm main.zip

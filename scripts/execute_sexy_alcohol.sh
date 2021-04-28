@@ -6,11 +6,10 @@
 # Read private, local file paths.
 echo "read private file path variables and organize paths..."
 cd ~/paths
-path_python_library=$(<"./project_tools_python_library.txt")
-path_temporary=$(<"./processing_sexy_alcohol.txt")
-path_waller="$path_temporary/waller"
-path_dock="$path_waller/dock"
-path_sexy_alcohol="$path_waller/sexy_alcohol"
+path_python_library=$(<"./tools_python_library.txt")
+path_process=$(<"./process_sexy_alcohol.txt")
+path_dock="$path_process/dock"
+path_sexy_alcohol="$path_process/sexy_alcohol"
 path_package="$path_sexy_alcohol/sexy_alcohol"
 
 # Organize paths to custom package installations.
