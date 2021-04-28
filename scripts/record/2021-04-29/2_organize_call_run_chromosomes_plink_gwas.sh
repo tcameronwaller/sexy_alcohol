@@ -23,7 +23,7 @@
 ### -p -10
 # Memory per iteration.
 # Segmentation errors commonly indicate a memory error.
-#$ -l h_vmem=10G
+#$ -l h_vmem=1G
 # Concurrent threads; assigns value to variable NSLOTS.
 # Important to specify 32 threads to avoid inconsistency with interactive
 # calculations.
@@ -37,7 +37,7 @@
 # For large cohorts (20,000 - 500,000), limit to 10-20 total simultaneous GWAS
 # on NCSA.
 # Beyond 10-20 simultaneous GWAS, PLINK2 begins to use more than 2 TB storage.
-#$ -tc 10
+#$ -tc 8
 
 # http://gridscheduler.sourceforge.net/htmlman/htmlman1/qsub.html
 
@@ -62,16 +62,19 @@ instance=${batch_instances[$batch_index]}
 IFS=";" read -r -a array <<< "${instance}"
 phenotype="${array[0]}"
 cohort="${array[1]}"
-covariates="${array[2]}"
-
-echo "phenotype: " ${phenotype}
-echo "cohort: " ${cohort}
-echo "covariates: " ${covariates}
+table_cohort="${array[2]}"
+covariates="${array[3]}"
 
 # Organize variables.
 cohort_phenotype="${cohort}_${phenotype}"
-path_table_phenotypes_covariates="${path_cohorts}/table_${cohort_phenotype}.tsv"
-path_cohort_phenotype="${path_gwas}/${cohort_phenotype}"
+path_table_phenotypes_covariates="${path_cohorts}/${table_cohort}_${phenotype}.tsv"
+path_study_gwas="${path_gwas}/${cohort_phenotype}"
+
+# Report.
+echo "phenotype: " ${phenotype}
+echo "cohort: " ${cohort}
+echo "table: " ${path_table_phenotypes_covariates}
+echo "covariates: " ${covariates}
 
 # General parameters.
 threads=32 # 32, needs to match the "pe threaded" argument to scheduler
@@ -85,16 +88,16 @@ set +x
 
 # Initialize directories.
 #rm -r $path_cohort_phenotype
-if [ ! -d $path_cohort_phenotype ]; then
+if [ ! -d $path_study_gwas ]; then
     # Directory does not already exist.
     # Create directory.
-    mkdir -p $path_cohort_phenotype
+    mkdir -p $path_study_gwas
 fi
 
 ###########################################################################
 # Execute procedure.
 
-path_report=$path_cohort_phenotype
+path_report=$path_study_gwas
 analysis="${cohort_phenotype}"
 /usr/bin/bash "${path_scripts_record}/3_run_chromosomes_plink_gwas.sh" \
 $path_table_phenotypes_covariates \

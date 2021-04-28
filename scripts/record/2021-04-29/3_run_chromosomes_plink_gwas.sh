@@ -38,22 +38,24 @@ do
   fi
   cd $path_chromosome
 
-  # Call PLINK2.
-  # 90,000 Mebibytes (MiB) is 94.372 Gigabytes (GB)
-  # --pfilter drops SNPs with null p-values and any beyond threshold (such as 1)
-  $path_plink2 \
-  --memory 90000 \
-  --threads $threads \
-  --bgen $path_ukb_genotype/Chromosome/ukb_imp_chr${index}_v3.bgen \
-  --sample $path_ukb_genotype/Chromosome/ukb46237_imp_chr${index}_v3_s487320.sample \
-  --keep $path_table_phenotypes_covariates \
-  --maf $maf \
-  --freq --glm hide-covar \
-  --pfilter 1 \
-  --pheno $path_table_phenotypes_covariates \
-  --pheno-name $phenotypes \
-  --covar $path_table_phenotypes_covariates \
-  --covar-name $covariates \
-  --out report
+  if false; then
+    # Call PLINK2.
+    # 90,000 Mebibytes (MiB) is 94.372 Gigabytes (GB)
+    # --pfilter drops SNPs with null p-values and any beyond threshold (such as 1)
+    $path_plink2 \
+    --memory 90000 \
+    --threads $threads \
+    --bgen $path_ukb_genotype/Chromosome/ukb_imp_chr${index}_v3.bgen \
+    --sample $path_ukb_genotype/Chromosome/ukb46237_imp_chr${index}_v3_s487320.sample \
+    --keep $path_table_phenotypes_covariates \
+    --maf $maf \
+    --freq --glm hide-covar \
+    --pfilter 1 \
+    --pheno $path_table_phenotypes_covariates \
+    --pheno-name $phenotypes \
+    --covar $path_table_phenotypes_covariates \
+    --covar-name $covariates \
+    --out report
+  fi
 
 done
