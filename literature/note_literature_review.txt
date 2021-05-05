@@ -1,0 +1,31 @@
+
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+Sex differences and Sex hormones
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+--------------------------------------------------
+
+--------------------------------------------------
+PubMed: ???
+title: "Sex Differences in the Brain Transcriptome Related to Alcohol Effects and Alcohol Use Disorder"
+authors: Robert Hitzemann, ..., Tamara J. Phillips
+journal: Biological Psychiatry
+date: 30 April 2021
+type: review
+
+
+
+--------------------------------------------------
+PubMed: 30581192
+title: "The role of sex in the genomics of human complex traits"
+authors: Ekaterina A. Khramtsova, Lea K. Davis, Barbara E. Stranger
+journal: Nature Reviews Genetics
+date: 23 December 2018
+type: review
+
