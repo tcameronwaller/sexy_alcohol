@@ -19,40 +19,42 @@
 echo "read private file path variables and organize paths..."
 cd ~/paths
 path_process=$(<"./process_sexy_alcohol.txt")
-path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-04-29"
+path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-05-07"
 path_dock="$path_process/dock"
 path_cohorts="${path_dock}/organization/cohorts"
 path_gwas="${path_dock}/gwas/cohorts_hormones"
 
 # Initialize directories.
-rm -r $path_gwas
-mkdir -p $path_gwas
+#rm -r $path_gwas
+#mkdir -p $path_gwas
 
 # Define covariates common for all cohorts.
 covariates_common="genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
 
 # Define multi-dimensional array of cohorts and covariates.
 
+# TODO: I think the combination tables did not exist...
+
 cohorts_covariates=()
-cohorts_covariates+=("female_male;table_female_male;sex,age,body_mass_index_log,")
-cohorts_covariates+=("female;table_female;age,body_mass_index_log,menopause_ordinal,hormone_alteration,")
-cohorts_covariates+=("female_combination;table_female_combination;age,body_mass_index_log,menopause_hormone_category_1,menopause_hormone_category_3,menopause_hormone_category_4,")
+#cohorts_covariates+=("female_male;table_female_male;sex,age,body_mass_index_log,")
+#cohorts_covariates+=("female;table_female;age,body_mass_index_log,menopause_ordinal,hormone_alteration,")
+cohorts_covariates+=("female_combination;table_female;age,body_mass_index_log,menopause_hormone_category_1,menopause_hormone_category_3,menopause_hormone_category_4,")
 cohorts_covariates+=("female_premenopause_binary;table_female_premenopause_binary;age,body_mass_index_log,menstruation_day,hormone_alteration,")
-cohorts_covariates+=("female_postmenopause_binary;table_female_postmenopause_binary;age,body_mass_index_log,hormone_alteration,")
+#cohorts_covariates+=("female_postmenopause_binary;table_female_postmenopause_binary;age,body_mass_index_log,hormone_alteration,")
 cohorts_covariates+=("female_premenopause_ordinal;table_female_premenopause_ordinal;age,body_mass_index_log,menstruation_day,hormone_alteration,")
 cohorts_covariates+=("female_perimenopause_ordinal;table_female_perimenopause_ordinal;age,body_mass_index_log,menstruation_day,hormone_alteration,")
-cohorts_covariates+=("female_postmenopause_ordinal;table_female_postmenopause_ordinal;age,body_mass_index_log,hormone_alteration,")
-cohorts_covariates+=("male;table_male;age,body_mass_index_log,")
+#cohorts_covariates+=("female_postmenopause_ordinal;table_female_postmenopause_ordinal;age,body_mass_index_log,hormone_alteration,")
+#cohorts_covariates+=("male;table_male;age,body_mass_index_log,")
 
-cohorts_covariates+=("female_male_unadjust;table_female_male;")
-cohorts_covariates+=("female_unadjust;table_female;")
-cohorts_covariates+=("female_combination_unadjust;table_female_combination;")
-cohorts_covariates+=("female_premenopause_binary_unadjust;table_female_premenopause_binary;")
-cohorts_covariates+=("female_postmenopause_binary_unadjust;table_female_postmenopause_binary;")
-cohorts_covariates+=("female_premenopause_ordinal_unadjust;table_female_premenopause_ordinal;")
-cohorts_covariates+=("female_perimenopause_ordinal_unadjust;table_female_perimenopause_ordinal;")
-cohorts_covariates+=("female_postmenopause_ordinal_unadjust;table_postmenopause_ordinal;")
-cohorts_covariates+=("male_unadjust;table_male;")
+#cohorts_covariates+=("female_male_unadjust;table_female_male;")
+#cohorts_covariates+=("female_unadjust;table_female;")
+cohorts_covariates+=("female_combination_unadjust;table_female;")
+#cohorts_covariates+=("female_premenopause_binary_unadjust;table_female_premenopause_binary;")
+#cohorts_covariates+=("female_postmenopause_binary_unadjust;table_female_postmenopause_binary;")
+#cohorts_covariates+=("female_premenopause_ordinal_unadjust;table_female_premenopause_ordinal;")
+#cohorts_covariates+=("female_perimenopause_ordinal_unadjust;table_female_perimenopause_ordinal;")
+cohorts_covariates+=("female_postmenopause_ordinal_unadjust;table_female_postmenopause_ordinal;")
+#cohorts_covariates+=("male_unadjust;table_male;")
 
 # Define array of hormones.
 hormones=()
@@ -66,7 +68,6 @@ hormones+=("testosterone_free_log")
 # Assemble array of batch instance details.
 path_batch_instances="${path_gwas}/batch_instances.txt"
 rm $path_batch_instances
-
 for cohort_covariates in "${cohorts_covariates[@]}"; do
   for hormone in "${hormones[@]}"; do
     instance="${hormone};${cohort_covariates}${covariates_common}"
