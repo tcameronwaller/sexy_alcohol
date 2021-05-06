@@ -33,8 +33,6 @@ covariates_common="genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genot
 
 # Define multi-dimensional array of cohorts and covariates.
 
-# TODO: I think the combination tables did not exist...
-
 cohorts_covariates=()
 #cohorts_covariates+=("female_male;table_female_male;sex,age,body_mass_index_log,")
 #cohorts_covariates+=("female;table_female;age,body_mass_index_log,menopause_ordinal,hormone_alteration,")
