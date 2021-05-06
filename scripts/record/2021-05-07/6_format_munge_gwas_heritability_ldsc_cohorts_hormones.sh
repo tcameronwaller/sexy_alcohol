@@ -31,15 +31,6 @@ path_gwas_cohorts_hormones="${path_gwas}/cohorts_hormones"
 ###########################################################################
 # Execute procedure.
 
-# TODO: for each cohort and hormone...
-# 1. keep the name of the cohort-hormone
-# 2. concatenate GWAS sum stats across chromosomes
-# 3. format GWAS sum stats
-# 4. munge GWAS sum stats...
-# 5. determine heritability
-
-# maybe use the general script for steps 3, 4, and 5???
-
 # Iterate on directories for GWAS on cohorts and hormones.
 cd $path_gwas_cohorts_hormones
 for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
