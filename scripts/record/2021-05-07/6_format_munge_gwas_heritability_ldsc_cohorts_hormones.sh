@@ -48,16 +48,14 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
     directory="$(basename -- $path_directory)"
     echo $directory
 
-    #study="${directory}"
-
     # Concatenate GWAS across chromosomes.
     # Organize variables.
     pattern_source_file="report.*.glm.linear" # do not expand with full path yet
     path_source_directory="${path_gwas_cohorts_hormones}/${directory}"
     chromosome_start=1
     chromosome_end=22
-    path_gwas_concatentation="${path_source_directory}/gwas_concatenation.txt"
-    path_gwas_concatentation_compress="${path_source_directory}/gwas_concatenation.txt.gz"
+    path_gwas_concatenation="${path_source_directory}/gwas_concatenation.txt"
+    path_gwas_concatenation_compress="${path_source_directory}/gwas_concatenation.txt.gz"
     report="true" # "true" or "false"
 
     echo "----------"
