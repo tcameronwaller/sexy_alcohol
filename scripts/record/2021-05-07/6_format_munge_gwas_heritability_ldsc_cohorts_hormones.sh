@@ -26,7 +26,19 @@ path_genetic_reference="${path_dock}/access/genetic_reference"
 path_gwas="${path_dock}/gwas"
 path_heritability="${path_dock}/heritability"
 
+path_gwas_cohorts_hormones="${path_gwas}/cohorts_hormones"
+
 ###########################################################################
 # Execute procedure.
 
+# TODO: iterate on all cohort-hormone subdirectories
 #find . -maxdepth 1 -mindepth 1 -type d
+
+#
+cd $path_gwas_cohorts_hormones
+for path_directory in `find . -type d -maxdepth 1 -mindepth 1`; do
+  if [ -d "$path_directory" ]; then
+    # Current content item is a directory.
+    echo $path_directory
+  fi
+done
