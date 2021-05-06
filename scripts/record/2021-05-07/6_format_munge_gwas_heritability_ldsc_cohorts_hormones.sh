@@ -36,7 +36,7 @@ path_gwas_cohorts_hormones="${path_gwas}/cohorts_hormones"
 
 #
 cd $path_gwas_cohorts_hormones
-for path_directory in `find . -type d -maxdepth 1 -mindepth 1`; do
+for path_directory in `find ./* -maxdepth 1 -mindepth 1 -type d`; do
   if [ -d "$path_directory" ]; then
     # Current content item is a directory.
     echo $path_directory
