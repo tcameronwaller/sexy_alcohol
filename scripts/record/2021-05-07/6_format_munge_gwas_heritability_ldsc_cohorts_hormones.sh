@@ -57,16 +57,7 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
     path_gwas_concatenation="${path_source_directory}/gwas_concatenation.txt"
     path_gwas_concatenation_compress="${path_source_directory}/gwas_concatenation.txt.gz"
     report="true" # "true" or "false"
-
-    echo "----------"
-    echo "pattern: " $pattern_source_file
-    echo "path to original directory: " $path_source_directory
-    echo "path to new file: " $path_gwas_concatenation
-    echo "path to new file: " $path_gwas_concatenation_compress
-    echo "start chromosome: " $chromosome_start
-    echo "end chromosome: " $chromosome_end
-
-    if false; then
+    if true; then
       /usr/bin/bash "${path_promiscuity_scripts}/collect_concatenate_gwas_chromosomes.sh" \
       $pattern_source_file \
       $path_source_directory \
