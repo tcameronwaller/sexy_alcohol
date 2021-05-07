@@ -36,15 +36,17 @@ path_gwas_cohorts_hormones="${path_gwas}/cohorts_hormones"
 delimiter=" "
 IFS=${delimiter}
 inclusions=()
-inclusions+=("female_premenopause_ordinal_testosterone_free_log")
-inclusions+=("female_perimenopause_ordinal_albumin_log")
+#inclusions+=("female_steroid_globulin_log") # file did not exist
+#inclusions+=("male_steroid_globulin_log") # file did not exist
+#inclusions+=("female_postmenopause_binary_steroid_globulin_log") # file did not exist
+#inclusions+=("female_perimenopause_ordinal_albumin_log")
+inclusions+=("female_perimenopause_ordinal_steroid_globulin_log")
+inclusions+=("female_perimenopause_ordinal_oestradiol_log")
+inclusions+=("female_perimenopause_ordinal_oestradiol_free_log")
+inclusions+=("female_perimenopause_ordinal_testosterone_log")
+inclusions+=("female_perimenopause_ordinal_testosterone_free_log")
 
 exclusions=()
-exclusions+=("female_perimenopause_ordinal_steroid_globulin_log")
-exclusions+=("female_perimenopause_ordinal_oestradiol_log")
-exclusions+=("female_perimenopause_ordinal_oestradiol_free_log")
-exclusions+=("female_perimenopause_ordinal_testosterone_log")
-exclusions+=("female_perimenopause_ordinal_testosterone_free_log")
 exclusions+=("female_combination_unadjust_albumin_log")
 exclusions+=("female_combination_unadjust_steroid_globulin_log")
 exclusions+=("female_combination_unadjust_oestradiol_log")
@@ -60,6 +62,9 @@ exclusions+=("female_postmenopause_ordinal_unadjust_testosterone_free_log")
 
 unset IFS
 
+
+# STATUS: ready to run concatenation, format, and munge for a few extra inclusions...
+
 ###########################################################################
 # Execute procedure.
 
@@ -73,12 +78,12 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
     # Determine specific inclusions or exclusions.
     # inclusions: [[ " ${inclusions[@]} " =~ "${directory}" ]]
     # exclusions: [[ ! " ${exclusions[@]} " =~ "${directory}" ]]
-    if [[ ! " ${exclusions[@]} " =~ "${directory}" ]]; then
+    if [[ " ${inclusions[@]} " =~ "${directory}" ]]; then
 
       echo $directory
 
       # Concatenate GWAS across chromosomes.
-      if false; then
+      if true; then
         # Organize variables.
         pattern_source_file="report.*.glm.linear" # do not expand with full path yet
         path_source_directory="${path_gwas_cohorts_hormones}/${directory}"

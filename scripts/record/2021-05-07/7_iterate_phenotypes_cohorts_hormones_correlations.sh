@@ -33,7 +33,7 @@ phenotype_studies+=("30482948_walters_2018_all")
 phenotype_studies+=("30482948_walters_2018_eur")
 phenotype_studies+=("30482948_walters_2018_eur_unrel")
 
-# TODO: create the genetic_correlation_comparison directory in the next script for individual cohort-hormone
+file_gwas_cohorts_hormones_munge_suffix="gwas_munge.sumstats.gz"
 
 # Organize information in format for LDSC.
 for phenotype_study in "${phenotype_studies[@]}"; do
@@ -42,13 +42,7 @@ for phenotype_study in "${phenotype_studies[@]}"; do
   path_gwas_phenotype_format_compress="${path_gwas_phenotype}/gwas_format.txt.gz"
   path_gwas_phenotype_munge_suffix="${path_gwas_phenotype}/gwas_munge.sumstats.gz"
 
-  #path_genetic_correlation_comparison="${path_genetic_correlation}/${phenotype_study}/${metabolite_study}"
-  # Initialize directories.
-  #rm -r $path_genetic_correlation_comparison
-  #mkdir -p $path_genetic_correlation_comparison
-
   # Organize variables.
-  file_gwas_cohorts_hormones_munge_suffix="gwas_munge.sumstats.gz"
   report="true" # "true" or "false"
   /usr/bin/bash "${path_scripts_record}/8_organize_phenotype_cohorts_hormones_correlations.sh" \
   $phenotype_study \
@@ -56,6 +50,7 @@ for phenotype_study in "${phenotype_studies[@]}"; do
   $path_gwas_phenotype_munge_suffix \
   $path_gwas_cohorts_hormones \
   $file_gwas_cohorts_hormones_munge_suffix \
+  $path_genetic_correlation \
   $path_genetic_reference \
   $path_promiscuity_scripts \
   $path_scripts_record \
@@ -71,17 +66,25 @@ pairs+=("female_premenopause_ordinal_testosterone_log;male_testosterone_log")
 pairs+=("female_postmenopause_ordinal_testosterone_log;male_testosterone_log")
 
 for pair in "${pairs[@]}"; do
+  # Read information.
+  IFS=";" read -r -a array <<< "${pair}"
+  study_one="${array[0]}"
+  study_two="${array[1]}"
   # Organize paths.
-  # TODO: read the sub-arrays...
-  echo "hello world"
+  path_gwas_one_munge_suffix="${path_gwas_cohorts_hormones}/${study_one}/${file_gwas_cohorts_hormones_munge_suffix}"
+  path_gwas_two_munge_suffix="${path_gwas_cohorts_hormones}/${study_two}/${file_gwas_cohorts_hormones_munge_suffix}"
 
-  # Organize variables.
-  file_gwas_cohorts_hormones_munge_suffix="gwas_munge.sumstats.gz"
-  report="true" # "true" or "false"
-
-
-  # TODO: now define the path to the GWAS munge suffix file for each "study"
-
-  # TODO: now call the genetic correlation directly...
-
+  # Organize paths.
+  path_genetic_correlation_comparison="${path_genetic_correlation}/${study_one}/${study_two}"
+  path_genetic_correlation_report="${path_genetic_correlation_comparison}/correlation"
+  path_genetic_correlation_report_suffix="${path_genetic_correlation_report}.log"
+  # Initialize directories.
+  rm -r $path_genetic_correlation_comparison
+  mkdir -p $path_genetic_correlation_comparison
+  # Estimate genetic correlation in LDSC.
+  $path_ldsc/ldsc.py \
+  --rg $path_gwas_one_munge_suffix,$path_gwas_two_munge_suffix \
+  --ref-ld-chr $path_disequilibrium/eur_w_ld_chr/ \
+  --w-ld-chr $path_disequilibrium/eur_w_ld_chr/ \
+  --out $path_genetic_correlation_report
 done
