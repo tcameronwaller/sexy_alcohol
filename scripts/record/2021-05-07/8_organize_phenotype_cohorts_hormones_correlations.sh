@@ -40,6 +40,12 @@ path_batch_instances="${path_gwas_metabolite}/batch_instances.txt"
 
 # TODO: I think this procedure is from the metabolites... need to adapt to the cohorts-hormones versus the main phenotype (alcohol dependence)
 
+# TODO: iterate across cohort-hormone subdirectories... check to make sure that each has the munged GWAS file???
+
+# if exists... "${path_gwas_cohorts_hormones}/${file_gwas_cohorts_hormones_munge_suffix}"
+
+
+
 # Organize instances for iteration.
 echo "----------------------------------------------------------------------"
 echo "Organize array of batch instances."

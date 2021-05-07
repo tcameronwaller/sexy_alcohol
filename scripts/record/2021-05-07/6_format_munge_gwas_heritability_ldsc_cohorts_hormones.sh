@@ -36,26 +36,28 @@ path_gwas_cohorts_hormones="${path_gwas}/cohorts_hormones"
 delimiter=" "
 IFS=${delimiter}
 inclusions=()
-inclusions+=("female_combination_albumin_log")
-inclusions+=("female_combination_steroid_globulin_log")
-inclusions+=("female_combination_oestradiol_log")
-inclusions+=("female_combination_oestradiol_free_log")
-inclusions+=("female_combination_testosterone_log")
-inclusions+=("female_combination_testosterone_free_log")
-inclusions+=("female_premenopause_binary_albumin_log")
-inclusions+=("female_premenopause_binary_steroid_globulin_log")
-inclusions+=("female_premenopause_binary_oestradiol_log")
-inclusions+=("female_premenopause_binary_oestradiol_free_log")
-inclusions+=("female_premenopause_binary_testosterone_log")
-inclusions+=("female_premenopause_binary_testosterone_free_log")
-inclusions+=("female_premenopause_ordinal_albumin_log")
-inclusions+=("female_premenopause_ordinal_steroid_globulin_log")
-inclusions+=("female_premenopause_ordinal_oestradiol_log")
-inclusions+=("female_premenopause_ordinal_oestradiol_free_log")
-inclusions+=("female_premenopause_ordinal_testosterone_log")
-#inclusions+=("female_premenopause_ordinal_testosterone_free_log")
+inclusions+=("female_premenopause_ordinal_testosterone_free_log")
+inclusions+=("female_perimenopause_ordinal_albumin_log")
 
 exclusions=()
+exclusions+=("female_perimenopause_ordinal_steroid_globulin_log")
+exclusions+=("female_perimenopause_ordinal_oestradiol_log")
+exclusions+=("female_perimenopause_ordinal_oestradiol_free_log")
+exclusions+=("female_perimenopause_ordinal_testosterone_log")
+exclusions+=("female_perimenopause_ordinal_testosterone_free_log")
+exclusions+=("female_combination_unadjust_albumin_log")
+exclusions+=("female_combination_unadjust_steroid_globulin_log")
+exclusions+=("female_combination_unadjust_oestradiol_log")
+exclusions+=("female_combination_unadjust_oestradiol_free_log")
+exclusions+=("female_combination_unadjust_testosterone_log")
+exclusions+=("female_combination_unadjust_testosterone_free_log")
+exclusions+=("female_postmenopause_ordinal_unadjust_albumin_log")
+exclusions+=("female_postmenopause_ordinal_unadjust_steroid_globulin_log")
+exclusions+=("female_postmenopause_ordinal_unadjust_oestradiol_log")
+exclusions+=("female_postmenopause_ordinal_unadjust_oestradiol_free_log")
+exclusions+=("female_postmenopause_ordinal_unadjust_testosterone_log")
+exclusions+=("female_postmenopause_ordinal_unadjust_testosterone_free_log")
+
 unset IFS
 
 ###########################################################################
@@ -69,8 +71,8 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
     directory="$(basename -- $path_directory)"
 
     # Determine specific inclusions or exclusions.
-    # inclusions: [[ " ${array[@]} " =~ " ${value} " ]]
-    # exclusions: [[ ! " ${array[@]} " =~ " ${value} " ]]
+    # inclusions: [[ " ${inclusions[@]} " =~ "${directory}" ]]
+    # exclusions: [[ ! " ${exclusions[@]} " =~ "${directory}" ]]
     if [[ " ${inclusions[@]} " =~ "${directory}" ]]; then
 
       echo $directory
