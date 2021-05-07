@@ -59,32 +59,33 @@ for phenotype_study in "${phenotype_studies[@]}"; do
 done
 
 # Define specific pairs for genetic correlation.
+if false; then
+  pairs=()
+  pairs+=("female_premenopause_ordinal_testosterone_log;female_postmenopause_ordinal_testosterone_log")
+  pairs+=("female_premenopause_ordinal_testosterone_log;male_testosterone_log")
+  pairs+=("female_postmenopause_ordinal_testosterone_log;male_testosterone_log")
 
-pairs=()
-pairs+=("female_premenopause_ordinal_testosterone_log;female_postmenopause_ordinal_testosterone_log")
-pairs+=("female_premenopause_ordinal_testosterone_log;male_testosterone_log")
-pairs+=("female_postmenopause_ordinal_testosterone_log;male_testosterone_log")
+  for pair in "${pairs[@]}"; do
+    # Read information.
+    IFS=";" read -r -a array <<< "${pair}"
+    study_one="${array[0]}"
+    study_two="${array[1]}"
+    # Organize paths.
+    path_gwas_one_munge_suffix="${path_gwas_cohorts_hormones}/${study_one}/${file_gwas_cohorts_hormones_munge_suffix}"
+    path_gwas_two_munge_suffix="${path_gwas_cohorts_hormones}/${study_two}/${file_gwas_cohorts_hormones_munge_suffix}"
 
-for pair in "${pairs[@]}"; do
-  # Read information.
-  IFS=";" read -r -a array <<< "${pair}"
-  study_one="${array[0]}"
-  study_two="${array[1]}"
-  # Organize paths.
-  path_gwas_one_munge_suffix="${path_gwas_cohorts_hormones}/${study_one}/${file_gwas_cohorts_hormones_munge_suffix}"
-  path_gwas_two_munge_suffix="${path_gwas_cohorts_hormones}/${study_two}/${file_gwas_cohorts_hormones_munge_suffix}"
-
-  # Organize paths.
-  path_genetic_correlation_comparison="${path_genetic_correlation}/${study_one}/${study_two}"
-  path_genetic_correlation_report="${path_genetic_correlation_comparison}/correlation"
-  path_genetic_correlation_report_suffix="${path_genetic_correlation_report}.log"
-  # Initialize directories.
-  rm -r $path_genetic_correlation_comparison
-  mkdir -p $path_genetic_correlation_comparison
-  # Estimate genetic correlation in LDSC.
-  $path_ldsc/ldsc.py \
-  --rg $path_gwas_one_munge_suffix,$path_gwas_two_munge_suffix \
-  --ref-ld-chr $path_disequilibrium/eur_w_ld_chr/ \
-  --w-ld-chr $path_disequilibrium/eur_w_ld_chr/ \
-  --out $path_genetic_correlation_report
-done
+    # Organize paths.
+    path_genetic_correlation_comparison="${path_genetic_correlation}/${study_one}/${study_two}"
+    path_genetic_correlation_report="${path_genetic_correlation_comparison}/correlation"
+    path_genetic_correlation_report_suffix="${path_genetic_correlation_report}.log"
+    # Initialize directories.
+    rm -r $path_genetic_correlation_comparison
+    mkdir -p $path_genetic_correlation_comparison
+    # Estimate genetic correlation in LDSC.
+    $path_ldsc/ldsc.py \
+    --rg $path_gwas_one_munge_suffix,$path_gwas_two_munge_suffix \
+    --ref-ld-chr $path_disequilibrium/eur_w_ld_chr/ \
+    --w-ld-chr $path_disequilibrium/eur_w_ld_chr/ \
+    --out $path_genetic_correlation_report
+  done
+fi

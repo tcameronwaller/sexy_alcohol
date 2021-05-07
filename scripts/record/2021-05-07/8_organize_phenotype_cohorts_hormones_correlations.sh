@@ -42,10 +42,14 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
     # Current content item is a directory.
     directory="$(basename -- $path_directory)"
 
+    echo $directory
+
     # Determine whether directory contains file for GWAS summary statistics
     # after concatenation, format, and munge.
     path_gwas_cohorts_hormones_munge_suffix="${path_gwas_cohorts_hormones}/${directory}/${file_gwas_cohorts_hormones_munge_suffix}"
     if [[ -f "$path_gwas_cohorts_hormones_munge_suffix" ]]; then
+
+      echo $path_gwas_cohorts_hormones_munge_suffix
 
       # Genetic correlation.
       if true; then
