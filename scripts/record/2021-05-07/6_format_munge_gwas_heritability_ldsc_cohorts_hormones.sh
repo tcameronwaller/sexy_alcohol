@@ -19,7 +19,7 @@ path_process=$(<"./process_sexy_alcohol.txt")
 path_promiscuity_scripts="${path_process}/promiscuity/scripts"
 path_promiscuity_scripts_ldsc_heritability="${path_promiscuity_scripts}/ldsc_genetic_heritability_correlation"
 path_scripts_format="${path_promiscuity_scripts}/format_gwas_ldsc"
-#path_scripts_record="$path_process/psychiatric_metabolism/scripts/record/2021-05-04"
+#path_scripts_record="$path_process/psychiatric_metabolism/scripts/record/2021-05-07"
 
 path_dock="$path_process/dock"
 path_genetic_reference="${path_dock}/access/genetic_reference"
@@ -73,12 +73,12 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
     # Determine specific inclusions or exclusions.
     # inclusions: [[ " ${inclusions[@]} " =~ "${directory}" ]]
     # exclusions: [[ ! " ${exclusions[@]} " =~ "${directory}" ]]
-    if [[ " ${inclusions[@]} " =~ "${directory}" ]]; then
+    if [[ ! " ${exclusions[@]} " =~ "${directory}" ]]; then
 
       echo $directory
 
       # Concatenate GWAS across chromosomes.
-      if true; then
+      if false; then
         # Organize variables.
         pattern_source_file="report.*.glm.linear" # do not expand with full path yet
         path_source_directory="${path_gwas_cohorts_hormones}/${directory}"
@@ -99,7 +99,7 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
 
       # Format and munge GWAS summary statistics.
       # Estimate genotype heritability.
-      if false; then
+      if true; then
         # Organize paths.
         path_gwas_study="${path_gwas_cohorts_hormones}/${directory}"
         path_heritability_study="${path_heritability}/cohorts_hormones/${directory}"
