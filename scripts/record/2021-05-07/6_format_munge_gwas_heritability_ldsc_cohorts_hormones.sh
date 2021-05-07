@@ -30,6 +30,8 @@ path_gwas_cohorts_hormones="${path_gwas}/cohorts_hormones"
 
 ###########################################################################
 # Define explicit inclusions and exclusions.
+# Use inclusions to run procedure for a few specific cohort-hormone combinations that are missing from the set.
+# Use exclusions to omit a few cohort-hormone combinations that are not complete yet.
 
 delimiter=" "
 IFS=${delimiter}
@@ -50,7 +52,7 @@ inclusions+=("female_premenopause_ordinal_albumin_log")
 inclusions+=("female_premenopause_ordinal_steroid_globulin_log")
 inclusions+=("female_premenopause_ordinal_oestradiol_log")
 inclusions+=("female_premenopause_ordinal_oestradiol_free_log")
-#inclusions+=("female_premenopause_ordinal_testosterone_log")
+inclusions+=("female_premenopause_ordinal_testosterone_log")
 #inclusions+=("female_premenopause_ordinal_testosterone_free_log")
 
 exclusions=()
@@ -74,7 +76,7 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
       echo $directory
 
       # Concatenate GWAS across chromosomes.
-      if false; then
+      if true; then
         # Organize variables.
         pattern_source_file="report.*.glm.linear" # do not expand with full path yet
         path_source_directory="${path_gwas_cohorts_hormones}/${directory}"
@@ -100,7 +102,7 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
         path_gwas_study="${path_gwas_cohorts_hormones}/${directory}"
         path_heritability_study="${path_heritability}/cohorts_hormones/${directory}"
         # Initialize directories.
-        mkdir -p $path_gwas_study
+        #mkdir -p $path_gwas_study
         mkdir -p $path_heritability_study
         # Organize variables.
         study="${directory}"
