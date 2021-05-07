@@ -31,7 +31,7 @@ path_gwas_cohorts_hormones="${path_gwas}/cohorts_hormones"
 ###########################################################################
 # Define explicit inclusions and exclusions.
 
-delimiter=";"
+delimiter=" "
 IFS=${delimiter}
 inclusions=()
 inclusions+=("female_combination_albumin_log")
@@ -49,7 +49,7 @@ inclusions+=("female_premenopause_binary_testosterone_free_log")
 inclusions+=("female_premenopause_ordinal_albumin_log")
 inclusions+=("female_premenopause_ordinal_steroid_globulin_log")
 inclusions+=("female_premenopause_ordinal_oestradiol_log")
-#inclusions+=("female_premenopause_ordinal_oestradiol_free_log")
+inclusions+=("female_premenopause_ordinal_oestradiol_free_log")
 #inclusions+=("female_premenopause_ordinal_testosterone_log")
 #inclusions+=("female_premenopause_ordinal_testosterone_free_log")
 
@@ -69,7 +69,7 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
     # Determine specific inclusions or exclusions.
     # inclusions: [[ " ${array[@]} " =~ " ${value} " ]]
     # exclusions: [[ ! " ${array[@]} " =~ " ${value} " ]]
-    if [[ " ${inclusions[@]} " =~ "${delimiter}${directory}${delimiter}" ]]; then
+    if [[ " ${inclusions[@]} " =~ "${directory}" ]]; then
 
       echo $directory
 

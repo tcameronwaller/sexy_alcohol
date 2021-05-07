@@ -34,7 +34,7 @@ covariates_common="genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genot
 # Define multi-dimensional array of cohorts and covariates.
 
 # Note:
-# Each GWAS (~200,000 persons; 22 chromosomes) requires about 7 hours to run on the grid.
+# Each GWAS (30,000 - 200,000 persons; 22 chromosomes) requires about 5-7 hours to run on the grid.
 
 cohorts_covariates=()
 #cohorts_covariates+=("female_male;table_female_male;sex,age,body_mass_index_log,")
