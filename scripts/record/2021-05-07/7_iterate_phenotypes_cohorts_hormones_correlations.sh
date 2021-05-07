@@ -16,7 +16,7 @@ path_ldsc=$(<"./tools_ldsc.txt")
 path_process=$(<"./process_sexy_alcohol.txt")
 
 path_promiscuity_scripts="${path_process}/promiscuity/scripts"
-path_scripts_record="$path_process/psychiatric_metabolism/scripts/record/2021-05-07"
+path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-05-07"
 
 path_dock="$path_process/dock"
 path_genetic_reference="${path_dock}/access/genetic_reference"
