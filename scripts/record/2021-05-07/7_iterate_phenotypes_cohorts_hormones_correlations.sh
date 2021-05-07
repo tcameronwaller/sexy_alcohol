@@ -63,6 +63,7 @@ for phenotype_study in "${phenotype_studies[@]}"; do
   $report
 done
 
+# * * * IMPORTANT!!! Don't forget this...
 # TODO: now set up and iterate on pair-wise comparisons between cohort-hormone pairs
 # TODO: for example... males and females... premenopause and postmenopause... etc
 # Define a parameter array... iterate... call a general genetic correlation script...

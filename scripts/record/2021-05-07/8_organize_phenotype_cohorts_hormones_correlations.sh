@@ -37,6 +37,9 @@ path_batch_instances="${path_gwas_metabolite}/batch_instances.txt"
 ###########################################################################
 # Execute procedure.
 
+
+# TODO: I think this procedure is from the metabolites... need to adapt to the cohorts-hormones versus the main phenotype (alcohol dependence)
+
 # Organize instances for iteration.
 echo "----------------------------------------------------------------------"
 echo "Organize array of batch instances."
