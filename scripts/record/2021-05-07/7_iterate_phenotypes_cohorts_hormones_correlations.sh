@@ -30,8 +30,8 @@ path_genetic_correlation="${path_dock}/genetic_correlation"
 # Define main phenotype studies.
 phenotype_studies=()
 phenotype_studies+=("30482948_walters_2018_all")
-phenotype_studies+=("30482948_walters_2018_eur")
-phenotype_studies+=("30482948_walters_2018_eur_unrel")
+#phenotype_studies+=("30482948_walters_2018_eur")
+#phenotype_studies+=("30482948_walters_2018_eur_unrel")
 
 file_gwas_cohorts_hormones_munge_suffix="gwas_munge.sumstats.gz"
 
