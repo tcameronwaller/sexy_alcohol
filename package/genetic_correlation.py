@@ -773,8 +773,7 @@ def combine_organize_phenotypes_summary_table(
     )
     # Sort table columns.
     columns_sequence = [
-        #"identifier",
-        #"name",
+        "identifier",
         "phenotype_heritability",
         "phenotype_heritability_error",
         "heritability", "heritability_standard_error",
