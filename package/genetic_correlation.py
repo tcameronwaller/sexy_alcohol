@@ -672,7 +672,7 @@ def read_source(
     table_correlations = (
         read_collect_primary_secondaries_genetic_correlations_by_directories(
             file="correlation.log",
-            path_source_directory=(
+            path_parent_directory=(
                 paths["correlation_studies"][primary_study][secondary_study]
             ),
     ))
