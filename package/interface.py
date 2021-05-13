@@ -16,6 +16,7 @@ import textwrap
 
 # Custom.
 
+import genetic_correlation
 import assembly
 import organization
 #import plot
@@ -140,6 +141,14 @@ def define_main_subparser(subparsers=None):
         )
     )
     parser_main.add_argument(
+        "-genetic_correlation", "--genetic_correlation",
+        dest="genetic_correlation",
+        action="store_true",
+        help=(
+            "Genetic correlations for phenotypes from multiple GWAS."
+        )
+    )
+    parser_main.add_argument(
         "-assembly", "--assembly", dest="assembly", action="store_true",
         help=(
             "Organization of information for further analyses."
@@ -230,6 +239,13 @@ def evaluate_main_parameters(arguments):
     print("--------------------------------------------------")
     print("... call to main routine ...")
     # Execute procedure.
+    if arguments.genetic_correlation:
+        # Report status.
+        print("... executing genetic_correlation procedure ...")
+        # Execute procedure.
+        genetic_correlation.execute_procedure(
+            path_dock=arguments.path_dock
+        )
     if arguments.assembly:
         # Report status.
         print("... executing assembly procedure ...")

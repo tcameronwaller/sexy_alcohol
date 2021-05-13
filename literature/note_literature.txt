@@ -132,9 +132,14 @@ note:
 - - oestradiol (30800)
 - - SHBG (30830)
 - - albumin (30600)
-- authors excluded females and males who self-reported hormone medication, including hormone replacement therapy and oral contraception (Data Fields 30850, 20003)
-- testosterone below lower limit (30856)
+- testosterone below lower limit (30856)... accessible in UK Biobank Data Showcase via Category 18518
+- - https://biobank.ndph.ox.ac.uk/showcase/label.cgi?id=18518
 - oestradiol below lower limit (30806)
+- "As the majority (78%) of women had estradiol levels below the limit of detection (as expected, given most women in UKBB are post-menopausal), analysis of this trait was limited by low sample numbers and a bias towards detecting age at menopause-associated loci. Therefore, assessment of estradiol levels in women was not considered further."
+- authors replicated analyses in a GWAS on 2,913 persons with measurements of 9 sex hormones (PubMed:26014426)
+- Supplementary Table S1 declares that persons were excluded if testosterone level was below lower limit of detection, according to UK Biobank data field 30856; however, the Data Showcase does not include this field.
+- Supplementary Table S1 declares that females and males were excluded if they were taking hormone based medication according to UK Biobank data field 20003 "Treatment/medication code", also exclusion for oral contraception or hormone-replacement therapy
+- Supplementary Table S1 declares that hormone covariates included "Age, dilution, batch, mins since blood draw, time of blood draw, menopause, operation status. Includes individuals at lower limit." Other covariates were "centre" and "Fasting time".
 
 --------------------------------------------------
 PubMed:____?___
@@ -148,11 +153,16 @@ Link: https://www.researchsquare.com/article/rs-32855/v2
 PubMed:26014426
 Date: February 2016
 Journal: European Journal of Human Genetics
-Authors: Ruth, ..., Perry
+Authors: Katherine S. Ruth, ..., John R. B. Perry
 Title: "Genome-wide association study with 1000 genomes imputation identifies signals for nine sex hormone-related phenotypes"
 Note:
 - 2913 persons from TwinsUK cohort
+- - European ancestry
+- - mostly females, 294 males
+- - excluded pregnancy, oral contraception, and hormone-replacement therapy
 - sex hormone GWAS
+- DHEAS, oestradiol, FAI, FSH, LH, prolactin, progesterone, SHBG, testosterone
+- study has a record on GWAS Catalog that does not include complete GWAS summary statistics
 
 --------------------------------------------------
 PubMed:26071488
@@ -231,7 +241,7 @@ reports of pleiotropy between sex hormones and alcohol use disorder
 
 
 --------------------------------------------------
-PubMed: 
+PubMed: 33648717
 title: "Examining sex-differentiated genetic effects across neuropsychiatric and behavioral traits"
 date: 8 January 2021
 journal: Biological Psychiatry
@@ -239,7 +249,7 @@ authors: Joanna Martin, ..., Lea K. Davis
 note:
 - Table S11
 - - sex-specific, between-phenotype genetic correlations
-- - includes genetic correlations for Alcohol Consumption
+- - includes genetic correlations for Alcohol Consumption (not Alcohol Dependence)
 
 --------------------------------------------------
 PubMed: 33407712
