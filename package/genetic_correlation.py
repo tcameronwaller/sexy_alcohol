@@ -976,7 +976,7 @@ def drive_collection_report_primary_secondary_studies(
         primary_study=primary_study,
         secondary_study=secondary_study,
         paths=paths,
-        report=False,
+        report=True,
     )
 
 
