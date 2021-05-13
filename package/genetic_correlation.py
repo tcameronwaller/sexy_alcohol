@@ -737,7 +737,10 @@ def combine_organize_phenotypes_summary_table(
         right_on="identifier",
         suffixes=("_heritability", "_correlation"),
     )
-
+    table.reset_index(
+        level=None,
+        inplace=True
+    )
     # Introduce columns for phenotype heritability.
     table["phenotype_heritability"] = primary_heritability["heritability"]
     table["phenotype_heritability_error"] = (
@@ -762,14 +765,7 @@ def combine_organize_phenotypes_summary_table(
     )
     # Sort table rows.
     table.sort_values(
-        by=["correlation_absolute"],
-        axis="index",
-        ascending=False,
-        na_position="last",
-        inplace=True,
-    )
-    table.sort_values(
-        by=["correlation_discovery",],
+        by=["identifier"],
         axis="index",
         ascending=True,
         na_position="last",
@@ -779,18 +775,18 @@ def combine_organize_phenotypes_summary_table(
     columns_sequence = [
         #"identifier",
         #"name",
-        "correlation_discovery",
-        "correlation", "correlation_standard_error",
-        "correlation_absolute",
-        "correlation_probability",
-        "correlation_significance",
-        "correlation_variants",
+        "phenotype_heritability",
+        "phenotype_heritability_error",
         "heritability", "heritability_standard_error",
         "heritability_ratio",
         "heritability_ratio_standard_error",
         "heritability_variants",
-        "phenotype_heritability",
-        "phenotype_heritability_error",
+        "correlation", "correlation_standard_error",
+        "correlation_absolute",
+        "correlation_probability",
+        "correlation_discovery",
+        "correlation_significance",
+        "correlation_variants",
     ]
     table = table[[*columns_sequence]]
     # Report.
