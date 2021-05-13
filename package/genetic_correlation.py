@@ -284,7 +284,7 @@ def read_extract_phenotype_heritability(
     return record
 
 
-def read_collect_phenotypes_heritabilities_hierarchy_files(
+def read_collect_phenotypes_heritabilities_by_files(
     file_suffix=None,
     path_source_directory=None,
 ):
@@ -342,7 +342,7 @@ def read_collect_phenotypes_heritabilities_hierarchy_files(
     return table
 
 
-def read_collect_phenotypes_heritabilities_hierarchy_directories(
+def read_collect_phenotypes_heritabilities_by_directories(
     file=None,
     path_parent_directory=None,
 ):
@@ -365,7 +365,7 @@ def read_collect_phenotypes_heritabilities_hierarchy_directories(
     child_directories = utility.extract_subdirectory_names(
         path=path_parent_directory
     )
-    # Filter child directories and collect paths to relevant files.
+    # Filter child directories to those that contain relevant files.
     child_directories_relevant = list()
     for child_directory in child_directories:
         path_file = os.path.join(
@@ -384,9 +384,7 @@ def read_collect_phenotypes_heritabilities_hierarchy_directories(
             file_suffix="",
             path_source_directory=path_child_directory,
         )
-        # TODO: now I need to specify a new identifier for the cohort-hormone combo...
         # Set name of cohort and hormone.
-        #record = dict()
         record["identifier"] = child_directory
         records.append(record)
         pass
@@ -414,7 +412,7 @@ def read_collect_phenotypes_heritabilities_hierarchy_directories(
     return table
 
 
-def read_extract_phenotype_metabolite_genetic_correlation(
+def read_extract_primary_secondary_genetic_correlation(
     file=None,
     file_suffix=None,
     path_source_directory=None,
@@ -499,7 +497,7 @@ def read_extract_phenotype_metabolite_genetic_correlation(
     return record
 
 
-def read_collect_phenotype_metabolites_genetic_correlations(
+def read_collect_primary_secondaries_genetic_correlations_by_files(
     file_suffix=None,
     path_source_directory=None,
 ):
@@ -527,11 +525,83 @@ def read_collect_phenotype_metabolites_genetic_correlations(
     ))
     records = list()
     for file in files_relevant:
-        record = read_extract_phenotype_metabolite_genetic_correlation(
+        record = read_extract_primary_secondary_genetic_correlation(
             file=file,
             file_suffix=file_suffix,
             path_source_directory=path_source_directory,
         )
+        records.append(record)
+        pass
+    # Organize heritability table.
+    table = utility.convert_records_to_dataframe(
+        records=records
+    )
+    table.sort_values(
+        by=["correlation_probability"],
+        axis="index",
+        ascending=True,
+        na_position="last",
+        inplace=True,
+    )
+    table.reset_index(
+        level=None,
+        inplace=True
+    )
+    table["identifier"].astype("string")
+    table.set_index(
+        "identifier",
+        drop=True,
+        inplace=True,
+    )
+    # Return information.
+    return table
+
+
+def read_collect_primary_secondaries_genetic_correlations_by_directories(
+    file=None,
+    path_parent_directory=None,
+):
+    """
+    Reads and collects estimations of genetic correlation between phenotype and
+        metabolites.
+
+    arguments:
+        file (str): name of a file
+        path_parent_directory (str): path to source parent directory for files
+            with heritability estimations for metabolites
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of metabolites' heritability estimates
+
+    """
+
+    # Collect names of child directories within the parent directory.
+    child_directories = utility.extract_subdirectory_names(
+        path=path_parent_directory
+    )
+    # Filter child directories to those that contain relevant files.
+    child_directories_relevant = list()
+    for child_directory in child_directories:
+        path_file = os.path.join(
+            path_parent_directory, child_directory, file,
+        )
+        if os.path.isfile(path_file):
+            child_directories_relevant.append(child_directory)
+    # Collect and organize phenotype genetic correlations.
+    records = list()
+    for child_directory in child_directories_relevant:
+        path_child_directory = os.path.join(
+            path_parent_directory, child_directory,
+        )
+        record = read_extract_primary_secondary_genetic_correlation(
+            file=file,
+            file_suffix="",
+            path_source_directory=path_child_directory,
+        )
+        # Set name of cohort and hormone.
+        record["identifier"] = child_directory
         records.append(record)
         pass
     # Organize heritability table.
@@ -591,37 +661,28 @@ def read_source(
         path_source_directory=paths["heritability_studies"][primary_study],
     )
     # Secondary phenotypes heritability table.
-    if False:
-        table_secondary_heritability = (
-            read_collect_phenotypes_heritabilities_hierarchy_files(
-                file_suffix="_heritability_report.log",
-                path_source_directory=(
-                    paths["heritability_studies"][secondary_study]
-                ),
-        ))
-    if True:
-        table_secondary_heritability = (
-            read_collect_phenotypes_heritabilities_hierarchy_directories(
-                file="heritability_report.log",
-                path_parent_directory=(
-                    paths["heritability_studies"][secondary_study]
-                ),
-        ))
-    # Phenotype-metabolite correlation table.
-    if False:
-        table_correlations = (
-            read_collect_phenotype_metabolites_genetic_correlations(
-                file_suffix="_correlation.log",
-                path_source_directory=(
-                    paths["correlation_studies"][phenotype_study][metabolite_study]
-                ),
-        ))
+    table_secondary_heritability = (
+        read_collect_phenotypes_heritabilities_by_directories(
+            file="heritability_report.log",
+            path_parent_directory=(
+                paths["heritability_studies"][secondary_study]
+            ),
+    ))
+    # Genetic correlations between primary and secondary phenotypes.
+    table_correlations = (
+        read_collect_primary_secondaries_genetic_correlations_by_directories(
+            file="correlation.log",
+            path_source_directory=(
+                paths["correlation_studies"][primary_study][secondary_study]
+            ),
+    ))
 
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
+        print(primary_heritability)
         print(table_secondary_heritability)
-        #print(table_correlations)
+        print(table_correlations)
         utility.print_terminal_partition(level=2)
     # Compile and return information.
     if False:
