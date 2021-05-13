@@ -778,7 +778,7 @@ def combine_organize_phenotypes_summary_table(
     # Sort table columns.
     columns_sequence = [
         #"identifier",
-        "name",
+        #"name",
         "correlation_discovery",
         "correlation", "correlation_standard_error",
         "correlation_absolute",
