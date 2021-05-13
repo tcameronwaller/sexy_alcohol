@@ -685,85 +685,22 @@ def read_source(
         print(table_correlations)
         utility.print_terminal_partition(level=2)
     # Compile and return information.
-    if False:
-        return {
-            "table_metabolite_reference": table_metabolite_reference,
-            "phenotype_heritability": phenotype_heritability,
-            "table_metabolite_heritability": table_metabolite_heritability,
-            "table_correlations": table_correlations,
-        }
+    return {
+        "primary_heritability": primary_heritability,
+        "table_secondary_heritability": table_secondary_heritability,
+        "table_correlations": table_correlations,
+    }
 
 
 ##########
 # Summary
 
 
-def organize_metabolite_reference_table(
-    table=None,
-    identifier=None,
-    name=None,
-    identity=None,
-):
-    """
-    Organizes information about general attributes.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        identifier (str): name of column for metabolite identifier
-        name (str): name of column for metabolite biochemical name
-        identity (str): name of column as binary logical indicator of whether
-            the metabolite has a known identity
-
-    raises:
-
-    returns:
-        (dict): collection of information about phenotype variables
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Translate column names.
-    translations = dict()
-    translations[identifier] = "identifier"
-    translations[name] = "name"
-    translations[identity] = "identity"
-    table.rename(
-        columns=translations,
-        inplace=True,
-    )
-    # Select relevant columns.
-    table = table.loc[
-        :, table.columns.isin(["identifier", "name", "identity"])
-    ]
-    # Organize table.
-    table.reset_index(
-        level=None,
-        inplace=True
-    )
-    #table["identity"].astype("float")
-    table["identity"] = pandas.to_numeric(
-        table["identity"],
-        errors="coerce", # force any invalid values to missing or null
-        downcast="float",
-    )
-    table["identifier"].astype("string")
-    table.set_index(
-        "identifier",
-        drop=True,
-        inplace=True,
-    )
-    # Return information.
-    return table
-
-
-def combine_organize_phenotype_metabolites_summary_table(
-    table_metabolite_reference=None,
-    phenotype_heritability=None,
-    table_metabolite_heritability=None,
+def combine_organize_phenotypes_summary_table(
+    primary_heritability=None,
+    table_secondary_heritability=None,
     table_correlations=None,
-    threshold_metabolite_heritability=None,
+    threshold_secondary_heritability=None,
     threshold_false_discovery_rate=None,
     report=None,
 ):
@@ -771,15 +708,13 @@ def combine_organize_phenotype_metabolites_summary_table(
     Reads, collects, and organizes metabolite heritability estimates.
 
     arguments:
-        table_metabolite_reference (object): Pandas data frame of metabolites'
-            identifiers and names from study
-        phenotype_heritability (dict): information about estimation of a
+        primary_heritability (dict): information about estimation of a
             phenotype's heritability
-        table_metabolite_heritability (object): Pandas data frame of
+        table_secondary_heritability (object): Pandas data frame of
             metabolites' heritability estimates
         table_correlations (object): Pandas data frame of genetic correlations
-        threshold_metabolite_heritability (float): threshold for metabolite
-            heritability
+        threshold_secondary_heritability (float): threshold for heritability of
+            secondary phenotypes, or missing null
         threshold_false_discovery_rate (float): threshold for false discovery
             rate
         report (bool): whether to print reports
@@ -792,29 +727,10 @@ def combine_organize_phenotype_metabolites_summary_table(
 
     """
 
-    # Organize metabolite reference table.
-    table_metabolite_reference = organize_metabolite_reference_table(
-        table=table_metabolite_reference,
-        identifier="identifier_study",
-        name="name",
-        identity="identity",
-    )
-
-    # Merge tables for metabolite references and heritabilities.
-    # Merge data tables using database-style join.
-    # Alternative is to use DataFrame.join().
-    table_heritability = table_metabolite_reference.merge(
-        table_metabolite_heritability,
-        how="outer",
-        left_on="identifier",
-        right_on="identifier",
-        suffixes=("_reference", "_heritability"),
-    )
-
     # Merge tables for metabolite heritabilities and correlations.
     # Merge data tables using database-style join.
     # Alternative is to use DataFrame.join().
-    table = table_heritability.merge(
+    table = table_secondary_heritability.merge(
         table_correlations,
         how="outer",
         left_on="identifier",
@@ -823,17 +739,18 @@ def combine_organize_phenotype_metabolites_summary_table(
     )
 
     # Introduce columns for phenotype heritability.
-    table["phenotype_heritability"] = phenotype_heritability["heritability"]
+    table["phenotype_heritability"] = primary_heritability["heritability"]
     table["phenotype_heritability_error"] = (
-        phenotype_heritability["heritability_standard_error"]
+        primary_heritability["heritability_standard_error"]
     )
 
-    # Select table rows for metabolites with valid identities.
-    table = table.loc[(table["identity"] == 1), :]
-    # Select table rows for metabolites with valid heritability estimates.
-    table = table.loc[
-        (table["heritability"] >= threshold_metabolite_heritability), :
-    ]
+    # Select table rows for secondary phenotypes with valid heritability
+    # estimates.
+    # Only filter if threshold is not missing or null.
+    if (not math.isnan(threshold_secondary_heritability)):
+        table = table.loc[
+            (table["heritability"] >= threshold_secondary_heritability), :
+        ]
 
     # Calculate False Discovery Rates (FDRs).
     table = utility.calculate_table_false_discovery_rates(
@@ -864,17 +781,16 @@ def combine_organize_phenotype_metabolites_summary_table(
         "name",
         "correlation_discovery",
         "correlation", "correlation_standard_error",
-        "heritability",
-        "heritability_standard_error",
         "correlation_absolute",
         "correlation_probability",
-        "phenotype_heritability",
-        "phenotype_heritability_error",
+        "correlation_significance",
+        "correlation_variants",
+        "heritability", "heritability_standard_error",
         "heritability_ratio",
         "heritability_ratio_standard_error",
         "heritability_variants",
-        "correlation_significance",
-        "correlation_variants",
+        "phenotype_heritability",
+        "phenotype_heritability_error",
     ]
     table = table[[*columns_sequence]]
     # Report.
@@ -950,8 +866,8 @@ def write_product_studies(
 
 
 def write_product(
-    phenotype_study=None,
-    metabolite_study=None,
+    primary_study=None,
+    secondary_study=None,
     information=None,
     paths=None,
 ):
@@ -959,8 +875,10 @@ def write_product(
     Writes product information to file.
 
     arguments:
-        phenotype_study (str): identifier of main phenotype study
-        metabolite_study (str): identifier of metabolite study
+        primary_study (str): identifier of primary study, consisting of a single
+            GWAS
+        secondary_study (str): identifier of secondary study, consisting of
+            multiple GWASes
         information (object): information to write to file
         paths (dict<str>): collection of paths to directories for procedure's
             files
@@ -974,7 +892,7 @@ def write_product(
     # Specify directories and files.
     path_table = os.path.join(
         paths["genetic_correlation"],
-        str("table_" + phenotype_study + "_" + metabolite_study + ".tsv")
+        str("table_" + primary_study + "_" + secondary_study + ".tsv")
     )
     # Write information to file.
     information["table_summary"].to_csv(
@@ -988,9 +906,6 @@ def write_product(
 
 ##########
 # Driver
-
-# TODO: adapt the metabolites iteration to a cohorts-hormones iteration...
-
 
 
 def drive_collection_report_primary_secondary_studies(
@@ -1037,42 +952,33 @@ def drive_collection_report_primary_secondary_studies(
         primary_study=primary_study,
         secondary_study=secondary_study,
         paths=paths,
-        report=True,
+        report=False,
+    )
+    # Organize summary table.
+    table_summary = combine_organize_phenotypes_summary_table(
+        primary_heritability=source["primary_heritability"],
+        table_secondary_heritability=source["table_secondary_heritability"],
+        table_correlations=source["table_correlations"],
+        threshold_secondary_heritability=float("nan"),
+        threshold_false_discovery_rate=0.05,
+        report=False,
     )
 
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=5)
+        print(table_summary)
 
-
-    if False:
-
-        # TODO: now combine and organize the various information containers from "read_source()"
-        # TODO: build summary table.
-
-        # name change?
-        table_summary = combine_organize_phenotype_metabolites_summary_table(
-            table_metabolite_reference=source["table_metabolite_reference"],
-            phenotype_heritability=source["phenotype_heritability"],
-            table_metabolite_heritability=source["table_metabolite_heritability"],
-            table_correlations=source["table_correlations"],
-            threshold_metabolite_heritability=0.05,
-            threshold_false_discovery_rate=0.05,
-            report=False,
-        )
-
-        # Report.
-        if report:
-            utility.print_terminal_partition(level=5)
-            print(table_summary)
-
-        # Collect information.
-        information = dict()
-        information["table_summary"] = table_summary
-        # Write product information to file.
-        write_product(
-            phenotype_study=phenotype_study,
-            metabolite_study=metabolite_study,
-            paths=paths,
-            information=information
-        )
+    # Collect information.
+    information = dict()
+    information["table_summary"] = table_summary
+    # Write product information to file.
+    write_product(
+        primary_study=primary_study,
+        secondary_study=secondary_study,
+        paths=paths,
+        information=information
+    )
 
     pass
 
