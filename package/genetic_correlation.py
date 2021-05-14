@@ -817,15 +817,37 @@ def organize_table_cohorts_hormones_models(
     table_unadjust = table_unadjust.loc[
         (table_unadjust["unadjust"] == 1), :
     ]
+    # Set new index.
+    table_adjust["cohort_hormone"].astype("string")
+    table_unadjust["cohort_hormone"].astype("string")
+    table_adjust.set_index(
+        "cohort_hormone",
+        drop=True,
+        inplace=True,
+    )
+    table_unadjust.set_index(
+        "cohort_hormone",
+        drop=True,
+        inplace=True,
+    )
+    # Merge tables for adjusted or unadjusted regression models.
+    # Merge data tables using database-style join.
+    # Alternative is to use DataFrame.join().
+    table_merge = table_adjust.merge(
+        table_unadjust,
+        how="outer",
+        left_on="identifier",
+        right_on="identifier",
+        suffixes=("_adjust", "_unadjust"),
+    )
 
-    print("table_adjust")
-    print(table_adjust)
-    print("table_unadjust")
-    print(table_unadjust)
+    print("table_merge")
+    print(table_merge)
+
 
 
     # Return information.
-    return table
+    return table_merge
 
 
 
