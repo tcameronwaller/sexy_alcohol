@@ -955,7 +955,8 @@ def combine_organize_phenotypes_summary_table(
     )
     # Sort table columns.
     columns_sequence = [
-        "cohort_hormone",
+        "cohort",
+        "hormone",
         "heritability_adjust", "heritability_standard_error_adjust",
         "heritability_unadjust", "heritability_standard_error_unadjust",
         "correlation_adjust", "correlation_standard_error_adjust",
@@ -969,6 +970,7 @@ def combine_organize_phenotypes_summary_table(
         "correlation_absolute",
         "correlation_significance_adjust",
         "correlation_variants",
+        "cohort_hormone",
         "identifier_adjust", "identifier_unadjust",
         "primary_heritability",
         "primary_heritability_error",
