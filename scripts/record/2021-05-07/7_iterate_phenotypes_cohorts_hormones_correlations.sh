@@ -30,8 +30,8 @@ path_genetic_correlation="${path_dock}/genetic_correlation"
 # Define main phenotype studies.
 phenotype_studies=()
 phenotype_studies+=("30482948_walters_2018_all")
-phenotype_studies+=("30482948_walters_2018_eur")
-phenotype_studies+=("30482948_walters_2018_eur_unrel")
+#phenotype_studies+=("30482948_walters_2018_eur")
+#phenotype_studies+=("30482948_walters_2018_eur_unrel")
 
 file_gwas_cohorts_hormones_munge_suffix="gwas_munge.sumstats.gz"
 
@@ -58,11 +58,19 @@ for phenotype_study in "${phenotype_studies[@]}"; do
   $report
 done
 
+# TODO: I still want to run these...
+
+
 # Define specific pairs for genetic correlation.
 if false; then
   pairs=()
+  pairs+=("female_premenopause_binary_testosterone_log;female_postmenopause_binary_testosterone_log")
+  pairs+=("female_premenopause_ordinal_testosterone_log;female_postmenopause_ordinal_testosterone_log")
+
+  
   pairs+=("female_premenopause_ordinal_testosterone_log;female_postmenopause_ordinal_testosterone_log")
   pairs+=("female_premenopause_ordinal_testosterone_log;male_testosterone_log")
+  pairs+=("female_perimenopause_ordinal_testosterone_log;male_testosterone_log")
   pairs+=("female_postmenopause_ordinal_testosterone_log;male_testosterone_log")
 
   for pair in "${pairs[@]}"; do
@@ -75,7 +83,7 @@ if false; then
     path_gwas_two_munge_suffix="${path_gwas_cohorts_hormones}/${study_two}/${file_gwas_cohorts_hormones_munge_suffix}"
 
     # Organize paths.
-    path_genetic_correlation_comparison="${path_genetic_correlation}/${study_one}/${study_two}"
+    path_genetic_correlation_comparison="${path_genetic_correlation}/cohorts_hormones_pairs/${study_one}/${study_two}"
     path_genetic_correlation_report="${path_genetic_correlation_comparison}/correlation"
     path_genetic_correlation_report_suffix="${path_genetic_correlation_report}.log"
     # Initialize directories.

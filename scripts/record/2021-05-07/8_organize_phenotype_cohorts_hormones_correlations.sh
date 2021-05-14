@@ -55,7 +55,7 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
       if true; then
 
         # Organize paths.
-        path_genetic_correlation_comparison="${path_genetic_correlation}/${phenotype_study}/${directory}"
+        path_genetic_correlation_comparison="${path_genetic_correlation}/${phenotype_study}/cohorts_hormones/${directory}"
         path_genetic_correlation_report="${path_genetic_correlation_comparison}/correlation"
         path_genetic_correlation_report_suffix="${path_genetic_correlation_report}.log"
         # Initialize directories.
