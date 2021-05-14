@@ -764,27 +764,14 @@ def organize_cohort_hormone_reference_table(
     return table
 
 
-# TODO: I need to read in the cohort hormone reference table... then merge it...
-# TODO... then define "cohort_hormone"
-# TODO... then split table by "unadjust"
-# TODO... then set "cohort_hormone" as indices of the adjust and unadjust tables
-# TODO... then merge the adjust and unadjust tables
-
-# Determine "cohort_sort" and "hormone_sort"
-# Define new "identifier" by cohort + hormone
-# Split tables by "unadjust" in name
-# set identifier to index
-# merge straight and "unadjust" tables
-
-def organize_table_cohorts_hormones_models(
-    cohorts_hormones=None,
+def organize_table_adjust_unadjust_models(
     table=None,
 ):
     """
-    Organizes cohorts, hormones, and regression models within summary table.
+    Organizes summary table with side by side columns for adjusted and
+    unadjusted regression models.
 
     arguments:
-        cohorts_hormones (dict): information about cohorts and hormones
         table (object): Pandas data frame of genetic correlations
 
     raises:
@@ -830,6 +817,22 @@ def organize_table_cohorts_hormones_models(
         drop=True,
         inplace=True,
     )
+    # Select relevant columns to simplify merge.
+    table_adjust.drop(
+        labels=[
+            "unadjust",
+        ],
+        axis="columns",
+        inplace=True
+    )
+    table_unadjust = table_unadjust.loc[
+        :, table_unadjust.columns.isin([
+            "cohort_hormone", "identifier",
+            "heritability", "heritability_standard_error",
+            "correlation", "correlation_standard_error",
+            "correlation_probability",
+        ])
+    ]
     # Merge tables for adjusted or unadjusted regression models.
     # Merge data tables using database-style join.
     # Alternative is to use DataFrame.join().
@@ -840,16 +843,8 @@ def organize_table_cohorts_hormones_models(
         right_on="cohort_hormone",
         suffixes=("_adjust", "_unadjust"),
     )
-
-    print("table_merge")
-    print(table_merge)
-
-
-
     # Return information.
     return table_merge
-
-
 
 
 def combine_organize_phenotypes_summary_table(
@@ -918,74 +913,70 @@ def combine_organize_phenotypes_summary_table(
         suffixes=("_heritability", "_correlation"),
     )
     # Organize cohorts, hormones, and regression models.
-    table = organize_table_cohorts_hormones_models(
+    table = organize_table_adjust_unadjust_models(
         table=table_merge_two,
     )
 
-    print(table)
-
-    # TODO: now... introduce columns for "cohort", "hormone", "cohort_sort", and "hormone_sort"
-    # TODO: also a column for "cohort_hormone"
-
-    if False:
-        # Introduce columns for phenotype heritability.
-        table["phenotype_heritability"] = primary_heritability["heritability"]
-        table["phenotype_heritability_error"] = (
-            primary_heritability["heritability_standard_error"]
-        )
-        # Select table rows for secondary phenotypes with valid heritability
-        # estimates.
-        # Only filter if threshold is not missing or null.
-        if (not math.isnan(threshold_secondary_heritability)):
-            table = table.loc[
-                (table["heritability"] >= threshold_secondary_heritability), :
-            ]
-
-        # Calculate False Discovery Rates (FDRs).
-        table = utility.calculate_table_false_discovery_rates(
-            threshold=threshold_false_discovery_rate,
-            probability="correlation_probability",
-            discovery="correlation_discovery",
-            significance="correlation_significance",
-            table=table,
-        )
-
-        # TODO: change the sort order?
-
-
-        # Sort table rows.
-        table.sort_values(
-            by=["identifier"],
-            axis="index",
-            ascending=True,
-            na_position="last",
-            inplace=True,
-        )
-        # Sort table columns.
-        columns_sequence = [
-            "identifier",
-            "phenotype_heritability",
-            "phenotype_heritability_error",
-            "heritability", "heritability_standard_error",
-            "heritability_ratio",
-            "heritability_ratio_standard_error",
-            "heritability_variants",
-            "correlation", "correlation_standard_error",
-            "correlation_absolute",
-            "correlation_probability",
-            "correlation_discovery",
-            "correlation_significance",
-            "correlation_variants",
+    # Introduce columns for phenotype heritability.
+    table["primary_heritability"] = primary_heritability["heritability"]
+    table["primary_heritability_error"] = (
+        primary_heritability["heritability_standard_error"]
+    )
+    # Select table rows for secondary phenotypes with valid heritability
+    # estimates.
+    # Only filter if threshold is not missing or null.
+    if (not math.isnan(threshold_secondary_heritability)):
+        table = table.loc[
+            (
+                table["heritability_adjust"] >= threshold_secondary_heritability
+            ), :
         ]
-        table = table[[*columns_sequence]]
-        # Report.
-        if report:
-            utility.print_terminal_partition(level=2)
-            print("combine_organize_phenotype_metabolites_summary_table()")
-            print(table)
-        # Return information.
-        return table
-    pass
+
+    # Calculate False Discovery Rates (FDRs).
+    table = utility.calculate_table_false_discovery_rates(
+        threshold=threshold_false_discovery_rate,
+        probability="correlation_probability_adjust",
+        discovery="correlation_discovery_adjust",
+        significance="correlation_significance_adjust",
+        table=table,
+    )
+
+    # Sort table rows.
+    table.sort_values(
+        by=["cohort_sort", "hormone_sort"],
+        axis="index",
+        ascending=True,
+        na_position="last",
+        inplace=True,
+    )
+    # Sort table columns.
+    columns_sequence = [
+        "cohort_hormone",
+        "heritability_adjust", "heritability_standard_error_adjust",
+        "heritability_unadjust", "heritability_standard_error_unadjust",
+        "correlation_adjust", "correlation_standard_error_adjust",
+        "correlation_probability_adjust",
+        "correlation_discovery_adjust",
+        "correlation_unadjust", "correlation_standard_error_unadjust",
+        "correlation_probability_unadjust",
+        "heritability_ratio",
+        "heritability_ratio_standard_error",
+        "heritability_variants",
+        "correlation_absolute",
+        "correlation_significance_adjust",
+        "correlation_variants",
+        "identifier_adjust", "identifier_unadjust",
+        "primary_heritability",
+        "primary_heritability_error",
+    ]
+    table = table[[*columns_sequence]]
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("combine_organize_phenotype_metabolites_summary_table()")
+        print(table)
+    # Return information.
+    return table
 
 
 ##########
