@@ -84,6 +84,16 @@ if true; then
   pairs+=("female_perimenopause_ordinal_testosterone_log;male_testosterone_log")
   pairs+=("female_postmenopause_ordinal_testosterone_log;male_testosterone_log")
 
+  pairs+=("female_premenopause_ordinal_testosterone_free_log;female_postmenopause_ordinal_testosterone_free_log")
+  pairs+=("female_premenopause_ordinal_testosterone_free_log;female_perimenopause_ordinal_testosterone_free_log")
+  pairs+=("female_perimenopause_ordinal_testosterone_free_log;female_postmenopause_ordinal_testosterone_free_log")
+
+  pairs+=("female_premenopause_ordinal_steroid_globulin_log;female_postmenopause_ordinal_steroid_globulin_log")
+  pairs+=("female_premenopause_ordinal_steroid_globulin_log;female_perimenopause_ordinal_steroid_globulin_log")
+  pairs+=("female_perimenopause_ordinal_steroid_globulin_log;female_postmenopause_ordinal_steroid_globulin_log")
+
+
+
   for pair in "${pairs[@]}"; do
     # Read information.
     IFS=";" read -r -a array <<< "${pair}"
