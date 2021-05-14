@@ -36,29 +36,20 @@ path_gwas_cohorts_hormones="${path_gwas}/cohorts_hormones"
 delimiter=" "
 IFS=${delimiter}
 inclusions=()
-#inclusions+=("female_steroid_globulin_log") # file did not exist
-#inclusions+=("male_steroid_globulin_log") # file did not exist
-#inclusions+=("female_postmenopause_binary_steroid_globulin_log") # file did not exist
-#inclusions+=("female_perimenopause_ordinal_albumin_log")
-inclusions+=("female_perimenopause_ordinal_steroid_globulin_log")
-inclusions+=("female_perimenopause_ordinal_oestradiol_log")
-inclusions+=("female_perimenopause_ordinal_oestradiol_free_log")
-inclusions+=("female_perimenopause_ordinal_testosterone_log")
-inclusions+=("female_perimenopause_ordinal_testosterone_free_log")
+inclusions+=("female_combination_unadjust_albumin_log")
+inclusions+=("female_combination_unadjust_steroid_globulin_log")
+inclusions+=("female_combination_unadjust_oestradiol_log")
+inclusions+=("female_combination_unadjust_oestradiol_free_log")
+inclusions+=("female_combination_unadjust_testosterone_log")
+inclusions+=("female_combination_unadjust_testosterone_free_log")
+inclusions+=("female_postmenopause_ordinal_unadjust_albumin_log")
+inclusions+=("female_postmenopause_ordinal_unadjust_steroid_globulin_log")
+inclusions+=("female_postmenopause_ordinal_unadjust_oestradiol_log")
+inclusions+=("female_postmenopause_ordinal_unadjust_oestradiol_free_log")
+inclusions+=("female_postmenopause_ordinal_unadjust_testosterone_log")
+inclusions+=("female_postmenopause_ordinal_unadjust_testosterone_free_log")
 
 exclusions=()
-exclusions+=("female_combination_unadjust_albumin_log")
-exclusions+=("female_combination_unadjust_steroid_globulin_log")
-exclusions+=("female_combination_unadjust_oestradiol_log")
-exclusions+=("female_combination_unadjust_oestradiol_free_log")
-exclusions+=("female_combination_unadjust_testosterone_log")
-exclusions+=("female_combination_unadjust_testosterone_free_log")
-exclusions+=("female_postmenopause_ordinal_unadjust_albumin_log")
-exclusions+=("female_postmenopause_ordinal_unadjust_steroid_globulin_log")
-exclusions+=("female_postmenopause_ordinal_unadjust_oestradiol_log")
-exclusions+=("female_postmenopause_ordinal_unadjust_oestradiol_free_log")
-exclusions+=("female_postmenopause_ordinal_unadjust_testosterone_log")
-exclusions+=("female_postmenopause_ordinal_unadjust_testosterone_free_log")
 
 unset IFS
 
