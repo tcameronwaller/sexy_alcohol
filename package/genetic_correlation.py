@@ -940,7 +940,11 @@ def combine_organize_phenotypes_summary_table(
         significance="correlation_significance_adjust",
         table=table,
     )
-
+    # Reset index.
+    table.reset_index(
+        level=None,
+        inplace=True
+    )
     # Sort table rows.
     table.sort_values(
         by=["cohort_sort", "hormone_sort"],
