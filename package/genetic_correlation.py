@@ -1139,7 +1139,7 @@ def drive_collection_report_primary_secondary_studies(
         table_correlations=source["table_correlations"],
         threshold_secondary_heritability=float("nan"),
         threshold_false_discovery_rate=0.05,
-        report=False,
+        report=True,
     )
 
     # Report.
