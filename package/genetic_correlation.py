@@ -836,8 +836,8 @@ def organize_table_cohorts_hormones_models(
     table_merge = table_adjust.merge(
         table_unadjust,
         how="outer",
-        left_on="identifier",
-        right_on="identifier",
+        left_on="cohort_hormone",
+        right_on="cohort_hormone",
         suffixes=("_adjust", "_unadjust"),
     )
 
