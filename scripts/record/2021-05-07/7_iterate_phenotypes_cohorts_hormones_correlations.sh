@@ -27,48 +27,59 @@ path_genetic_correlation="${path_dock}/genetic_correlation"
 ###########################################################################
 # Execute procedure.
 
-# Define main phenotype studies.
-phenotype_studies=()
-phenotype_studies+=("30482948_walters_2018_all")
-#phenotype_studies+=("30482948_walters_2018_eur")
-#phenotype_studies+=("30482948_walters_2018_eur_unrel")
-
 file_gwas_cohorts_hormones_munge_suffix="gwas_munge.sumstats.gz"
 
-# Organize information in format for LDSC.
-for phenotype_study in "${phenotype_studies[@]}"; do
-  # Organize paths.
-  path_gwas_phenotype="${path_gwas}/${phenotype_study}"
-  path_gwas_phenotype_format_compress="${path_gwas_phenotype}/gwas_format.txt.gz"
-  path_gwas_phenotype_munge_suffix="${path_gwas_phenotype}/gwas_munge.sumstats.gz"
+if false; then
 
-  # Organize variables.
-  report="true" # "true" or "false"
-  /usr/bin/bash "${path_scripts_record}/8_organize_phenotype_cohorts_hormones_correlations.sh" \
-  $phenotype_study \
-  $path_gwas_phenotype \
-  $path_gwas_phenotype_munge_suffix \
-  $path_gwas_cohorts_hormones \
-  $file_gwas_cohorts_hormones_munge_suffix \
-  $path_genetic_correlation \
-  $path_genetic_reference \
-  $path_promiscuity_scripts \
-  $path_scripts_record \
-  $path_ldsc \
-  $report
-done
+  # Define main phenotype studies.
+  phenotype_studies=()
+  phenotype_studies+=("30482948_walters_2018_all")
+  #phenotype_studies+=("30482948_walters_2018_eur")
+  #phenotype_studies+=("30482948_walters_2018_eur_unrel")
+
+  # Organize information in format for LDSC.
+  for phenotype_study in "${phenotype_studies[@]}"; do
+    # Organize paths.
+    path_gwas_phenotype="${path_gwas}/${phenotype_study}"
+    path_gwas_phenotype_format_compress="${path_gwas_phenotype}/gwas_format.txt.gz"
+    path_gwas_phenotype_munge_suffix="${path_gwas_phenotype}/gwas_munge.sumstats.gz"
+
+    # Organize variables.
+    report="true" # "true" or "false"
+    /usr/bin/bash "${path_scripts_record}/8_organize_phenotype_cohorts_hormones_correlations.sh" \
+    $phenotype_study \
+    $path_gwas_phenotype \
+    $path_gwas_phenotype_munge_suffix \
+    $path_gwas_cohorts_hormones \
+    $file_gwas_cohorts_hormones_munge_suffix \
+    $path_genetic_correlation \
+    $path_genetic_reference \
+    $path_promiscuity_scripts \
+    $path_scripts_record \
+    $path_ldsc \
+    $report
+  done
+fi
 
 # TODO: I still want to run these...
 
 
 # Define specific pairs for genetic correlation.
-if false; then
+if true; then
+
+  # Organize paths.
+  path_alleles="$path_genetic_reference/alleles"
+  path_disequilibrium="$path_genetic_reference/disequilibrium"
+  path_baseline="$path_genetic_reference/baseline"
+  path_weights="$path_genetic_reference/weights"
+  path_frequencies="$path_genetic_reference/frequencies"
+
   pairs=()
   pairs+=("female_premenopause_binary_testosterone_log;female_postmenopause_binary_testosterone_log")
   pairs+=("female_premenopause_ordinal_testosterone_log;female_postmenopause_ordinal_testosterone_log")
+  pairs+=("female_premenopause_ordinal_testosterone_log;female_perimenopause_ordinal_testosterone_log")
+  pairs+=("female_perimenopause_ordinal_testosterone_log;female_postmenopause_ordinal_testosterone_log")
 
-  
-  pairs+=("female_premenopause_ordinal_testosterone_log;female_postmenopause_ordinal_testosterone_log")
   pairs+=("female_premenopause_ordinal_testosterone_log;male_testosterone_log")
   pairs+=("female_perimenopause_ordinal_testosterone_log;male_testosterone_log")
   pairs+=("female_postmenopause_ordinal_testosterone_log;male_testosterone_log")
