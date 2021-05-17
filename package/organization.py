@@ -2143,7 +2143,7 @@ def write_product(
         path_parent=paths["export"],
     )
     # Cohort tables in PLINK format.
-    if True:
+    if False:
         write_product_cohorts(
             information=information["cohorts"],
             path_parent=paths["cohorts"],
@@ -2212,6 +2212,10 @@ def execute_procedure(
         table=table_hormone,
         report=True,
     )
+    execute_analyze_sex_cohorts_hormones(
+        table=pail_female["table_clean"],
+        report=True,
+    )
 
     # Plot figures for hormones.
     if False:
@@ -2222,7 +2226,7 @@ def execute_procedure(
 
     # Select and organize variables across cohorts.
     # Organize phenotypes and covariates in format for analysis in PLINK.
-    if True:
+    if False:
         pail_cohorts = (
             ukb_organization.select_organize_plink_cohorts_by_sex_hormones(
                 table=pail_female["table_clean"],
@@ -2244,7 +2248,7 @@ def execute_procedure(
         pail_female["table_report_summary"]
     )
     #information["plots"] = pail_figures_hormone
-    information["cohorts"] = pail_cohorts
+    #information["cohorts"] = pail_cohorts
     # Write product information to file.
     write_product(
         paths=paths,
