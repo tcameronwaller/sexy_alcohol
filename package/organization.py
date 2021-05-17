@@ -2202,17 +2202,16 @@ def execute_procedure(
         report=False,
     )
     # Organize variables for persons' sex hormones across the UK Biobank.
-    table_hormone = ukb_organization.execute_sex_hormones(
+    pail_hormone = ukb_organization.execute_sex_hormones(
         table=table_basis,
-        selection="table_clean", # whether to remove original, raw UK Biobank variables
         report=False,
     )
     # Organize variables for female menstruation across the UK Biobank.
     pail_female = ukb_organization.execute_female_menstruation(
-        table=table_hormone,
+        table=pail_hormone["table_clean"],
         report=True,
     )
-    execute_analyze_sex_cohorts_hormones(
+    ukb_organization.execute_analyze_sex_cohorts_hormones(
         table=pail_female["table_clean"],
         report=True,
     )
