@@ -2209,7 +2209,7 @@ def execute_procedure(
     # Organize variables for female menstruation across the UK Biobank.
     pail_female = ukb_organization.execute_female_menstruation(
         table=pail_hormone["table_clean"],
-        report=True,
+        report=False,
     )
     ukb_organization.execute_analyze_sex_cohorts_hormones(
         table=pail_female["table_clean"],
