@@ -1596,29 +1596,30 @@ def organize_hormone_female_export_table(
     """
 
     table = table.copy(deep=True)
-    columns_export = [
-        #"eid",
-        "IID",
-        "sex", "sex_text", "age", "body_mass_index", "body_mass_index_log",
-        "pregnancy",
-        "hysterectomy", "oophorectomy", "hysterectomy_or_oophorectomy",
-        "menopause_binary", "menopause_ordinal",
-        "menstruation_days", "menstruation_phase",
-        "oral_contraception", "hormone_replacement",
-        "hormone_alteration",
-        "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
-        "oestradiol", "oestradiol_log",
-        "oestradiol_free", "oestradiol_free_log",
-        "oestradiol_bioavailable", "oestradiol_bioavailable_log",
-        "testosterone", "testosterone_log",
-        "testosterone_free", "testosterone_free_log",
-        "testosterone_bioavailable", "testosterone_bioavailable_log",
+    if (select_columns):
+        columns_export = [
+            #"eid",
+            "IID",
+            "sex", "sex_text", "age", "body_mass_index", "body_mass_index_log",
+            "pregnancy",
+            "hysterectomy", "oophorectomy", "hysterectomy_or_oophorectomy",
+            "menopause_binary", "menopause_ordinal",
+            "menstruation_days", "menstruation_phase",
+            "oral_contraception", "hormone_replacement",
+            "hormone_alteration",
+            "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
+            "oestradiol", "oestradiol_log",
+            "oestradiol_free", "oestradiol_free_log",
+            "oestradiol_bioavailable", "oestradiol_bioavailable_log",
+            "testosterone", "testosterone_log",
+            "testosterone_free", "testosterone_free_log",
+            "testosterone_bioavailable", "testosterone_bioavailable_log",
 
-    ]
-    table = table.loc[
-        :, table.columns.isin(columns_export)
-    ]
-    table = table[[*columns_export]]
+        ]
+        table = table.loc[
+            :, table.columns.isin(columns_export)
+        ]
+        table = table[[*columns_export]]
     # Report.
     if report:
         # Column name translations.
@@ -2208,12 +2209,12 @@ def execute_procedure(
     )
     # Organize variables for persons' sex hormones across the UK Biobank.
     pail_hormone = ukb_organization.execute_sex_hormones(
-        table=pail_basis["table_clean"],
+        table=pail_basis["table_clean"], # pail_basis["table_clean"]
         report=True,
     )
     # Organize variables for female menstruation across the UK Biobank.
     pail_female = ukb_organization.execute_female_menstruation(
-        table=pail_hormone["table_clean"],
+        table=pail_hormone["table_clean"], # pail_hormone["table_clean"]
         report=False,
     )
     if False:
@@ -2241,6 +2242,7 @@ def execute_procedure(
     # Organize information for export.
     table_hormone_female_export = organize_hormone_female_export_table(
         table=pail_female["table_clean"],
+        select_columns=False,
         report=False,
     )
 
