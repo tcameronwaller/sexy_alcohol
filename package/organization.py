@@ -1576,6 +1576,7 @@ def scrap_record_cohorts_variables_by_sex_alcoholism_split(
 
 def organize_hormone_female_export_table(
     table=None,
+    select_columns=None,
     report=None,
 ):
     """
@@ -1584,6 +1585,7 @@ def organize_hormone_female_export_table(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        select_columns (bool): whether to select specific columns from table
         report (bool): whether to print reports
 
     raises:
