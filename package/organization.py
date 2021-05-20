@@ -2200,14 +2200,13 @@ def execute_procedure(
     )
     # Organize variables for persons' genotypes, sex, age, and body mass index
     # across the UK Biobank.
-    table_basis = ukb_organization.execute_genotype_sex_age_body(
+    pail_basis = ukb_organization.execute_genotype_sex_age_body(
         table=source["table_phenotypes"],
-        selection="table_clean",
         report=False,
     )
     # Organize variables for persons' sex hormones across the UK Biobank.
     pail_hormone = ukb_organization.execute_sex_hormones(
-        table=table_basis,
+        table=pail_basis["table_clean"],
         report=True,
     )
     # Organize variables for female menstruation across the UK Biobank.
