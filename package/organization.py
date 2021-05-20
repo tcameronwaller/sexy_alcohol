@@ -1574,7 +1574,7 @@ def scrap_record_cohorts_variables_by_sex_alcoholism_split(
 # Data export
 
 
-def organize_hormone_export_table(
+def organize_hormone_female_export_table(
     table=None,
     report=None,
 ):
@@ -1598,16 +1598,20 @@ def organize_hormone_export_table(
         #"eid",
         "IID",
         "sex", "sex_text", "age", "body_mass_index", "body_mass_index_log",
-        "menopause",
-        "pregnancy_broad", "pregnancy",
-        "menstruation_day",
-        "oral_contraception",
-        "hormone_therapy",
+        "pregnancy",
+        "hysterectomy", "oophorectomy", "hysterectomy_or_oophorectomy",
+        "menopause_binary", "menopause_ordinal",
+        "menstruation_days", "menstruation_phase",
+        "oral_contraception", "hormone_replacement",
+        "hormone_alteration",
         "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
         "oestradiol", "oestradiol_log",
         "oestradiol_free", "oestradiol_free_log",
+        "oestradiol_bioavailable", "oestradiol_bioavailable_log",
         "testosterone", "testosterone_log",
         "testosterone_free", "testosterone_free_log",
+        "testosterone_bioavailable", "testosterone_bioavailable_log",
+
     ]
     table = table.loc[
         :, table.columns.isin(columns_export)
@@ -2211,10 +2215,11 @@ def execute_procedure(
         table=pail_hormone["table_clean"],
         report=False,
     )
-    ukb_organization.execute_analyze_sex_cohorts_hormones(
-        table=pail_female["table_clean"],
-        report=True,
-    )
+    if False:
+        ukb_organization.execute_analyze_sex_cohorts_hormones(
+            table=pail_female["table_clean"],
+            report=True,
+        )
 
     # Plot figures for hormones.
     if False:
@@ -2233,16 +2238,17 @@ def execute_procedure(
         ))
 
     # Organize information for export.
-    if False:
-        table_hormone_export = organize_hormone_export_table(
-            table=table_hormone,
-            report=False,
-        )
+    table_hormone_female_export = organize_hormone_female_export_table(
+        table=pail_female["table_clean"],
+        report=False,
+    )
 
     # Collect information.
     information = dict()
     information["export"] = dict()
-    information["export"]["table_hormone_export"] = table_basis
+    information["export"]["table_hormone_female_export"] = (
+        table_hormone_female_export
+    )
     information["export"]["table_report_summary_cohorts_hormones"] = (
         pail_female["table_report_summary"]
     )
