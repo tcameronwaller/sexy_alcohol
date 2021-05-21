@@ -2217,7 +2217,7 @@ def execute_procedure(
         table=pail_hormone["table"], # pail_hormone["table_clean"]
         report=False,
     )
-    if True:
+    if False:
         ukb_organization.execute_analyze_sex_cohorts_hormones(
             table=pail_female["table_clean"],
             report=True,
@@ -2232,7 +2232,7 @@ def execute_procedure(
 
     # Select and organize variables across cohorts.
     # Organize phenotypes and covariates in format for analysis in PLINK.
-    if True:
+    if False:
         pail_cohorts = (
             ukb_organization.select_organize_plink_cohorts_by_sex_hormones(
                 table=pail_female["table_clean"],
