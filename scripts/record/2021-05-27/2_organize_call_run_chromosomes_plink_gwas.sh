@@ -33,11 +33,11 @@
 # Array batch indices cannot start at zero.
 ### -t 1-100:1
 # Limit on concurrent processes.
-# Process this count of chromosomes at a time for each job.
+# Allow simultaneous processes for this count of GWAS studies.
 # For large cohorts (20,000 - 500,000), limit to 10-20 total simultaneous GWAS
 # on NCSA.
-# Beyond 10-20 simultaneous GWAS, PLINK2 begins to use more than 2 TB storage.
-#$ -tc 13
+# Beyond about 15 simultaneous GWAS, PLINK2 begins to use more than 2 TB storage.
+#$ -tc 10
 
 # http://gridscheduler.sourceforge.net/htmlman/htmlman1/qsub.html
 

@@ -22,10 +22,10 @@ path_process=$(<"./process_sexy_alcohol.txt")
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-05-27"
 path_dock="$path_process/dock"
 path_cohorts="${path_dock}/organization/cohorts"
-path_gwas="${path_dock}/gwas/cohorts_hormones"
+path_gwas="${path_dock}/gwas/cohorts_models"
 
 # Initialize directories.
-rm -r $path_gwas
+#rm -r $path_gwas
 mkdir -p $path_gwas
 
 # Define covariates common for all cohorts.
@@ -50,7 +50,6 @@ cohorts_covariates+=("male_old;table_male_old;age,body_mass_index_log,")
 
 cohorts_covariates+=("female_male_unadjust;table_female_male;")
 cohorts_covariates+=("female_unadjust;table_female;")
-cohorts_covariates+=("female_combination_unadjust;table_female_combination;")
 cohorts_covariates+=("female_premenopause_binary_unadjust;table_female_premenopause_binary;")
 cohorts_covariates+=("female_postmenopause_binary_unadjust;table_female_postmenopause_binary;")
 cohorts_covariates+=("female_premenopause_ordinal_unadjust;table_female_premenopause_ordinal;")
@@ -61,20 +60,27 @@ cohorts_covariates+=("male_young_unadjust;table_male_young;")
 cohorts_covariates+=("male_old_unadjust;table_male_old;")
 
 
+# TODO: expand to all hormones for the cohorts above ^^^
+
+# TODO: remember to delete the empty directories in "".../gwas/cohorts_hormones" for the "female_combination_" models...
+
+
 # Define array of hormones.
 hormones=()
-#hormones+=("albumin_log")
-#hormones+=("steroid_globulin_log")
-hormones+=("oestradiol_log")
-#hormones+=("oestradiol_free_log")
-#hormones+=("oestradiol_bioavailable_log")
-hormones+=("oestradiol_imputation_log")
-hormones+=("testosterone_log")
-hormones+=("testosterone_free_log")
-hormones+=("testosterone_bioavailable_log")
-hormones+=("testosterone_imputation_log")
-hormones+=("vitamin_d_log")
-hormones+=("vitamin_d_imputation_log")
+hormones+=("albumin_log")
+hormones+=("albumin_imputation_log")
+hormones+=("steroid_globulin_log")
+hormones+=("steroid_globulin_imputation_log")
+#hormones+=("oestradiol_log")
+hormones+=("oestradiol_free_log")
+hormones+=("oestradiol_bioavailable_log")
+#hormones+=("oestradiol_imputation_log")
+#hormones+=("testosterone_log")
+#hormones+=("testosterone_free_log")
+#hormones+=("testosterone_bioavailable_log")
+#hormones+=("testosterone_imputation_log")
+#hormones+=("vitamin_d_log")
+#hormones+=("vitamin_d_imputation_log")
 
 # Assemble array of batch instance details.
 path_batch_instances="${path_gwas}/batch_instances.txt"
