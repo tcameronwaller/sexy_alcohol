@@ -192,6 +192,13 @@ Journal: European Journal of Human Genetics
 Title: "Genome-wide association study with 1000 genomes imputation identifies signals for nine sex hormone-related phenotypes"
 
 --------------------------------------------------
+PubMed:24523135
+date: 13 February 2014
+journal: Developmental Psychobiology
+title: "Genetic and environmental influences on testosterone in adolescents: evidence for sex differences"
+
+
+--------------------------------------------------
 PubMed:23746309
 Date: 7 June 2013
 Journal: Clinical Endocrinology
