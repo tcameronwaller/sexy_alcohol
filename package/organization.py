@@ -114,8 +114,8 @@ def initialize_directories(
     paths["export"] = os.path.join(
         path_dock, "organization", "export"
     )
-    paths["cohorts"] = os.path.join(
-        path_dock, "organization", "cohorts"
+    paths["cohorts_models"] = os.path.join(
+        path_dock, "organization", "cohorts_models"
     )
     paths["plots"] = os.path.join(
         path_dock, "organization", "plots"
@@ -132,7 +132,7 @@ def initialize_directories(
         path=paths["export"]
     )
     utility.create_directories(
-        path=paths["cohorts"]
+        path=paths["cohorts_models"]
     )
     utility.create_directories(
         path=paths["plots"]
@@ -171,6 +171,7 @@ def read_source(
     path_table_phenotypes = os.path.join(
         path_dock, "assembly", "table_phenotypes.pickle"
     )
+
     # Read information from file.
     table_phenotypes = pandas.read_pickle(
         path_table_phenotypes
@@ -1900,7 +1901,7 @@ def write_product_quality(
     pass
 
 
-def write_product_cohort_table(
+def write_product_cohort_model_table(
     name=None,
     information=None,
     path_parent=None,
@@ -1933,7 +1934,7 @@ def write_product_cohort_table(
     pass
 
 
-def write_product_cohorts(
+def write_product_cohorts_models(
     information=None,
     path_parent=None,
 ):
@@ -1951,7 +1952,7 @@ def write_product_cohorts(
     """
 
     for name in information.keys():
-        write_product_cohort_table(
+        write_product_cohort_model_table(
             name=name,
             information=information[name],
             path_parent=path_parent,
@@ -2151,9 +2152,9 @@ def write_product(
     )
     # Cohort tables in PLINK format.
     if True:
-        write_product_cohorts(
-            information=information["cohorts"],
-            path_parent=paths["cohorts"],
+        write_product_cohorts_models(
+            information=information["cohorts_models"],
+            path_parent=paths["cohorts_models"],
         )
     # Trial organization.
     if False:
@@ -2230,21 +2231,23 @@ def execute_procedure(
             report=False,
         )
 
-    # Select and organize variables across cohorts.
-    # Organize phenotypes and covariates in format for analysis in PLINK.
-    if True:
-        pail_cohorts = (
-            ukb_organization.select_organize_plink_cohorts_by_sex_hormones(
-                table=pail_female["table_clean"],
-                report=True,
-        ))
-
     # Organize information for export.
     table_hormone_female_export = organize_hormone_female_export_table(
         table=pail_female["table"], # pail_female["table_clean"]
         select_columns=False,
         report=False,
     )
+
+    # Select and organize variables across cohorts.
+    # Organize phenotypes and covariates in format for analysis in PLINK.
+    if True:
+        pail_cohorts_models = (
+            ukb_organization.execute_cohorts_models_genetic_analysis(
+                table=pail_female["table_clean"],
+                set="sex_hormones",
+                path_dock=path_dock,
+                report=True,
+        ))
 
     # Collect information.
     information = dict()
@@ -2256,7 +2259,7 @@ def execute_procedure(
         pail_female["table_report_summary"]
     )
     #information["plots"] = pail_figures_hormone
-    information["cohorts"] = pail_cohorts
+    information["cohorts_models"] = pail_cohorts_models
     # Write product information to file.
     write_product(
         paths=paths,
