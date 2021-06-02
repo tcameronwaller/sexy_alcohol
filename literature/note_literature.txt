@@ -106,9 +106,18 @@ journal: European Journal of Human Genetics
 authors: Emily Flynn, ..., Manuel A. Rivas
 note:
 - UK Biobank cohort
-- analysis of sex-specific genetic determinants in variation of testosterone
-- 119 female-specific variants
-- 445 male-specific variants
+- analysis of sex-specific heritability and genetic correlation for 33 biochemical biomarkers in UK Biobank
+- analysis included albumin, steroid hormone binding globulin (SHBG), and testosterone
+- analysis did not include oestradiol
+- genetic correlations for most biomarkers between females and males were near one (Figure 2)
+- genetic correlation for testosterone between females and males was near zero (Figure 2)
+- analysis of sex-specific genetic determinants in variation of testosterone:
+- - 119 female-specific variants
+- - 445 male-specific variants
+- supplemental information
+- - "Menopause phenotype definition"
+"We defined pre-menopause as self-reported “reached menopause” (field ID: 2724) and less than 60 years old and post-menopause as at least 2 years post menopause (ID:3581) and had menopause after age 40 (to exclude premature menopause)5. We excluded people with missing or “unsure” answers, and individuals who may have gone through surgical menopause (oophorectomy ID:2834 or hysterectomy ID:3591 or 2724). In the White British population, this resulted in 35,999 pre- and 91,462 post-menopausal women (53,573 excluded)."
+
 
 --------------------------------------------------
 PubMed: 32042192
@@ -206,9 +215,13 @@ Title: "The heritability of circulating testosterone, oestradiol, oestrone and s
 
 --------------------------------------------------
 PubMed: 22675492
-Date: 4 June 2012
-Journal: PLOS One
-Title: "Genome-Wide Association Study of Circulating Estradiol, Testosterone, and Sex Hormone-Binding Globulin in Postmenopausal Women"
+date: 4 June 2012
+journal: PLOS One
+authors: Jennifer Prescott, ..., Immaculata De Vivo
+title: "Genome-Wide Association Study of Circulating Estradiol, Testosterone, and Sex Hormone-Binding Globulin in Postmenopausal Women"
+note:
+- sample size: ~ 1,600 persons all post-menopause females
+- main GWAS result was SHBG variant in CYP19A1 gene locus
 
 --------------------------------------------------
 PubMed:15755867
@@ -252,11 +265,13 @@ PubMed: 33648717
 title: "Examining sex-differentiated genetic effects across neuropsychiatric and behavioral traits"
 date: 8 January 2021
 journal: Biological Psychiatry
-authors: Joanna Martin, ..., Lea K. Davis
+authors: Joanna Martin, ..., Stacey J. Winham, ..., Lea K. Davis
 note:
 - Table S11
 - - sex-specific, between-phenotype genetic correlations
 - - includes genetic correlations for Alcohol Consumption (not Alcohol Dependence)
+- commentary by Anna Gui
+
 
 --------------------------------------------------
 PubMed: 33407712
