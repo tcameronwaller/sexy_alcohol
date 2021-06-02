@@ -314,7 +314,8 @@ def read_collect_cohorts_sample_counts_by_files(
     raises:
 
     returns:
-        (object): Pandas data frame of metabolites' heritability estimates
+        (object): Pandas data frame of counts of sample records in each cohort
+            and model
 
     """
 
@@ -873,7 +874,9 @@ def read_source_primary_secondary(
         utility.print_terminal_partition(level=2)
     # Compile and return information.
     return {
-        "table_cohort_hormone_reference": table_cohort_hormone_reference,
+        "table_cohort_model_phenotype_reference": (
+            table_cohort_model_phenotype_reference
+        ),
         "primary_heritability": primary_heritability,
         "table_secondary_samples_counts": table_secondary_samples_counts,
         "table_secondary_heritability": table_secondary_heritability,
@@ -1023,9 +1026,11 @@ def organize_table_adjust_unadjust_models(
     return table_merge
 
 
+# TODO: I might need to rename to distinguish from the pairs...
 def combine_organize_phenotypes_summary_table(
-    table_cohort_hormone_reference=None,
+    table_cohort_model_phenotype_reference=None,
     primary_heritability=None,
+    table_secondary_samples_counts=None,
     table_secondary_heritability=None,
     table_correlations=None,
     threshold_secondary_heritability=None,
@@ -1036,10 +1041,13 @@ def combine_organize_phenotypes_summary_table(
     Reads, collects, and organizes metabolite heritability estimates.
 
     arguments:
-        table_cohort_hormone_reference (object): Pandas data frame of names and
-            information about cohorts, hromones, and regression models in study
+        table_cohort_model_phenotype_reference (object): Pandas data frame of
+            names and information about cohorts, regression models, and
+            phenotypes in study
         primary_heritability (dict): information about estimation of a
             phenotype's heritability
+        table_secondary_samples_counts (object): Pandas data frame of counts of
+            sample records in each cohort and model
         table_secondary_heritability (object): Pandas data frame of
             metabolites' heritability estimates
         table_correlations (object): Pandas data frame of genetic correlations
@@ -1058,30 +1066,42 @@ def combine_organize_phenotypes_summary_table(
     """
 
     # Organize reference table.
-    table_cohort_hormone_reference = organize_cohort_hormone_reference_table(
-        table=table_cohort_hormone_reference,
-        identifier="identifier",
-        keep_columns=[
-            "identifier", "cohort", "cohort_sort",
-            "hormone", "hormone_sort", "unadjust"
-        ],
+    table_cohort_model_phenotype_reference = (
+        organize_cohort_hormone_reference_table(
+            table=table_cohort_model_phenotype_reference,
+            identifier="identifier",
+            keep_columns=[
+                "identifier", "cohort", "cohort_sort",
+                "hormone", "hormone_sort", "unadjust"
+            ],
+    ))
+
+    # Merge tables for references and heritabilities.
+    # Merge data tables using database-style join.
+    # Alternative is to use DataFrame.join().
+    table_merge_one = table_cohort_model_phenotype_reference.merge(
+        table_secondary_samples_counts,
+        how="outer",
+        left_on="identifier",
+        right_on="identifier",
+        suffixes=("_reference", "_counts"),
     )
 
     # Merge tables for references and heritabilities.
     # Merge data tables using database-style join.
     # Alternative is to use DataFrame.join().
-    table_merge_one = table_cohort_hormone_reference.merge(
+    table_merge_two = table_merge_one.merge(
         table_secondary_heritability,
         how="outer",
         left_on="identifier",
         right_on="identifier",
-        suffixes=("_reference", "_heritability"),
+        suffixes=("_counts", "_heritability"),
     )
 
     # Merge tables for heritabilities and correlations.
     # Merge data tables using database-style join.
     # Alternative is to use DataFrame.join().
-    table_merge_two = table_merge_one.merge(
+    table_merge_three = table_merge_two.merge(
         table_correlations,
         how="outer",
         left_on="identifier",
@@ -1090,7 +1110,7 @@ def combine_organize_phenotypes_summary_table(
     )
     # Organize cohorts, hormones, and regression models.
     table = organize_table_adjust_unadjust_models(
-        table=table_merge_two,
+        table=table_merge_three,
     )
 
     # Introduce columns for phenotype heritability.
@@ -1133,6 +1153,7 @@ def combine_organize_phenotypes_summary_table(
     columns_sequence = [
         "cohort",
         "hormone",
+        "count_samples",
         "heritability_adjust", "heritability_standard_error_adjust",
         "heritability_unadjust", "heritability_standard_error_unadjust",
         "correlation_adjust", "correlation_standard_error_adjust",
@@ -1324,8 +1345,11 @@ def drive_collection_report_primary_secondary_studies(
 
     # Organize summary table.
     table_summary = combine_organize_phenotypes_summary_table(
-        table_cohort_hormone_reference=source["table_cohort_hormone_reference"],
+        table_cohort_model_phenotype_reference=(
+            source["table_cohort_model_phenotype_reference"]
+        ),
         primary_heritability=source["primary_heritability"],
+        table_secondary_samples_counts=source["table_secondary_samples_counts"],
         table_secondary_heritability=source["table_secondary_heritability"],
         table_correlations=source["table_correlations"],
         threshold_secondary_heritability=float("nan"),
@@ -1409,7 +1433,7 @@ def execute_procedure(
 
 
     # TODO: also iterate on primary and secondary pairs in the other reference table...
-    
+
     pass
 
 
