@@ -108,12 +108,11 @@ if true; then
   pairs+=("female_premenopause_ordinal_vitamin_d_log;male_young_vitamin_d_log")
   pairs+=("female_postmenopause_ordinal_vitamin_d_log;male_old_vitamin_d_log")
 
-  pairs+=("male_young_oestradiol_log;male_old_oestradiol_log")
-  pairs+=("male_young_testosterone_log;male_old_testosterone_log")
-
   pairs+=("female_premenopause_ordinal_oestradiol_log;female_postmenopause_ordinal_oestradiol_log")
   pairs+=("female_premenopause_ordinal_testosterone_log;female_postmenopause_ordinal_testosterone_log")
 
+  pairs+=("male_young_oestradiol_log;male_old_oestradiol_log")
+  pairs+=("male_young_testosterone_log;male_old_testosterone_log")
 
   for pair in "${pairs[@]}"; do
     # Read information.

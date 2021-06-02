@@ -55,6 +55,43 @@ import promiscuity.utility as utility
 # Initialization
 
 
+def initialize_organization_directories(
+    organization_studies=None,
+    paths=None,
+    path_dock=None,
+    restore=None,
+):
+    """
+    Initialize directories for procedure's product files.
+
+    arguments:
+        organization_studies (list<str>): identifiers of studies with
+            organization tables
+        paths (dict<str>): collection of paths to directories for procedure's
+            files
+        path_dock (str): path to dock directory for source and product
+            directories and files
+        restore (bool): whether to remove previously existing directories
+
+    raises:
+
+    returns:
+        (dict<str>): collection of paths to directories for procedure's files
+
+    """
+
+    paths = copy.deepcopy(paths)
+    paths["organization"] = os.path.join(
+        path_dock, "organization",
+    )
+    paths["organization_studies"] = dict()
+    for study in organization_studies:
+        paths["organization_studies"][study] = os.path.join(
+            path_dock, "organization", study
+        )
+    return paths
+
+
 def initialize_heritability_directories(
     heritability_studies=None,
     paths=None,
@@ -137,6 +174,7 @@ def initialize_correlation_directories(
     return paths
 
 
+# TODO: this is sort of specific to the primary-secondary scenario...
 def initialize_directories(
     primary_study=None,
     secondary_study=None,
@@ -166,6 +204,10 @@ def initialize_directories(
     paths = dict()
     # Define paths to directories.
     paths["dock"] = path_dock
+    paths["organization_cohorts_models"] = os.path.join(
+        path_dock, "organization", "cohorts_models"
+    )
+
     heritability_studies = [
         primary_study,
         secondary_study,
@@ -176,6 +218,12 @@ def initialize_directories(
     secondary_studies = [
         secondary_study,
     ]
+    paths = initialize_organization_directories(
+        organization_studies=[secondary_study],
+        paths=paths,
+        path_dock=path_dock,
+        restore=restore,
+    )
     paths = initialize_heritability_directories(
         heritability_studies=heritability_studies,
         paths=paths,
@@ -195,6 +243,121 @@ def initialize_directories(
 
 ##########
 # Read
+
+
+
+def read_extract_cohort_samples_count(
+    file=None,
+    file_prefix=None,
+    file_suffix=None,
+    path_source_directory=None,
+):
+    """
+    Reads and extracts information from log of LDSC for heritability estimation
+    from GWAS summary statistics.
+
+    arguments:
+        file (str): name of a file
+        file_suffix (str): file name suffix to recognize relevant files and to
+            extract identifier
+        path_source_directory (str): path to source parent directory for files
+            with heritability estimations for phenotype
+
+    raises:
+
+    returns:
+        (dict): information about estimation of a phenotype's heritability
+
+    """
+
+    # Extract metabolite's identifier.
+    identifier = str(
+        file.replace(str(file_prefix), "").replace(str(file_suffix), "")
+    )
+    # Define path to file.
+    path_file = os.path.join(
+        path_source_directory, file
+    )
+    # Read table from file.
+    table = pandas.read_csv(
+        path_file,
+        sep="\t",
+        header=0,
+        #dtype="string",
+    )
+    # Read count of samples' records in table.
+    count_samples = table.shape[0]
+    # Collect information.
+    record = dict()
+    record["identifier"] = identifier
+    record["count_samples"] = count_samples
+    # Return information.
+    return record
+
+
+def read_collect_cohorts_sample_counts_by_files(
+    file_prefix=None,
+    file_suffix=None,
+    path_source_directory=None,
+):
+    """
+    Reads, collects, and organizes heritability estimates across phenotypes.
+
+    arguments:
+        file_prefix (str): file name prefix to recognize relevant files and to
+            extract identifier
+        file_suffix (str): file name suffix to recognize relevant files and to
+            extract identifier
+        path_source_directory (str): path to source directory that contains
+            files with heritability estimations for phenotypes
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of metabolites' heritability estimates
+
+    """
+
+    # Collect names of files for metabolites' heritabilities.
+    files = utility.extract_directory_file_names(path=path_source_directory)
+    files_relevant = list(filter(
+        lambda content: (
+            (str(file_prefix) in content) and
+            (str(file_suffix) in content)
+        ), files
+    ))
+    records = list()
+    for file in files_relevant:
+        record = read_extract_cohort_samples_count(
+            file=file,
+            file_prefix=file_prefix,
+            file_suffix=file_suffix,
+            path_source_directory=path_source_directory,
+        )
+        records.append(record)
+        pass
+    # Organize heritability table.
+    table = utility.convert_records_to_dataframe(
+        records=records
+    )
+    table.sort_values(
+        by=["count_samples"],
+        axis="index",
+        ascending=False,
+        inplace=True,
+    )
+    table.reset_index(
+        level=None,
+        inplace=True
+    )
+    table["identifier"].astype("string")
+    table.set_index(
+        "identifier",
+        drop=True,
+        inplace=True,
+    )
+    # Return information.
+    return table
 
 
 def read_extract_phenotype_heritability(
@@ -629,7 +792,7 @@ def read_collect_primary_secondaries_genetic_correlations_by_directories(
     return table
 
 
-def read_source(
+def read_source_primary_secondary(
     primary_study=None,
     secondary_study=None,
     paths=None,
@@ -654,23 +817,35 @@ def read_source(
 
     """
 
-    # Metabolite reference table.
-    path_table_cohort_hormone_reference = os.path.join(
+    # Reference table.
+    path_table_cohort_model_phenotype_reference = os.path.join(
         paths["dock"], "parameters", "sexy_alcohol",
-        "table_cohort_hormone_reference.tsv"
+        "table_cohort_model_phenotype_reference.tsv"
     )
-    table_cohort_hormone_reference = pandas.read_csv(
-        path_table_cohort_hormone_reference,
+    table_cohort_model_phenotype_reference = pandas.read_csv(
+        path_table_cohort_model_phenotype_reference,
         sep="\t",
         header=0,
         #dtype="string",
     )
+
     # Primary phenotype heritability.
     primary_heritability = read_extract_phenotype_heritability(
         file="heritability_report.log",
         file_suffix="",
         path_source_directory=paths["heritability_studies"][primary_study],
     )
+
+    # Secondary sample counts table.
+    table_secondary_samples_counts = (
+        read_collect_cohorts_sample_counts_by_files(
+            file_prefix="table_",
+            file_suffix=".tsv",
+            path_source_directory=(
+                paths["organization_studies"][secondary_study]
+            ),
+    ))
+
     # Secondary phenotypes heritability table.
     table_secondary_heritability = (
         read_collect_phenotypes_heritabilities_by_directories(
@@ -700,6 +875,7 @@ def read_source(
     return {
         "table_cohort_hormone_reference": table_cohort_hormone_reference,
         "primary_heritability": primary_heritability,
+        "table_secondary_samples_counts": table_secondary_samples_counts,
         "table_secondary_heritability": table_secondary_heritability,
         "table_correlations": table_correlations,
     }
@@ -1100,6 +1276,12 @@ def drive_collection_report_primary_secondary_studies(
     """
     Function to execute module's main behavior.
 
+    Collect results from primary and secondary studies.
+    Primary phenotype is the same across comparisons to multiple secondary
+    studies.
+    Secondary studies vary by cohort, regression model, and phenotype (such as
+    hormone).
+
     arguments:
         primary_study (str): identifier of primary study, consisting of a single
             GWAS
@@ -1131,12 +1313,15 @@ def drive_collection_report_primary_secondary_studies(
     )
 
     # Read source information from file.
-    source = read_source(
+    source = read_source_primary_secondary(
         primary_study=primary_study,
         secondary_study=secondary_study,
         paths=paths,
         report=False,
     )
+
+    print(source["table_secondary_samples_counts"])
+
     # Organize summary table.
     table_summary = combine_organize_phenotypes_summary_table(
         table_cohort_hormone_reference=source["table_cohort_hormone_reference"],
@@ -1145,7 +1330,7 @@ def drive_collection_report_primary_secondary_studies(
         table_correlations=source["table_correlations"],
         threshold_secondary_heritability=float("nan"),
         threshold_false_discovery_rate=0.05,
-        report=True,
+        report=False,
     )
 
     # Report.
@@ -1195,15 +1380,21 @@ def execute_procedure(
     # Pause procedure.
     time.sleep(5.0)
 
+    # Collect results from primary and secondary studies.
+    # Primary phenotype is the same across comparisons to multiple secondary
+    # studies.
+    # Secondary studies vary by cohort, regression model, and phenotype (such as
+    # hormone).
+
     # Define phenotype studies.
     primary_studies = [
         "30482948_walters_2018_all",
-        #"30482948_walters_2018_eur",
-        #"30482948_walters_2018_eur_unrel",
+        "30482948_walters_2018_eur",
+        "30482948_walters_2018_eur_unrel",
     ]
     # Define container for secondary studies.
     secondary_studies = [
-        "cohorts_hormones",
+        "cohorts_models",
     ]
     for primary_study in primary_studies:
         for secondary_study in secondary_studies:
@@ -1215,6 +1406,10 @@ def execute_procedure(
             )
             pass
         pass
+
+
+    # TODO: also iterate on primary and secondary pairs in the other reference table...
+    
     pass
 
 
