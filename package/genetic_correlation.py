@@ -659,22 +659,34 @@ def read_extract_phenotypes_genetic_correlation(
 
     # Determine whether main report has a missing value ("nan") correlation.
     if missing_correlation:
+        # Initialize flag.
+        summary_table = False
+        # Determine whether report has a summary table.
+        # Keep index of prefix title.
         # Read relevant lines from file.
         lines = utility.read_file_text_lines(
             path_file=path_file,
-            start=0,
+            start=50,
             stop=250,
         )
+        index = 50
+        index_title = float("nan")
         count_lines = len(lines)
-        # Read values from bottom table in report.
-        table = pandas.read_csv(
-            path_file,
-            sep="\s+",
-            header=60,
-            #skip_blank_lines=True,
-        )
-        print(path_file)
-        print(table)
+        for line in lines:
+            if "Summary of Genetic Correlation Results" in line:
+                summary_table = True
+                index_title = index
+            index += 1
+        if summary_table:
+            # Read values from bottom table in report.
+            table = pandas.read_csv(
+                path_file,
+                sep="\s+",
+                header=(index_title + 2),
+                #skip_blank_lines=True,
+            )
+            print(path_file)
+            print(table)
     # Collect information.
     record = dict()
     record["identifier"] = identifier
