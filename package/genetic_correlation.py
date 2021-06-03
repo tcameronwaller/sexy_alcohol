@@ -827,7 +827,14 @@ def read_source_primary_secondary(
         path_table_cohort_model_phenotype_reference,
         sep="\t",
         header=0,
-        #dtype="string",
+        dtype={
+            "identifier": "string",
+            "cohort": "string",
+            "cohort_sort": "int32",
+            "hormone": "string",
+            "hormone_sort": "int32",
+            "unadjust": "int32",
+        },
     )
 
     # Primary phenotype heritability.
@@ -888,7 +895,7 @@ def read_source_primary_secondary(
 # Summary
 
 
-def organize_cohort_hormone_reference_table(
+def organize_cohort_model_phenotype_reference_table(
     table=None,
     identifier=None,
     keep_columns=None,
@@ -1067,7 +1074,7 @@ def combine_organize_phenotypes_summary_table(
 
     # Organize reference table.
     table_cohort_model_phenotype_reference = (
-        organize_cohort_hormone_reference_table(
+        organize_cohort_model_phenotype_reference_table(
             table=table_cohort_model_phenotype_reference,
             identifier="identifier",
             keep_columns=[
