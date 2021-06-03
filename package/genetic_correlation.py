@@ -645,6 +645,8 @@ def read_extract_phenotypes_genetic_correlation(
                 correlation_error = float(contents[1].replace(")", ""))
             else:
                 # Main report has a missing value ("nan") for correlation.
+                # Importantly, the report also has a prefix for genetic
+                # correlation.
                 missing_correlation = True
             pass
         elif (
@@ -671,6 +673,7 @@ def read_extract_phenotypes_genetic_correlation(
             header=60,
             #skip_blank_lines=True,
         )
+        print(path_file)
         print(table)
     # Collect information.
     record = dict()
