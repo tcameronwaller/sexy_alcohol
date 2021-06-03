@@ -286,7 +286,7 @@ def read_extract_cohort_samples_count(
         #dtype="string",
     )
     # Read count of samples' records in table.
-    count_samples = table.shape[0]
+    count_samples = int(table.shape[0])
     # Collect information.
     record = dict()
     record["identifier"] = identifier
@@ -978,7 +978,7 @@ def organize_table_adjust_unadjust_models(
     # Determine combination identifier of cohort and hormone.
     table["cohort_hormone"] = table.apply(
         lambda row:
-            str(row["cohort"] + "_" + row["hormone"]),
+            str(str(row["cohort"]) + "_" + str(row["hormone"])),
         axis="columns", # apply across rows
     )
     # Now split the table by adjusted or unadjusted regression models.
@@ -1347,7 +1347,6 @@ def drive_collection_report_primary_secondary_studies(
         paths=paths,
         report=False,
     )
-
     print(source["table_secondary_samples_counts"])
 
     # Organize summary table.
@@ -1361,7 +1360,7 @@ def drive_collection_report_primary_secondary_studies(
         table_correlations=source["table_correlations"],
         threshold_secondary_heritability=float("nan"),
         threshold_false_discovery_rate=0.05,
-        report=False,
+        report=report,
     )
 
     # Report.
