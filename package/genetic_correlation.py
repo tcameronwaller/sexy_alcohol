@@ -174,8 +174,7 @@ def initialize_correlation_directories(
     return paths
 
 
-# TODO: this is sort of specific to the primary-secondary scenario...
-def initialize_directories(
+def initialize_directories_hierarchy(
     primary_study=None,
     secondary_study=None,
     restore=None,
@@ -243,7 +242,6 @@ def initialize_directories(
 
 ##########
 # Read
-
 
 
 def read_extract_cohort_samples_count(
@@ -576,7 +574,9 @@ def read_collect_phenotypes_heritabilities_by_directories(
     return table
 
 
-def read_extract_primary_secondary_genetic_correlation(
+# TODO: update the read genetic correlation report...
+# TODO: read from table at bottom if the main report has "nan"
+def read_extract_phenotypes_genetic_correlation(
     file=None,
     file_suffix=None,
     path_source_directory=None,
@@ -623,6 +623,8 @@ def read_extract_primary_secondary_genetic_correlation(
         start=25,
         stop=57,
     )
+    # Initialize flag.
+    missing_correlation = False
     # Extract information from lines.
     prefix_variants = ""
     suffix_variants = " SNPs with valid alleles."
@@ -641,6 +643,9 @@ def read_extract_primary_secondary_genetic_correlation(
                 correlation = float(contents[0])
                 correlation_absolute = math.fabs(correlation)
                 correlation_error = float(contents[1].replace(")", ""))
+            else:
+                # Main report has a missing value ("nan") for correlation.
+                missing_correlation = True
             pass
         elif (
             (not math.isnan(correlation)) and
@@ -649,6 +654,24 @@ def read_extract_primary_secondary_genetic_correlation(
             probability = float(line.replace(prefix_probability, ""))
             pass
         pass
+
+    # Determine whether main report has a missing value ("nan") correlation.
+    if missing_correlation:
+        # Read relevant lines from file.
+        lines = utility.read_file_text_lines(
+            path_file=path_file,
+            start=0,
+            stop=250,
+        )
+        count_lines = len(lines)
+        # Read values from bottom table in report.
+        table = pandas.read_csv(
+            path_file,
+            sep="\s+",
+            header=60,
+            #skip_blank_lines=True,
+        )
+        print(table)
     # Collect information.
     record = dict()
     record["identifier"] = identifier
@@ -689,7 +712,7 @@ def read_collect_primary_secondaries_genetic_correlations_by_files(
     ))
     records = list()
     for file in files_relevant:
-        record = read_extract_primary_secondary_genetic_correlation(
+        record = read_extract_phenotypes_genetic_correlation(
             file=file,
             file_suffix=file_suffix,
             path_source_directory=path_source_directory,
@@ -759,7 +782,7 @@ def read_collect_primary_secondaries_genetic_correlations_by_directories(
         path_child_directory = os.path.join(
             path_parent_directory, child_directory,
         )
-        record = read_extract_primary_secondary_genetic_correlation(
+        record = read_extract_phenotypes_genetic_correlation(
             file=file,
             file_suffix="",
             path_source_directory=path_child_directory,
@@ -793,7 +816,7 @@ def read_collect_primary_secondaries_genetic_correlations_by_directories(
     return table
 
 
-def read_source_primary_secondary(
+def read_source_hierarchy(
     primary_study=None,
     secondary_study=None,
     paths=None,
@@ -893,6 +916,8 @@ def read_source_primary_secondary(
 
 ##########
 # Summary
+
+# TODO: group these by "hierarchy" or "pair"
 
 
 def organize_cohort_model_phenotype_reference_table(
@@ -1033,8 +1058,7 @@ def organize_table_adjust_unadjust_models(
     return table_merge
 
 
-# TODO: I might need to rename to distinguish from the pairs...
-def combine_organize_phenotypes_summary_table(
+def combine_organize_phenotypes_hierarchy_summary_table(
     table_cohort_model_phenotype_reference=None,
     primary_heritability=None,
     table_secondary_samples_counts=None,
@@ -1295,7 +1319,7 @@ def write_product(
 # Driver
 
 
-def drive_collection_report_primary_secondary_studies(
+def drive_collection_report_hierarchy_studies(
     primary_study=None,
     secondary_study=None,
     path_dock=None,
@@ -1328,12 +1352,12 @@ def drive_collection_report_primary_secondary_studies(
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
-        print("report: drive_collection_report_primary_secondary_studies()")
+        print("report: drive_collection_report_hierarchy_studies()")
         print(primary_study)
         print(secondary_study)
 
     # Initialize directories.
-    paths = initialize_directories(
+    paths = initialize_directories_hierarchy(
         primary_study=primary_study,
         secondary_study=secondary_study,
         restore=False,
@@ -1341,7 +1365,7 @@ def drive_collection_report_primary_secondary_studies(
     )
 
     # Read source information from file.
-    source = read_source_primary_secondary(
+    source = read_source_hierarchy(
         primary_study=primary_study,
         secondary_study=secondary_study,
         paths=paths,
@@ -1350,7 +1374,7 @@ def drive_collection_report_primary_secondary_studies(
     print(source["table_secondary_samples_counts"])
 
     # Organize summary table.
-    table_summary = combine_organize_phenotypes_summary_table(
+    table_summary = combine_organize_phenotypes_hierarchy_summary_table(
         table_cohort_model_phenotype_reference=(
             source["table_cohort_model_phenotype_reference"]
         ),
@@ -1380,6 +1404,58 @@ def drive_collection_report_primary_secondary_studies(
     )
 
     pass
+
+
+def drive_collection_report_pair_studies(
+    path_dock=None,
+    report=None,
+):
+    """
+    Function to execute module's main behavior.
+
+    Collect results from pairs of primary and secondary studies.
+
+    arguments:
+        path_dock (str): path to dock directory for source and product
+            directories and files
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+
+    """
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: drive_collection_report_pair_studies()")
+
+    # Initialize directories.
+    paths = initialize_directories_hierarchy(
+        primary_study=primary_study,
+        secondary_study=secondary_study,
+        restore=False,
+        path_dock=path_dock,
+    )
+
+    # Read source information from file.
+    source = read_source_hierarchy(
+        primary_study=primary_study,
+        secondary_study=secondary_study,
+        paths=paths,
+        report=False,
+    )
+    print(source["table_secondary_samples_counts"])
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=5)
+        print(table_summary)
+
+
+    pass
+
 
 
 
@@ -1428,7 +1504,7 @@ def execute_procedure(
     ]
     for primary_study in primary_studies:
         for secondary_study in secondary_studies:
-            drive_collection_report_primary_secondary_studies(
+            drive_collection_report_hierarchy_studies(
                 primary_study=primary_study,
                 secondary_study=secondary_study,
                 path_dock=path_dock,
@@ -1437,8 +1513,12 @@ def execute_procedure(
             pass
         pass
 
-
-    # TODO: also iterate on primary and secondary pairs in the other reference table...
+    if False:
+        # TODO: also iterate on primary and secondary pairs in the other reference table...
+        drive_collection_report_pair_studies(
+            path_dock=path_dock,
+            report=True,
+        )
 
     pass
 
