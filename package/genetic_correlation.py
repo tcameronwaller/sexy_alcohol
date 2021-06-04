@@ -574,8 +574,6 @@ def read_collect_phenotypes_heritabilities_by_directories(
     return table
 
 
-# TODO: update the read genetic correlation report...
-# TODO: read from table at bottom if the main report has "nan"
 def read_extract_phenotypes_genetic_correlation(
     file=None,
     file_suffix=None,
@@ -1420,7 +1418,7 @@ def drive_collection_report_hierarchy_studies(
 
     pass
 
-
+# TODO:
 def drive_collection_report_pair_studies(
     path_dock=None,
     report=None,
@@ -1447,21 +1445,17 @@ def drive_collection_report_pair_studies(
         print("report: drive_collection_report_pair_studies()")
 
     # Initialize directories.
-    paths = initialize_directories_hierarchy(
-        primary_study=primary_study,
-        secondary_study=secondary_study,
+    paths = initialize_directories_pair(
         restore=False,
         path_dock=path_dock,
     )
 
     # Read source information from file.
-    source = read_source_hierarchy(
-        primary_study=primary_study,
-        secondary_study=secondary_study,
+    source = read_source_pair(
         paths=paths,
         report=False,
     )
-    print(source["table_secondary_samples_counts"])
+    #print(source["table_secondary_samples_counts"])
 
     # Report.
     if report:
@@ -1523,7 +1517,7 @@ def execute_procedure(
                 primary_study=primary_study,
                 secondary_study=secondary_study,
                 path_dock=path_dock,
-                report=True,
+                report=False,
             )
             pass
         pass
