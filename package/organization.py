@@ -2218,8 +2218,8 @@ def execute_procedure(
         table=pail_hormone["table"], # pail_hormone["table_clean"]
         report=False,
     )
-    if False:
-        ukb_organization.execute_analyze_sex_cohorts_hormones(
+    if True:
+        pail_summary = ukb_organization.execute_analyze_sex_cohorts_hormones(
             table=pail_female["table_clean"],
             report=True,
         )
@@ -2255,9 +2255,10 @@ def execute_procedure(
     information["export"]["table_hormone_female_export"] = (
         table_hormone_female_export
     )
-    information["export"]["table_report_summary_cohorts_hormones"] = (
-        pail_female["table_report_summary"]
+    information["export"]["table_summary_cohorts_variables"] = (
+        pail_summary["table_summary_cohorts_variables"]
     )
+
     #information["plots"] = pail_figures_hormone
     information["cohorts_models"] = pail_cohorts_models
     # Write product information to file.
