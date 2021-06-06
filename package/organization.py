@@ -2220,7 +2220,7 @@ def execute_procedure(
     )
     if True:
         pail_summary = ukb_organization.execute_analyze_sex_cohorts_hormones(
-            table=pail_female["table_clean"],
+            table=pail_female["table"],
             report=True,
         )
 
