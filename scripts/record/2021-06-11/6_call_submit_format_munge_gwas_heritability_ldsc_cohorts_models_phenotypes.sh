@@ -67,10 +67,11 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
       path_gwas_check_file="${matches[0]}"
       echo $path_gwas_check_file
       echo $directory
-      if [[ -f "$path_gwas_check_file" ]]; then
-        echo $directory
-        echo $directory >> $path_batch_instances
-      fi
+      echo $directory >> $path_batch_instances
+      #if [[ -f "$path_gwas_check_file" ]]; then
+      #  echo $directory
+      #  echo $directory >> $path_batch_instances
+      #fi
     fi
   fi
 done
@@ -84,7 +85,7 @@ echo "first batch instance: " ${batch_instances[0]} # notice base-zero indexing
 echo "last batch instance: " ${batch_instances[batch_instances_count - 1]}
 
 # Execute batch with grid scheduler.
-if false; then
+if true; then
   report="true" # "true" or "false"
   # Submit array batch to Sun Grid Engine.
   # Array batch indices must start at one (not zero).
