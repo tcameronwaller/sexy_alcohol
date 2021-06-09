@@ -68,6 +68,7 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
       if [[ -f "$path_gwas_check_file" ]]; then
         echo $directory
         echo $directory >> $path_batch_instances
+      fi
     fi
   fi
 done
