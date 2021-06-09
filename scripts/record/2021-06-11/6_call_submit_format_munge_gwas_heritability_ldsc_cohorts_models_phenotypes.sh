@@ -66,6 +66,7 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
       matches=("${path_gwas_parent}/${directory}/chromosome_22/${pattern_gwas_check_file}")
       path_gwas_check_file="${matches[0]}"
       echo $path_gwas_check_file
+      echo $directory
       if [[ -f "$path_gwas_check_file" ]]; then
         echo $directory
         echo $directory >> $path_batch_instances
