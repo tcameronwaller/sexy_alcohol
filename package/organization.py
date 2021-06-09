@@ -2206,23 +2206,28 @@ def execute_procedure(
     # across the UK Biobank.
     pail_basis = ukb_organization.execute_genotype_sex_age_body(
         table=source["table_phenotypes"],
-        report=True,
+        report=False,
     )
     # Organize variables for persons' sex hormones across the UK Biobank.
     pail_hormone = ukb_organization.execute_sex_hormones(
         table=pail_basis["table"], # pail_basis["table_clean"]
-        report=True,
+        report=False,
     )
     # Organize variables for female menstruation across the UK Biobank.
     pail_female = ukb_organization.execute_female_menstruation(
         table=pail_hormone["table"], # pail_hormone["table_clean"]
-        report=True,
+        report=False,
     )
+
+    # Describe variables within cohorts and models.
     if True:
-        pail_summary = ukb_organization.execute_analyze_sex_cohorts_hormones(
-            table=pail_female["table"],
-            report=True,
-        )
+        pail_summary = (
+            ukb_organization.execute_describe_cohorts_models_phenotypes(
+                table=pail_female["table"],
+                set="sex_hormones",
+                path_dock=path_dock,
+                report=True,
+        ))
 
     # Plot figures for hormones.
     if False:
@@ -2240,7 +2245,7 @@ def execute_procedure(
 
     # Select and organize variables across cohorts.
     # Organize phenotypes and covariates in format for analysis in PLINK.
-    if True:
+    if False:
         pail_cohorts_models = (
             ukb_organization.execute_cohorts_models_genetic_analysis(
                 table=pail_female["table_clean"],
@@ -2248,6 +2253,8 @@ def execute_procedure(
                 path_dock=path_dock,
                 report=True,
         ))
+    else:
+        pail_cohorts_models = dict()
 
     # Collect information.
     information = dict()
@@ -2255,8 +2262,11 @@ def execute_procedure(
     information["export"]["table_hormone_female_export"] = (
         table_hormone_female_export
     )
-    information["export"]["table_summary_cohorts_variables"] = (
-        pail_summary["table_summary_cohorts_variables"]
+    information["export"]["table_summary_cohorts_models_phenotypes"] = (
+        pail_summary["table_summary_cohorts_models_phenotypes"]
+    )
+    information["export"]["table_summary_cohorts_models_genotypes"] = (
+        pail_summary["table_summary_cohorts_models_genotypes"]
     )
 
     #information["plots"] = pail_figures_hormone
