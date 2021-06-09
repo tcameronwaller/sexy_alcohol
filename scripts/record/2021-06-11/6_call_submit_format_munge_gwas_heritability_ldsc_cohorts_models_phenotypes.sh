@@ -13,7 +13,7 @@
 # Read private, local file paths.
 cd ~/paths
 path_ldsc=$(<"./tools_ldsc.txt")
-path_process=$(<"./process_psychiatric_metabolism.txt")
+path_process=$(<"./process_sexy_alcohol.txt")
 
 path_dock="$path_process/dock"
 path_genetic_reference="${path_dock}/access/genetic_reference"
@@ -48,6 +48,7 @@ path_batch_instances="${path_gwas_parent}/batch_instances.txt"
 rm $path_batch_instances
 
 # Iterate on directories for GWAS on cohorts and hormones.
+pattern_gwas_check_file="report.*.glm.linear" # do not expand with full path yet
 cd $path_gwas_parent
 for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
   if [ -d "$path_directory" ]; then
@@ -58,10 +59,15 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
     # inclusions: [[ " ${inclusions[@]} " =~ "${directory}" ]]
     # exclusions: [[ ! " ${exclusions[@]} " =~ "${directory}" ]]
     if [[ ! " ${exclusions[@]} " =~ "${directory}" ]]; then
-
-      echo $directory
-      echo $directory >> $path_batch_instances
-
+      # Determine whether directory contains valid GWAS summary statistics
+      # across chromosomes.
+      # Check for chromosome 22, assuming that all chromosomes completed
+      # sequentially.
+      matches=("${path_directory}/chromosome_22/${pattern_gwas_check_file}")
+      path_gwas_check_file="${matches[0]}"
+      if [[ -f "$path_gwas_check_file" ]]; then
+        echo $directory
+        echo $directory >> $path_batch_instances
     fi
   fi
 done
