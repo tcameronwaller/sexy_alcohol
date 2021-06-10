@@ -1466,10 +1466,13 @@ def drive_collection_report_pair_studies(
     pass
 
 
-
-
 ###############################################################################
 # Procedure
+
+# TODO: need to update paths in "dock"
+# /.../organization/cohorts_models_2021-06-07/
+# /.../heritability/cohorts_models_2021-06-07/
+# /.../genetic_correlation/[primary_study]/cohorts_models_2021-06-07/
 
 
 def execute_procedure(
@@ -1509,7 +1512,7 @@ def execute_procedure(
     ]
     # Define container for secondary studies.
     secondary_studies = [
-        "cohorts_models",
+        "cohorts_models_2021-06-07",
     ]
     for primary_study in primary_studies:
         for secondary_study in secondary_studies:

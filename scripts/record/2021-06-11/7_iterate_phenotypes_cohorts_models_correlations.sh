@@ -29,7 +29,7 @@ path_genetic_correlation="${path_dock}/genetic_correlation"
 
 file_gwas_cohorts_models_munge_suffix="gwas_munge.sumstats.gz"
 
-if true; then
+if false; then
 
   # Define main phenotype studies.
   phenotype_studies=()
@@ -62,7 +62,7 @@ if true; then
 fi
 
 # Define specific pairs for genetic correlation.
-if false; then
+if true; then
 
   # Organize paths.
   path_alleles="$path_genetic_reference/alleles"
@@ -81,11 +81,11 @@ if false; then
   #pairs+=("female_postmenopause_ordinal_albumin_log;male_old_albumin_log")
 
   #pairs+=("female_steroid_globulin_log;male_steroid_globulin_log")
-  #pairs+=("female_premenopause_ordinal_steroid_globulin_log;male_steroid_globulin_log")
-  #pairs+=("female_perimenopause_ordinal_steroid_globulin_log;male_steroid_globulin_log")
-  #pairs+=("female_postmenopause_ordinal_steroid_globulin_log;male_steroid_globulin_log")
-  #pairs+=("female_premenopause_ordinal_steroid_globulin_log;male_young_steroid_globulin_log")
-  #pairs+=("female_postmenopause_ordinal_steroid_globulin_log;male_old_steroid_globulin_log")
+  pairs+=("female_premenopause_ordinal_steroid_globulin_log;male_steroid_globulin_log")
+  pairs+=("female_perimenopause_ordinal_steroid_globulin_log;male_steroid_globulin_log")
+  pairs+=("female_postmenopause_ordinal_steroid_globulin_log;male_steroid_globulin_log")
+  pairs+=("female_premenopause_ordinal_steroid_globulin_log;male_young_steroid_globulin_log")
+  pairs+=("female_postmenopause_ordinal_steroid_globulin_log;male_old_steroid_globulin_log")
 
   #pairs+=("female_oestradiol_log;male_oestradiol_log")
   #pairs+=("female_premenopause_ordinal_oestradiol_log;male_oestradiol_log")
@@ -95,11 +95,11 @@ if false; then
   #pairs+=("female_postmenopause_ordinal_oestradiol_log;male_old_oestradiol_log")
 
   #pairs+=("female_testosterone_log;male_testosterone_log")
-  #pairs+=("female_premenopause_ordinal_testosterone_log;male_testosterone_log")
-  #pairs+=("female_perimenopause_ordinal_testosterone_log;male_testosterone_log")
-  #pairs+=("female_postmenopause_ordinal_testosterone_log;male_testosterone_log")
-  #pairs+=("female_premenopause_ordinal_testosterone_log;male_young_testosterone_log")
-  #pairs+=("female_postmenopause_ordinal_testosterone_log;male_old_testosterone_log")
+  pairs+=("female_premenopause_ordinal_testosterone_log;male_testosterone_log")
+  pairs+=("female_perimenopause_ordinal_testosterone_log;male_testosterone_log")
+  pairs+=("female_postmenopause_ordinal_testosterone_log;male_testosterone_log")
+  pairs+=("female_premenopause_ordinal_testosterone_log;male_young_testosterone_log")
+  pairs+=("female_postmenopause_ordinal_testosterone_log;male_old_testosterone_log")
 
   #pairs+=("female_vitamin_d_log;male_vitamin_d_log")
   #pairs+=("female_premenopause_ordinal_vitamin_d_log;male_vitamin_d_log")
@@ -108,13 +108,19 @@ if false; then
   #pairs+=("female_premenopause_ordinal_vitamin_d_log;male_young_vitamin_d_log")
   #pairs+=("female_postmenopause_ordinal_vitamin_d_log;male_old_vitamin_d_log")
 
-  pairs+=("female_premenopause_ordinal_oestradiol_log;female_postmenopause_ordinal_oestradiol_log")
+  pairs+=("female_premenopause_ordinal_steroid_globulin_log;female_perimenopause_ordinal_steroid_globulin_log")
+  pairs+=("female_perimenopause_ordinal_steroid_globulin_log;female_postmenopause_ordinal_steroid_globulin_log")
+  pairs+=("female_premenopause_ordinal_steroid_globulin_log;female_postmenopause_ordinal_steroid_globulin_log")
+
+  pairs+=("male_young_steroid_globulin_log;male_old_steroid_globulin_log")
+
+  #pairs+=("female_premenopause_ordinal_oestradiol_log;female_postmenopause_ordinal_oestradiol_log")
   pairs+=("female_premenopause_ordinal_testosterone_log;female_perimenopause_ordinal_testosterone_log")
   pairs+=("female_perimenopause_ordinal_testosterone_log;female_postmenopause_ordinal_testosterone_log")
   pairs+=("female_premenopause_ordinal_testosterone_log;female_postmenopause_ordinal_testosterone_log")
 
   #pairs+=("male_young_oestradiol_log;male_old_oestradiol_log")
-  #pairs+=("male_young_testosterone_log;male_old_testosterone_log")
+  pairs+=("male_young_testosterone_log;male_old_testosterone_log")
 
   for pair in "${pairs[@]}"; do
     # Read information.
@@ -126,7 +132,7 @@ if false; then
     path_gwas_two_munge_suffix="${path_gwas_cohorts_models}/${study_two}/${file_gwas_cohorts_models_munge_suffix}"
 
     # Organize paths.
-    path_genetic_correlation_comparison="${path_genetic_correlation}/cohorts_models_pairs/${study_one}/${study_two}"
+    path_genetic_correlation_comparison="${path_genetic_correlation}/cohorts_models_pairs_2021-06-07/${study_one}/${study_two}"
     path_genetic_correlation_report="${path_genetic_correlation_comparison}/correlation"
     path_genetic_correlation_report_suffix="${path_genetic_correlation_report}.log"
     # Initialize directories.
