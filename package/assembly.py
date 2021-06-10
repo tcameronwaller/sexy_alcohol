@@ -38,7 +38,7 @@ import scipy.stats
 import promiscuity.utility as utility
 #import promiscuity.plot as plot
 import uk_biobank.assembly
-import uk_biobank.organization
+#import uk_biobank.organization
 
 
 
