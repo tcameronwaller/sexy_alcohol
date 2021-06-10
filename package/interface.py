@@ -18,7 +18,7 @@ import textwrap
 
 import genetic_correlation
 import assembly
-import organization
+#import organization
 #import plot
 #import utility
 
