@@ -1173,13 +1173,14 @@ def combine_organize_phenotypes_hierarchy_summary_table(
         ]
 
     # Calculate False Discovery Rates (FDRs).
-    table = utility.calculate_table_false_discovery_rates(
-        threshold=threshold_false_discovery_rate,
-        probability="correlation_probability_adjust",
-        discovery="correlation_discovery_adjust",
-        significance="correlation_significance_adjust",
-        table=table,
-    )
+    if False:
+        table = utility.calculate_table_false_discovery_rates(
+            threshold=threshold_false_discovery_rate,
+            probability="correlation_probability_adjust",
+            discovery="correlation_discovery_adjust",
+            significance="correlation_significance_adjust",
+            table=table,
+        )
     # Reset index.
     table.reset_index(
         level=None,
@@ -1202,14 +1203,14 @@ def combine_organize_phenotypes_hierarchy_summary_table(
         "heritability_unadjust", "heritability_standard_error_unadjust",
         "correlation_adjust", "correlation_standard_error_adjust",
         "correlation_probability_adjust",
-        "correlation_discovery_adjust",
+        #"correlation_discovery_adjust",
         "correlation_unadjust", "correlation_standard_error_unadjust",
         "correlation_probability_unadjust",
         "heritability_ratio",
         "heritability_ratio_standard_error",
         "heritability_variants",
         "correlation_absolute",
-        "correlation_significance_adjust",
+        #"correlation_significance_adjust",
         "correlation_variants",
         "cohort_hormone",
         "identifier_adjust", "identifier_unadjust",
