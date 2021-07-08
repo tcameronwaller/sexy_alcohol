@@ -21,7 +21,7 @@ cd ~/paths
 path_process=$(<"./process_sexy_alcohol.txt")
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-07-21"
 path_dock="$path_process/dock"
-path_cohorts_models="${path_dock}/organization/cohorts_models"
+path_cohorts_models="${path_dock}/organization_freeze_2021-07-08/cohorts_models"
 path_gwas="${path_dock}/gwas/cohorts_models"
 
 # Initialize directories.
