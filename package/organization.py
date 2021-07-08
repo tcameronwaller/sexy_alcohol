@@ -2187,7 +2187,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 21")
     # Pause procedure.
     time.sleep(5.0)
 
@@ -2211,12 +2211,12 @@ def execute_procedure(
     # Organize variables for persons' sex hormones across the UK Biobank.
     pail_hormone = ukb_organization.execute_sex_hormones(
         table=pail_basis["table"], # pail_basis["table_clean"]
-        report=False,
+        report=True,
     )
     # Organize variables for female menstruation across the UK Biobank.
     pail_female = ukb_organization.execute_female_menstruation(
         table=pail_hormone["table"], # pail_hormone["table_clean"]
-        report=False,
+        report=True,
     )
 
     # Describe variables within cohorts and models.
@@ -2240,7 +2240,7 @@ def execute_procedure(
     table_hormone_female_export = organize_hormone_female_export_table(
         table=pail_female["table"], # pail_female["table_clean"]
         select_columns=False,
-        report=False,
+        report=True,
     )
 
     # Select and organize variables across cohorts.
