@@ -2020,16 +2020,16 @@ def write_product_export(
 
 
 def write_product_plot_figure(
+    name=None,
     figure=None,
-    file_name=None,
     path_parent=None,
 ):
     """
     Writes product information to file.
 
     arguments:
+        name (str): base name for file
         figure (object): figure object to write to file
-        file_name (str): base name for file
         path_parent (str): path to parent directory
 
     raises:
@@ -2040,7 +2040,7 @@ def write_product_plot_figure(
 
     # Specify directories and files.
     path_file = os.path.join(
-        path_parent, str(file_name + ".png")
+        path_parent, str(name + ".png")
     )
     # Write information to file.
     plot.write_figure(
@@ -2069,10 +2069,10 @@ def write_product_plots(
 
     """
 
-    for key in information.keys():
+    for name in information.keys():
         write_product_plot_figure(
-            figure=information[key]["figure"],
-            file_name=information[key]["name"],
+            name=name,
+            figure=information[name],
             path_parent=path_parent,
         )
     pass
@@ -2134,7 +2134,7 @@ def write_product(
     """
 
     # Plots.
-    if False:
+    if True:
         write_product_plots(
             information=information["plots"],
             path_parent=paths["plots"],
@@ -2229,12 +2229,14 @@ def execute_procedure(
                 report=True,
         ))
 
-    # Plot figures for hormones.
-    if False:
-        pail_figures_hormone = ukb_organization.execute_plot_hormones(
-            table=table_hormone,
-            report=False,
+    # Plot figures for cohorts, models, and phenotypes.
+    if True:
+        pail_plot = ukb_organization.execute_plot_cohorts_models_phenotypes(
+            table=pail_female["table"],
+            report=True,
         )
+    else:
+        pail_plot = dict()
 
     # Organize information for export.
     table_hormone_female_export = organize_hormone_female_export_table(
@@ -2268,8 +2270,7 @@ def execute_procedure(
     information["export"]["table_summary_cohorts_models_genotypes"] = (
         pail_summary["table_summary_cohorts_models_genotypes"]
     )
-
-    #information["plots"] = pail_figures_hormone
+    information["plots"] = pail_plot
     information["cohorts_models"] = pail_cohorts_models
     # Write product information to file.
     write_product(
