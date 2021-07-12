@@ -2247,7 +2247,7 @@ def execute_procedure(
 
     # Select and organize variables across cohorts.
     # Organize phenotypes and covariates in format for analysis in PLINK.
-    if True:
+    if False:
         pail_cohorts_models = (
             ukb_organization.execute_cohorts_models_genetic_analysis(
                 table=pail_female["table_clean"],
