@@ -1843,6 +1843,42 @@ def organize_auditc_questionnaire_alcoholism_variables(
 # Write
 
 
+def write_product_organization(
+    information=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        path_parent (str): path to parent directory
+            raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_table_phenotypes = os.path.join(
+        path_parent, "table_phenotypes.pickle"
+    )
+    path_table_phenotypes_text = os.path.join(
+        path_parent, "table_phenotypes.tsv"
+    )
+    # Write information to file.
+    information["table_phenotypes"].to_pickle(
+        path_table_phenotypes
+    )
+    information["table_phenotypes"].to_csv(
+        path_or_buf=path_table_phenotypes_text,
+        sep="\t",
+        header=True,
+        index=True,
+    )
+    pass
+
+
 def write_product_quality(
     information=None,
     path_parent=None,
@@ -2133,6 +2169,12 @@ def write_product(
 
     """
 
+
+    # Organization procedure main information.
+    write_product_organization(
+        information=information["organization"],
+        path_parent=paths["organization"],
+    )
     # Plots.
     if True:
         write_product_plots(
@@ -2260,6 +2302,8 @@ def execute_procedure(
 
     # Collect information.
     information = dict()
+    information["organization"] = dict()
+    information["organization"]["table_phenotypes"] = pail_female["table"]
     information["export"] = dict()
     information["export"]["table_hormone_female_export"] = (
         table_hormone_female_export
@@ -2277,38 +2321,6 @@ def execute_procedure(
         paths=paths,
         information=information
     )
-
-
-    # Organize variables for persons' alcohol consumption across the UK Biobank.
-    if False:
-        table_alcohol = ukb_organization.execute_alcohol(
-            table=table_hormone,
-            report=None,
-        )
-
-    if False:
-        # Collect information.
-        information = dict()
-        information["quality"] = dict()
-        information["quality"]["table_auditc"] = (
-            pail_audit["auditc"]["table_report"]
-        )
-        information["quality"]["table_audit"] = (
-            pail_audit["audit"]["table_report"]
-        )
-        information["quality"]["table_diagnosis"] = (
-            pail_diagnosis["table_report"]
-        )
-        information["quality"]["table_alcoholism"] = (
-            pail_alcoholism["table_report"]
-        )
-        information["cohorts"] = pail_cohorts
-        # Write product information to file.
-        write_product(
-            paths=paths,
-            information=information
-        )
-
     pass
 
 

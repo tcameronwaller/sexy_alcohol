@@ -127,7 +127,7 @@ def execute_procedure(
         label="hello world",
         column_phenotype="testosterone",
         column_day="menstruation_days",
-        threshold_days=35,
+        threshold_days=32,
         table=source["table_phenotypes"],
     )
 
