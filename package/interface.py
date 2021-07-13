@@ -16,6 +16,7 @@ import textwrap
 
 # Custom.
 
+import scratch
 import genetic_correlation
 import assembly
 import organization
@@ -141,6 +142,14 @@ def define_main_subparser(subparsers=None):
         )
     )
     parser_main.add_argument(
+        "-scratch", "--scratch",
+        dest="scratch",
+        action="store_true",
+        help=(
+            "Scratch, temporary module for method development and testing."
+        )
+    )
+    parser_main.add_argument(
         "-genetic_correlation", "--genetic_correlation",
         dest="genetic_correlation",
         action="store_true",
@@ -239,6 +248,13 @@ def evaluate_main_parameters(arguments):
     print("--------------------------------------------------")
     print("... call to main routine ...")
     # Execute procedure.
+    if arguments.scratch:
+        # Report status.
+        print("... executing scratch procedure ...")
+        # Execute procedure.
+        scratch.execute_procedure(
+            path_dock=arguments.path_dock
+        )
     if arguments.genetic_correlation:
         # Report status.
         print("... executing genetic_correlation procedure ...")
