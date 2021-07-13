@@ -68,18 +68,13 @@ def read_source(
 
     # Specify directories and files.
     path_table_phenotypes = os.path.join(
-        path_dock, "organization_freeze_2021-07-08", "cohorts_models",
-        "table_female_premenopause_ordinal_testosterone.tsv",
+        path_dock, "organization_temporary_freeze",
+        "table_phenotypes.pickle",
     )
 
     # Read information from file.
-    table_phenotypes = pandas.read_csv(
-        path_table_phenotypes,
-        sep="\t", # "," or "\t"
-        header=0,
-        #dtype="string",
-        na_values=["NA", "<NA>"],
-        keep_default_na=True,
+    table_phenotypes = pandas.read_pickle(
+        path_table_phenotypes
     )
     # Compile and return information.
     return {
@@ -123,14 +118,10 @@ def execute_procedure(
 
     print(source["table_phenotypes"])
 
-    figure = ukb_organization.plot_variable_means_bars_by_day(
-        label="hello world",
-        column_phenotype="testosterone",
-        column_day="menstruation_days",
-        threshold_days=32,
+    pail_plot = ukb_organization.execute_plot_cohorts_models_phenotypes(
         table=source["table_phenotypes"],
+        report=True,
     )
-
     pass
 
 

@@ -2175,12 +2175,6 @@ def write_product(
         information=information["organization"],
         path_parent=paths["organization"],
     )
-    # Plots.
-    if True:
-        write_product_plots(
-            information=information["plots"],
-            path_parent=paths["plots"],
-        )
     # Export information.
     if False:
         write_product_quality(
@@ -2203,6 +2197,12 @@ def write_product(
         write_product_trial(
             information=information["trial"],
             path_parent=paths["trial"],
+        )
+    # Plots.
+    if True:
+        write_product_plots(
+            information=information["plots"],
+            path_parent=paths["plots"],
         )
     pass
 
