@@ -121,6 +121,8 @@ def execute_procedure(
         report=False,
     )
 
+    print(source["table_phenotypes"])
+
     figure = ukb_organization.plot_variable_means_bars_by_day(
         label="hello world",
         column_phenotype="testosterone",
