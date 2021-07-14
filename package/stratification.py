@@ -264,7 +264,7 @@ def execute_procedure(
     # else: pail_cohorts_models = dict()
     pail_cohorts_models = (
         ukb_organization.execute_cohorts_models_genetic_analysis(
-            table=pail_female["table_clean"],
+            table=source["table_phenotypes"],
             set="sex_hormones",
             path_dock=path_dock,
             report=True,
