@@ -17,9 +17,11 @@ import textwrap
 # Custom.
 
 import scratch
-import genetic_correlation
 import assembly
 import organization
+import description
+import stratification
+import genetic_correlation
 #import plot
 #import utility
 
@@ -150,14 +152,6 @@ def define_main_subparser(subparsers=None):
         )
     )
     parser_main.add_argument(
-        "-genetic_correlation", "--genetic_correlation",
-        dest="genetic_correlation",
-        action="store_true",
-        help=(
-            "Genetic correlations for phenotypes from multiple GWAS."
-        )
-    )
-    parser_main.add_argument(
         "-assembly", "--assembly", dest="assembly", action="store_true",
         help=(
             "Organization of information for further analyses."
@@ -167,7 +161,34 @@ def define_main_subparser(subparsers=None):
         "-organization", "--organization", dest="organization",
         action="store_true",
         help=(
-            "Organization of information for further analyses."
+            "Organization of variables, definition of cohorts and phenotypes."
+        )
+    )
+    parser_main.add_argument(
+        "-description", "--description",
+        dest="description",
+        action="store_true",
+        help=(
+            "Description of cohorts and phenotypes with summary statistics " +
+            "and plots."
+        )
+    )
+    parser_main.add_argument(
+        "-stratification", "--stratification",
+        dest="stratification",
+        action="store_true",
+        help=(
+            "Stratification of cohorts and formatting tables of phenotypes " +
+            "and covariates for genetic analyses (especially GWAS in PLINK2)."
+        )
+    )
+    parser_main.add_argument(
+        "-genetic_correlation", "--genetic_correlation",
+        dest="genetic_correlation",
+        action="store_true",
+        help=(
+            "Collection of genetic correlation estimates for phenotypes from " +
+            "multiple GWAS."
         )
     )
     # Define behavior.
@@ -255,13 +276,6 @@ def evaluate_main_parameters(arguments):
         scratch.execute_procedure(
             path_dock=arguments.path_dock
         )
-    if arguments.genetic_correlation:
-        # Report status.
-        print("... executing genetic_correlation procedure ...")
-        # Execute procedure.
-        genetic_correlation.execute_procedure(
-            path_dock=arguments.path_dock
-        )
     if arguments.assembly:
         # Report status.
         print("... executing assembly procedure ...")
@@ -276,6 +290,21 @@ def evaluate_main_parameters(arguments):
         organization.execute_procedure(
             path_dock=arguments.path_dock
         )
+    if arguments.description:
+        # Report status.
+        print("... executing description procedure ...")
+        # Execute procedure.
+        description.execute_procedure(
+            path_dock=arguments.path_dock
+        )
+    if arguments.stratification:
+        # Report status.
+        print("... executing stratification procedure ...")
+        # Execute procedure.
+        stratification.execute_procedure(
+            path_dock=arguments.path_dock
+        )
+
     pass
 
 

@@ -36,7 +36,6 @@ import promiscuity.plot as plot
 import uk_biobank.organization as ukb_organization
 
 
-
 ###############################################################################
 # Functionality
 
@@ -44,7 +43,7 @@ import uk_biobank.organization as ukb_organization
 ##########
 # Initialization
 
-
+# Scrap... but still sort of cool...
 def initialize_directories_cohorts(
     path_parent=None,
 ):
@@ -1635,9 +1634,6 @@ def organize_hormone_female_export_table(
 
 
 
-
-
-
 ##########
 # ... in progress...
 
@@ -1879,278 +1875,6 @@ def write_product_organization(
     pass
 
 
-def write_product_quality(
-    information=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    # Specify directories and files.
-    path_table_auditc = os.path.join(
-        path_parent, "table_auditc.tsv"
-    )
-    path_table_audit = os.path.join(
-        path_parent, "table_audit.tsv"
-    )
-    path_table_diagnosis = os.path.join(
-        path_parent, "table_diagnosis.tsv"
-    )
-    path_table_alcoholism = os.path.join(
-        path_parent, "table_alcoholism.tsv"
-    )
-    # Write information to file.
-    information["table_auditc"].to_csv(
-        path_or_buf=path_table_auditc,
-        sep="\t",
-        header=True,
-        index=False,
-    )
-    information["table_audit"].to_csv(
-        path_or_buf=path_table_audit,
-        sep="\t",
-        header=True,
-        index=False,
-    )
-    information["table_diagnosis"].to_csv(
-        path_or_buf=path_table_diagnosis,
-        sep="\t",
-        header=True,
-        index=False,
-    )
-    information["table_alcoholism"].to_csv(
-        path_or_buf=path_table_alcoholism,
-        sep="\t",
-        header=True,
-        index=False,
-    )
-    pass
-
-
-def write_product_cohort_model_table(
-    name=None,
-    information=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        name (str): base name for file
-        information (object): information to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    # Specify directories and files.
-    path_table = os.path.join(
-        path_parent, str(name + ".tsv")
-    )
-    # Write information to file.
-    information.to_csv(
-        path_or_buf=path_table,
-        sep="\t",
-        header=True,
-        index=False,
-    )
-    pass
-
-
-def write_product_cohorts_models(
-    information=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    for name in information.keys():
-        write_product_cohort_model_table(
-            name=name,
-            information=information[name],
-            path_parent=path_parent,
-        )
-    pass
-
-
-def write_product_export_table(
-    name=None,
-    information=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        name (str): base name for file
-        information (object): information to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    # Specify directories and files.
-    path_table = os.path.join(
-        path_parent, str(name + ".tsv")
-    )
-    # Write information to file.
-    information.to_csv(
-        path_or_buf=path_table,
-        sep="\t",
-        header=True,
-        index=True,
-    )
-    pass
-
-
-def write_product_export(
-    information=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    for name in information.keys():
-        write_product_export_table(
-            name=name,
-            information=information[name],
-            path_parent=path_parent,
-        )
-    pass
-
-
-def write_product_plot_figure(
-    name=None,
-    figure=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        name (str): base name for file
-        figure (object): figure object to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    # Specify directories and files.
-    path_file = os.path.join(
-        path_parent, str(name + ".png")
-    )
-    # Write information to file.
-    plot.write_figure(
-        figure=figure,
-        format="png",
-        resolution=300,
-        path=path_file,
-    )
-    pass
-
-
-def write_product_plots(
-    information=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    for name in information.keys():
-        write_product_plot_figure(
-            name=name,
-            figure=information[name],
-            path_parent=path_parent,
-        )
-    pass
-
-
-def write_product_trial(
-    information=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    # Specify directories and files.
-    path_table_phenotypes = os.path.join(
-        path_parent, "table_phenotypes_covariates.pickle"
-    )
-    path_table_phenotypes_text = os.path.join(
-        path_parent, "table_phenotypes_covariates.tsv"
-    )
-    # Write information to file.
-    information["table_phenotypes_covariates"].to_pickle(
-        path_table_phenotypes
-    )
-    information["table_phenotypes_covariates"].to_csv(
-        path_or_buf=path_table_phenotypes_text,
-        sep="\t",
-        header=True,
-        index=False,
-    )
-    pass
-
-
 def write_product(
     information=None,
     paths=None,
@@ -2169,41 +1893,11 @@ def write_product(
 
     """
 
-
     # Organization procedure main information.
     write_product_organization(
         information=information["organization"],
         path_parent=paths["organization"],
     )
-    # Export information.
-    if False:
-        write_product_quality(
-            information=information["quality"],
-            path_parent=paths["quality"],
-        )
-    # Export information.
-    write_product_export(
-        information=information["export"],
-        path_parent=paths["export"],
-    )
-    # Cohort tables in PLINK format.
-    if True:
-        write_product_cohorts_models(
-            information=information["cohorts_models"],
-            path_parent=paths["cohorts_models"],
-        )
-    # Trial organization.
-    if False:
-        write_product_trial(
-            information=information["trial"],
-            path_parent=paths["trial"],
-        )
-    # Plots.
-    if True:
-        write_product_plots(
-            information=information["plots"],
-            path_parent=paths["plots"],
-        )
     pass
 
 
@@ -2229,7 +1923,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 21")
+    print("version check: 1")
     # Pause procedure.
     time.sleep(5.0)
 
@@ -2261,32 +1955,6 @@ def execute_procedure(
         report=True,
     )
 
-    # Describe variables within cohorts and models.
-    if True:
-        pail_summary = (
-            ukb_organization.execute_describe_cohorts_models_phenotypes(
-                table=pail_female["table"],
-                set="sex_hormones",
-                path_dock=path_dock,
-                report=True,
-        ))
-
-    # Plot figures for cohorts, models, and phenotypes.
-    if True:
-        pail_plot = ukb_organization.execute_plot_cohorts_models_phenotypes(
-            table=pail_female["table"],
-            report=True,
-        )
-    else:
-        pail_plot = dict()
-
-    # Organize information for export.
-    table_hormone_female_export = organize_hormone_female_export_table(
-        table=pail_female["table"], # pail_female["table_clean"]
-        select_columns=False,
-        report=True,
-    )
-
     # Select and organize variables across cohorts.
     # Organize phenotypes and covariates in format for analysis in PLINK.
     if False:
@@ -2304,18 +1972,6 @@ def execute_procedure(
     information = dict()
     information["organization"] = dict()
     information["organization"]["table_phenotypes"] = pail_female["table"]
-    information["export"] = dict()
-    information["export"]["table_hormone_female_export"] = (
-        table_hormone_female_export
-    )
-    information["export"]["table_summary_cohorts_models_phenotypes"] = (
-        pail_summary["table_summary_cohorts_models_phenotypes"]
-    )
-    information["export"]["table_summary_cohorts_models_genotypes"] = (
-        pail_summary["table_summary_cohorts_models_genotypes"]
-    )
-    information["plots"] = pail_plot
-    information["cohorts_models"] = pail_cohorts_models
     # Write product information to file.
     write_product(
         paths=paths,
