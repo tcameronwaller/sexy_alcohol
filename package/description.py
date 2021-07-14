@@ -138,6 +138,70 @@ def read_source(
 
 
 
+##########
+# Data export
+
+
+def organize_hormone_female_export_table(
+    table=None,
+    select_columns=None,
+    report=None,
+):
+    """
+    Organizes information for export.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        select_columns (bool): whether to select specific columns from table
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+
+    """
+
+    table = table.copy(deep=True)
+    if (select_columns):
+        columns_export = [
+            #"eid",
+            "IID",
+            "sex", "sex_text", "age", "body_mass_index", "body_mass_index_log",
+            "pregnancy",
+            "hysterectomy", "oophorectomy", "hysterectomy_or_oophorectomy",
+            "menopause_binary", "menopause_ordinal",
+            "menstruation_days", "menstruation_phase",
+            "oral_contraception", "hormone_replacement",
+            "hormone_alteration",
+            "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
+            "oestradiol", "oestradiol_log",
+            "oestradiol_free", "oestradiol_free_log",
+            "oestradiol_bioavailable", "oestradiol_bioavailable_log",
+            "testosterone", "testosterone_log",
+            "testosterone_free", "testosterone_free_log",
+            "testosterone_bioavailable", "testosterone_bioavailable_log",
+
+        ]
+        table = table.loc[
+            :, table.columns.isin(columns_export)
+        ]
+        table = table[[*columns_export]]
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        print("report: organize_hormone_export_table()")
+        utility.print_terminal_partition(level=3)
+        print(table)
+        print("table shape (rows, columns): " + str(table.shape))
+        print(table.columns.to_list())
+    # Return information.
+    return table
+
+
+
 
 ##########
 # Write
