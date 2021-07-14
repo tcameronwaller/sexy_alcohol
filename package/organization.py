@@ -1806,7 +1806,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 5")
+    print("version check: 1")
     # Pause procedure.
     time.sleep(5.0)
 
@@ -1819,7 +1819,7 @@ def execute_procedure(
     # Exclusion identifiers are "eid".
     source = read_source(
         path_dock=path_dock,
-        report=False,
+        report=True,
     )
     # Organize variables for persons' genotypes, sex, age, and body mass index
     # across the UK Biobank.

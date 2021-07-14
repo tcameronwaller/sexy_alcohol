@@ -82,13 +82,10 @@ def initialize_directories(
         path=paths["stratification"]
     )
     utility.create_directories(
-        path=paths["stratification"]
+        path=paths["cohorts_models"]
     )
     # Return information.
     return paths
-
-
-
 
 
 ##########
@@ -119,7 +116,7 @@ def read_source(
 
     # Specify directories and files.
     path_table_phenotypes = os.path.join(
-        path_dock, "organization_temporary_freeze",
+        path_dock, "organization",
         "table_phenotypes.pickle",
     )
 
@@ -132,8 +129,6 @@ def read_source(
         "table_phenotypes": table_phenotypes,
         #"table_ukb_samples": table_ukb_samples,
     }
-
-
 
 
 ##########
@@ -224,8 +219,6 @@ def write_product(
         path_parent=paths["cohorts_models"],
     )
     pass
-
-
 
 
 ###############################################################################
