@@ -43,48 +43,6 @@ import uk_biobank.organization as ukb_organization
 ##########
 # Initialization
 
-# Scrap... but still sort of cool...
-def initialize_directories_cohorts(
-    path_parent=None,
-):
-    """
-    Initialize directories for procedure's product files.
-
-    arguments:
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-        (dict<str>): collection of paths to directories for procedure's files
-
-    """
-
-    # Collect information.
-    paths = dict()
-    sexes = ["female", "male",]
-    alcoholisms = [
-        "alcoholism_1", "alcoholism_2", "alcoholism_3", "alcoholism_4",
-    ]
-    groups = ["all", "case", "control"]
-    for sex in sexes:
-        paths[sex] = dict()
-        for alcoholism in alcoholisms:
-            paths[sex][alcoholism] = dict()
-            for group in groups:
-                paths[sex][alcoholism][group] = os.path.join(
-                    path_parent, "cohorts", sex, alcoholism, group
-                )
-                # Initialize directories.
-                utility.create_directories(
-                    path=paths[sex][alcoholism][group]
-                )
-                pass
-            pass
-        pass
-    # Return information.
-    return paths
-
 
 def initialize_directories(
     restore=None,
@@ -110,14 +68,8 @@ def initialize_directories(
     # Define paths to directories.
     paths["dock"] = path_dock
     paths["organization"] = os.path.join(path_dock, "organization")
-    paths["export"] = os.path.join(
-        path_dock, "organization", "export"
-    )
     paths["cohorts_models"] = os.path.join(
         path_dock, "organization", "cohorts_models"
-    )
-    paths["plots"] = os.path.join(
-        path_dock, "organization", "plots"
     )
 
     # Remove previous files to avoid version or batch confusion.
@@ -128,13 +80,7 @@ def initialize_directories(
         path=paths["organization"]
     )
     utility.create_directories(
-        path=paths["export"]
-    )
-    utility.create_directories(
         path=paths["cohorts_models"]
-    )
-    utility.create_directories(
-        path=paths["plots"]
     )
     # Return information.
     return paths
@@ -1954,19 +1900,6 @@ def execute_procedure(
         table=pail_hormone["table"], # pail_hormone["table_clean"]
         report=True,
     )
-
-    # Select and organize variables across cohorts.
-    # Organize phenotypes and covariates in format for analysis in PLINK.
-    if False:
-        pail_cohorts_models = (
-            ukb_organization.execute_cohorts_models_genetic_analysis(
-                table=pail_female["table_clean"],
-                set="sex_hormones",
-                path_dock=path_dock,
-                report=True,
-        ))
-    else:
-        pail_cohorts_models = dict()
 
     # Collect information.
     information = dict()
