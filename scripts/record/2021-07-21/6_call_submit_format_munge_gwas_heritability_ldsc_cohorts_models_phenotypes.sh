@@ -9,18 +9,6 @@
 ###########################################################################
 
 ################################################################################
-# Activate Virtual Environment.
-
-# Read private, local file paths.
-#echo "read private file path variables and organize paths..."
-cd ~/paths
-path_tools=$(<"./waller_tools.txt")
-path_environment_ldsc="${path_tools}/python/environments/ldsc"
-source "${path_environment_ldsc}/bin/activate"
-which python2
-sleep 5s
-
-################################################################################
 # Organize paths.
 # Read private, local file paths.
 cd ~/paths
@@ -114,6 +102,7 @@ if false; then
   $report
 fi
 
+
 # Execute iteratively on head node.
 if true; then
   for directory in "${batch_instances[@]}"; do
@@ -129,7 +118,7 @@ if true; then
     # Execute procedure.
 
     # Concatenate GWAS across chromosomes.
-    if false; then
+    if true; then
       # Organize variables.
       pattern_source_file="report.*.glm.linear" # do not expand with full path yet
       path_source_directory="${path_gwas_parent}/${directory}"
@@ -149,7 +138,7 @@ if true; then
 
     # Format and munge GWAS summary statistics.
     # Estimate genotype heritability.
-    if true; then
+    if false; then
       # Organize paths.
       path_gwas_study="${path_gwas_parent}/${directory}"
       path_heritability_study="${path_heritability_parent}/${directory}"
@@ -175,9 +164,3 @@ if true; then
     fi
   done
 fi
-
-################################################################################
-# Deactivate Virtual Environment.
-
-deactivate
-which python2

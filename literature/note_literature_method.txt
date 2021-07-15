@@ -11,6 +11,23 @@ Method
 --------------------------------------------------
 --------------------------------------------------
 
+
+--------------------------------------------------
+PubMed: 33364437
+date: 4 January 2021
+authors: Naomi E. Allen, ..., Samantha Welsh, Rory Collins
+title: "Approaches to minimising the epidemiological impact of sources of systematic and random variation that may affect biochemistry assay data in UK Biobank"
+journal: Wellcome Open Research
+note:
+- description of dilution factor and other technical counfounders in blood biochemistry variables in U.K. Biobank
+- accidental dilution of biological samples occurred
+- authors mention specifically the exclusion of oestradiol measurements below assay's limit of detection for about 80% of samples
+- - this measurement below limit of detection did not vary appreciably across biological sample aliquots
+- U.K. Biobank adjusted measurements for some of these technical confounders (such as the dilution error)
+- seasonal fluctuation in concentrations of Vitamin D and other blood biochemistry variables
+- this article might comment on the potential for sampling bias in the selection of persons for measurement of blood biochemistry
+- processing and measurements on biological samples was not truly random, but involved some level of randomization
+
 --------------------------------------------------
 PubMed:29754766
 Date: 10 May 2018
