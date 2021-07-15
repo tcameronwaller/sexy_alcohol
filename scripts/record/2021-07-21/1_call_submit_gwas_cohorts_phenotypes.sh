@@ -21,7 +21,8 @@ cd ~/paths
 path_process=$(<"./process_sexy_alcohol.txt")
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-07-21"
 path_dock="$path_process/dock"
-path_cohorts_models="${path_dock}/organization_freeze_2021-07-08/cohorts_models"
+#path_cohorts_models="${path_dock}/organization_freeze_2021-07-08/cohorts_models"
+path_cohorts_models="${path_dock}/organization_freeze_2021-07-14/cohorts_models"
 path_gwas="${path_dock}/gwas/cohorts_models"
 
 # Initialize directories.
@@ -41,24 +42,27 @@ cohorts_models=()
 #cohorts_models+=("female_male;table_female_male;sex,age,body_mass_index_log,")
 #cohorts_models+=("female;table_female;age,body_mass_index_log,menopause_ordinal,hormone_alteration,")
 #cohorts_models+=("female_premenopause_binary;table_female_premenopause_binary;age,body_mass_index_log,menstruation_phase,hormone_alteration,")
+cohorts_models+=("female_premenopause_binary_cycle;table_female_premenopause_binary;age,body_mass_index_log,menstruation_phase_cycle,hormone_alteration,")
 #cohorts_models+=("female_postmenopause_binary;table_female_postmenopause_binary;age,body_mass_index_log,hormone_alteration,")
 #cohorts_models+=("female_premenopause_ordinal;table_female_premenopause_ordinal;age,body_mass_index_log,menstruation_phase,hormone_alteration,")
+cohorts_models+=("female_premenopause_ordinal_cycle;table_female_premenopause_ordinal;age,body_mass_index_log,menstruation_phase_cycle,hormone_alteration,")
 #cohorts_models+=("female_perimenopause_ordinal;table_female_perimenopause_ordinal;age,body_mass_index_log,menstruation_phase,hormone_alteration,")
+cohorts_models+=("female_perimenopause_ordinal_cycle;table_female_perimenopause_ordinal;age,body_mass_index_log,menstruation_phase_cycle,hormone_alteration,")
 #cohorts_models+=("female_postmenopause_ordinal;table_female_postmenopause_ordinal;age,body_mass_index_log,hormone_alteration,")
 #cohorts_models+=("male;table_male;age,body_mass_index_log,")
-cohorts_models+=("male_young;table_male_young;age,body_mass_index_log,")
-cohorts_models+=("male_old;table_male_old;age,body_mass_index_log,")
+#cohorts_models+=("male_young;table_male_young;age,body_mass_index_log,")
+#cohorts_models+=("male_old;table_male_old;age,body_mass_index_log,")
 
-cohorts_models+=("female_male_unadjust;table_female_male;")
-cohorts_models+=("female_unadjust;table_female;")
-cohorts_models+=("female_premenopause_binary_unadjust;table_female_premenopause_binary;")
-cohorts_models+=("female_postmenopause_binary_unadjust;table_female_postmenopause_binary;")
-cohorts_models+=("female_premenopause_ordinal_unadjust;table_female_premenopause_ordinal;")
-cohorts_models+=("female_perimenopause_ordinal_unadjust;table_female_perimenopause_ordinal;")
-cohorts_models+=("female_postmenopause_ordinal_unadjust;table_female_postmenopause_ordinal;")
-cohorts_models+=("male_unadjust;table_male;")
-cohorts_models+=("male_young_unadjust;table_male_young;")
-cohorts_models+=("male_old_unadjust;table_male_old;")
+#cohorts_models+=("female_male_unadjust;table_female_male;")
+#cohorts_models+=("female_unadjust;table_female;")
+#cohorts_models+=("female_premenopause_binary_unadjust;table_female_premenopause_binary;")
+#cohorts_models+=("female_postmenopause_binary_unadjust;table_female_postmenopause_binary;")
+#cohorts_models+=("female_premenopause_ordinal_unadjust;table_female_premenopause_ordinal;")
+#cohorts_models+=("female_perimenopause_ordinal_unadjust;table_female_perimenopause_ordinal;")
+#cohorts_models+=("female_postmenopause_ordinal_unadjust;table_female_postmenopause_ordinal;")
+#cohorts_models+=("male_unadjust;table_male;")
+#cohorts_models+=("male_young_unadjust;table_male_young;")
+#cohorts_models+=("male_old_unadjust;table_male_old;")
 
 # Define array of phenotypes.
 phenotypes=()

@@ -392,7 +392,7 @@ def execute_procedure(
     # Exclusion identifiers are "eid".
     source = read_source(
         path_dock=path_dock,
-        report=False,
+        report=True,
     )
 
     # Describe variables within cohorts and models.

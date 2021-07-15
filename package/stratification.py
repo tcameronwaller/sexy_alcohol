@@ -256,7 +256,7 @@ def execute_procedure(
     # Exclusion identifiers are "eid".
     source = read_source(
         path_dock=path_dock,
-        report=False,
+        report=True,
     )
 
     # Select and organize variables across cohorts.
