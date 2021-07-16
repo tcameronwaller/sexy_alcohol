@@ -79,7 +79,7 @@ for cohort_model_phenotype in "${cohorts_models_phenotypes[@]}"; do
   mkdir -p $path_correlation_comparison
 
   # Concatenate GWAS across chromosomes.
-  if true; then
+  if false; then
     # Organize variables.
     pattern_source_file="report.*.glm.linear" # do not expand with full path yet
     path_source_directory="${path_gwas_source_parent}/${cohort_model_phenotype}"
@@ -98,7 +98,7 @@ for cohort_model_phenotype in "${cohorts_models_phenotypes[@]}"; do
   fi
 
   # Format and munge GWAS summary statistics.
-  if false; then
+  if true; then
     # Organize information in format for LDSC.
     # Parameters.
     study=${cohort_model_phenotype}
