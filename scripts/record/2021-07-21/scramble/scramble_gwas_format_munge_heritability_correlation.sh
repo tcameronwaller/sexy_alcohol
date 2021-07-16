@@ -98,7 +98,7 @@ for cohort_model_phenotype in "${cohorts_models_phenotypes[@]}"; do
   fi
 
   # Format and munge GWAS summary statistics.
-  if true; then
+  if false; then
     # Organize information in format for LDSC.
     # Parameters.
     study=${cohort_model_phenotype}
@@ -130,7 +130,7 @@ for cohort_model_phenotype in "${cohorts_models_phenotypes[@]}"; do
   sleep 5s
 
   # Munge GWAS summary statistics.
-  if true; then
+  if false; then
     path_gwas_format="${path_target_gwas_study}/gwas_format.txt"
     path_gwas_format_compress="${path_gwas_format}.gz"
     path_gwas_munge="${path_target_gwas_study}/gwas_munge"
@@ -146,7 +146,7 @@ for cohort_model_phenotype in "${cohorts_models_phenotypes[@]}"; do
   fi
 
   # Estimate genotype heritability.
-  if true; then
+  if false; then
     path_gwas_munge="${path_target_gwas_study}/gwas_munge"
     path_gwas_munge_suffix="${path_gwas_munge}.sumstats.gz"
     path_heritability_report="${path_heritability_study}/heritability_report"
@@ -160,7 +160,7 @@ for cohort_model_phenotype in "${cohorts_models_phenotypes[@]}"; do
   fi
 
   # Genetic correlation.
-  if true; then
+  if false; then
 
     # Organize paths.
 
