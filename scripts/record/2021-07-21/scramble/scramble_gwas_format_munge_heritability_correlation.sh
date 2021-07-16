@@ -36,12 +36,12 @@ path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-07-21"
 path_promiscuity_scripts="${path_process}/promiscuity/scripts"
 
 # Initialize directories.
-rm -r $path_gwas_target_parent
-rm -r $path_heritability_parent
-rm -r $path_correlation_parent
-mkdir -p $path_gwas_target_parent
-mkdir -p $path_heritability_parent
-mkdir -p $path_correlation_parent
+#rm -r $path_gwas_target_parent
+#rm -r $path_heritability_parent
+#rm -r $path_correlation_parent
+#mkdir -p $path_gwas_target_parent
+#mkdir -p $path_heritability_parent
+#mkdir -p $path_correlation_parent
 
 ###########################################################################
 # Organize variables.
