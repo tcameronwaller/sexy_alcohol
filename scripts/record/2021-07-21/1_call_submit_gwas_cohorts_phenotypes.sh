@@ -42,11 +42,11 @@ covariates_common="genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genot
 
 cohorts_models=()
 
-#cohorts_models+=("female_male;table_female_male;sex,age,body_mass_index_log,")
+###cohorts_models+=("female_male;table_female_male;sex,age,body_mass_index_log,")
 #cohorts_models+=("female;table_female;age,body_mass_index_log,menopause_ordinal,hormone_alteration,")
-#cohorts_models+=("female_premenopause_binary;table_female_premenopause_binary;age,body_mass_index_log,menstruation_phase,hormone_alteration,")
+###cohorts_models+=("female_premenopause_binary;table_female_premenopause_binary;age,body_mass_index_log,menstruation_phase,hormone_alteration,")
 cohorts_models+=("female_premenopause_binary_cycle;table_female_premenopause_binary;age,body_mass_index_log,menstruation_phase_cycle,hormone_alteration,")
-#cohorts_models+=("female_postmenopause_binary;table_female_postmenopause_binary;age,body_mass_index_log,hormone_alteration,")
+###cohorts_models+=("female_postmenopause_binary;table_female_postmenopause_binary;age,body_mass_index_log,hormone_alteration,")
 #cohorts_models+=("female_premenopause_ordinal;table_female_premenopause_ordinal;age,body_mass_index_log,menstruation_phase,hormone_alteration,")
 cohorts_models+=("female_premenopause_ordinal_cycle;table_female_premenopause_ordinal;age,body_mass_index_log,menstruation_phase_cycle,hormone_alteration,")
 #cohorts_models+=("female_perimenopause_ordinal;table_female_perimenopause_ordinal;age,body_mass_index_log,menstruation_phase,hormone_alteration,")

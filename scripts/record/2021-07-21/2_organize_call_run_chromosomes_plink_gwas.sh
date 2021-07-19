@@ -37,7 +37,7 @@
 # For large cohorts (20,000 - 500,000), limit to 10-20 total simultaneous GWAS
 # on NCSA.
 # Beyond about 10-15 simultaneous GWAS, PLINK2 begins to use more than 2 TB storage.
-#$ -tc 7
+#$ -tc 3
 
 # http://gridscheduler.sourceforge.net/htmlman/htmlman1/qsub.html
 
