@@ -38,7 +38,7 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
     matches=$(find "${path_gwas_source_container}/${study}" -name "$name_gwas_munge_file")
     match_file=${matches[0]}
     if [[ -n $matches && -f $match_file ]]; then
-      secondaries+=("$study;${path_gwas_source_container}/${study}")
+      secondaries+=("$study;${path_gwas_source_container}/${study}/${name_gwas_munge_file}")
     fi
   fi
 done
