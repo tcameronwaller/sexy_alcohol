@@ -76,7 +76,7 @@ for comparison in "${comparisons[@]}"; do
   echo "secondary study: ${study_secondary}"
   echo "path: ${path_gwas_secondary_munge_suffix}"
 
-  if false; then
+  if true; then
     ##############################################################################
     # LDSC Genetic Correlation.
     # Paths.
