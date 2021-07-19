@@ -24,7 +24,7 @@ path_dock="$path_process/dock"
 
 # General paths.
 #path_gwas_source_container="${path_dock}/gwas_complete/cohorts_models"
-path_gwas_target_container="${path_dock}/gwas_post/cohorts_models"
+path_gwas_target_container="${path_dock}/gwas_process/cohorts_models"
 
 ###########################################################################
 # Execute procedure.
