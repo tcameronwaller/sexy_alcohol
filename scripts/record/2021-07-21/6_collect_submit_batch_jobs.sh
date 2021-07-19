@@ -37,8 +37,6 @@ unset IFS
 rm $path_batch_instances
 
 # Iterate on directories for GWAS on cohorts and hormones.
-# Set "nullglob" option to expand null wildcard matches to empty list.
-#shopt -s nullglob
 pattern_gwas_chromosome_file="report.*.glm.linear" # do not expand with full path yet
 pattern_gwas_concatenation_file="gwas_concatenation.txt.gz"
 cd $path_gwas_source_container
