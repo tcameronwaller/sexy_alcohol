@@ -70,8 +70,8 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
         echo "Found GWAS concatenation for: ${directory}"
         echo "Found match file: ${match_concatenation_file}"
         #echo $directory >> $path_batch_instances
+      fi
     fi
-
   fi
 done
 
