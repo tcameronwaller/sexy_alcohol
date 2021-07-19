@@ -49,28 +49,21 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
     # Current content item is a directory.
     directory="$(basename -- $path_directory)"
 
-    # Determine specific inclusions or exclusions.
-    # inclusions: [[ " ${inclusions[@]} " =~ "${directory}" ]]
-    # exclusions: [[ ! " ${exclusions[@]} " =~ "${directory}" ]]
-    if [[ ! " ${exclusions[@]} " =~ "${directory}" ]]; then
-      #echo $path_gwas_check_file
-      echo $directory
-      #echo $directory >> $path_batch_instances
-
-      # Determine whether directory contains valid GWAS summary statistics
-      # across chromosomes.
-      # Check for chromosome 22, assuming that all chromosomes completed
-      # sequentially.
-      matches=$(find "${path_gwas_container}/${directory}/chromosome_22" -path "report.*.glm.linear")
-      #path_match_file=("${path_gwas_parent}/${directory}/chromosome_22/${pattern_gwas_check_file}")
-      echo $matches
-      #path_gwas_check_file="${matches[0]}"
-      #if [[ -f "$path_match_file" ]]; then
-      #  echo $directory
-      #  echo "the directory had a matching file!!!"
-      #  #echo $directory >> $path_batch_instances
-      #fi
-    fi
+    echo $directory
+    # Determine whether directory contains valid GWAS summary statistics
+    # across chromosomes.
+    # Check for chromosome 22, assuming that all chromosomes completed
+    # sequentially.
+    #matches=$(find "${path_gwas_container}/${directory}/chromosome_22" -path "report.*.glm.linear")
+    find "${path_gwas_container}/${directory}/chromosome_22" -path "$pattern_gwas_check_file"
+    #path_match_file=("${path_gwas_parent}/${directory}/chromosome_22/${pattern_gwas_check_file}")
+    #echo $matches
+    #path_gwas_check_file="${matches[0]}"
+    #if [[ -f "$path_match_file" ]]; then
+    #  echo $directory
+    #  echo "the directory had a matching file!!!"
+    #  #echo $directory >> $path_batch_instances
+    #fi
   fi
 done
 
