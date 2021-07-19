@@ -59,7 +59,7 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
       # across chromosomes.
       # Check for chromosome 22, assuming that all chromosomes completed
       # sequentially.
-      matches=$(find "${path_gwas_parent}/${directory}/chromosome_22" -name "${pattern_gwas_check_file}")
+      matches=$(find "${path_gwas_parent}/${directory}/chromosome_22" -name "report.*.glm.linear")
       echo "$matches"
       #matches=("${path_gwas_parent}/${directory}/chromosome_22/${pattern_gwas_check_file}")
       #path_gwas_check_file="${matches[0]}"
