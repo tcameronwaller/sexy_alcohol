@@ -42,36 +42,34 @@ rm $path_batch_instances
 # Iterate on directories for GWAS on cohorts and hormones.
 # Set "nullglob" option to expand null wildcard matches to empty list.
 #shopt -s nullglob
-pattern_gwas_check_file="report.*.glm.linear" # do not expand with full path yet
+pattern_gwas_chromosome_file="report.*.glm.linear" # do not expand with full path yet
+pattern_gwas_concatenation_file="gwas_concatenation.txt.gz"
 cd $path_gwas_container
 for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
   if [ -d "$path_directory" ]; then
     # Current content item is a directory.
+    # Extract directory's base name.
     directory="$(basename -- $path_directory)"
-
-    echo $directory
+    #echo $directory
     # Determine whether directory contains valid GWAS summary statistics
     # across chromosomes.
     # Check for chromosome 22, assuming that all chromosomes completed
     # sequentially.
-    #matches=$(find "${path_gwas_container}/${directory}/chromosome_22" -path "report.*.glm.linear")
-
-    #find "${path_gwas_container}/${directory}/chromosome_22" -path "$pattern_gwas_check_file"
-
-    #path_match_file=("${path_gwas_parent}/${directory}/chromosome_22/${pattern_gwas_check_file}")
-    #echo $matches
-    #path_gwas_check_file="${matches[0]}"
-    #if [[ -f "$path_match_file" ]]; then
-    #  echo $directory
-    #  echo "the directory had a matching file!!!"
-    #  #echo $directory >> $path_batch_instances
-    #fi
-    matches=$(find "${path_gwas_container}/${directory}/chromosome_22" -name "$pattern_gwas_check_file")
-    match_file=${matches[0]}
-    if [[ -n $matches && -f $match_file ]]; then
-      echo "found file!!!!"
-      echo $matches
-      echo $match_file
+    matches_chromosome=$(find "${path_gwas_container}/${directory}/chromosome_22" -name "$pattern_gwas_chromosome_file")
+    match_chromosome_file=${matches_chromosome[0]}
+    if [[ -n $matches_chromosome && -f $match_chromosome_file ]]; then
+      echo "----------"
+      echo "Found chromosome-22 sum stats for: ${directory}"
+      echo $matches_chromosome
+      echo "Found match file: ${match_chromosome_file}"
+      # Determine whether directory already contains a concatenation file.
+      matches_concatenation=$(find "${path_gwas_container}/${directory}" -name "$pattern_gwas_concatenation_file")
+      match_concatenation_file=${matches_concatenation[0]}
+      if [[ -n $matches_concatenation && -f $match_concatenation_file ]]; then
+        echo "-----"
+        echo "Found GWAS concatenation for: ${directory}"
+        echo "Found match file: ${match_concatenation_file}"
+        #echo $directory >> $path_batch_instances
     fi
 
   fi
