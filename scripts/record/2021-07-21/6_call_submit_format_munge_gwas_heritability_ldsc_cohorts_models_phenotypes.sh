@@ -55,7 +55,9 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
     # Check for chromosome 22, assuming that all chromosomes completed
     # sequentially.
     #matches=$(find "${path_gwas_container}/${directory}/chromosome_22" -path "report.*.glm.linear")
-    find "${path_gwas_container}/${directory}/chromosome_22" -path "$pattern_gwas_check_file"
+
+    #find "${path_gwas_container}/${directory}/chromosome_22" -path "$pattern_gwas_check_file"
+
     #path_match_file=("${path_gwas_parent}/${directory}/chromosome_22/${pattern_gwas_check_file}")
     #echo $matches
     #path_gwas_check_file="${matches[0]}"
@@ -64,6 +66,10 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
     #  echo "the directory had a matching file!!!"
     #  #echo $directory >> $path_batch_instances
     #fi
+    if [[ -n $(find "${path_gwas_container}/${directory}/chromosome_22" -path "$pattern_gwas_check_file") ]]; then
+      echo "found file!!!!"
+    fi
+
   fi
 done
 
