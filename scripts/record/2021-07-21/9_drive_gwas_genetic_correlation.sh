@@ -72,7 +72,9 @@ for comparison in "${comparisons[@]}"; do
   path_gwas_secondary_munge_suffix="${array[3]}"
   echo "----------"
   echo "primary study: ${study_primary}"
+  echo "path: ${path_gwas_primary_munge_suffix}"
   echo "secondary study: ${study_secondary}"
+  echo "path: ${path_gwas_secondary_munge_suffix}"
 
   if false; then
     ##############################################################################
