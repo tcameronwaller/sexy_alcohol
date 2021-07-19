@@ -41,7 +41,7 @@ rm $path_batch_instances
 
 # Iterate on directories for GWAS on cohorts and hormones.
 # Set "nullglob" option to expand null wildcard matches to empty list.
-shopt -s nullglob
+#shopt -s nullglob
 pattern_gwas_check_file="report.*.glm.linear" # do not expand with full path yet
 cd $path_gwas_container
 for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
@@ -61,13 +61,14 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
       # across chromosomes.
       # Check for chromosome 22, assuming that all chromosomes completed
       # sequentially.
-      #matches=$(find "${path_gwas_parent}/${directory}/chromosome_22" -name "report.*.glm.linear")
-      matches=("${path_gwas_parent}/${directory}/chromosome_22/${pattern_gwas_check_file}")
-      echo "$matches"
+      matches=$(find "${path_gwas_container}/${directory}/chromosome_22" -path "report.*.glm.linear")
+      #path_match_file=("${path_gwas_parent}/${directory}/chromosome_22/${pattern_gwas_check_file}")
+      echo $matches
       #path_gwas_check_file="${matches[0]}"
-      #if [[ -f "$path_gwas_check_file" ]]; then
+      #if [[ -f "$path_match_file" ]]; then
       #  echo $directory
-      #  echo $directory >> $path_batch_instances
+      #  echo "the directory had a matching file!!!"
+      #  #echo $directory >> $path_batch_instances
       #fi
     fi
   fi
