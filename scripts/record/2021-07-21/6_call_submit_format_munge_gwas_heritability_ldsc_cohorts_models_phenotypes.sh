@@ -66,8 +66,10 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
     #  echo "the directory had a matching file!!!"
     #  #echo $directory >> $path_batch_instances
     #fi
-    if [[ -n $(find "${path_gwas_container}/${directory}/chromosome_22" -name "$pattern_gwas_check_file") ]]; then
+    matches=$(find "${path_gwas_container}/${directory}/chromosome_22" -name "$pattern_gwas_check_file")
+    if [[ -n $matches ]]; then
       echo "found file!!!!"
+      echo $matches
     fi
 
   fi
