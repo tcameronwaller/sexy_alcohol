@@ -28,11 +28,59 @@ studies=()
 #studies+=("female_steroid_globulin_log")
 studies+=("male_steroid_globulin_log")
 
-
 for study in "${studies[@]}"; do
-  # Concatenate GWAS across chromosomes.
-  /usr/bin/bash "${path_scripts_record}/8_drive_gwas_concatenation_format_munge_heritability.sh" \
-  $study \
-  $path_gwas_source_container \
-  $path_gwas_target_container
+  ##############################################################################
+  # Concatenation and format.
+  # Paths.
+  path_gwas_source_parent="${path_gwas_source_container}/${study}"
+  path_gwas_target_parent="${path_gwas_target_container}/${study}"
+  #rm -r $path_gwas_target_parent
+  mkdir -p $path_gwas_target_parent
+  # Scripts.
+  path_promiscuity_scripts="${path_process}/promiscuity/scripts"
+
+  ################################################################################
+  # Paths.
+  path_gwas_concatenation="${path_gwas_target_parent}/gwas_concatenation.txt"
+  path_gwas_concatenation_compress="${path_gwas_target_parent}/gwas_concatenation.txt.gz"
+  path_gwas_collection="${path_gwas_target_parent}/gwas_collection.txt"
+  path_gwas_format="${path_gwas_target_parent}/gwas_format.txt"
+  path_gwas_standard="${path_gwas_target_parent}/gwas_standard.txt"
+  path_gwas_format_compress="${path_gwas_target_parent}/gwas_format.txt.gz"
+
+  ################################################################################
+  # Scripts.
+  path_scripts_gwas_process="${path_promiscuity_scripts}/gwas_process"
+  path_script_gwas_collect_concatenate="${path_scripts_gwas_process}/collect_concatenate_gwas_chromosomes.sh"
+  path_script_gwas_format="${path_scripts_gwas_process}/format_gwas_ldsc/format_gwas_ldsc_plink_linear.sh"
+  path_script_calculate_z_score="${path_scripts_gwas_process}/calculate_z_score_column_5_of_6.sh"
+
+  ################################################################################
+  # Concatenation across chromosomes
+  report="true"
+  if false; then
+    pattern_source_file="report.*.glm.linear" # do not expand with full path yet
+    chromosome_start=1
+    chromosome_end=22
+    /usr/bin/bash "$path_script_gwas_collect_concatenate" \
+    $pattern_source_file \
+    $path_gwas_source_parent \
+    $chromosome_start \
+    $chromosome_end \
+    $path_gwas_concatenation \
+    $path_gwas_concatenation_compress \
+    $report
+  fi
+
+  ################################################################################
+  # Format adaptation
+  path_gwas_source=$path_gwas_concatenation_compress
+  /usr/bin/bash "$path_script_gwas_format" \
+  $path_gwas_source \
+  $path_gwas_collection \
+  $path_gwas_format \
+  $path_gwas_standard \
+  $path_gwas_format_compress \
+  $path_script_calculate_z_score \
+  $report
 done
