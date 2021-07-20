@@ -56,7 +56,8 @@
 path_batch_instances=${1} # text list of information for each instance in batch
 batch_instances_count=${2} # count of instances in batch
 path_gwas_source_container=${3} # full path to parent directories of GWAS summary statistics for each study
-path_scripts_record=${4} # full path to directory of scripts for a specific analysis report date
+path_gwas_target_container=${4} # full path to parent directories of GWAS summary statistics for each study
+path_scripts_record=${5} # full path to directory of scripts for a specific analysis report date
 
 ###########################################################################
 # Organize variables.
@@ -72,4 +73,5 @@ study=${batch_instances[$batch_index]}
 # Concatenate GWAS across chromosomes.
 /usr/bin/bash "${path_scripts_record}/8_drive_gwas_concatenation_format_munge_heritability.sh" \
 $study \
-$path_gwas_source_container
+$path_gwas_source_container \
+$path_gwas_target_container

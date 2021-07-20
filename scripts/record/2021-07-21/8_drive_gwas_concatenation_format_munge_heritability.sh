@@ -13,6 +13,7 @@
 
 study=${1} # text name of GWAS study and also name of study's parent directory
 path_gwas_source_container=${2} # full path to parent directories of GWAS summary statistics for each study
+path_gwas_target_container=${3} # full path to parent directories of GWAS summary statistics for each study
 
 ################################################################################
 # Organize paths.
@@ -24,7 +25,7 @@ path_dock="$path_process/dock"
 
 # General paths.
 #path_gwas_source_container="${path_dock}/gwas_complete/cohorts_models"
-path_gwas_target_container="${path_dock}/gwas_process/cohorts_models"
+#path_gwas_target_container="${path_dock}/gwas_process/cohorts_models"
 
 ###########################################################################
 # Execute procedure.

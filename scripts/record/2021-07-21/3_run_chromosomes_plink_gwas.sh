@@ -52,6 +52,8 @@ do
     # --pfilter 1 \
     # --pfilter drops SNPs with null p-values and any beyond threshold (such as 1)
     # But, maybe pfilter is actually a problem.
+    # Argument "--reference-allele" allows to give an explicit list of alleles to designate as "A1".
+    # "Warning: No --bgen REF/ALT mode specified ('ref-first', 'ref-last', or 'ref-unknown'). This will be required as of alpha 3."
     $path_plink2 \
     --memory 90000 \
     --threads $threads \

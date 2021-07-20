@@ -15,6 +15,7 @@ cd ~/paths
 path_process=$(<"./process_sexy_alcohol.txt")
 path_dock="$path_process/dock"
 path_gwas_source_container="${path_dock}/gwas_complete/cohorts_models" # selection
+path_gwas_target_container="${path_dock}/gwas_process/cohorts_models" # selection
 
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-07-21"
 path_batch_instances="${path_gwas_source_container}/post_process_batch_instances.txt"
@@ -92,5 +93,6 @@ if true; then
   $path_batch_instances \
   $batch_instances_count \
   $path_gwas_source_container \
+  $path_gwas_target_container \
   $path_scripts_record
 fi
