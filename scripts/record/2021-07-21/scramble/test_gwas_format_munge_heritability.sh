@@ -25,7 +25,7 @@ path_gwas_target_container="${path_dock}/test/gwas"
 ################################################################################
 # Define array of studies.
 studies=()
-studies+=("female_steroid_globulin_log")
+#studies+=("female_steroid_globulin_log")
 studies+=("male_steroid_globulin_log")
 
 
