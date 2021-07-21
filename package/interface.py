@@ -304,6 +304,13 @@ def evaluate_main_parameters(arguments):
         stratification.execute_procedure(
             path_dock=arguments.path_dock
         )
+    if arguments.genetic_correlation:
+        # Report status.
+        print("... executing genetic_correlation procedure ...")
+        # Execute procedure.
+        genetic_correlation.execute_procedure(
+            path_dock=arguments.path_dock
+        )
 
     pass
 
