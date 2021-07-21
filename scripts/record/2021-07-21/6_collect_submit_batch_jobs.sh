@@ -18,7 +18,7 @@ path_gwas_source_container="${path_dock}/gwas_complete/cohorts_models" # selecti
 path_gwas_target_container="${path_dock}/gwas_process/cohorts_models" # selection
 
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-07-21"
-path_batch_instances="${path_gwas_source_container}/post_process_batch_instances.txt"
+path_batch_instances="${path_gwas_target_container}/post_process_batch_instances.txt"
 
 ###########################################################################
 # Define explicit inclusions and exclusions.
@@ -35,6 +35,8 @@ unset IFS
 # Execute procedure.
 
 # Initialize batch instances.
+rm -r $path_gwas_target_container
+mkdir -p $path_gwas_target_container
 rm $path_batch_instances
 
 # Iterate on directories for GWAS on cohorts and hormones.
@@ -61,7 +63,8 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
       echo $matches_chromosome
       echo "Found match file: ${match_chromosome_file}"
       # Determine whether directory already contains a concatenation file.
-      matches_concatenation=$(find "${path_gwas_source_container}/${study}" -name "$pattern_gwas_concatenation_file")
+      mkdir -p "${path_gwas_target_container}/${study}"
+      matches_concatenation=$(find "${path_gwas_target_container}/${study}" -name "$pattern_gwas_concatenation_file")
       match_concatenation_file=${matches_concatenation[0]}
       if [[ -n $matches_concatenation && -f $match_concatenation_file ]]; then
         echo "-----"
@@ -88,7 +91,7 @@ if true; then
   # Submit array batch to Sun Grid Engine.
   # Array batch indices must start at one (not zero).
   qsub -t 1-${batch_instances_count}:1 -o \
-  "${path_gwas_source_container}/post_process_out.txt" -e "${path_gwas_source_container}/post_process_error.txt" \
+  "${path_gwas_target_container}/post_process_out.txt" -e "${path_gwas_target_container}/post_process_error.txt" \
   "${path_scripts_record}/7_run_batch_jobs_gwas_concatenation_format_munge_heritability.sh" \
   $path_batch_instances \
   $batch_instances_count \
