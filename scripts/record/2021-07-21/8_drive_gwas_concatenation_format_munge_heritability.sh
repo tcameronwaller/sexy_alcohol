@@ -55,7 +55,7 @@ $report
 path_genetic_reference="${path_dock}/access/genetic_reference"
 path_gwas_source_parent="${path_gwas_target_container}/${study}"
 path_gwas_target_parent="${path_gwas_target_container}/${study}"
-path_heritability_parent="${path_dock}/heritability/${study}"
+path_heritability_parent="${path_dock}/heritability/cohorts_models/${study}"
 rm -r $path_heritability_parent
 mkdir -p $path_gwas_target_parent
 mkdir -p $path_heritability_parent

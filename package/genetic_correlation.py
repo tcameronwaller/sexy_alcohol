@@ -54,9 +54,15 @@ import promiscuity.utility as utility
 ##########
 # Initialization
 
+# TODO: the directory path for the cohort_model_phenotype tables has CHANGED!!!
 
-def initialize_organization_directories(
-    organization_studies=None,
+# TODO: need to update paths in "dock"
+# /.../stratification_freeze_2021-07-15/cohorts_models/
+# /.../heritability_2021-07-20/cohorts_models/
+# /.../genetic_correlation_2021-07-21/[primary_study]/cohorts_models_2021-06-07/
+
+def initialize_stratification_directories(
+    stratification_studies=None,
     paths=None,
     path_dock=None,
     restore=None,
@@ -65,7 +71,7 @@ def initialize_organization_directories(
     Initialize directories for procedure's product files.
 
     arguments:
-        organization_studies (list<str>): identifiers of studies with
+        stratification_studies (list<str>): identifiers of studies with
             organization tables
         paths (dict<str>): collection of paths to directories for procedure's
             files
@@ -81,13 +87,13 @@ def initialize_organization_directories(
     """
 
     paths = copy.deepcopy(paths)
-    paths["organization"] = os.path.join(
-        path_dock, "organization",
+    paths["stratification"] = os.path.join(
+        path_dock, "stratification_freeze_2021-07-15",
     )
-    paths["organization_studies"] = dict()
-    for study in organization_studies:
-        paths["organization_studies"][study] = os.path.join(
-            path_dock, "organization", study
+    paths["stratification_studies"] = dict()
+    for study in stratification_studies:
+        paths["stratification_studies"][study] = os.path.join(
+            path_dock, "stratification_freeze_2021-07-15", study
         )
     return paths
 
@@ -119,12 +125,12 @@ def initialize_heritability_directories(
 
     paths = copy.deepcopy(paths)
     paths["heritability"] = os.path.join(
-        path_dock, "heritability",
+        path_dock, "heritability_2021-07-20",
     )
     paths["heritability_studies"] = dict()
     for study in heritability_studies:
         paths["heritability_studies"][study] = os.path.join(
-            path_dock, "heritability", study
+            path_dock, "heritability_2021-07-20", study
         )
     return paths
 
@@ -159,7 +165,7 @@ def initialize_correlation_directories(
 
     paths = copy.deepcopy(paths)
     paths["genetic_correlation"] = os.path.join(
-        path_dock, "genetic_correlation",
+        path_dock, "genetic_correlation_2021-07-21",
     )
     paths["correlation_studies"] = dict()
     for study_first in primary_studies:
@@ -167,7 +173,7 @@ def initialize_correlation_directories(
             paths["correlation_studies"][study_first] = dict()
             paths["correlation_studies"][study_first][study_second] = (
                 os.path.join(
-                    path_dock, "genetic_correlation",
+                    path_dock, "genetic_correlation_2021-07-21",
                     study_first, study_second
                 )
             )
@@ -203,8 +209,8 @@ def initialize_directories_hierarchy(
     paths = dict()
     # Define paths to directories.
     paths["dock"] = path_dock
-    paths["organization_cohorts_models"] = os.path.join(
-        path_dock, "organization", "cohorts_models"
+    paths["stratification_cohorts_models"] = os.path.join(
+        path_dock, "stratification_freeze_2021-07-15", "cohorts_models"
     )
 
     heritability_studies = [
@@ -217,8 +223,8 @@ def initialize_directories_hierarchy(
     secondary_studies = [
         secondary_study,
     ]
-    paths = initialize_organization_directories(
-        organization_studies=[secondary_study],
+    paths = initialize_stratification_directories(
+        stratification_studies=[secondary_study],
         paths=paths,
         path_dock=path_dock,
         restore=restore,
@@ -886,7 +892,7 @@ def read_source_hierarchy(
             file_prefix="table_",
             file_suffix=".tsv",
             path_source_directory=(
-                paths["organization_studies"][secondary_study]
+                paths["stratification_studies"][secondary_study]
             ),
     ))
 
@@ -901,7 +907,7 @@ def read_source_hierarchy(
     # Genetic correlations between primary and secondary phenotypes.
     table_correlations = (
         read_collect_primary_secondaries_genetic_correlations_by_directories(
-            file="correlation.log",
+            file="correlation_report.log",
             path_parent_directory=(
                 paths["correlation_studies"][primary_study][secondary_study]
             ),
@@ -1471,9 +1477,9 @@ def drive_collection_report_pair_studies(
 # Procedure
 
 # TODO: need to update paths in "dock"
-# /.../organization/cohorts_models_2021-06-07/
-# /.../heritability/cohorts_models_2021-06-07/
-# /.../genetic_correlation/[primary_study]/cohorts_models_2021-06-07/
+# /.../stratification_freeze_2021-07-15/cohorts_models/
+# /.../heritability_2021-07-20/cohorts_models/
+# /.../genetic_correlation_2021-07-21/[primary_study]/cohorts_models_2021-06-07/
 
 
 def execute_procedure(
@@ -1507,13 +1513,13 @@ def execute_procedure(
 
     # Define phenotype studies.
     primary_studies = [
-        "30482948_walters_2018_all",
-        "30482948_walters_2018_eur",
+        #"30482948_walters_2018_all",
+        #"30482948_walters_2018_eur",
         "30482948_walters_2018_eur_unrel",
     ]
     # Define container for secondary studies.
     secondary_studies = [
-        "cohorts_models_2021-06-07",
+        "cohorts_models",
     ]
     for primary_study in primary_studies:
         for secondary_study in secondary_studies:
