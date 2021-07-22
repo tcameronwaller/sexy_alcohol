@@ -165,7 +165,7 @@ def initialize_correlation_directories(
 
     paths = copy.deepcopy(paths)
     paths["genetic_correlation"] = os.path.join(
-        path_dock, "genetic_correlation_2021-07-21",
+        path_dock, "genetic_correlation_2021-07-22",
     )
     paths["correlation_studies"] = dict()
     for study_first in primary_studies:
@@ -173,7 +173,7 @@ def initialize_correlation_directories(
             paths["correlation_studies"][study_first] = dict()
             paths["correlation_studies"][study_first][study_second] = (
                 os.path.join(
-                    path_dock, "genetic_correlation_2021-07-21",
+                    path_dock, "genetic_correlation_2021-07-22",
                     study_first, study_second
                 )
             )
