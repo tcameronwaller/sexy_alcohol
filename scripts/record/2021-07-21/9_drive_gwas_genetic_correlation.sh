@@ -85,7 +85,7 @@ for comparison in "${comparisons[@]}"; do
     #study_secondary=""
     #path_gwas_primary_munge_suffix=""
     #path_gwas_secondary_munge_suffix=""
-    path_genetic_correlation_parent="${path_dock}/genetic_correlation/${study_primary}/${study_secondary}"
+    path_genetic_correlation_parent="${path_dock}/genetic_correlation/${study_primary}/cohorts_models/${study_secondary}"
     rm -r $path_genetic_correlation_parent
     mkdir -p $path_genetic_correlation_parent
     # Scripts.
