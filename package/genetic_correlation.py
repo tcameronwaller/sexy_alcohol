@@ -400,6 +400,8 @@ def read_extract_phenotype_heritability(
     variants = float("nan")
     heritability = float("nan")
     heritability_error = float("nan")
+    confidence_95_low = float("nan")
+    confidence_95_high = float("nan")
     ratio = float("nan")
     ratio_error = float("nan")
     # Read relevant lines from file.
@@ -440,12 +442,29 @@ def read_extract_phenotype_heritability(
                 )
             pass
         pass
+    # Organize information.
+    if (
+        (not pandas.isna(heritability)) and
+        (not pandas.isna(heritability_error))
+    ):
+        confidence_95_low = (heritability - (1.96 * heritability_error))
+        confidence_95_high = (heritability + (1.96 * heritability_error))
+        pass
+    confidence_95 = str(
+        str(round(confidence_95_low, 3)) + " ... " +
+        str(round(confidence_95_high, 3))
+    )
+    summary = str(
+        "(h2: " + str(heritability) + "; 95% CI: " + str(confidence_95) + ")"
+    )
     # Collect information.
     record = dict()
     record["identifier"] = identifier
     record["heritability_variants"] = variants
+    record["heritability_summary"] = summary
     record["heritability"] = heritability
     record["heritability_standard_error"] = heritability_error
+    record["heritability_confidence_95"] = confidence_95
     record["heritability_ratio"] = ratio
     record["heritability_ratio_standard_error"] = ratio_error
     # Return information.
@@ -619,6 +638,8 @@ def read_extract_phenotypes_genetic_correlation(
     variants = float("nan")
     correlation = float("nan")
     correlation_error = float("nan")
+    confidence_95_low = float("nan")
+    confidence_95_high = float("nan")
     correlation_absolute = float("nan")
     probability = float("nan")
     # Read relevant lines from file.
@@ -691,12 +712,29 @@ def read_extract_phenotypes_genetic_correlation(
             )
             print(path_file)
             print(table)
+    # Organize information.
+    if (
+        (not pandas.isna(correlation)) and
+        (not pandas.isna(correlation_error))
+    ):
+        confidence_95_low = (correlation - (1.96 * correlation_error))
+        confidence_95_high = (correlation + (1.96 * correlation_error))
+        pass
+    confidence_95 = str(
+        str(round(confidence_95_low, 3)) + " ... " +
+        str(round(confidence_95_high, 3))
+    )
+    summary = str(
+        "(rg: " + str(correlation) + "; 95% CI: " + str(confidence_95) + ")"
+    )
     # Collect information.
     record = dict()
     record["identifier"] = identifier
     record["correlation_variants"] = variants
+    record["correlation_summary"] = summary
     record["correlation"] = correlation
     record["correlation_standard_error"] = correlation_error
+    record["correlation_confidence_95"] = confidence_95
     record["correlation_absolute"] = correlation_absolute
     record["correlation_probability"] = probability
     # Return information.
@@ -1200,18 +1238,27 @@ def combine_organize_phenotypes_hierarchy_summary_table(
         na_position="last",
         inplace=True,
     )
+
     # Sort table columns.
     columns_sequence = [
         "cohort",
         "hormone",
         "count_samples",
+        "heritability_summary_adjust",
         "heritability_adjust", "heritability_standard_error_adjust",
+        "heritability_confidence_95_adjust",
+        "heritability_summary_unadjust",
         "heritability_unadjust", "heritability_standard_error_unadjust",
+        "heritability_confidence_95_unadjust",
+        "correlation_summary_adjust",
         "correlation_adjust", "correlation_standard_error_adjust",
         "correlation_probability_adjust",
         #"correlation_discovery_adjust",
+        "correlation_confidence_95_adjust",
+        "correlation_summary_unadjust",
         "correlation_unadjust", "correlation_standard_error_unadjust",
         "correlation_probability_unadjust",
+        "correlation_confidence_95_unadjust",
         "heritability_ratio",
         "heritability_ratio_standard_error",
         "heritability_variants",
