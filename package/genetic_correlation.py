@@ -1096,8 +1096,12 @@ def organize_table_adjust_unadjust_models(
     table_unadjust = table_unadjust.loc[
         :, table_unadjust.columns.isin([
             "cohort_hormone", "identifier",
+            "heritability_summary",
             "heritability", "heritability_standard_error",
+            "heritability_confidence_95",
+            "correlation_summary",
             "correlation", "correlation_standard_error",
+            "correlation_confidence_95",
             "correlation_probability",
         ])
     ]
