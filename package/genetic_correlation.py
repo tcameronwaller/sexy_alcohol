@@ -125,12 +125,12 @@ def initialize_heritability_directories(
 
     paths = copy.deepcopy(paths)
     paths["heritability"] = os.path.join(
-        path_dock, "heritability_2021-07-20",
+        path_dock, "heritability_2021-07-21",
     )
     paths["heritability_studies"] = dict()
     for study in heritability_studies:
         paths["heritability_studies"][study] = os.path.join(
-            path_dock, "heritability_2021-07-20", study
+            path_dock, "heritability_2021-07-21", study
         )
     return paths
 
@@ -165,7 +165,7 @@ def initialize_correlation_directories(
 
     paths = copy.deepcopy(paths)
     paths["genetic_correlation"] = os.path.join(
-        path_dock, "genetic_correlation_2021-07-22",
+        path_dock, "genetic_correlation_2021-07-21",
     )
     paths["correlation_studies"] = dict()
     for study_first in primary_studies:
@@ -173,7 +173,7 @@ def initialize_correlation_directories(
             paths["correlation_studies"][study_first] = dict()
             paths["correlation_studies"][study_first][study_second] = (
                 os.path.join(
-                    path_dock, "genetic_correlation_2021-07-22",
+                    path_dock, "genetic_correlation_2021-07-21",
                     study_first, study_second
                 )
             )
@@ -1501,7 +1501,7 @@ def execute_procedure(
     # Report version.
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 2")
+    print("version check: 2021-07-21")
     # Pause procedure.
     time.sleep(5.0)
 
