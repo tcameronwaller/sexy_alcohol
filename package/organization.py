@@ -1687,14 +1687,14 @@ def execute_procedure(
             report=True,
         )
 
-    # Collect information.
-    information = dict()
-    information["organization"] = dict()
-    information["organization"]["table_phenotypes"] = pail_basis["table"]
-    #information["organization"]["table_phenotypes"] = pail_female["table"]
-    # Write product information to file.
-    ukb_organization.write_product(
-        paths=paths,
-        information=information
-    )
+        # Collect information.
+        information = dict()
+        information["organization"] = dict()
+        information["organization"]["table_phenotypes"] = pail_basis["table"]
+        #information["organization"]["table_phenotypes"] = pail_female["table"]
+        # Write product information to file.
+        ukb_organization.write_product(
+            paths=paths,
+            information=information
+        )
     pass
