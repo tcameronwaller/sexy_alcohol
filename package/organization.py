@@ -1664,29 +1664,37 @@ def execute_procedure(
         table=source["table_phenotypes"],
         report=True,
     )
+
+    # TODO: summarize missing values and reportability in hormone data fields...
     # Organize variables for persons' sex hormones across the UK Biobank.
-    pail_hormone = ukb_organization.execute_sex_hormones(
+    ukb_organization.temporary_report_hormones_missingness_reportability(
         table=pail_basis["table"], # pail_basis["table_clean"]
         report=True,
     )
-    # Organize variables for female menstruation across the UK Biobank.
-    pail_female = ukb_organization.execute_female_menstruation(
-        table=pail_hormone["table"], # pail_hormone["table_clean"]
-        report=True,
-    )
+
+
+
+
+    if False:
+        # Organize variables for persons' sex hormones across the UK Biobank.
+        pail_hormone = ukb_organization.execute_sex_hormones(
+            table=pail_basis["table"], # pail_basis["table_clean"]
+            report=True,
+        )
+        # Organize variables for female menstruation across the UK Biobank.
+        pail_female = ukb_organization.execute_female_menstruation(
+            table=pail_hormone["table"], # pail_hormone["table_clean"]
+            report=True,
+        )
 
     # Collect information.
     information = dict()
     information["organization"] = dict()
-    information["organization"]["table_phenotypes"] = pail_female["table"]
+    information["organization"]["table_phenotypes"] = pail_basis["table"]
+    #information["organization"]["table_phenotypes"] = pail_female["table"]
     # Write product information to file.
     ukb_organization.write_product(
         paths=paths,
         information=information
     )
     pass
-
-
-
-if (__name__ == "__main__"):
-    execute_procedure()
