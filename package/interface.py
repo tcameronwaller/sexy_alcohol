@@ -154,14 +154,14 @@ def define_main_subparser(subparsers=None):
     parser_main.add_argument(
         "-assembly", "--assembly", dest="assembly", action="store_true",
         help=(
-            "Organization of information for further analyses."
+            "Assemble U.K. Biobank's raw accession tables."
         )
     )
     parser_main.add_argument(
         "-organization", "--organization", dest="organization",
         action="store_true",
         help=(
-            "Organization of variables, definition of cohorts and phenotypes."
+            "Organize definitions of variables for cohorts and phenotypes."
         )
     )
     parser_main.add_argument(

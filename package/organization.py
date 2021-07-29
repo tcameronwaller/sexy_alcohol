@@ -40,104 +40,6 @@ import uk_biobank.organization as ukb_organization
 # Functionality
 
 
-##########
-# Initialization
-
-
-def initialize_directories(
-    restore=None,
-    path_dock=None,
-):
-    """
-    Initialize directories for procedure's product files.
-
-    arguments:
-        restore (bool): whether to remove previous versions of data
-        path_dock (str): path to dock directory for source and product
-            directories and files
-
-    raises:
-
-    returns:
-        (dict<str>): collection of paths to directories for procedure's files
-
-    """
-
-    # Collect paths.
-    paths = dict()
-    # Define paths to directories.
-    paths["dock"] = path_dock
-    paths["organization"] = os.path.join(path_dock, "organization")
-    paths["cohorts_models"] = os.path.join(
-        path_dock, "organization", "cohorts_models"
-    )
-
-    # Remove previous files to avoid version or batch confusion.
-    if restore:
-        utility.remove_directory(path=paths["organization"])
-    # Initialize directories.
-    utility.create_directories(
-        path=paths["organization"]
-    )
-    utility.create_directories(
-        path=paths["cohorts_models"]
-    )
-    # Return information.
-    return paths
-
-
-##########
-# Read
-
-
-def read_source(
-    path_dock=None,
-    report=None,
-):
-    """
-    Reads and organizes source information from file.
-
-    Notice that Pandas does not accommodate missing values within series of
-    integer variable types.
-
-    arguments:
-        path_dock (str): path to dock directory for source and product
-            directories and files
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): source information
-
-    """
-
-    # Specify directories and files.
-    path_table_phenotypes = os.path.join(
-        path_dock, "assembly", "table_phenotypes.pickle"
-    )
-
-    # Read information from file.
-    table_phenotypes = pandas.read_pickle(
-        path_table_phenotypes
-    )
-    if False:
-        path_table_ukb_samples = os.path.join(
-            path_dock, "access", "ukb46237_imp_chr21_v3_s487320.sample"
-        )
-        table_ukb_samples = pandas.read_csv(
-            path_table_ukb_samples,
-            sep="\s+",
-            header=0,
-            dtype="string",
-        )
-    # Compile and return information.
-    return {
-        "table_phenotypes": table_phenotypes,
-        #"table_ukb_samples": table_ukb_samples,
-    }
-
-
 ############################
 # A LOT below here should not be duplicated from uk_biobank package...
 ################################
@@ -1718,71 +1620,6 @@ def organize_auditc_questionnaire_alcoholism_variables(
     return bucket
 
 
-##########
-# Write
-
-
-def write_product_organization(
-    information=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        path_parent (str): path to parent directory
-            raises:
-
-    returns:
-
-    """
-
-    # Specify directories and files.
-    path_table_phenotypes = os.path.join(
-        path_parent, "table_phenotypes.pickle"
-    )
-    path_table_phenotypes_text = os.path.join(
-        path_parent, "table_phenotypes.tsv"
-    )
-    # Write information to file.
-    information["table_phenotypes"].to_pickle(
-        path_table_phenotypes
-    )
-    information["table_phenotypes"].to_csv(
-        path_or_buf=path_table_phenotypes_text,
-        sep="\t",
-        header=True,
-        index=True,
-    )
-    pass
-
-
-def write_product(
-    information=None,
-    paths=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        paths (dict<str>): collection of paths to directories for procedure's
-            files
-
-    raises:
-
-    returns:
-
-    """
-
-    # Organization procedure main information.
-    write_product_organization(
-        information=information["organization"],
-        path_parent=paths["organization"],
-    )
-    pass
-
 
 ###############################################################################
 # Procedure
@@ -1811,13 +1648,13 @@ def execute_procedure(
     time.sleep(5.0)
 
     # Initialize directories.
-    paths = initialize_directories(
+    paths = ukb_organization.initialize_directories(
         restore=True,
         path_dock=path_dock,
     )
     # Read source information from file.
     # Exclusion identifiers are "eid".
-    source = read_source(
+    source = ukb_organization.read_source(
         path_dock=path_dock,
         report=True,
     )
@@ -1843,7 +1680,7 @@ def execute_procedure(
     information["organization"] = dict()
     information["organization"]["table_phenotypes"] = pail_female["table"]
     # Write product information to file.
-    write_product(
+    ukb_organization.write_product(
         paths=paths,
         information=information
     )
