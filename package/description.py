@@ -329,6 +329,7 @@ def execute_procedure(
     pail_summary = (
         ukb_organization.execute_describe_cohorts_models_phenotypes(
             table=source["table_phenotypes"],
+            genotype_cohorts=False, # genotype cohorts are slow
             set="sex_hormones",
             path_dock=path_dock,
             report=True,
