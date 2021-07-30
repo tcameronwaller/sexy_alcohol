@@ -279,19 +279,16 @@ def write_product(
         path_parent=paths["description"],
     )
     # Plots.
-    write_product_plots(
-        information=information["plots"],
-        path_parent=paths["plots"],
-    )
+    if False:
+        write_product_plots(
+            information=information["plots"],
+            path_parent=paths["plots"],
+        )
     pass
 
 
 ###############################################################################
 # Procedure
-
-
-# TODO: implement a new summary table for missingness in hormone variables
-# TODO: in each cohort...
 
 
 def execute_procedure(
@@ -350,11 +347,11 @@ def execute_procedure(
         )
         pass
 
-    # Plot figures for cohorts, models, and phenotypes.
-    pail_plot = ukb_organization.execute_plot_cohorts_models_phenotypes(
-        table=source["table_phenotypes"],
-        report=True,
-    )
+        # Plot figures for cohorts, models, and phenotypes.
+        pail_plot = ukb_organization.execute_plot_cohorts_models_phenotypes(
+            table=source["table_phenotypes"],
+            report=True,
+        )
 
     # Collect information.
     information = dict()
@@ -365,7 +362,10 @@ def execute_procedure(
     information["description"]["table_summary_cohorts_models_genotypes"] = (
         pail_summary["table_summary_cohorts_models_genotypes"]
     )
-    information["plots"] = pail_plot
+    information["description"]["table_cohorts_hormones_missingness"] = (
+        pail_summary["table_cohorts_hormones_missingness"]
+    )
+    #information["plots"] = pail_plot
     # Write product information to file.
     write_product(
         paths=paths,
