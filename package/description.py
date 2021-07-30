@@ -337,6 +337,19 @@ def execute_procedure(
             report=True,
     ))
 
+    if False:
+        # TODO: TCW 29 July 2021
+        # TODO: I need to write the organization table
+        # TODO: then I can work on the new summary table for missing hormones in the "description" procedure
+
+        # TODO: summarize missing values and reportability in hormone data fields...
+        # Organize variables for persons' sex hormones across the UK Biobank.
+        ukb_organization.temporary_report_hormones_missingness_reportability(
+            table=pail_female["table"], # pail_basis["table_clean"]
+            report=True,
+        )
+        pass
+
     # Plot figures for cohorts, models, and phenotypes.
     pail_plot = ukb_organization.execute_plot_cohorts_models_phenotypes(
         table=source["table_phenotypes"],

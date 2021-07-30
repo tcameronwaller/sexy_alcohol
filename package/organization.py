@@ -1670,35 +1670,20 @@ def execute_procedure(
         report=True,
     )
 
-    # TODO: TCW 29 July 2021
-    # TODO: I need to write the organization table
-    # TODO: then I can work on the new summary table for missing hormones in the "description" procedure
-
-    # TODO: summarize missing values and reportability in hormone data fields...
     # Organize variables for persons' sex hormones across the UK Biobank.
-    ukb_organization.temporary_report_hormones_missingness_reportability(
+    pail_hormone = ukb_organization.execute_sex_hormones(
         table=pail_female["table"], # pail_basis["table_clean"]
         report=True,
     )
 
-
-
-
-    if False:
-        # Organize variables for persons' sex hormones across the UK Biobank.
-        pail_hormone = ukb_organization.execute_sex_hormones(
-            table=pail_female["table"], # pail_basis["table_clean"]
-            report=True,
-        )
-
-        # Collect information.
-        information = dict()
-        information["organization"] = dict()
-        information["organization"]["table_phenotypes"] = pail_basis["table"]
-        #information["organization"]["table_phenotypes"] = pail_hormone["table"]
-        # Write product information to file.
-        ukb_organization.write_product(
-            paths=paths,
-            information=information
-        )
+    # Collect information.
+    information = dict()
+    information["organization"] = dict()
+    #information["organization"]["table_phenotypes"] = pail_basis["table"]
+    information["organization"]["table_phenotypes"] = pail_hormone["table"]
+    # Write product information to file.
+    ukb_organization.write_product(
+        paths=paths,
+        information=information
+    )
     pass
