@@ -70,9 +70,6 @@ def initialize_directories(
     # Define paths to directories.
     paths["dock"] = path_dock
     paths["description"] = os.path.join(path_dock, "description")
-    paths["export"] = os.path.join(
-        path_dock, "description", "export"
-    )
     paths["plots"] = os.path.join(
         path_dock, "description", "plots"
     )
@@ -83,9 +80,6 @@ def initialize_directories(
     # Initialize directories.
     utility.create_directories(
         path=paths["description"]
-    )
-    utility.create_directories(
-        path=paths["export"]
     )
     utility.create_directories(
         path=paths["plots"]
@@ -139,76 +133,11 @@ def read_source(
 
 
 ##########
-# Data export
-
-
-def organize_hormone_female_export_table(
-    table=None,
-    select_columns=None,
-    report=None,
-):
-    """
-    Organizes information for export.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        select_columns (bool): whether to select specific columns from table
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-
-    """
-
-    table = table.copy(deep=True)
-    if (select_columns):
-        columns_export = [
-            #"eid",
-            "IID",
-            "sex", "sex_text", "age", "body_mass_index", "body_mass_index_log",
-            "pregnancy",
-            "hysterectomy", "oophorectomy", "hysterectomy_or_oophorectomy",
-            "menopause_binary", "menopause_ordinal",
-            "menstruation_days", "menstruation_phase",
-            "oral_contraception", "hormone_replacement",
-            "hormone_alteration",
-            "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
-            "oestradiol", "oestradiol_log",
-            "oestradiol_free", "oestradiol_free_log",
-            "oestradiol_bioavailable", "oestradiol_bioavailable_log",
-            "testosterone", "testosterone_log",
-            "testosterone_free", "testosterone_free_log",
-            "testosterone_bioavailable", "testosterone_bioavailable_log",
-
-        ]
-        table = table.loc[
-            :, table.columns.isin(columns_export)
-        ]
-        table = table[[*columns_export]]
-    # Report.
-    if report:
-        # Column name translations.
-        utility.print_terminal_partition(level=2)
-        print("report: organize_hormone_export_table()")
-        utility.print_terminal_partition(level=3)
-        print(table)
-        print("table shape (rows, columns): " + str(table.shape))
-        print(table.columns.to_list())
-    # Return information.
-    return table
-
-
-
-
-##########
 # Write
 
 
 
-def write_product_export_table(
+def write_product_description_table(
     name=None,
     information=None,
     path_parent=None,
@@ -241,7 +170,7 @@ def write_product_export_table(
     pass
 
 
-def write_product_export(
+def write_product_description(
     information=None,
     path_parent=None,
 ):
@@ -259,7 +188,7 @@ def write_product_export(
     """
 
     for name in information.keys():
-        write_product_export_table(
+        write_product_description_table(
             name=name,
             information=information[name],
             path_parent=path_parent,
@@ -345,9 +274,9 @@ def write_product(
     """
 
     # Export information.
-    write_product_export(
-        information=information["export"],
-        path_parent=paths["export"],
+    write_product_description(
+        information=information["description"],
+        path_parent=paths["description"],
     )
     # Plots.
     write_product_plots(
@@ -359,6 +288,10 @@ def write_product(
 
 ###############################################################################
 # Procedure
+
+
+# TODO: implement a new summary table for missingness in hormone variables
+# TODO: in each cohort...
 
 
 def execute_procedure(
@@ -410,23 +343,13 @@ def execute_procedure(
         report=True,
     )
 
-    # Organize information for export.
-    table_hormone_female_export = organize_hormone_female_export_table(
-        table=source["table_phenotypes"],
-        select_columns=False,
-        report=True,
-    )
-
     # Collect information.
     information = dict()
-    information["export"] = dict()
-    information["export"]["table_hormone_female_export"] = (
-        table_hormone_female_export
-    )
-    information["export"]["table_summary_cohorts_models_phenotypes"] = (
+    information["description"] = dict()
+    information["description"]["table_summary_cohorts_models_phenotypes"] = (
         pail_summary["table_summary_cohorts_models_phenotypes"]
     )
-    information["export"]["table_summary_cohorts_models_genotypes"] = (
+    information["description"]["table_summary_cohorts_models_genotypes"] = (
         pail_summary["table_summary_cohorts_models_genotypes"]
     )
     information["plots"] = pail_plot

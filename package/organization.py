@@ -1664,11 +1664,20 @@ def execute_procedure(
         table=source["table_phenotypes"],
         report=True,
     )
+    # Organize variables for female menstruation across the UK Biobank.
+    pail_female = ukb_organization.execute_female_menstruation(
+        table=pail_basis["table"], # pail_hormone["table_clean"]
+        report=True,
+    )
+
+    # TODO: TCW 29 July 2021
+    # TODO: I need to write the organization table
+    # TODO: then I can work on the new summary table for missing hormones in the "description" procedure
 
     # TODO: summarize missing values and reportability in hormone data fields...
     # Organize variables for persons' sex hormones across the UK Biobank.
     ukb_organization.temporary_report_hormones_missingness_reportability(
-        table=pail_basis["table"], # pail_basis["table_clean"]
+        table=pail_female["table"], # pail_basis["table_clean"]
         report=True,
     )
 
@@ -1678,12 +1687,7 @@ def execute_procedure(
     if False:
         # Organize variables for persons' sex hormones across the UK Biobank.
         pail_hormone = ukb_organization.execute_sex_hormones(
-            table=pail_basis["table"], # pail_basis["table_clean"]
-            report=True,
-        )
-        # Organize variables for female menstruation across the UK Biobank.
-        pail_female = ukb_organization.execute_female_menstruation(
-            table=pail_hormone["table"], # pail_hormone["table_clean"]
+            table=pail_female["table"], # pail_basis["table_clean"]
             report=True,
         )
 
@@ -1691,7 +1695,7 @@ def execute_procedure(
         information = dict()
         information["organization"] = dict()
         information["organization"]["table_phenotypes"] = pail_basis["table"]
-        #information["organization"]["table_phenotypes"] = pail_female["table"]
+        #information["organization"]["table_phenotypes"] = pail_hormone["table"]
         # Write product information to file.
         ukb_organization.write_product(
             paths=paths,
