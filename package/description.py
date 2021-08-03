@@ -34,6 +34,7 @@ pandas.options.mode.chained_assignment = None # default = "warn"
 import promiscuity.utility as utility
 import promiscuity.plot as plot
 import uk_biobank.organization as ukb_organization
+import uk_biobank.description as ukb_description
 
 
 
@@ -246,12 +247,29 @@ def write_product_plots(
 
     """
 
-    for name in information.keys():
-        write_product_plot_figure(
-            name=name,
-            figure=information[name],
-            path_parent=path_parent,
+    # Structure of "plots" collection is "dict<dict<object>>".
+    # First level of plots dictionary tree gives names for child directories.
+    # Second level of plots dictionary tree gives names of plots.
+    # Iterate across child directories.
+    for name_directory in information.keys():
+        # Define paths to directories.
+        path_child = os.path.join(
+            path_parent, name_directory
         )
+        # Initialize directories.
+        utility.create_directories(
+            path=path_child
+        )
+        # Iterate across charts.
+        for name_file in information[name_directory].keys():
+            # Write chart object to file in child directory.
+            write_product_plot_figure(
+                name=name_file,
+                figure=information[name_directory][name_file],
+                path_parent=path_child,
+            )
+            pass
+        pass
     pass
 
 
@@ -279,11 +297,10 @@ def write_product(
         path_parent=paths["description"],
     )
     # Plots.
-    if False:
-        write_product_plots(
-            information=information["plots"],
-            path_parent=paths["plots"],
-        )
+    write_product_plots(
+        information=information["plots"],
+        path_parent=paths["plots"],
+    )
     pass
 
 
@@ -327,7 +344,7 @@ def execute_procedure(
 
     # Describe variables within cohorts and models.
     pail_summary = (
-        ukb_organization.execute_describe_cohorts_models_phenotypes(
+        ukb_description.execute_describe_cohorts_models_phenotypes(
             table=source["table_phenotypes"],
             genotype_cohorts=False, # genotype cohorts are slow
             set="sex_hormones",
@@ -335,24 +352,11 @@ def execute_procedure(
             report=True,
     ))
 
-    if False:
-        # TODO: TCW 29 July 2021
-        # TODO: I need to write the organization table
-        # TODO: then I can work on the new summary table for missing hormones in the "description" procedure
-
-        # TODO: summarize missing values and reportability in hormone data fields...
-        # Organize variables for persons' sex hormones across the UK Biobank.
-        ukb_organization.temporary_report_hormones_missingness_reportability(
-            table=pail_female["table"], # pail_basis["table_clean"]
-            report=True,
-        )
-        pass
-
-        # Plot figures for cohorts, models, and phenotypes.
-        pail_plot = ukb_organization.execute_plot_cohorts_models_phenotypes(
-            table=source["table_phenotypes"],
-            report=True,
-        )
+    # Plot figures for cohorts, models, and phenotypes.
+    pail_plot = ukb_description.execute_plot_cohorts_models_phenotypes(
+        table=source["table_phenotypes"],
+        report=True,
+    )
 
     # Collect information.
     information = dict()
@@ -366,7 +370,7 @@ def execute_procedure(
     information["description"]["table_cohorts_hormones_missingness"] = (
         pail_summary["table_cohorts_hormones_missingness"]
     )
-    #information["plots"] = pail_plot
+    information["plots"] = pail_plot
     # Write product information to file.
     write_product(
         paths=paths,
