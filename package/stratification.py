@@ -33,7 +33,7 @@ pandas.options.mode.chained_assignment = None # default = "warn"
 # Custom
 import promiscuity.utility as utility
 import promiscuity.plot as plot
-import uk_biobank.organization as ukb_organization
+import uk_biobank.stratification as ukb_strat
 
 
 
@@ -263,7 +263,7 @@ def execute_procedure(
     # Organize phenotypes and covariates in format for analysis in PLINK.
     # else: pail_cohorts_models = dict()
     pail_cohorts_models = (
-        ukb_organization.execute_cohorts_models_genetic_analysis(
+        ukb_strat.execute_cohorts_models_genetic_analysis(
             table=source["table_phenotypes"],
             set="sex_hormones",
             path_dock=path_dock,
