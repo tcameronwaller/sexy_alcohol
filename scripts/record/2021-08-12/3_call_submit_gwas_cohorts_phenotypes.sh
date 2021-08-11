@@ -113,7 +113,7 @@ if true; then
   echo "----------------------------------------------------------------------"
   qsub -t 1-${batch_instances_count}:1 \
   -o "${path_gwas}/out.txt" -e "${path_gwas}/error.txt" \
-  "${path_scripts_record}/2_organize_call_run_chromosomes_plink_gwas.sh" \
+  "${path_scripts_record}/4_organize_call_run_chromosomes_plink_gwas.sh" \
   $path_batch_instances \
   $batch_instances_count \
   $path_cohorts_models \
