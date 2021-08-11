@@ -1665,30 +1665,32 @@ def execute_procedure(
         path_dock=path_dock,
         report=True,
     )
-    # Organize variables for female menstruation across the UK Biobank.
-    pail_female = ukb_organization.execute_female_menstruation(
-        table=pail_basis["table"], # pail_hormone["table_clean"]
-        report=True,
-    )
 
-    # Organize variables for persons' sex hormones across the UK Biobank.
-    pail_hormone = ukb_organization.execute_sex_hormones(
-        table=pail_female["table"], # pail_basis["table_clean"]
-        report=True,
-    )
+    if False:
+        # Organize variables for female menstruation across the UK Biobank.
+        pail_female = ukb_organization.execute_female_menstruation(
+            table=pail_basis["table"], # pail_hormone["table_clean"]
+            report=True,
+        )
 
-    # Organize variables for persons' alcohol consumption across the UK Biobank.
-    pail_alcohol = ukb_organization.execute_alcohol(
-        table=pail_hormone["table"],
-        report=True,
-    )
+        # Organize variables for persons' sex hormones across the UK Biobank.
+        pail_hormone = ukb_organization.execute_sex_hormones(
+            table=pail_female["table"], # pail_basis["table_clean"]
+            report=True,
+        )
+
+        # Organize variables for persons' alcohol consumption across the UK Biobank.
+        pail_alcohol = ukb_organization.execute_alcohol(
+            table=pail_hormone["table"],
+            report=True,
+        )
 
 
     # Collect information.
     information = dict()
     information["organization"] = dict()
-    #information["organization"]["table_phenotypes"] = pail_basis["table"]
-    information["organization"]["table_phenotypes"] = pail_alcohol["table"]
+    information["organization"]["table_phenotypes"] = pail_basis["table"]
+    #information["organization"]["table_phenotypes"] = pail_alcohol["table"]
     # Write product information to file.
     ukb_organization.write_product(
         paths=paths,
