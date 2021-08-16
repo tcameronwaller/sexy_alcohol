@@ -1660,7 +1660,7 @@ def execute_procedure(
     )
     # Organize variables for persons' genotypes, sex, age, and body mass index
     # across the UK Biobank.
-    pail_basis = ukb_organization.execute_genotype_assessment_basis(
+    pail_basis = ukb_organization.dev_execute_genotype_assessment_basis(
         table=source["table_phenotypes"],
         path_dock=path_dock,
         report=True,
