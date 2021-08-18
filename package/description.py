@@ -359,7 +359,7 @@ def execute_procedure(
             report=True,
         )
     else:
-        pail_lot = dict()
+        pail_plot = dict()
 
     # Collect information.
     information = dict()
