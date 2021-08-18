@@ -1668,13 +1668,13 @@ def execute_procedure(
 
     # Organize variables for female menstruation across the UK Biobank.
     pail_female = ukb_organization.execute_female_menstruation(
-        table=pail_basis["table"], # pail_hormone["table_clean"]
+        table=pail_basis["table"],
         report=True,
     )
 
     # Organize variables for persons' sex hormones across the UK Biobank.
     pail_hormone = ukb_organization.execute_sex_hormones(
-        table=pail_female["table"], # pail_basis["table_clean"]
+        table=pail_female["table"],
         report=True,
     )
 
@@ -1688,6 +1688,7 @@ def execute_procedure(
     information = dict()
     information["organization"] = dict()
     #information["organization"]["table_phenotypes"] = pail_basis["table"]
+    #information["organization"]["table_phenotypes"] = pail_hormone["table"]
     information["organization"]["table_phenotypes"] = pail_alcohol["table"]
     # Write product information to file.
     ukb_organization.write_product(
