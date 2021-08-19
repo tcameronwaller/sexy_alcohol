@@ -169,7 +169,7 @@ def organize_cohorts_models_phenotypes_regressions(
         "oestradiol", "testosterone",
     ]
     # Define predictor independent variables.
-    predictors_site = [
+    predictors_site_components = [
         "site-component_1", "site-component_2", "site-component_3",
         "site-component_4", "site-component_5", "site-component_6",
         "site-component_7", "site-component_8", "site-component_9",
@@ -211,7 +211,7 @@ def organize_cohorts_models_phenotypes_regressions(
                 utility.print_terminal_partition(level=5)
             pail_regression = regression.regress_linear_ordinary_least_squares(
                 dependence=outcome,
-                independence=predictors_month_indicators,
+                independence=predictors_site_components,
                 threshold_samples=100,
                 table=table_cohort,
                 report=report,
