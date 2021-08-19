@@ -32,11 +32,10 @@ pandas.options.mode.chained_assignment = None # default = "warn"
 
 # Custom
 import promiscuity.utility as utility
-import promiscuity.plot as plot
-import uk_biobank.organization as ukb_organization
-import uk_biobank.description as ukb_description
-
-
+import promiscuity.regression as regression
+import uk_biobank.organization as ukb_organ
+import uk_biobank.stratification as ukb_strat
+import uk_biobank.description as ukb_descr
 
 ###############################################################################
 # Functionality
@@ -70,20 +69,14 @@ def initialize_directories(
     paths = dict()
     # Define paths to directories.
     paths["dock"] = path_dock
-    paths["description"] = os.path.join(path_dock, "description")
-    paths["plots"] = os.path.join(
-        path_dock, "description", "plots"
-    )
+    paths["regression"] = os.path.join(path_dock, "regression")
 
     # Remove previous files to avoid version or batch confusion.
     if restore:
-        utility.remove_directory(path=paths["description"])
+        utility.remove_directory(path=paths["regression"])
     # Initialize directories.
     utility.create_directories(
-        path=paths["description"]
-    )
-    utility.create_directories(
-        path=paths["plots"]
+        path=paths["regression"]
     )
     # Return information.
     return paths
@@ -133,178 +126,85 @@ def read_source(
 
 
 
-##########
-# Write
 
 
-
-def write_product_description_table(
-    name=None,
-    information=None,
-    path_parent=None,
+def organize_cohorts_models_phenotypes_regressions(
+    table=None,
+    report=None,
 ):
     """
-    Writes product information to file.
+    Organize regressions.
 
     arguments:
-        name (str): base name for file
-        information (object): information to write to file
-        path_parent (str): path to parent directory
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
 
     raises:
 
     returns:
+        (dict): information from regressions
 
     """
 
-    # Specify directories and files.
-    path_table = os.path.join(
-        path_parent, str(name + ".tsv")
+    # Define relevant cohorts.
+    cohorts_records = ukb_strat.stratify_set_primary_sex_menopause_age(
+        table=table
     )
-    # Write information to file.
-    information.to_csv(
-        path_or_buf=path_table,
-        sep="\t",
-        header=True,
-        index=True,
-    )
-    pass
 
+    # TODO: TCW 19 August 2021
+    # TODO: eventually... I will need cohort-specific models...
 
-def write_product_description(
-    information=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
+    # Define outcome dependent variables.
+    outcomes = [
+        "albumin", "steroid_globulin", "vitamin_d",
+        "oestradiol", "testosterone",
+    ]
+    # Define predictor independent variables.
+    predictors_site = [
+        "site-component_1", "site-component_2", "site-component_3",
+        "site-component_4", "site-component_5", "site-component_6",
+        "site-component_7", "site-component_8", "site-component_9",
+        "site-component_10", "site-component_11", "site-component_12",
+        "site-component_13", "site-component_14", "site-component_15",
+        "site-component_16", "site-component_17", "site-component_18",
+        "site-component_19", "site-component_20",
+    ]
+    predictors_month = [
+        "month-component_1", "month-component_2", "month-component_3",
+        "month-component_4", "month-component_5", "month-component_6",
+        "month-component_7", "month-component_8", "month-component_9",
+        "month-component_10",
+    ]
 
-    arguments:
-        information (object): information to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    for name in information.keys():
-        write_product_description_table(
-            name=name,
-            information=information[name],
-            path_parent=path_parent,
-        )
-    pass
-
-
-def write_product_plot_figure(
-    name=None,
-    figure=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        name (str): base name for file
-        figure (object): figure object to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    # Specify directories and files.
-    path_file = os.path.join(
-        path_parent, str(name + ".png")
-    )
-    # Write information to file.
-    plot.write_figure(
-        figure=figure,
-        format="png",
-        resolution=300,
-        path=path_file,
-    )
-    pass
-
-
-def write_product_plots(
-    information=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    # Structure of "plots" collection is "dict<dict<object>>".
-    # First level of plots dictionary tree gives names for child directories.
-    # Second level of plots dictionary tree gives names of plots.
-    # Iterate across child directories.
-    for name_directory in information.keys():
-        # Define paths to directories.
-        path_child = os.path.join(
-            path_parent, name_directory
-        )
-        # Initialize directories.
-        utility.create_directories(
-            path=path_child
-        )
-        # Iterate across charts.
-        for name_file in information[name_directory].keys():
-            # Write chart object to file in child directory.
-            write_product_plot_figure(
-                name=name_file,
-                figure=information[name_directory][name_file],
-                path_parent=path_child,
+    # Iterate across cohorts.
+    for cohort_record in cohorts_records:
+        cohort = cohort_record["cohort"]
+        menstruation = cohort_record["menstruation"]
+        table_cohort = cohort_record["table"]
+        # Iterate across outcomes (dependent variables).
+        for outcome in outcomes:
+            pail_regression = regression.regress_linear_ordinary_least_squares(
+                dependence=outcome,
+                independence=predictors_month,
+                threshold_samples=100,
+                table=table_cohort,
+                report=report,
             )
             pass
         pass
-    pass
+
+    # Compile information.
+    pail = dict()
+    # Return information.
+    return pail
 
 
-def write_product(
-    information=None,
-    paths=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        paths (dict<str>): collection of paths to directories for procedure's
-            files
-
-    raises:
-
-    returns:
-
-    """
-
-    # Export information.
-    write_product_description(
-        information=information["description"],
-        path_parent=paths["description"],
-    )
-    # Plots.
-    write_product_plots(
-        information=information["plots"],
-        path_parent=paths["plots"],
-    )
-    pass
 
 
-###############################################################################
+
+
+################################################################################
 # Procedure
 
 
@@ -342,43 +242,13 @@ def execute_procedure(
         report=True,
     )
 
-    # Describe variables within cohorts and models.
-    pail_summary = (
-        ukb_description.execute_describe_cohorts_models_phenotypes(
-            table=source["table_phenotypes"],
-            genotype_cohorts=False, # genotype cohorts are slow
-            set="sex_hormones",
-            path_dock=path_dock,
-            report=True,
-    ))
+    # Preliminary organization of regressions.
+    pail = organize_cohorts_models_phenotypes_regressions(
+        table=source["table_phenotypes"],
+        report=True
+    )
 
-    # Plot figures for cohorts, models, and phenotypes.
-    if False:
-        pail_plot = ukb_description.execute_plot_cohorts_models_phenotypes(
-            table=source["table_phenotypes"],
-            report=True,
-        )
-    else:
-        pail_plot = dict()
 
-    # Collect information.
-    information = dict()
-    information["description"] = dict()
-    information["description"]["table_summary_cohorts_models_phenotypes"] = (
-        pail_summary["table_summary_cohorts_models_phenotypes"]
-    )
-    information["description"]["table_summary_cohorts_models_genotypes"] = (
-        pail_summary["table_summary_cohorts_models_genotypes"]
-    )
-    information["description"]["table_cohorts_hormones_missingness"] = (
-        pail_summary["table_cohorts_hormones_missingness"]
-    )
-    information["plots"] = pail_plot
-    # Write product information to file.
-    write_product(
-        paths=paths,
-        information=information
-    )
     pass
 
 

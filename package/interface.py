@@ -21,6 +21,7 @@ import assembly
 import organization
 import description
 import stratification
+import regression
 import genetic_correlation
 #import plot
 #import utility
@@ -46,12 +47,12 @@ def define_interface_parsers():
     """
 
     # Define description.
-    description = define_general_description()
+    description_string = define_general_description()
     # Define epilog.
     epilog = define_general_epilog()
     # Define arguments.
     parser = argparse.ArgumentParser(
-        description=description,
+        description=description_string,
         epilog=epilog,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
@@ -75,7 +76,7 @@ def define_general_description():
 
     """
 
-    description = textwrap.dedent("""\
+    description_string = textwrap.dedent("""\
         --------------------------------------------------
         --------------------------------------------------
         --------------------------------------------------
@@ -84,7 +85,7 @@ def define_general_description():
 
         --------------------------------------------------
     """)
-    return description
+    return description_string
 
 
 def define_general_epilog():
@@ -124,13 +125,13 @@ def define_main_subparser(subparsers=None):
     """
 
     # Define description.
-    description = define_main_description()
+    description_string = define_main_description()
     # Define epilog.
     epilog = define_main_epilog()
     # Define parser.
     parser_main = subparsers.add_parser(
         name="main",
-        description=description,
+        description=description_string,
         epilog=epilog,
         help="Help for main routine.",
         formatter_class=argparse.RawDescriptionHelpFormatter
@@ -162,6 +163,14 @@ def define_main_subparser(subparsers=None):
         action="store_true",
         help=(
             "Organize definitions of variables for cohorts and phenotypes."
+        )
+    )
+    parser_main.add_argument(
+        "-regression", "--regression",
+        dest="regression",
+        action="store_true",
+        help=(
+            "Regression analyses of phenotypes within of cohorts."
         )
     )
     parser_main.add_argument(
@@ -210,7 +219,7 @@ def define_main_description():
 
     """
 
-    description = textwrap.dedent("""\
+    description_string = textwrap.dedent("""\
         --------------------------------------------------
         --------------------------------------------------
         --------------------------------------------------
@@ -221,7 +230,7 @@ def define_main_description():
 
         --------------------------------------------------
     """)
-    return description
+    return description_string
 
 
 def define_main_epilog():
@@ -288,6 +297,13 @@ def evaluate_main_parameters(arguments):
         print("... executing organization procedure ...")
         # Execute procedure.
         organization.execute_procedure(
+            path_dock=arguments.path_dock
+        )
+    if arguments.regression:
+        # Report status.
+        print("... executing regression procedure ...")
+        # Execute procedure.
+        regression.execute_procedure(
             path_dock=arguments.path_dock
         )
     if arguments.description:
