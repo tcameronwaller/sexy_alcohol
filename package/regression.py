@@ -151,6 +151,14 @@ def organize_cohorts_models_phenotypes_regressions(
     cohorts_records = ukb_strat.stratify_set_primary_sex_menopause_age(
         table=table
     )
+    cohorts_relevant = [
+        "female-premenopause", "female-perimenopause", "female-postmenopause",
+        "male",
+    ]
+    cohorts_records = list(filter(
+        lambda cohort_record: (cohort_record["cohort"] in cohorts_relevant),
+        cohorts_records
+    ))
 
     # TODO: TCW 19 August 2021
     # TODO: eventually... I will need cohort-specific models...
@@ -194,12 +202,13 @@ def organize_cohorts_models_phenotypes_regressions(
         for outcome in outcomes:
             # Report.
             if report:
-                utility.print_terminal_partition(level=2)
+                utility.print_terminal_partition(level=3)
                 print("report: ")
                 print("organize_cohorts_models_phenotypes_regressions()")
-                utility.print_terminal_partition(level=3)
+                utility.print_terminal_partition(level=5)
                 print("cohort: " + str(cohort))
                 print("outcome: " + str(outcome))
+                utility.print_terminal_partition(level=5)
             pail_regression = regression.regress_linear_ordinary_least_squares(
                 dependence=outcome,
                 independence=predictors_month_indicators,
