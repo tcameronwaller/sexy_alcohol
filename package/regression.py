@@ -165,7 +165,7 @@ def organize_cohorts_models_phenotypes_regressions(
 
     # Define outcome dependent variables.
     hormones = [
-        "albumin", "steroid_globulin", "vitamin_d",
+        "vitamin_d", "albumin", "steroid_globulin",
         "oestradiol", "testosterone",
     ]
     # Define predictor independent variables.
@@ -206,8 +206,8 @@ def organize_cohorts_models_phenotypes_regressions(
             # Specify outcome and predictors.
             #outcome = hormone
             outcome = hormone_ordinal
-            predictors = predictors_month_components
-            #predictors = predictors_site_components
+            #predictors = predictors_month_components
+            predictors = predictors_site_components
 
             # Report.
             if report:
