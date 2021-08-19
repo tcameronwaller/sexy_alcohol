@@ -153,7 +153,7 @@ def organize_cohorts_models_phenotypes_regressions(
     )
     cohorts_relevant = [
         "female-premenopause", "female-perimenopause", "female-postmenopause",
-        "male",
+        "male", "male-younger", "male-older"
     ]
     cohorts_records = list(filter(
         lambda cohort_record: (cohort_record["cohort"] in cohorts_relevant),
@@ -212,7 +212,7 @@ def organize_cohorts_models_phenotypes_regressions(
                 print("outcome: " + str(outcome_ordinal))
                 utility.print_terminal_partition(level=5)
             pail_regression = regression.regress_linear_ordinary_least_squares(
-                dependence=outcome_ordinal, # parameter
+                dependence=outcome, # parameter
                 independence=predictors_month_components, # parameter
                 threshold_samples=100,
                 table=table_cohort,
