@@ -204,8 +204,8 @@ def organize_cohorts_models_phenotypes_regressions(
             hormone_ordinal = str(str(hormone) + "_" + str(cohort) + "_ordinal")
 
             # Specify outcome and predictors.
-            outcome = hormone
-            #outcome = hormone_ordinal
+            #outcome = hormone
+            outcome = hormone_ordinal
             predictors = predictors_month_components
             #predictors = predictors_site_components
 
