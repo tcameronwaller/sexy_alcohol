@@ -164,7 +164,7 @@ def organize_cohorts_models_phenotypes_regressions(
     # TODO: eventually... I will need cohort-specific models...
 
     # Define outcome dependent variables.
-    outcomes = [
+    hormones = [
         "albumin", "steroid_globulin", "vitamin_d",
         "oestradiol", "testosterone",
     ]
@@ -199,9 +199,16 @@ def organize_cohorts_models_phenotypes_regressions(
         menstruation = cohort_record["menstruation"]
         table_cohort = cohort_record["table"]
         # Iterate across outcomes (dependent variables).
-        for outcome in outcomes:
+        for hormone in hormones:
             # Define cohort-specific ordinal representation.
-            outcome_ordinal = str(str(outcome) + "_" + str(cohort) + "_ordinal")
+            hormone_ordinal = str(str(hormone) + "_" + str(cohort) + "_ordinal")
+
+            # Specify outcome and predictors.
+            outcome = hormone
+            #outcome = hormone_ordinal
+            predictors = predictors_month_components
+            #predictors = predictors_site_components
+
             # Report.
             if report:
                 utility.print_terminal_partition(level=3)
@@ -209,11 +216,11 @@ def organize_cohorts_models_phenotypes_regressions(
                 print("organize_cohorts_models_phenotypes_regressions()")
                 utility.print_terminal_partition(level=5)
                 print("cohort: " + str(cohort))
-                print("outcome: " + str(outcome_ordinal))
+                print("outcome: " + str(outcome))
                 utility.print_terminal_partition(level=5)
             pail_regression = regression.regress_linear_ordinary_least_squares(
                 dependence=outcome, # parameter
-                independence=predictors_month_components, # parameter
+                independence=predictors, # parameter
                 threshold_samples=100,
                 table=table_cohort,
                 report=report,
