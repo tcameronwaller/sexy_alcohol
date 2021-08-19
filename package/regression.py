@@ -192,6 +192,14 @@ def organize_cohorts_models_phenotypes_regressions(
         table_cohort = cohort_record["table"]
         # Iterate across outcomes (dependent variables).
         for outcome in outcomes:
+            # Report.
+            if report:
+                utility.print_terminal_partition(level=2)
+                print("report: ")
+                print("organize_cohorts_models_phenotypes_regressions()")
+                utility.print_terminal_partition(level=3)
+                print("cohort: " + str(cohort))
+                print("outcome: " + str(outcome))
             pail_regression = regression.regress_linear_ordinary_least_squares(
                 dependence=outcome,
                 independence=predictors_month_indicators,
