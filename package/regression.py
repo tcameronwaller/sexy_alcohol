@@ -196,7 +196,7 @@ def organize_cohorts_models_phenotypes_regressions_alcohol(
         for outcome in outcomes:
             # Specify predictors.
             #predictors = predictors_month_components
-            predictors = predictors_month_components
+            predictors = predictors_month_indicators
 
             # Report.
             if report:
