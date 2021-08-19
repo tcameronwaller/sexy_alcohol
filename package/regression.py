@@ -213,7 +213,7 @@ def organize_cohorts_models_phenotypes_regressions(
                 utility.print_terminal_partition(level=5)
             pail_regression = regression.regress_linear_ordinary_least_squares(
                 dependence=outcome_ordinal, # parameter
-                independence=predictors_site_components, # parameter
+                independence=predictors_month_components, # parameter
                 threshold_samples=100,
                 table=table_cohort,
                 report=report,
