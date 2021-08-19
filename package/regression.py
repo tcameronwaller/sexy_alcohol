@@ -178,7 +178,7 @@ def organize_cohorts_models_phenotypes_regressions(
     ]
     predictors_month_indicators = [
         "month-indicator_January", "month-indicator_February",
-        "month-indicator_March", "month-indicator_April",
+        "month-indicator_March", #"month-indicator_April",
         "month-indicator_May", "month-indicator_June",
         "month-indicator_July", "month-indicator_August",
         "month-indicator_September", "month-indicator_October",
