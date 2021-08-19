@@ -170,11 +170,19 @@ def organize_cohorts_models_phenotypes_regressions(
         "site-component_16", "site-component_17", "site-component_18",
         "site-component_19", "site-component_20",
     ]
-    predictors_month = [
+    predictors_month_components = [
         "month-component_1", "month-component_2", "month-component_3",
         "month-component_4", "month-component_5", "month-component_6",
         "month-component_7", "month-component_8", "month-component_9",
         "month-component_10",
+    ]
+    predictors_month_indicators = [
+        "month-indicator_January", "month-indicator_February",
+        "month-indicator_March", "month-indicator_April",
+        "month-indicator_May", "month-indicator_June",
+        "month-indicator_July", "month-indicator_August",
+        "month-indicator_September", "month-indicator_October",
+        "month-indicator_November", "month-indicator_December",
     ]
 
     # Iterate across cohorts.
@@ -186,7 +194,7 @@ def organize_cohorts_models_phenotypes_regressions(
         for outcome in outcomes:
             pail_regression = regression.regress_linear_ordinary_least_squares(
                 dependence=outcome,
-                independence=predictors_month,
+                independence=predictors_month_indicators,
                 threshold_samples=100,
                 table=table_cohort,
                 report=report,
