@@ -312,8 +312,8 @@ def organize_cohorts_models_phenotypes_regressions(
 
             #predictors = predictors_month_components
             #predictors = predictors_site_components
-            predictors = predictors_region
-            #predictors = predictors_season
+            #predictors = predictors_region
+            predictors = predictors_season
 
 
             # Report.
