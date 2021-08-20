@@ -163,6 +163,8 @@ def organize_cohorts_models_phenotypes_regressions_alcohol(
         "alcohol_frequency",
     ]
     # Define predictor independent variables.
+    predictors_region = ["assessment_region",]
+    predictors_season = ["assessment_season",]
     predictors_site_components = [
         "site-component_1", "site-component_2", "site-component_3",
         "site-component_4", "site-component_5", "site-component_6",
@@ -197,7 +199,9 @@ def organize_cohorts_models_phenotypes_regressions_alcohol(
             # Specify predictors.
             #predictors = predictors_month_components
             #predictors = predictors_month_indicators
-            predictors = predictors_site_components
+            #predictors = predictors_site_components
+            predictors = predictors_region
+            #predictors = predictors_season
 
             # Report.
             if report:
@@ -265,6 +269,8 @@ def organize_cohorts_models_phenotypes_regressions(
         "oestradiol", "testosterone",
     ]
     # Define predictor independent variables.
+    predictors_region = ["assessment_region",]
+    predictors_season = ["assessment_season",]
     predictors_site_components = [
         "site-component_1", "site-component_2", "site-component_3",
         "site-component_4", "site-component_5", "site-component_6",
@@ -300,10 +306,15 @@ def organize_cohorts_models_phenotypes_regressions(
             hormone_ordinal = str(str(hormone) + "_" + str(cohort) + "_ordinal")
 
             # Specify outcome and predictors.
+
             outcome = hormone
             #outcome = hormone_ordinal
+            
             #predictors = predictors_month_components
-            predictors = predictors_site_components
+            #predictors = predictors_site_components
+            predictors = predictors_region
+            #predictors = predictors_season
+
 
             # Report.
             if report:
