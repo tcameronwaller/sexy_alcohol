@@ -380,7 +380,7 @@ def execute_procedure(
     )
 
     # Preliminary organization of regressions.
-    pail = organize_cohorts_models_phenotypes_regressions_alcohol(
+    pail = organize_cohorts_models_phenotypes_regressions(
         table=source["table_phenotypes"],
         report=True
     )
