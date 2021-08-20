@@ -200,8 +200,8 @@ def organize_cohorts_models_phenotypes_regressions_alcohol(
             #predictors = predictors_month_components
             #predictors = predictors_month_indicators
             #predictors = predictors_site_components
-            predictors = predictors_region
-            #predictors = predictors_season
+            #predictors = predictors_region
+            predictors = predictors_season
 
             # Report.
             if report:
@@ -309,7 +309,7 @@ def organize_cohorts_models_phenotypes_regressions(
 
             outcome = hormone
             #outcome = hormone_ordinal
-            
+
             #predictors = predictors_month_components
             #predictors = predictors_site_components
             predictors = predictors_region
