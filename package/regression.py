@@ -130,6 +130,95 @@ def read_source(
 # TODO: then alcohol_frenquency as ordinal outcome
 
 
+def organize_cohorts_models_phenotypes_regressions_body(
+    table=None,
+    report=None,
+):
+    """
+    Organize regressions.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): information from regressions
+
+    """
+
+    # Define relevant cohorts.
+    cohorts_records = ukb_strat.stratify_set_primary_sex_menopause_age(
+        table=table
+    )
+    cohorts_relevant = [
+        "female-premenopause", "female-perimenopause", "female-postmenopause",
+        "male", "male-age-low", "male-age-middle", "male-age-high",
+        "female-body-low", "female-body-middle", "female-body-high",
+        "male-body-low", "male-body-middle", "male-body-high",
+    ]
+    cohorts_records = list(filter(
+        lambda cohort_record: (cohort_record["cohort"] in cohorts_relevant),
+        cohorts_records
+    ))
+
+    # Define outcome dependent variables.
+    body_variables = ["body", "body_log"]
+    hormones = [
+        "vitamin_d", "albumin", "steroid_globulin",
+        "oestradiol", "testosterone",
+    ]
+    # Define predictor independent variables.
+    predictors_hormones = [
+        "vitamin_d", "albumin", "steroid_globulin",
+        "oestradiol", "testosterone",
+    ]
+
+    # Iterate across cohorts.
+    for cohort_record in cohorts_records:
+        cohort = cohort_record["cohort"]
+        menstruation = cohort_record["menstruation"]
+        table_cohort = cohort_record["table"]
+        # Iterate across outcomes (dependent variables).
+        for hormone in hormones:
+            # Define cohort-specific ordinal representation.
+            hormone_ordinal = str(str(hormone) + "_" + str(cohort) + "_order")
+
+            # Specify outcome and predictors.
+
+            outcome = hormone
+            #outcome = hormone_ordinal
+
+            predictors = ["body",]
+
+            # Report.
+            if report:
+                utility.print_terminal_partition(level=3)
+                print("report: ")
+                print("organize_cohorts_models_phenotypes_regressions()")
+                utility.print_terminal_partition(level=5)
+                print("cohort: " + str(cohort))
+                print("outcome: " + str(outcome))
+                print("predictors: ")
+                print(predictors)
+                utility.print_terminal_partition(level=5)
+            pail_regression = regression.regress_linear_ordinary_least_squares(
+                dependence=outcome, # parameter
+                independence=predictors, # parameter
+                threshold_samples=100,
+                table=table_cohort,
+                report=report,
+            )
+            pass
+        pass
+
+    # Compile information.
+    pail = dict()
+    # Return information.
+    return pail
+
 
 def organize_cohorts_models_phenotypes_regressions_alcohol(
     table=None,
@@ -380,7 +469,7 @@ def execute_procedure(
     )
 
     # Preliminary organization of regressions.
-    pail = organize_cohorts_models_phenotypes_regressions(
+    pail = organize_cohorts_models_phenotypes_regressions_body(
         table=source["table_phenotypes"],
         report=True
     )
