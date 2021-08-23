@@ -303,7 +303,7 @@ def organize_cohorts_models_phenotypes_regressions(
         # Iterate across outcomes (dependent variables).
         for hormone in hormones:
             # Define cohort-specific ordinal representation.
-            hormone_ordinal = str(str(hormone) + "_" + str(cohort) + "_ordinal")
+            hormone_ordinal = str(str(hormone) + "_" + str(cohort) + "_order")
 
             # Specify outcome and predictors.
 
