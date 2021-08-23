@@ -150,7 +150,7 @@ def organize_cohorts_models_phenotypes_regressions_body(
     """
 
     # Define relevant cohorts.
-    cohorts_records = ukb_strat.stratify_set_primary_sex_menopause_age(
+    cohorts_records = ukb_strat.stratify_set_primary_sex_age_body_menopause(
         table=table
     )
     cohorts_relevant = [
