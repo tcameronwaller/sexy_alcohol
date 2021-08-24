@@ -277,7 +277,13 @@ def execute_procedure(
             report=True,
     ))
 
-    #pail_cohorts_models_logistic = ()
+    pail_cohorts_models_logistic = (
+        ukb_strat.execute_stratify_for_logistic_genotype_analysis(
+            table=source["table_phenotypes"],
+            set="sex_hormones",
+            path_dock=path_dock,
+            report=True,
+    ))
 
     # Collect information.
     information = dict()
