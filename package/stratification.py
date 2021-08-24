@@ -46,6 +46,9 @@ import uk_biobank.stratification as ukb_strat
 # Initialization
 
 
+# TODO: initialize separate directories for "linear" and "logistic"
+
+
 def initialize_directories(
     restore=None,
     path_dock=None,
