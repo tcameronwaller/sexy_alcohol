@@ -46,9 +46,6 @@ import uk_biobank.stratification as ukb_strat
 # Initialization
 
 
-# TODO: initialize separate directories for "linear" and "logistic"
-
-
 def initialize_directories(
     restore=None,
     path_dock=None,
@@ -73,8 +70,11 @@ def initialize_directories(
     # Define paths to directories.
     paths["dock"] = path_dock
     paths["stratification"] = os.path.join(path_dock, "stratification")
-    paths["cohorts_models"] = os.path.join(
-        path_dock, "stratification", "cohorts_models"
+    paths["cohorts_models_linear"] = os.path.join(
+        path_dock, "stratification", "cohorts_models_linear"
+    )
+    paths["cohorts_models_logistic"] = os.path.join(
+        path_dock, "stratification", "cohorts_models_logistic"
     )
 
     # Remove previous files to avoid version or batch confusion.
@@ -218,8 +218,12 @@ def write_product(
 
     # Cohort tables in PLINK format.
     write_product_cohorts_models(
-        information=information["cohorts_models"],
-        path_parent=paths["cohorts_models"],
+        information=information["cohorts_models_linear"],
+        path_parent=paths["cohorts_models_linear"],
+    )
+    write_product_cohorts_models(
+        information=information["cohorts_models_logistic"],
+        path_parent=paths["cohorts_models_logistic"],
     )
     pass
 
@@ -265,17 +269,20 @@ def execute_procedure(
     # Select and organize variables across cohorts.
     # Organize phenotypes and covariates in format for analysis in PLINK.
     # else: pail_cohorts_models = dict()
-    pail_cohorts_models = (
-        ukb_strat.execute_cohorts_models_genetic_analysis(
+    pail_cohorts_models_linear = (
+        ukb_strat.execute_stratify_for_linear_genotype_analysis(
             table=source["table_phenotypes"],
             set="sex_hormones",
             path_dock=path_dock,
             report=True,
     ))
 
+    #pail_cohorts_models_logistic = ()
+
     # Collect information.
     information = dict()
-    information["cohorts_models"] = pail_cohorts_models
+    information["cohorts_models_linear"] = pail_cohorts_models_linear
+    information["cohorts_models_logistic"] = pail_cohorts_models_logistic
     # Write product information to file.
     write_product(
         paths=paths,
