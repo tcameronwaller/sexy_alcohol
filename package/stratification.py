@@ -85,7 +85,10 @@ def initialize_directories(
         path=paths["stratification"]
     )
     utility.create_directories(
-        path=paths["cohorts_models"]
+        path=paths["cohorts_models_linear"]
+    )
+    utility.create_directories(
+        path=paths["cohorts_models_logistic"]
     )
     # Return information.
     return paths
