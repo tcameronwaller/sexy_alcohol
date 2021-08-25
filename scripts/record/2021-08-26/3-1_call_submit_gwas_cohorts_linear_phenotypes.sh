@@ -24,38 +24,43 @@ cd ~/paths
 path_process=$(<"./process_sexy_alcohol.txt")
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-08-26"
 path_dock="$path_process/dock"
-path_cohorts_models="${path_dock}/stratification_2021-08-26/cohorts_models"
-path_gwas="${path_dock}/gwas/cohorts_models"
+path_cohorts_models="${path_dock}/stratification_2021-08-26/cohorts_models_linear"
+path_cohorts_models="${path_dock}/stratification_2021-08-26/cohorts_models_logistic"
+path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement"
+#path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation"
+#path_gwas="${path_dock}/gwas/cohorts_models_linear_order"
+#path_gwas="${path_dock}/gwas/cohorts_models_logistic_detection"
 
 # Initialize directories.
 #rm -r $path_gwas
 mkdir -p $path_gwas
 
 ##########
+##########
+##########
 # Assemble a list of analysis instances with common patterns.
+
+# Assemble array of batch instance details.
+path_batch_instances="${path_gwas}/batch_instances.txt"
+rm $path_batch_instances
+
+##########
+# General models.
 
 # Define covariates common for all cohorts.
 covariates_common="genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genotype_pc_5,genotype_pc_6,genotype_pc_7,genotype_pc_8,genotype_pc_9,genotype_pc_10"
 
-# Define multi-dimensional array of cohorts and covariates.
-
-# Note:
-# Each GWAS (30,000 - 200,000 persons; 22 chromosomes) requires about 5-7 hours to run on the grid.
-
+# Define multi-dimensional array of cohorts and model covariates.
 cohorts_models=()
-
 ###cohorts_models+=("female_male;table_female_male;sex,age,body_mass_index_log,")
 #cohorts_models+=("female;table_female;age,body_mass_index_log,menopause_ordinal,hormone_alteration,")
-###cohorts_models+=("female_premenopause_binary;table_female_premenopause_binary;age,body_mass_index_log,menstruation_phase,hormone_alteration,")
-###cohorts_models+=("female_premenopause_binary_cycle;table_female_premenopause_binary;age,body_mass_index_log,menstruation_phase_cycle,hormone_alteration,")
-###cohorts_models+=("female_postmenopause_binary;table_female_postmenopause_binary;age,body_mass_index_log,hormone_alteration,")
-cohorts_models+=("female_premenopause;table_female_premenopause;age,body_mass_index_log,menstruation_phase,hormone_alteration,")
-cohorts_models+=("female_perimenopause;table_female_perimenopause;age,body_mass_index_log,menstruation_phase,hormone_alteration,")
-cohorts_models+=("female_postmenopause;table_female_postmenopause;age,body_mass_index_log,hormone_alteration,")
+cohorts_models+=("female_premenopause;table_female_premenopause;age,body_log,menstruation_phase_cycle,hormone_alteration,")
+cohorts_models+=("female_perimenopause;table_female_perimenopause;age,body_log,menstruation_phase_cycle,hormone_alteration,")
+cohorts_models+=("female_postmenopause;table_female_postmenopause;age,body_log,hormone_alteration,")
 cohorts_models+=("male;table_male;age,body_mass_index_log,")
-cohorts_models+=("male_age_low;table_male_age_low;age,body_mass_index_log,")
-cohorts_models+=("male_age_middle;table_male_age_middle;age,body_mass_index_log,")
-cohorts_models+=("male_age_high;table_male_age_high;age,body_mass_index_log,")
+cohorts_models+=("male_age_low;table_male_age_low;age,body_log,")
+cohorts_models+=("male_age_middle;table_male_age_middle;age,body_log,")
+cohorts_models+=("male_age_high;table_male_age_high;age,body_log,")
 
 #cohorts_models+=("female_male_unadjust;table_female_male;")
 #cohorts_models+=("female_unadjust;table_female;")
@@ -70,33 +75,30 @@ cohorts_models+=("male_age_high;table_male_age_high;age,body_mass_index_log,")
 
 # Define array of phenotypes.
 phenotypes=()
-phenotypes+=("vitamin_d_log")
-phenotypes+=("vitamin_d_imputation_log")
-phenotypes+=("vitamin_d_order")
+#phenotypes+=("vitamin_d_log")
+#phenotypes+=("vitamin_d_imputation_log")
+#phenotypes+=("vitamin_d_order")
 phenotypes+=("albumin")
-phenotypes+=("albumin_imputation")
-phenotypes+=("albumin_order")
+#phenotypes+=("albumin_imputation")
+#phenotypes+=("albumin_order")
 phenotypes+=("steroid_globulin_log")
-phenotypes+=("steroid_globulin_imputation_log")
-phenotypes+=("steroid_globulin_order")
+#phenotypes+=("steroid_globulin_imputation_log")
+#phenotypes+=("steroid_globulin_order")
 phenotypes+=("oestradiol_log")
 phenotypes+=("oestradiol_bioavailable_log")
 phenotypes+=("oestradiol_free_log")
-phenotypes+=("oestradiol_imputation")
-phenotypes+=("oestradiol_bioavailable_imputation")
-phenotypes+=("oestradiol_free_imputation")
-phenotypes+=("oestradiol_order")
+#phenotypes+=("oestradiol_imputation")
+#phenotypes+=("oestradiol_bioavailable_imputation")
+#phenotypes+=("oestradiol_free_imputation")
+#phenotypes+=("oestradiol_order")
 phenotypes+=("testosterone_log")
 phenotypes+=("testosterone_bioavailable_log")
 phenotypes+=("testosterone_free_log")
-phenotypes+=("testosterone_imputation")
-phenotypes+=("testosterone_bioavailable_imputation")
-phenotypes+=("testosterone_free_imputation")
-phenotypes+=("testosterone_order")
+#phenotypes+=("testosterone_imputation")
+#phenotypes+=("testosterone_bioavailable_imputation")
+#phenotypes+=("testosterone_free_imputation")
+#phenotypes+=("testosterone_order")
 
-# Assemble array of batch instance details.
-path_batch_instances="${path_gwas}/batch_instances.txt"
-rm $path_batch_instances
 for cohort_model in "${cohorts_models[@]}"; do
   for phenotype in "${phenotypes[@]}"; do
     instance="${phenotype};${cohort_model}${covariates_common}"
@@ -105,12 +107,42 @@ for cohort_model in "${cohorts_models[@]}"; do
   done
 done
 
-# TODO: now add instances to the list that do not follow the pattern.
+##########
+# Vitamin D models.
+
+# Define multi-dimensional array of cohorts and model covariates.
+cohorts_models=()
+cohorts_models+=("female_premenopause;table_female_premenopause;assessment_region,assessment_season,age,body_log,menstruation_phase_cycle,hormone_alteration,")
+cohorts_models+=("female_perimenopause;table_female_perimenopause;assessment_region,assessment_season,age,body_log,menstruation_phase_cycle,hormone_alteration,")
+cohorts_models+=("female_postmenopause;table_female_postmenopause;assessment_region,assessment_season,age,body_log,hormone_alteration,")
+cohorts_models+=("male;table_male;assessment_region,assessment_season,age,body_mass_index_log,")
+cohorts_models+=("male_age_low;table_male_age_low;assessment_region,assessment_season,age,body_log,")
+cohorts_models+=("male_age_middle;table_male_age_middle;assessment_region,assessment_season,age,body_log,")
+cohorts_models+=("male_age_high;table_male_age_high;assessment_region,assessment_season,age,body_log,")
+
+# Define array of phenotypes.
+phenotypes=()
+phenotypes+=("vitamin_d_log")
+phenotypes+=("vitamin_d_imputation_log")
+phenotypes+=("vitamin_d_order")
+
+for cohort_model in "${cohorts_models[@]}"; do
+  for phenotype in "${phenotypes[@]}"; do
+    instance="${phenotype};${cohort_model}${covariates_common}"
+    echo $instance
+    echo $instance >> $path_batch_instances
+  done
+done
 
 ##########
-# Append analysis instances that do not follow the pattern.
+# Summary of batch instances.
 
-
+# Array pattern.
+#phenotype="${array[0]}"
+#cohort_model="${array[1]}"
+#table_cohort_model="${array[2]}"
+#covariates="${array[3]}"
+#path_table_phenotypes_covariates="${path_cohorts_models}/${table_cohort_model}_${phenotype}.tsv"
 
 # Read batch instances.
 readarray -t batch_instances < $path_batch_instances
@@ -128,7 +160,7 @@ if true; then
   echo "----------------------------------------------------------------------"
   qsub -t 1-${batch_instances_count}:1 \
   -o "${path_gwas}/out.txt" -e "${path_gwas}/error.txt" \
-  "${path_scripts_record}/4_organize_call_run_chromosomes_plink_gwas.sh" \
+  "${path_scripts_record}/4-1_organize_call_run_chromosomes_plink_linear_gwas.sh" \
   $path_batch_instances \
   $batch_instances_count \
   $path_cohorts_models \

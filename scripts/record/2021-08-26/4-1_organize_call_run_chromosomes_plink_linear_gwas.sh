@@ -37,7 +37,7 @@
 # For large cohorts (20,000 - 500,000), limit to 10-20 total simultaneous GWAS
 # on NCSA.
 # Beyond about 10-15 simultaneous GWAS, PLINK2 begins to use more than 2 TB storage.
-#$ -tc 3
+#$ -tc 11
 
 # http://gridscheduler.sourceforge.net/htmlman/htmlman1/qsub.html
 
@@ -99,7 +99,7 @@ fi
 
 path_report=$path_study_gwas
 analysis="${cohort_model_phenotype}"
-/usr/bin/bash "${path_scripts_record}/5_run_chromosomes_plink_gwas.sh" \
+/usr/bin/bash "${path_scripts_record}/5-1_run_chromosomes_plink_linear_gwas.sh" \
 $path_table_phenotypes_covariates \
 $path_report \
 $analysis \

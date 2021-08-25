@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Note:
+# Each GWAS (30,000 - 200,000 persons; 22 chromosomes) requires about 5-7 hours to run on the grid.
+
 ################################################################################
 # Organize argument variables.
 
