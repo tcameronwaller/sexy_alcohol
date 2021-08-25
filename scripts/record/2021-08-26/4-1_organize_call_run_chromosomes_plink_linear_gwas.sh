@@ -32,11 +32,15 @@
 # Specify as argument when calling qsub.
 # Array batch indices cannot start at zero.
 ### -t 1-100:1
+##########
 # Limit on concurrent processes.
 # Allow simultaneous processes for this count of GWAS studies.
 # For large cohorts (20,000 - 500,000), limit to 10-20 total simultaneous GWAS
 # on NCSA.
-# Beyond about 10-15 simultaneous GWAS, PLINK2 begins to use more than 2 TB storage.
+# At this scale, about 15 simultaneous GWAS in PLINK2 require approximately 1.5
+# Terabytes of storage (not memory).
+# Also remember that as large batches complete, the final GWAS summary
+# statistics accumulate and consume some of the available storage space.
 #$ -tc 11
 
 # http://gridscheduler.sourceforge.net/htmlman/htmlman1/qsub.html
