@@ -25,7 +25,7 @@ path_process=$(<"./process_sexy_alcohol.txt")
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-08-26"
 path_dock="$path_process/dock"
 path_cohorts_models="${path_dock}/stratification_2021-08-26/cohorts_models_linear"
-path_cohorts_models="${path_dock}/stratification_2021-08-26/cohorts_models_logistic"
+#path_cohorts_models="${path_dock}/stratification_2021-08-26/cohorts_models_logistic"
 path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement"
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation"
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_order"
@@ -57,7 +57,7 @@ cohorts_models=()
 cohorts_models+=("female_premenopause;table_female_premenopause;age,body_log,menstruation_phase_cycle,hormone_alteration,")
 cohorts_models+=("female_perimenopause;table_female_perimenopause;age,body_log,menstruation_phase_cycle,hormone_alteration,")
 cohorts_models+=("female_postmenopause;table_female_postmenopause;age,body_log,hormone_alteration,")
-cohorts_models+=("male;table_male;age,body_mass_index_log,")
+cohorts_models+=("male;table_male;age,body_log,")
 cohorts_models+=("male_age_low;table_male_age_low;age,body_log,")
 cohorts_models+=("male_age_middle;table_male_age_middle;age,body_log,")
 cohorts_models+=("male_age_high;table_male_age_high;age,body_log,")
@@ -115,7 +115,7 @@ cohorts_models=()
 cohorts_models+=("female_premenopause;table_female_premenopause;assessment_region,assessment_season,age,body_log,menstruation_phase_cycle,hormone_alteration,")
 cohorts_models+=("female_perimenopause;table_female_perimenopause;assessment_region,assessment_season,age,body_log,menstruation_phase_cycle,hormone_alteration,")
 cohorts_models+=("female_postmenopause;table_female_postmenopause;assessment_region,assessment_season,age,body_log,hormone_alteration,")
-cohorts_models+=("male;table_male;assessment_region,assessment_season,age,body_mass_index_log,")
+cohorts_models+=("male;table_male;assessment_region,assessment_season,age,body_log,")
 cohorts_models+=("male_age_low;table_male_age_low;assessment_region,assessment_season,age,body_log,")
 cohorts_models+=("male_age_middle;table_male_age_middle;assessment_region,assessment_season,age,body_log,")
 cohorts_models+=("male_age_high;table_male_age_high;assessment_region,assessment_season,age,body_log,")
@@ -123,8 +123,8 @@ cohorts_models+=("male_age_high;table_male_age_high;assessment_region,assessment
 # Define array of phenotypes.
 phenotypes=()
 phenotypes+=("vitamin_d_log")
-phenotypes+=("vitamin_d_imputation_log")
-phenotypes+=("vitamin_d_order")
+#phenotypes+=("vitamin_d_imputation_log")
+#phenotypes+=("vitamin_d_order")
 
 for cohort_model in "${cohorts_models[@]}"; do
   for phenotype in "${phenotypes[@]}"; do
