@@ -29,7 +29,7 @@ path_cohorts_models="${path_dock}/stratification_2021-08-26/cohorts_models_linea
 
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement" # 63 GWAS; TCW started at 23:12 on 24 August 2021
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement_unadjust"
-path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation" # __ GWAS; TCW started at ____ on 26 August 2021
+path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation" # 63 GWAS; TCW started at 16:44 on 26 August 2021
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation_unadjust"
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_order"
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_order_unadjust"

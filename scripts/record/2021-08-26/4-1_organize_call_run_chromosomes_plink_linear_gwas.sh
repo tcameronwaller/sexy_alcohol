@@ -39,9 +39,12 @@
 # on NCSA.
 # At this scale, about 15 simultaneous GWAS in PLINK2 require approximately 1.5
 # Terabytes of storage (not memory).
+# PLINK2 seems to require the most storage during the initial reads of variants
+# such that simultaneous starts to multiple GWAS cause the requirement to peak
+# temporarily.
 # Also remember that as large batches complete, the final GWAS summary
 # statistics accumulate and consume some of the available storage space.
-#$ -tc 11
+#$ -tc 9
 
 # http://gridscheduler.sourceforge.net/htmlman/htmlman1/qsub.html
 
