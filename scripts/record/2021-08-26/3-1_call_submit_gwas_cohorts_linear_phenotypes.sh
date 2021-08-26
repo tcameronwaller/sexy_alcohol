@@ -26,9 +26,10 @@ path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-08-26"
 path_dock="$path_process/dock"
 path_cohorts_models="${path_dock}/stratification_2021-08-26/cohorts_models_linear"
 #path_cohorts_models="${path_dock}/stratification_2021-08-26/cohorts_models_logistic"
-path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement" # 63 GWAS; TCW started 23:12 on 24 August 2021
+
+#path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement" # 63 GWAS; TCW started at 23:12 on 24 August 2021
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement_unadjust"
-#path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation"
+path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation" # __ GWAS; TCW started at ____ on 26 August 2021
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation_unadjust"
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_order"
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_order_unadjust"
@@ -79,30 +80,34 @@ cohorts_models+=("male_age_high;table_male_age_high;age,body_log,")
 
 # Define array of phenotypes.
 phenotypes=()
-phenotypes+=("albumin")
-#phenotypes+=("albumin_imputation")
+
+#phenotypes+=("albumin") # cohorts_models_linear_measurement
+phenotypes+=("albumin_imputation") # cohorts_models_linear_imputation
 #phenotypes+=("albumin_order")
-###phenotypes+=("albumin_detection") # logistic only... senseless for albumin
-phenotypes+=("steroid_globulin_log")
-#phenotypes+=("steroid_globulin_imputation_log")
+###phenotypes+=("albumin_detection")
+
+#phenotypes+=("steroid_globulin_log") # cohorts_models_linear_measurement
+phenotypes+=("steroid_globulin_imputation_log") # cohorts_models_linear_imputation
 #phenotypes+=("steroid_globulin_order")
-###phenotypes+=("steroid_globulin_detection") # logistic only
-phenotypes+=("oestradiol_log")
-phenotypes+=("oestradiol_bioavailable_log")
-phenotypes+=("oestradiol_free_log")
-#phenotypes+=("oestradiol_imputation")
-#phenotypes+=("oestradiol_bioavailable_imputation")
-#phenotypes+=("oestradiol_free_imputation")
+###phenotypes+=("steroid_globulin_detection")
+
+#phenotypes+=("oestradiol_log") # cohorts_models_linear_measurement
+#phenotypes+=("oestradiol_bioavailable_log") # cohorts_models_linear_measurement
+#phenotypes+=("oestradiol_free_log") # cohorts_models_linear_measurement
+phenotypes+=("oestradiol_imputation") # cohorts_models_linear_imputation
+phenotypes+=("oestradiol_bioavailable_imputation") # cohorts_models_linear_imputation
+phenotypes+=("oestradiol_free_imputation") # cohorts_models_linear_imputation
 #phenotypes+=("oestradiol_order")
-###phenotypes+=("oestradiol_detection") # logistic only
-phenotypes+=("testosterone_log")
-phenotypes+=("testosterone_bioavailable_log")
-phenotypes+=("testosterone_free_log")
-#phenotypes+=("testosterone_imputation")
-#phenotypes+=("testosterone_bioavailable_imputation")
-#phenotypes+=("testosterone_free_imputation")
+###phenotypes+=("oestradiol_detection")
+
+#phenotypes+=("testosterone_log") # cohorts_models_linear_measurement
+#phenotypes+=("testosterone_bioavailable_log") # cohorts_models_linear_measurement
+#phenotypes+=("testosterone_free_log") # cohorts_models_linear_measurement
+phenotypes+=("testosterone_imputation") # cohorts_models_linear_imputation
+phenotypes+=("testosterone_bioavailable_imputation") # cohorts_models_linear_imputation
+phenotypes+=("testosterone_free_imputation") # cohorts_models_linear_imputation
 #phenotypes+=("testosterone_order")
-###phenotypes+=("testosterone_detection") # logistic only
+###phenotypes+=("testosterone_detection")
 
 for cohort_model in "${cohorts_models[@]}"; do
   for phenotype in "${phenotypes[@]}"; do
@@ -127,10 +132,11 @@ cohorts_models+=("male_age_high;table_male_age_high;assessment_region,assessment
 
 # Define array of phenotypes.
 phenotypes=()
-phenotypes+=("vitamin_d_log")
-#phenotypes+=("vitamin_d_imputation_log")
+
+#phenotypes+=("vitamin_d_log") # cohorts_models_linear_measurement
+phenotypes+=("vitamin_d_imputation_log") # cohorts_models_linear_imputation
 #phenotypes+=("vitamin_d_order")
-###phenotypes+=("vitamin_d_detection") # logistic only
+###phenotypes+=("vitamin_d_detection")
 
 for cohort_model in "${cohorts_models[@]}"; do
   for phenotype in "${phenotypes[@]}"; do
