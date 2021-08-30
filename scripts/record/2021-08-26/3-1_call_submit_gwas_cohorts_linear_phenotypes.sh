@@ -24,15 +24,15 @@ cd ~/paths
 path_process=$(<"./process_sexy_alcohol.txt")
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-08-26"
 path_dock="$path_process/dock"
-path_cohorts_models="${path_dock}/stratification_2021-08-26/cohorts_models_linear"
+path_cohorts_models="${path_dock}/stratification_2021-08-26/cohorts_models_linear" # Change to "stratification_2021-08-30"
 #path_cohorts_models="${path_dock}/stratification_2021-08-26/cohorts_models_logistic"
 
-#path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement" # 63 GWAS; TCW started at 23:12 on 24 August 2021
+#path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement"          # 63 GWAS; TCW started at 23:12 on 24 August 2021
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement_unadjust" # __ GWAS; TCW started at ___ on __ August 2021
-#path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation" # 63 GWAS; TCW started at 16:44 on 26 August 2021
-path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation_unadjust" # 63 GWAS; TCW started at 12:03 on 29 August 2021
-#path_gwas="${path_dock}/gwas/cohorts_models_linear_order"
-#path_gwas="${path_dock}/gwas/cohorts_models_linear_order_unadjust"
+#path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation"           # 63 GWAS; TCW started at 16:44 on 26 August 2021
+path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation_unadjust"   # 63 GWAS; TCW started at 12:03 on 29 August 2021
+#path_gwas="${path_dock}/gwas/cohorts_models_linear_order"                # __ GWAS; TCW started at ___ on __ August 2021
+#path_gwas="${path_dock}/gwas/cohorts_models_linear_order_unadjust"       # __ GWAS; TCW started at ___ on __ August 2021
 #path_gwas="${path_dock}/gwas/cohorts_models_logistic_detection"
 #path_gwas="${path_dock}/gwas/cohorts_models_logistic_detection_unadjust"
 
