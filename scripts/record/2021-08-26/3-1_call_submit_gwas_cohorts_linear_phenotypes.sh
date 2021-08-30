@@ -28,9 +28,9 @@ path_cohorts_models="${path_dock}/stratification_2021-08-26/cohorts_models_linea
 #path_cohorts_models="${path_dock}/stratification_2021-08-26/cohorts_models_logistic"
 
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement" # 63 GWAS; TCW started at 23:12 on 24 August 2021
-#path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement_unadjust"
+#path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement_unadjust" # __ GWAS; TCW started at ___ on __ August 2021
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation" # 63 GWAS; TCW started at 16:44 on 26 August 2021
-path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation_unadjust" # __ GWAS; TCW started at ___ on 29 August 2021
+path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation_unadjust" # 63 GWAS; TCW started at 12:03 on 29 August 2021
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_order"
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_order_unadjust"
 #path_gwas="${path_dock}/gwas/cohorts_models_logistic_detection"
@@ -58,7 +58,7 @@ covariates_common="genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genot
 # Define multi-dimensional array of cohorts and model covariates.
 cohorts_models=()
 ###cohorts_models+=("female_male;table_female_male;sex,age,body_mass_index_log,")
-###cohorts_models+=("female;table_female;age,body_mass_index_log,menopause_ordinal,hormone_alteration,")
+###cohorts_models+=("female;table_female;age,body_log,menopause_ordinal,hormone_alteration,")
 #cohorts_models+=("female_premenopause;table_female_premenopause;age,body_log,menstruation_phase_cycle,hormone_alteration,")
 #cohorts_models+=("female_perimenopause;table_female_perimenopause;age,body_log,menstruation_phase_cycle,hormone_alteration,")
 #cohorts_models+=("female_postmenopause;table_female_postmenopause;age,body_log,hormone_alteration,")
