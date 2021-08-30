@@ -24,8 +24,11 @@ cd ~/paths
 path_process=$(<"./process_sexy_alcohol.txt")
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-08-26"
 path_dock="$path_process/dock"
-path_cohorts_models="${path_dock}/stratification_2021-08-26/cohorts_models_linear" # Change to "stratification_2021-08-30"
+#path_cohorts_models="${path_dock}/stratification_2021-08-26/cohorts_models_linear"
 #path_cohorts_models="${path_dock}/stratification_2021-08-26/cohorts_models_logistic"
+path_cohorts_models="${path_dock}/stratification_2021-08-30/cohorts_models_linear"
+#path_cohorts_models="${path_dock}/stratification_2021-08-30/cohorts_models_logistic"
+
 
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement"          # 63 GWAS; TCW started at 23:12 on 24 August 2021
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement_unadjust" # __ GWAS; TCW started at ___ on __ August 2021
@@ -58,7 +61,7 @@ covariates_common="genotype_pc_1,genotype_pc_2,genotype_pc_3,genotype_pc_4,genot
 # Define multi-dimensional array of cohorts and model covariates.
 cohorts_models=()
 ###cohorts_models+=("female_male;table_female_male;sex,age,body_mass_index_log,")
-###cohorts_models+=("female;table_female;age,body_log,menopause_ordinal,hormone_alteration,")
+#cohorts_models+=("female;table_female;age,body_log,menopause_ordinal,hormone_alteration,")
 #cohorts_models+=("female_premenopause;table_female_premenopause;age,body_log,menstruation_phase_cycle,hormone_alteration,")
 #cohorts_models+=("female_perimenopause;table_female_perimenopause;age,body_log,menstruation_phase_cycle,hormone_alteration,")
 #cohorts_models+=("female_postmenopause;table_female_postmenopause;age,body_log,hormone_alteration,")
@@ -67,6 +70,7 @@ cohorts_models=()
 #cohorts_models+=("male_age_middle;table_male_age_middle;age,body_log,")
 #cohorts_models+=("male_age_high;table_male_age_high;age,body_log,")
 
+cohorts_models+=("female;table_female;")
 cohorts_models+=("female_premenopause;table_female_premenopause;")
 cohorts_models+=("female_perimenopause;table_female_perimenopause;")
 cohorts_models+=("female_postmenopause;table_female_postmenopause;")

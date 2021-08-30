@@ -94,7 +94,7 @@ chromosomes=22 # 22 # Count of chromosomes on which to run GWAS
 set +x
 
 # Initialize directories.
-#rm -r $path_cohort_phenotype
+#rm -r $path_study_gwas
 if [ ! -d $path_study_gwas ]; then
     # Directory does not already exist.
     # Create directory.

@@ -15,6 +15,15 @@
 # 1. all hormones (phenotypes) for all females together (cohort)
 # 2. Vitamin D (phenotype) for all cohorts
 
+# ###          ###
+#  ###       ###
+#   ###    ###
+#    ### ###
+#     ###
+
+# remember to remove the pre-existing files for the "vitamin_d" results???
+# or does the script already do that?
+
 
 ###########################################################################
 ###########################################################################
@@ -27,7 +36,7 @@ cd ~/paths
 path_process=$(<"./process_sexy_alcohol.txt")
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-08-26"
 path_dock="$path_process/dock"
-path_cohorts_models="${path_dock}/stratification_2021-08-30/cohorts_models_linear" # <-- not ready yet!!!
+path_cohorts_models="${path_dock}/stratification_2021-08-30/cohorts_models_linear"
 #path_cohorts_models="${path_dock}/stratification_2021-08-30/cohorts_models_logistic"
 
 path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement"           # __ GWAS; TCW started at ___ on 30 August 2021
@@ -49,7 +58,7 @@ mkdir -p $path_gwas
 # Assemble a list of analysis instances with common patterns.
 
 # Assemble array of batch instance details.
-path_batch_instances="${path_gwas}/batch_instances.txt"
+path_batch_instances="${path_gwas}/batch_instances_fill.txt"
 rm $path_batch_instances
 
 ##########
@@ -64,23 +73,23 @@ cohorts_models=()
 # Models with adjustment covariates
 ###cohorts_models+=("female_male;table_female_male;sex,age,body_mass_index_log,")
 cohorts_models+=("female;table_female;age,body_log,menopause_ordinal,hormone_alteration,")
-cohorts_models+=("female_premenopause;table_female_premenopause;age,body_log,menstruation_phase_cycle,hormone_alteration,")
-cohorts_models+=("female_perimenopause;table_female_perimenopause;age,body_log,menstruation_phase_cycle,hormone_alteration,")
-cohorts_models+=("female_postmenopause;table_female_postmenopause;age,body_log,hormone_alteration,")
-cohorts_models+=("male;table_male;age,body_log,")
-cohorts_models+=("male_age_low;table_male_age_low;age,body_log,")
-cohorts_models+=("male_age_middle;table_male_age_middle;age,body_log,")
-cohorts_models+=("male_age_high;table_male_age_high;age,body_log,")
+#cohorts_models+=("female_premenopause;table_female_premenopause;age,body_log,menstruation_phase_cycle,hormone_alteration,")
+###cohorts_models+=("female_perimenopause;table_female_perimenopause;age,body_log,menstruation_phase_cycle,hormone_alteration,")
+###cohorts_models+=("female_postmenopause;table_female_postmenopause;age,body_log,hormone_alteration,")
+###cohorts_models+=("male;table_male;age,body_log,")
+###cohorts_models+=("male_age_low;table_male_age_low;age,body_log,")
+###cohorts_models+=("male_age_middle;table_male_age_middle;age,body_log,")
+###cohorts_models+=("male_age_high;table_male_age_high;age,body_log,")
 
 # Models without adjustment covariates ("unadjust")
 #cohorts_models+=("female;table_female;")
-#cohorts_models+=("female_premenopause;table_female_premenopause;")
-#cohorts_models+=("female_perimenopause;table_female_perimenopause;")
-#cohorts_models+=("female_postmenopause;table_female_postmenopause;")
-#cohorts_models+=("male;table_male;")
-#cohorts_models+=("male_age_low;table_male_age_low;")
-#cohorts_models+=("male_age_middle;table_male_age_middle;")
-#cohorts_models+=("male_age_high;table_male_age_high;")
+###cohorts_models+=("female_premenopause;table_female_premenopause;")
+###cohorts_models+=("female_perimenopause;table_female_perimenopause;")
+###cohorts_models+=("female_postmenopause;table_female_postmenopause;")
+###cohorts_models+=("male;table_male;")
+###cohorts_models+=("male_age_low;table_male_age_low;")
+###cohorts_models+=("male_age_middle;table_male_age_middle;")
+###cohorts_models+=("male_age_high;table_male_age_high;")
 
 # Define array of phenotypes.
 phenotypes=()
@@ -188,7 +197,7 @@ if true; then
   echo "Submit array of batches to Sun Grid Engine."
   echo "----------------------------------------------------------------------"
   qsub -t 1-${batch_instances_count}:1 \
-  -o "${path_gwas}/out.txt" -e "${path_gwas}/error.txt" \
+  -o "${path_gwas}/out_fill.txt" -e "${path_gwas}/error_fill.txt" \
   "${path_scripts_record}/4-1_organize_call_run_chromosomes_plink_linear_gwas.sh" \
   $path_batch_instances \
   $batch_instances_count \
