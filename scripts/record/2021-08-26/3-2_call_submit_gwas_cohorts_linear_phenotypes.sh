@@ -21,9 +21,6 @@
 #    ### ###
 #     ###
 
-# remember to remove the pre-existing files for the "vitamin_d" results???
-# or does the script already do that?
-
 
 ###########################################################################
 ###########################################################################
@@ -39,7 +36,7 @@ path_dock="$path_process/dock"
 path_cohorts_models="${path_dock}/stratification_2021-08-30/cohorts_models_linear"
 #path_cohorts_models="${path_dock}/stratification_2021-08-30/cohorts_models_logistic"
 
-path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement"           # __ GWAS; TCW started at ___ on 30 August 2021
+path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement"           # __ GWAS; TCW started at ___ on 31 August 2021
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement_unadjust" # run in script "3-1"
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation"           # __ GWAS; TCW started at ___ on __ August 2021
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation_unadjust"  # __ GWAS; TCW started at ___ on __ August 2021
