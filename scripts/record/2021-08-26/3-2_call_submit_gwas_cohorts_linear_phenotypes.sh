@@ -36,10 +36,10 @@ path_dock="$path_process/dock"
 path_cohorts_models="${path_dock}/stratification_2021-08-30/cohorts_models_linear"
 #path_cohorts_models="${path_dock}/stratification_2021-08-30/cohorts_models_logistic"
 
-path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement"           # __ GWAS; TCW started at ___ on 31 August 2021
+#path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement"           # 16 GWAS; TCW started at 09:40 on 31 August 2021
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement_unadjust" # run in script "3-1"
-#path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation"           # __ GWAS; TCW started at ___ on __ August 2021
-#path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation_unadjust"  # __ GWAS; TCW started at ___ on __ August 2021
+path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation"           # __ GWAS; TCW started at ___ on 31 August 2021
+#path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation_unadjust"  # __ GWAS; TCW started at ___ on 31 August 2021
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_order"
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_order_unadjust"
 #path_gwas="${path_dock}/gwas/cohorts_models_logistic_detection"
@@ -91,31 +91,31 @@ cohorts_models+=("female;table_female;age,body_log,menopause_ordinal,hormone_alt
 # Define array of phenotypes.
 phenotypes=()
 
-phenotypes+=("albumin")             # cohorts_models_linear_measurement
-#phenotypes+=("albumin_imputation") # cohorts_models_linear_imputation
+#phenotypes+=("albumin")             # cohorts_models_linear_measurement
+phenotypes+=("albumin_imputation") # cohorts_models_linear_imputation
 #phenotypes+=("albumin_order")
 ###phenotypes+=("albumin_detection")
 
-phenotypes+=("steroid_globulin_log")             # cohorts_models_linear_measurement
-#phenotypes+=("steroid_globulin_imputation_log") # cohorts_models_linear_imputation
+#phenotypes+=("steroid_globulin_log")             # cohorts_models_linear_measurement
+phenotypes+=("steroid_globulin_imputation_log") # cohorts_models_linear_imputation
 #phenotypes+=("steroid_globulin_order")
 ###phenotypes+=("steroid_globulin_detection")
 
-phenotypes+=("oestradiol_log")                     # cohorts_models_linear_measurement
-phenotypes+=("oestradiol_bioavailable_log")        # cohorts_models_linear_measurement
-phenotypes+=("oestradiol_free_log")                # cohorts_models_linear_measurement
-#phenotypes+=("oestradiol_imputation")              # cohorts_models_linear_imputation
-#phenotypes+=("oestradiol_bioavailable_imputation") # cohorts_models_linear_imputation
-#phenotypes+=("oestradiol_free_imputation")         # cohorts_models_linear_imputation
+#phenotypes+=("oestradiol_log")                     # cohorts_models_linear_measurement
+#phenotypes+=("oestradiol_bioavailable_log")        # cohorts_models_linear_measurement
+#phenotypes+=("oestradiol_free_log")                # cohorts_models_linear_measurement
+phenotypes+=("oestradiol_imputation")              # cohorts_models_linear_imputation
+phenotypes+=("oestradiol_bioavailable_imputation") # cohorts_models_linear_imputation
+phenotypes+=("oestradiol_free_imputation")         # cohorts_models_linear_imputation
 #phenotypes+=("oestradiol_order")
 ###phenotypes+=("oestradiol_detection")
 
-phenotypes+=("testosterone_log")                      # cohorts_models_linear_measurement
-phenotypes+=("testosterone_bioavailable_log")         # cohorts_models_linear_measurement
-phenotypes+=("testosterone_free_log")                 # cohorts_models_linear_measurement
-#phenotypes+=("testosterone_imputation")              # cohorts_models_linear_imputation
-#phenotypes+=("testosterone_bioavailable_imputation") # cohorts_models_linear_imputation
-#phenotypes+=("testosterone_free_imputation")         # cohorts_models_linear_imputation
+#phenotypes+=("testosterone_log")                      # cohorts_models_linear_measurement
+#phenotypes+=("testosterone_bioavailable_log")         # cohorts_models_linear_measurement
+#phenotypes+=("testosterone_free_log")                 # cohorts_models_linear_measurement
+phenotypes+=("testosterone_imputation")              # cohorts_models_linear_imputation
+phenotypes+=("testosterone_bioavailable_imputation") # cohorts_models_linear_imputation
+phenotypes+=("testosterone_free_imputation")         # cohorts_models_linear_imputation
 #phenotypes+=("testosterone_order")
 ###phenotypes+=("testosterone_detection")
 
@@ -156,8 +156,8 @@ cohorts_models+=("male_age_high;table_male_age_high;assessment_region,assessment
 # Define array of phenotypes.
 phenotypes=()
 
-phenotypes+=("vitamin_d_log") # cohorts_models_linear_measurement
-#phenotypes+=("vitamin_d_imputation_log") # cohorts_models_linear_imputation
+#phenotypes+=("vitamin_d_log") # cohorts_models_linear_measurement
+phenotypes+=("vitamin_d_imputation_log") # cohorts_models_linear_imputation
 #phenotypes+=("vitamin_d_order")
 ###phenotypes+=("vitamin_d_detection")
 

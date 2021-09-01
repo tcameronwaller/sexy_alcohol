@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Note:
-# Each GWAS (30,000 - 200,000 persons; 22 chromosomes) requires about 5-7 hours to run on the grid.
+# Each linear GWAS (30,000 - 200,000 records; 22 chromosomes) requires about
+# 5-7 hours to run on the grid.
 
 ################################################################################
 # Organize argument variables.
@@ -41,16 +42,11 @@ do
   fi
   cd $path_chromosome
 
-
-  # TODO: 29 June 2021 (TCW)
-  # - PLINK2 gave an error about designation of a newly-required argument
-  # - I think it related to specification of the reference allele...
-
-  # consider using "--keep-allele-order"
-  # consider using "--omit-ref"
-
   if true; then
     # Call PLINK2.
+    # PLINK2 command "--glm" drives genotypic association analyses, either
+    # linear or logistic regressions across Simple Nucleotide Polymorphisms
+    # (SNPs).
     # 90,000 Mebibytes (MiB) is 94.372 Gigabytes (GB)
     # --pfilter 1 \
     # --pfilter drops SNPs with null p-values and any beyond threshold (such as 1)
