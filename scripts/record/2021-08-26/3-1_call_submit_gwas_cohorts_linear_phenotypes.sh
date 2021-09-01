@@ -132,6 +132,7 @@ cohorts_models=()
 #cohorts_models+=("male_age_middle;table_male_age_middle;assessment_region,assessment_season,age,body_log,")
 #cohorts_models+=("male_age_high;table_male_age_high;assessment_region,assessment_season,age,body_log,")
 
+cohorts_models+=("female;table_female;assessment_region,assessment_season,")
 cohorts_models+=("female_premenopause;table_female_premenopause;assessment_region,assessment_season,")
 cohorts_models+=("female_perimenopause;table_female_perimenopause;assessment_region,assessment_season,")
 cohorts_models+=("female_postmenopause;table_female_postmenopause;assessment_region,assessment_season,")

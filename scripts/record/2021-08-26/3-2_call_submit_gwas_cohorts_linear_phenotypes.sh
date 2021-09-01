@@ -36,10 +36,10 @@ path_dock="$path_process/dock"
 path_cohorts_models="${path_dock}/stratification_2021-08-30/cohorts_models_linear"
 #path_cohorts_models="${path_dock}/stratification_2021-08-30/cohorts_models_logistic"
 
-#path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement"           # 16 GWAS; TCW started at 09:40 on 31 August 2021
+#path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement"          # 16 GWAS; TCW started at 09:40 on 31 August 2021
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_measurement_unadjust" # run in script "3-1"
-path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation"           # __ GWAS; TCW started at ___ on 31 August 2021
-#path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation_unadjust"  # __ GWAS; TCW started at ___ on 31 August 2021
+#path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation"            # 16 GWAS; TCW started at 23:33 on 31 August 2021
+path_gwas="${path_dock}/gwas/cohorts_models_linear_imputation_unadjust"  # __ GWAS; TCW started at ___ on 1 September 2021
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_order"
 #path_gwas="${path_dock}/gwas/cohorts_models_linear_order_unadjust"
 #path_gwas="${path_dock}/gwas/cohorts_models_logistic_detection"
@@ -69,8 +69,8 @@ cohorts_models=()
 
 # Models with adjustment covariates
 ###cohorts_models+=("female_male;table_female_male;sex,age,body_mass_index_log,")
-cohorts_models+=("female;table_female;age,body_log,menopause_ordinal,hormone_alteration,")
-#cohorts_models+=("female_premenopause;table_female_premenopause;age,body_log,menstruation_phase_cycle,hormone_alteration,")
+#cohorts_models+=("female;table_female;age,body_log,menopause_ordinal,hormone_alteration,")
+###cohorts_models+=("female_premenopause;table_female_premenopause;age,body_log,menstruation_phase_cycle,hormone_alteration,")
 ###cohorts_models+=("female_perimenopause;table_female_perimenopause;age,body_log,menstruation_phase_cycle,hormone_alteration,")
 ###cohorts_models+=("female_postmenopause;table_female_postmenopause;age,body_log,hormone_alteration,")
 ###cohorts_models+=("male;table_male;age,body_log,")
@@ -79,7 +79,7 @@ cohorts_models+=("female;table_female;age,body_log,menopause_ordinal,hormone_alt
 ###cohorts_models+=("male_age_high;table_male_age_high;age,body_log,")
 
 # Models without adjustment covariates ("unadjust")
-#cohorts_models+=("female;table_female;")
+cohorts_models+=("female;table_female;")
 ###cohorts_models+=("female_premenopause;table_female_premenopause;")
 ###cohorts_models+=("female_perimenopause;table_female_perimenopause;")
 ###cohorts_models+=("female_postmenopause;table_female_postmenopause;")
@@ -134,24 +134,24 @@ done
 cohorts_models=()
 
 # Models with adjustment covariates
-cohorts_models+=("female;table_female;assessment_region,assessment_season,age,body_log,menopause_ordinal,hormone_alteration,")
-cohorts_models+=("female_premenopause;table_female_premenopause;assessment_region,assessment_season,age,body_log,menstruation_phase_cycle,hormone_alteration,")
-cohorts_models+=("female_perimenopause;table_female_perimenopause;assessment_region,assessment_season,age,body_log,menstruation_phase_cycle,hormone_alteration,")
-cohorts_models+=("female_postmenopause;table_female_postmenopause;assessment_region,assessment_season,age,body_log,hormone_alteration,")
-cohorts_models+=("male;table_male;assessment_region,assessment_season,age,body_log,")
-cohorts_models+=("male_age_low;table_male_age_low;assessment_region,assessment_season,age,body_log,")
-cohorts_models+=("male_age_middle;table_male_age_middle;assessment_region,assessment_season,age,body_log,")
-cohorts_models+=("male_age_high;table_male_age_high;assessment_region,assessment_season,age,body_log,")
+#cohorts_models+=("female;table_female;assessment_region,assessment_season,age,body_log,menopause_ordinal,hormone_alteration,")
+#cohorts_models+=("female_premenopause;table_female_premenopause;assessment_region,assessment_season,age,body_log,menstruation_phase_cycle,hormone_alteration,")
+#cohorts_models+=("female_perimenopause;table_female_perimenopause;assessment_region,assessment_season,age,body_log,menstruation_phase_cycle,hormone_alteration,")
+#cohorts_models+=("female_postmenopause;table_female_postmenopause;assessment_region,assessment_season,age,body_log,hormone_alteration,")
+#cohorts_models+=("male;table_male;assessment_region,assessment_season,age,body_log,")
+#cohorts_models+=("male_age_low;table_male_age_low;assessment_region,assessment_season,age,body_log,")
+#cohorts_models+=("male_age_middle;table_male_age_middle;assessment_region,assessment_season,age,body_log,")
+#cohorts_models+=("male_age_high;table_male_age_high;assessment_region,assessment_season,age,body_log,")
 
 # Models without adjustment covariates ("unadjust")
-#cohorts_models+=("female;table_female;assessment_region,assessment_season,")
-#cohorts_models+=("female_premenopause;table_female_premenopause;assessment_region,assessment_season,")
-#cohorts_models+=("female_perimenopause;table_female_perimenopause;assessment_region,assessment_season,")
-#cohorts_models+=("female_postmenopause;table_female_postmenopause;assessment_region,assessment_season,")
-#cohorts_models+=("male;table_male;assessment_region,assessment_season,")
-#cohorts_models+=("male_age_low;table_male_age_low;assessment_region,assessment_season,")
-#cohorts_models+=("male_age_middle;table_male_age_middle;assessment_region,assessment_season,")
-#cohorts_models+=("male_age_high;table_male_age_high;assessment_region,assessment_season,")
+cohorts_models+=("female;table_female;assessment_region,assessment_season,")
+cohorts_models+=("female_premenopause;table_female_premenopause;assessment_region,assessment_season,")
+cohorts_models+=("female_perimenopause;table_female_perimenopause;assessment_region,assessment_season,")
+cohorts_models+=("female_postmenopause;table_female_postmenopause;assessment_region,assessment_season,")
+cohorts_models+=("male;table_male;assessment_region,assessment_season,")
+cohorts_models+=("male_age_low;table_male_age_low;assessment_region,assessment_season,")
+cohorts_models+=("male_age_middle;table_male_age_middle;assessment_region,assessment_season,")
+cohorts_models+=("male_age_high;table_male_age_high;assessment_region,assessment_season,")
 
 # Define array of phenotypes.
 phenotypes=()
