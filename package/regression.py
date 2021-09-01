@@ -36,6 +36,7 @@ import promiscuity.regression as regression
 import uk_biobank.organization as ukb_organ
 import uk_biobank.stratification as ukb_strat
 import uk_biobank.description as ukb_descr
+import uk_biobank.regression as ukb_regre
 
 ###############################################################################
 # Functionality
@@ -364,28 +365,14 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 3")
+    print("version check: 1")
     # Pause procedure.
     time.sleep(5.0)
 
-    # Initialize directories.
-    paths = initialize_directories(
-        restore=True,
-        path_dock=path_dock,
-    )
-    # Read source information from file.
-    # Exclusion identifiers are "eid".
-    source = read_source(
-        path_dock=path_dock,
-        report=True,
-    )
-
-    # Preliminary organization of regressions.
-    pail = organize_cohorts_models_phenotypes_regressions_female(
-        table=source["table_phenotypes"],
-        report=True
-    )
-
+    # Execute assembly procedure from uk_biobank package.
+    ukb_regre.execute_procedure(path_dock=path_dock)
+    utility.print_terminal_partition(level=1)
+    print("From package 'uk_biobank', procedure 'regression' is complete.")
 
     pass
 
