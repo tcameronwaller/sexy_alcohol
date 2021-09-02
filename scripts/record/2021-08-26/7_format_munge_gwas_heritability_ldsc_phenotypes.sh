@@ -12,9 +12,8 @@
 # Organize paths.
 # Read private, local file paths.
 cd ~/paths
-path_ldsc=$(<"./tools_ldsc.txt")
 path_gwas_summaries=$(<"./gwas_summaries_waller_metabolism.txt")
-path_process=$(<"./process_psychiatric_metabolism.txt")
+path_process=$(<"./process_sexy_alcohol.txt")
 
 path_promiscuity_scripts="${path_process}/promiscuity/scripts"
 

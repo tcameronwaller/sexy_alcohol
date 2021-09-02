@@ -5,7 +5,7 @@
 # Read private, local file paths.
 #echo "read private file path variables and organize paths..."
 cd ~/paths
-path_process=$(<"./process_psychiatric_metabolism.txt")
+path_process=$(<"./process_sexy_alcohol.txt")
 
 path_dock="${path_process}/dock"
 path_genetic_reference="${path_dock}/access/genetic_reference"
