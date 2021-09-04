@@ -48,24 +48,9 @@ studies=()
 #studies+=("30239722_pulit_2018;${path_gwas_summaries}/30239722_pulit_2018/whradjbmi.giant-ukbb.meta-analysis.combined.23May2018.txt.gz")
 #studies+=("30482948_walters_2018_all;${path_gwas_summaries}/30482948_walters_2018/pgc_alcdep.discovery.aug2018_release.txt.gz")
 #studies+=("30482948_walters_2018_eur;${path_gwas_summaries}/30482948_walters_2018/pgc_alcdep.eur_discovery.aug2018_release.txt.gz")
-
 studies+=("30482948_walters_2018_eur_unrel;z_score;${path_gwas_summaries}/30482948_walters_2018/pgc_alcdep.eur_unrelated.aug2018_release.txt.gz")
-# - European ancestry
-# - unrelated
-# - cases: 10,206
-# - controls: 28,480
-
 studies+=("30482948_walters_2018_female;odds_ratio;${path_gwas_summaries}/30482948_walters_2018/sex_stratification/pgc_alcdep_eur_female_public.gz")
-# - European ancestry
-# - unrelated
-# - cases: 2,504
-# - controls: 6,033
-
 studies+=("30482948_walters_2018_male;odds_ratio;${path_gwas_summaries}/30482948_walters_2018/sex_stratification/pgc_alcdep_eur_male_public.gz")
-# - European ancestry
-# - unrelated
-# - cases: 5,932
-# - controls: 9,412
 
 #studies+=("30718901_howard_2019;${path_gwas_summaries}/30718901_howard_2019/PGC_UKB_depression_genome-wide.txt.gz")
 #studies+=("29906448_ruderfer_2018_scz_vs_ctl;${path_gwas_summaries}/29906448_ruderfer_2018/sczvscont-sumstat.gz")
@@ -74,9 +59,9 @@ studies+=("30482948_walters_2018_male;odds_ratio;${path_gwas_summaries}/30482948
 #studies+=("29906448_ruderfer_2018_bpd_vs_ctl;${path_gwas_summaries}/29906448_ruderfer_2018/BDvsCONT.sumstats.gz")
 #studies+=("00000000_ripke_2021;${path_gwas_summaries}/00000000_ripke_2021/PGC3_SCZ_wave3_public.v2.tsv.gz")
 #studies+=("31043756_stahl_2019;${path_gwas_summaries}/31043756_stahl_2019/daner_PGC_BIP32b_mds7a_0416a.gz")
-#studies+=("00000000_mullins_2021_all;${path_gwas_summaries}/00000000_mullins_2021/pgc-bip2021-all.vcf.tsv.gz")
-#studies+=("00000000_mullins_2021_bpd1;${path_gwas_summaries}/00000000_mullins_2021/pgc-bip2021-BDI.vcf.tsv.gz")
-#studies+=("00000000_mullins_2021_bpd2;${path_gwas_summaries}/00000000_mullins_2021/pgc-bip2021-BDII.vcf.tsv.gz")
+studies+=("34002096_mullins_2021_all;${path_gwas_summaries}/34002096_mullins_2021/pgc-bip2021-all.vcf.tsv.gz")
+studies+=("34002096_mullins_2021_bpd1;${path_gwas_summaries}/34002096_mullins_2021/pgc-bip2021-BDI.vcf.tsv.gz")
+studies+=("34002096_mullins_2021_bpd2;${path_gwas_summaries}/34002096_mullins_2021/pgc-bip2021-BDII.vcf.tsv.gz")
 
 # Organize information in format for LDSC.
 for study_details in "${studies[@]}"; do

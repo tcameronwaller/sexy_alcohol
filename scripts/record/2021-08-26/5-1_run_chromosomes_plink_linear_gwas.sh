@@ -42,6 +42,8 @@ do
   fi
   cd $path_chromosome
 
+  # TODO: need to read in allele frequencies from all UK Biobank genotypes
+
   if true; then
     # Call PLINK2.
     # PLINK2 command "--glm" drives genotypic association analyses, either
