@@ -16,12 +16,12 @@ path_process=$(<"./process_sexy_alcohol.txt")
 path_dock="$path_process/dock"
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-08-26/gwas_process_tools"
 
-path_gwas_container="${path_dock}/gwas/cohorts_models_linear_measurement_test"
+#path_gwas_container="${path_dock}/gwas/cohorts_models_linear_measurement_test"
 #path_gwas_container="${path_dock}/gwas/cohorts_models_linear_measurement"
 #path_gwas_container="${path_dock}/gwas/cohorts_models_linear_measurement_unadjust"
 #path_gwas_container="${path_dock}/gwas/cohorts_models_linear_imputation"
 #path_gwas_container="${path_dock}/gwas/cohorts_models_linear_imputation_unadjust"
-#path_gwas_container="${path_dock}/gwas/cohorts_models_linear_order" <-- incomplete... first filter to complete
+path_gwas_container="${path_dock}/gwas/cohorts_models_linear_order" #<-- incomplete... first filter to complete
 #path_gwas_container="${path_dock}/gwas/cohorts_models_linear_order_unadjust" <-- incomplete... first filter to complete
 #path_gwas_container="${path_dock}/gwas/cohorts_models_logistic_detection" <-- next
 #path_gwas_container="${path_dock}/gwas/cohorts_models_logistic_detection_unadjust"
