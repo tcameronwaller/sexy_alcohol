@@ -84,7 +84,7 @@ batch_instances_count=${#batch_instances[@]}
 echo "----------"
 echo "count of batch instances: " $batch_instances_count
 echo "first batch instance: " ${batch_instances[0]} # notice base-zero indexing
-echo "last batch instance: " ${batch_instances[batch_instances_count - 1]}
+echo "last batch instance: " ${batch_instances[$batch_instances_count - 1]}
 
 # Execute batch with grid scheduler.
 if true; then

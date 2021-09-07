@@ -59,13 +59,16 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
       matches_chromosome=$(find "${path_gwas_container}/${study}/${name_chromosome}" -name "$pattern_gwas_chromosome_file")
       match_chromosome_file=${matches_chromosome[0]}
       if [[ -n $matches_chromosome && -f $match_chromosome_file ]]; then
-        echo "----------"
-        echo "----------"
-        echo "----------"
-        echo "Found ${name_chromosome} summary statistics for: ${study}"
-        echo $matches_chromosome
-        echo "Found match file: ${match_chromosome_file}"
-        echo $match_chromosome_file >> $path_match_instances
+        #echo "----------"
+        #echo "----------"
+        #echo "----------"
+        #echo "Found ${name_chromosome} summary statistics for: ${study}"
+        #echo $matches_chromosome
+        #echo "Found match file: ${match_chromosome_file}"
+        ##########
+        # Define match instance for file conversion.
+        match_instance="${match_chromosome_file};${match_chromosome_file}.gz"
+        echo $match_instance >> $path_match_instances
       fi
     done
   fi
@@ -78,11 +81,15 @@ match_instances_count=${#match_instances[@]}
 echo "----------"
 echo "count of match instances: " $match_instances_count
 echo "first match instance: " ${match_instances[0]} # notice base-zero indexing
-echo "last match instance: " ${match_instances[batch_instances_count - 1]}
+echo "last match instance: " ${match_instances[$match_instances_count - 1]}
 
 ##########
 # Iterate across match instances.
 
 for match_instance in "${match_instances[@]}"; do
-  echo $match_instance
+  IFS=";" read -r -a array <<< "${match_instance}"
+  path_file="${array[0]}"
+  path_file_compress="${array[1]}"
+  gzip -cvf $path_file > $path_file_compress
+  rm $path_file
 done
