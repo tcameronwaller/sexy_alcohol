@@ -74,6 +74,13 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
       echo "study GWAS failed for at least one chromosome:"
       echo $study
       echo $path_directory >> $path_batch_instances
+
+    else
+      echo "----------"
+      echo "----------"
+      echo "----------"
+      echo "study GWAS SUCCESS for all chromosomes:"
+      echo $study
     fi
 
   fi
