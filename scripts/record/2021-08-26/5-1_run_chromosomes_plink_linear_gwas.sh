@@ -68,6 +68,9 @@ do
     --covar $path_table_phenotypes_covariates \
     --covar-name $covariates \
     --out report
+
+    ##########
+    
   fi
 
   # TODO: introduce new "GZIP" compression of GWAS report... then removel original
