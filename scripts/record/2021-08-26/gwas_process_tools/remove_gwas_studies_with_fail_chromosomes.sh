@@ -16,8 +16,8 @@ path_process=$(<"./process_sexy_alcohol.txt")
 path_dock="$path_process/dock"
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-08-26/gwas_process_tools"
 
-path_gwas_container="${path_dock}/gwas/cohorts_models_linear_order"
-#path_gwas_container="${path_dock}/gwas/cohorts_models_linear_order_unadjust"
+#path_gwas_container="${path_dock}/gwas/cohorts_models_linear_order"
+path_gwas_container="${path_dock}/gwas/cohorts_models_linear_order_unadjust"
 
 path_batch_instances="${path_gwas_container}/post_process_fail_batch_instances.txt"
 
