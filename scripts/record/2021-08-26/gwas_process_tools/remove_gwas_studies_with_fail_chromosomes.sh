@@ -73,7 +73,8 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
       echo "----------"
       echo "study GWAS failed for at least one chromosome:"
       echo $study
-      echo $path_directory >> $path_batch_instances
+      batch_instance="${path_gwas_container}/${study}"
+      echo $batch_instance >> $path_batch_instances
 
     else
       echo "----------"
@@ -98,10 +99,8 @@ echo "last batch instance: " ${batch_instances[$batch_instances_count - 1]}
 ##########
 # Iterate across batch instances.
 
-#for match_instance in "${match_instances[@]}"; do
-#  IFS=";" read -r -a array <<< "${match_instance}"
-#  path_file="${array[0]}"
-#  path_file_compress="${array[1]}"
-#  gzip -cvf $path_file > $path_file_compress
-#  rm $path_file
+#for batch_instance in "${batch_instances[@]}"; do
+#  IFS=";" read -r -a array <<< "${batch_instance}"
+#  path_directory="${array[0]}"
+#  rm -r $path_directory
 #done
