@@ -15,8 +15,8 @@ cd ~/paths
 path_process=$(<"./process_sexy_alcohol.txt")
 path_dock="$path_process/dock"
 
-cohorts_models="cohorts_models_linear_measurement"
-#cohorts_models="cohorts_models_linear_measurement_unadjust"
+#cohorts_models="cohorts_models_linear_measurement" # 72 GWAS started at 17:47 on 7 September 2021
+cohorts_models="cohorts_models_linear_measurement_unadjust" #
 #cohorts_models="cohorts_models_linear_imputation"
 #cohorts_models="cohorts_models_linear_imputation_unadjust"
 #cohorts_models="cohorts_models_linear_order"
