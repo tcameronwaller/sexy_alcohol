@@ -20,7 +20,7 @@ path_gwas_target_container=${3} # full path to parent directories of GWAS summar
 # Read private, local file paths.
 cd ~/paths
 
-path_process=$(<"./process_psychiatric_metabolism.txt")
+path_process=$(<"./process_sexy_alcohol.txt")
 path_dock="$path_process/dock"
 
 # General paths.

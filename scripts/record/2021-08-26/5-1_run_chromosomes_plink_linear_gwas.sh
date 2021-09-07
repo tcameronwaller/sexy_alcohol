@@ -70,9 +70,7 @@ do
     --out report
 
     ##########
-    
-  fi
 
-  # TODO: introduce new "GZIP" compression of GWAS report... then removel original
+  fi
 
 done

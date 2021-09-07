@@ -51,6 +51,9 @@ for primary in "${primaries[@]}"; do
   done
 done
 
+# TODO: compare females to males...
+
+
 # Append custom comparisons that do not follow the same pattern.
 # Without log transformation of Body Mass Index phenotype.
 comparisons+=("white_bipolar_disorder_control_body_mass_index;${path_gwas_source_container}/white_bipolar_disorder_control_body_mass_index/${name_gwas_munge_file};white_bipolar_disorder_case_body_mass_index;${path_gwas_source_container}/white_bipolar_disorder_case_body_mass_index/${name_gwas_munge_file}")

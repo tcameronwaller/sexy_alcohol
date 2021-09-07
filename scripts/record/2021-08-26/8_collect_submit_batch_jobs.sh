@@ -12,12 +12,22 @@
 # Organize paths.
 # Read private, local file paths.
 cd ~/paths
-path_process=$(<"./process_psychiatric_metabolism.txt")
+path_process=$(<"./process_sexy_alcohol.txt")
 path_dock="$path_process/dock"
-path_gwas_source_container="${path_dock}/gwas/cohorts_models" # selection
-path_gwas_target_container="${path_dock}/gwas_process/cohorts_models" # selection
 
-path_scripts_record="$path_process/psychiatric_metabolism/scripts/record/2021-08-27/old_gwas_new_process_analysis"
+cohorts_models="cohorts_models_linear_measurement"
+#cohorts_models="cohorts_models_linear_measurement_unadjust"
+#cohorts_models="cohorts_models_linear_imputation"
+#cohorts_models="cohorts_models_linear_imputation_unadjust"
+#cohorts_models="cohorts_models_linear_order"
+#cohorts_models="cohorts_models_linear_order_unadjust"
+#cohorts_models="cohorts_models_logistic_detection"
+#cohorts_models="cohorts_models_logistic_detection_unadjust"
+
+path_gwas_source_container="${path_dock}/gwas/${cohorts_models}" # selection
+path_gwas_target_container="${path_dock}/gwas_process/${cohorts_models}" # selection
+
+path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-08-26"
 path_batch_instances="${path_gwas_target_container}/post_process_batch_instances.txt"
 
 ###########################################################################
@@ -25,11 +35,11 @@ path_batch_instances="${path_gwas_target_container}/post_process_batch_instances
 # Use inclusions to run procedure for a few specific cohort-hormone combinations that are missing from the set.
 # Use exclusions to omit a few cohort-hormone combinations that are not complete yet.
 
-delimiter=" "
-IFS=${delimiter}
-exclusions=()
+#delimiter=" "
+#IFS=${delimiter}
+#exclusions=()
 #exclusions+=("female_combination_unadjust_albumin_log")
-unset IFS
+#unset IFS
 
 ###########################################################################
 # Execute procedure.
