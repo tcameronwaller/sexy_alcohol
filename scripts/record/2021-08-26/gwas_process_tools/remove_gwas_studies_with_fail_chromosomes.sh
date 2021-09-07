@@ -26,7 +26,7 @@ path_gwas_container="${path_dock}/gwas/cohorts_models_linear_measurement_test"
 #path_gwas_container="${path_dock}/gwas/cohorts_models_logistic_detection" <-- next
 #path_gwas_container="${path_dock}/gwas/cohorts_models_logistic_detection_unadjust"
 
-path_batch_instances="${path_gwas_container}/post_process_compress_batch_instances.txt"
+path_batch_instances="${path_gwas_container}/post_process_fail_batch_instances.txt"
 
 ###########################################################################
 # Execute procedure.
@@ -46,6 +46,9 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
     study="$(basename -- $path_directory)"
     #echo $directory
 
+    # Assume that study's GWAS were successful across all chromosomes.
+    fail="false"
+
     ##########
     # Iterate on chromosomes.
     start=1
@@ -54,24 +57,25 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
       #echo "chromosome: ${index}"
       # Set chromosome name.
       name_chromosome="chromosome_${index}"
-
       # Determine whether directory contains valid GWAS summary statistics
       # for current chromosomes.
       matches_chromosome=$(find "${path_gwas_container}/${study}/${name_chromosome}" -name "$pattern_gwas_chromosome_file")
       match_chromosome_file=${matches_chromosome[0]}
-      if [[ -n $matches_chromosome && -f $match_chromosome_file ]]; then
-        #echo "----------"
-        #echo "----------"
-        #echo "----------"
-        #echo "Found ${name_chromosome} summary statistics for: ${study}"
-        #echo $matches_chromosome
-        #echo "Found match file: ${match_chromosome_file}"
-        ##########
-        # Define match instance for file conversion.
-        batch_instance="${match_chromosome_file};${match_chromosome_file}.gz"
-        echo $batch_instance >> $path_batch_instances
+      if ! [[ -n $matches_chromosome && -f $match_chromosome_file ]]; then
+        # Study's GWAS failed for current chromosome.
+        fail="true"
       fi
     done
+
+    ##########
+    # Determine whether study's GWAS failed for any chromosomes.
+    if [[ "$fail" == "true" ]]; then
+      echo "----------"
+      echo "study GWAS failed for at least one chromosome:"
+      echo $study
+      echo $path_directory >> $path_batch_instances
+    fi
+
   fi
 done
 
@@ -94,16 +98,3 @@ echo "last batch instance: " ${batch_instances[$batch_instances_count - 1]}
 #  gzip -cvf $path_file > $path_file_compress
 #  rm $path_file
 #done
-
-# Execute batch with grid scheduler.
-if true; then
-  # Submit array batch to Sun Grid Engine.
-  # Array batch indices must start at one (not zero).
-  qsub -t 1-${batch_instances_count}:1 \
-  -o "${path_gwas_container}/post_process_compress_out.txt" \
-  -e "${path_gwas_container}/post_process_compress_error.txt" \
-  "${path_scripts_record}/run_batch_jobs_compress_gwas.sh" \
-  $path_batch_instances \
-  $batch_instances_count \
-  $path_gwas_container
-fi
