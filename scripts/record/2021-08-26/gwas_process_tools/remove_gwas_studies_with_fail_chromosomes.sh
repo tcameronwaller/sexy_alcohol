@@ -16,15 +16,8 @@ path_process=$(<"./process_sexy_alcohol.txt")
 path_dock="$path_process/dock"
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-08-26/gwas_process_tools"
 
-#path_gwas_container="${path_dock}/gwas/cohorts_models_linear_measurement_test"
-#path_gwas_container="${path_dock}/gwas/cohorts_models_linear_measurement"
-#path_gwas_container="${path_dock}/gwas/cohorts_models_linear_measurement_unadjust"
-#path_gwas_container="${path_dock}/gwas/cohorts_models_linear_imputation"
-#path_gwas_container="${path_dock}/gwas/cohorts_models_linear_imputation_unadjust"
-path_gwas_container="${path_dock}/gwas/cohorts_models_linear_order" #<-- incomplete... first filter to complete
-#path_gwas_container="${path_dock}/gwas/cohorts_models_linear_order_unadjust" <-- incomplete... first filter to complete
-#path_gwas_container="${path_dock}/gwas/cohorts_models_logistic_detection" <-- next
-#path_gwas_container="${path_dock}/gwas/cohorts_models_logistic_detection_unadjust"
+path_gwas_container="${path_dock}/gwas/cohorts_models_linear_order"
+#path_gwas_container="${path_dock}/gwas/cohorts_models_linear_order_unadjust"
 
 path_batch_instances="${path_gwas_container}/post_process_fail_batch_instances.txt"
 
@@ -99,8 +92,8 @@ echo "last batch instance: " ${batch_instances[$batch_instances_count - 1]}
 ##########
 # Iterate across batch instances.
 
-#for batch_instance in "${batch_instances[@]}"; do
-#  IFS=";" read -r -a array <<< "${batch_instance}"
-#  path_directory="${array[0]}"
-#  rm -r $path_directory
-#done
+for batch_instance in "${batch_instances[@]}"; do
+  IFS=";" read -r -a array <<< "${batch_instance}"
+  path_directory="${array[0]}"
+  rm -r $path_directory
+done
