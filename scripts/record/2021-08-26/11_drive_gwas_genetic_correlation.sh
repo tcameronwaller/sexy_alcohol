@@ -12,7 +12,7 @@
 # Organize paths.
 # Read private, local file paths.
 cd ~/paths
-path_process=$(<"./process_psychiatric_metabolism.txt")
+path_process=$(<"./process_sexy_alcohol.txt")
 path_dock="$path_process/dock"
 
 ###########################################################################
@@ -22,10 +22,17 @@ path_dock="$path_process/dock"
 primaries=()
 primaries+=("30124842_yengo_2018;${path_dock}/gwas_process/30124842_yengo_2018/gwas_munge.sumstats.gz")
 
+studies+=("30482948_walters_2018_eur_unrel;${path_dock}/gwas_process/30482948_walters_2018_eur_unrel/gwas_munge.sumstats.gz")
+studies+=("30482948_walters_2018_female;${path_dock}/gwas_process/30482948_walters_2018/sex_stratification/gwas_munge.sumstats.gz")
+studies+=("30482948_walters_2018_male;${path_dock}/gwas_process/30482948_walters_2018/sex_stratification/gwas_munge.sumstats.gz")
+studies+=("34002096_mullins_2021_all;${path_dock}/gwas_process/34002096_mullins_2021/gwas_munge.sumstats.gz")
+studies+=("34002096_mullins_2021_bpd1;${path_dock}/gwas_process/34002096_mullins_2021/gwas_munge.sumstats.gz")
+studies+=("34002096_mullins_2021_bpd2;${path_dock}/gwas_process/34002096_mullins_2021/gwas_munge.sumstats.gz")
+
 # Define array of secondary studies.
 secondaries=()
 # Iterate on directories for GWAS on cohorts and hormones.
-path_gwas_source_container="${path_dock}/gwas_process/cohorts_models"
+path_gwas_source_container="${path_dock}/gwas_process/cohorts_models/cohorts_models_linear_measurement"
 name_gwas_munge_file="gwas_munge.sumstats.gz"
 cd $path_gwas_source_container
 for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
@@ -52,6 +59,8 @@ for primary in "${primaries[@]}"; do
 done
 
 # TODO: compare females to males...
+# TODO: compare premenopause females to postmenopause females
+# TODO: compare younger males to older males
 
 
 # Append custom comparisons that do not follow the same pattern.
