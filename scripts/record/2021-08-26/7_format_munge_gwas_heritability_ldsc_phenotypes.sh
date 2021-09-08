@@ -59,9 +59,9 @@ studies+=("30482948_walters_2018_male;odds_ratio;${path_gwas_summaries}/30482948
 #studies+=("29906448_ruderfer_2018_bpd_vs_ctl;${path_gwas_summaries}/29906448_ruderfer_2018/BDvsCONT.sumstats.gz")
 #studies+=("00000000_ripke_2021;${path_gwas_summaries}/00000000_ripke_2021/PGC3_SCZ_wave3_public.v2.tsv.gz")
 #studies+=("31043756_stahl_2019;${path_gwas_summaries}/31043756_stahl_2019/daner_PGC_BIP32b_mds7a_0416a.gz")
-studies+=("34002096_mullins_2021_all;${path_gwas_summaries}/34002096_mullins_2021/pgc-bip2021-all.vcf.tsv.gz")
-studies+=("34002096_mullins_2021_bpd1;${path_gwas_summaries}/34002096_mullins_2021/pgc-bip2021-BDI.vcf.tsv.gz")
-studies+=("34002096_mullins_2021_bpd2;${path_gwas_summaries}/34002096_mullins_2021/pgc-bip2021-BDII.vcf.tsv.gz")
+studies+=("34002096_mullins_2021_all;coefficient;${path_gwas_summaries}/34002096_mullins_2021/pgc-bip2021-all.vcf.tsv.gz")
+studies+=("34002096_mullins_2021_bpd1;coefficient;${path_gwas_summaries}/34002096_mullins_2021/pgc-bip2021-BDI.vcf.tsv.gz")
+studies+=("34002096_mullins_2021_bpd2;coefficient;${path_gwas_summaries}/34002096_mullins_2021/pgc-bip2021-BDII.vcf.tsv.gz")
 
 # Organize information in format for LDSC.
 for study_details in "${studies[@]}"; do
