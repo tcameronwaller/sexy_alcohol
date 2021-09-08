@@ -23,7 +23,7 @@ path_genetic_reference="${path_dock}/access/genetic_reference"
 #path_gwas_source="${path_dock}/gwas" # selection
 path_gwas_target="${path_dock}/gwas_process" # selection
 
-path_heritability="${path_dock}/heritability"
+path_heritability="${path_dock}/heritability/community_studies" # store in container to parallel "cohorts_models" containers
 
 ###########################################################################
 # Execute procedure.

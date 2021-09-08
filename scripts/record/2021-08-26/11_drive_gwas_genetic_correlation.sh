@@ -11,9 +11,9 @@
 ################################################################################
 # General parameters.
 
-cohorts_models="cohorts_models_linear_measurement"
+#cohorts_models="cohorts_models_linear_measurement" # 8 September 2021
 #cohorts_models="cohorts_models_linear_measurement_unadjust"
-#cohorts_models="cohorts_models_linear_imputation"
+cohorts_models="cohorts_models_linear_imputation"
 #cohorts_models="cohorts_models_linear_imputation_unadjust"
 #cohorts_models="cohorts_models_linear_order"
 #cohorts_models="cohorts_models_linear_order_unadjust"
@@ -128,7 +128,7 @@ for comparison in "${comparisons[@]}"; do
     #study_secondary=""
     #path_gwas_primary_munge_suffix=""
     #path_gwas_secondary_munge_suffix=""
-    path_genetic_correlation_parent="${path_dock}/genetic_correlation/${study_primary}/${study_secondary}"
+    path_genetic_correlation_parent="${path_dock}/genetic_correlation/${cohorts_models}/${study_primary}/${study_secondary}"
     rm -r $path_genetic_correlation_parent
     mkdir -p $path_genetic_correlation_parent
     # Scripts.
