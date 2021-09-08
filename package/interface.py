@@ -22,7 +22,7 @@ import organization
 import description
 import stratification
 import regression
-import genetic_correlation
+import collection
 #import plot
 #import utility
 
@@ -192,12 +192,12 @@ def define_main_subparser(subparsers=None):
         )
     )
     parser_main.add_argument(
-        "-genetic_correlation", "--genetic_correlation",
-        dest="genetic_correlation",
+        "-collection", "--collection",
+        dest="collection",
         action="store_true",
         help=(
-            "Collection of genetic correlation estimates for phenotypes from " +
-            "multiple GWAS."
+            "Collection of reports from estimations of SNP heritability and " +
+            "genetic correlation."
         )
     )
     # Define behavior.
@@ -320,11 +320,11 @@ def evaluate_main_parameters(arguments):
         stratification.execute_procedure(
             path_dock=arguments.path_dock
         )
-    if arguments.genetic_correlation:
+    if arguments.collection:
         # Report status.
-        print("... executing genetic_correlation procedure ...")
+        print("... executing collection procedure ...")
         # Execute procedure.
-        genetic_correlation.execute_procedure(
+        collection.execute_procedure(
             path_dock=arguments.path_dock
         )
 
