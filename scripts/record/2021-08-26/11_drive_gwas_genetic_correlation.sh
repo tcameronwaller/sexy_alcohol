@@ -9,31 +9,43 @@
 ###########################################################################
 
 ################################################################################
+# General parameters.
+
+cohorts_models="cohorts_models_linear_measurement"
+#cohorts_models="cohorts_models_linear_measurement_unadjust"
+#cohorts_models="cohorts_models_linear_imputation"
+#cohorts_models="cohorts_models_linear_imputation_unadjust"
+#cohorts_models="cohorts_models_linear_order"
+#cohorts_models="cohorts_models_linear_order_unadjust"
+#cohorts_models="cohorts_models_logistic_detection"
+#cohorts_models="cohorts_models_logistic_detection_unadjust"
+
+name_gwas_munge_file="gwas_munge.sumstats.gz"
+
+################################################################################
 # Organize paths.
 # Read private, local file paths.
 cd ~/paths
 path_process=$(<"./process_sexy_alcohol.txt")
 path_dock="$path_process/dock"
 
+path_gwas_source_container="${path_dock}/gwas_process/${cohorts_models}"
+
 ###########################################################################
 # Define main comparisons.
 
 # Define array of primary studies.
 primaries=()
-primaries+=("30124842_yengo_2018;${path_dock}/gwas_process/30124842_yengo_2018/gwas_munge.sumstats.gz")
-
-studies+=("30482948_walters_2018_eur_unrel;${path_dock}/gwas_process/30482948_walters_2018_eur_unrel/gwas_munge.sumstats.gz")
-studies+=("30482948_walters_2018_female;${path_dock}/gwas_process/30482948_walters_2018/sex_stratification/gwas_munge.sumstats.gz")
-studies+=("30482948_walters_2018_male;${path_dock}/gwas_process/30482948_walters_2018/sex_stratification/gwas_munge.sumstats.gz")
-studies+=("34002096_mullins_2021_all;${path_dock}/gwas_process/34002096_mullins_2021/gwas_munge.sumstats.gz")
-studies+=("34002096_mullins_2021_bpd1;${path_dock}/gwas_process/34002096_mullins_2021/gwas_munge.sumstats.gz")
-studies+=("34002096_mullins_2021_bpd2;${path_dock}/gwas_process/34002096_mullins_2021/gwas_munge.sumstats.gz")
+primaries+=("30482948_walters_2018_eur_unrel;${path_dock}/gwas_process/30482948_walters_2018_eur_unrel/${name_gwas_munge_file}")
+#primaries+=("30482948_walters_2018_female;${path_dock}/gwas_process/30482948_walters_2018_female/${name_gwas_munge_file}") # heritability < 0
+primaries+=("30482948_walters_2018_male;${path_dock}/gwas_process/30482948_walters_2018_male/${name_gwas_munge_file}")
+primaries+=("34002096_mullins_2021_all;${path_dock}/gwas_process/34002096_mullins_2021_all/${name_gwas_munge_file}")
+primaries+=("34002096_mullins_2021_bpd1;${path_dock}/gwas_process/34002096_mullins_2021_bpd1/${name_gwas_munge_file}")
+primaries+=("34002096_mullins_2021_bpd2;${path_dock}/gwas_process/34002096_mullins_2021_bpd2/${name_gwas_munge_file}")
 
 # Define array of secondary studies.
 secondaries=()
 # Iterate on directories for GWAS on cohorts and hormones.
-path_gwas_source_container="${path_dock}/gwas_process/cohorts_models/cohorts_models_linear_measurement"
-name_gwas_munge_file="gwas_munge.sumstats.gz"
 cd $path_gwas_source_container
 for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
   if [ -d "$path_directory" ]; then
@@ -58,25 +70,34 @@ for primary in "${primaries[@]}"; do
   done
 done
 
-# TODO: compare females to males...
-# TODO: compare premenopause females to postmenopause females
-# TODO: compare younger males to older males
-
-
-# Append custom comparisons that do not follow the same pattern.
-# Without log transformation of Body Mass Index phenotype.
-comparisons+=("white_bipolar_disorder_control_body_mass_index;${path_gwas_source_container}/white_bipolar_disorder_control_body_mass_index/${name_gwas_munge_file};white_bipolar_disorder_case_body_mass_index;${path_gwas_source_container}/white_bipolar_disorder_case_body_mass_index/${name_gwas_munge_file}")
-comparisons+=("white_bipolar_disorder_control_simple_body_mass_index;${path_gwas_source_container}/white_bipolar_disorder_control_simple_body_mass_index/${name_gwas_munge_file};white_bipolar_disorder_case_simple_body_mass_index;${path_gwas_source_container}/white_bipolar_disorder_case_simple_body_mass_index/${name_gwas_munge_file}")
-comparisons+=("white_bipolar_disorder_control_unadjust_body_mass_index;${path_gwas_source_container}/white_bipolar_disorder_control_unadjust_body_mass_index/${name_gwas_munge_file};white_bipolar_disorder_case_unadjust_body_mass_index;${path_gwas_source_container}/white_bipolar_disorder_case_unadjust_body_mass_index/${name_gwas_munge_file}")
-# With log transformation of Body Mass Index phenotype.
-comparisons+=("white_bipolar_disorder_control_body_mass_index_log;${path_gwas_source_container}/white_bipolar_disorder_control_body_mass_index_log/${name_gwas_munge_file};white_bipolar_disorder_case_body_mass_index_log;${path_gwas_source_container}/white_bipolar_disorder_case_body_mass_index_log/${name_gwas_munge_file}")
-comparisons+=("white_bipolar_disorder_control_simple_body_mass_index_log;${path_gwas_source_container}/white_bipolar_disorder_control_simple_body_mass_index_log/${name_gwas_munge_file};white_bipolar_disorder_case_simple_body_mass_index_log;${path_gwas_source_container}/white_bipolar_disorder_case_simple_body_mass_index_log/${name_gwas_munge_file}")
-comparisons+=("white_bipolar_disorder_control_unadjust_body_mass_index_log;${path_gwas_source_container}/white_bipolar_disorder_control_unadjust_body_mass_index_log/${name_gwas_munge_file};white_bipolar_disorder_case_unadjust_body_mass_index_log;${path_gwas_source_container}/white_bipolar_disorder_case_unadjust_body_mass_index_log/${name_gwas_munge_file}")
-
 ################################################################################
-# Define custom comparisons.
+# Append custom comparisons that do not follow the same pattern.
 
-# TODO: see script 8 from 11 June 2021
+# Females to Males.
+pairs+=("female_vitamin_d_log;male_vitamin_d_log")
+pairs+=("female_albumin;male_albumin")
+pairs+=("female_steroid_globulin_log;male_steroid_globulin_log")
+pairs+=("female_oestradiol_log;male_oestradiol_log")
+pairs+=("female_testosterone_log;male_testosterone_log")
+# Premenopause Females to Postmenopause Females.
+pairs+=("female_premenopause_vitamin_d_log;female_postmenopause_vitamin_d_log")
+pairs+=("female_premenopause_albumin;female_postmenopause_albumin")
+pairs+=("female_premenopause_steroid_globulin_log;female_postmenopause_steroid_globulin_log")
+pairs+=("female_premenopause_oestradiol_log;female_postmenopause_oestradiol_log")
+pairs+=("female_premenopause_testosterone_log;female_postmenopause_testosterone_log")
+# Younger Males to Older Males.
+pairs+=("male_age_low_vitamin_d_log;male_age_high_vitamin_d_log")
+pairs+=("male_age_low_albumin;male_age_high_albumin")
+pairs+=("male_age_low_steroid_globulin_log;male_age_high_steroid_globulin_log")
+pairs+=("male_age_low_oestradiol_log;male_age_high_oestradiol_log")
+pairs+=("male_age_low_testosterone_log;male_age_high_testosterone_log")
+
+for pair in "${pairs[@]}"; do
+  IFS=";" read -r -a array <<< "${pair}"
+  study_primary="${array[0]}"
+  study_secondary="${array[1]}"
+  comparisons+=("${study_primary};${path_gwas_source_container}/${study_primary}/${name_gwas_munge_file};${study_secondary};${path_gwas_source_container}/${study_secondary}/${name_gwas_munge_file}")
+done
 
 ################################################################################
 # Drive genetic correlations across comparisons.

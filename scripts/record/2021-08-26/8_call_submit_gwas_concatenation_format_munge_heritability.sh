@@ -31,8 +31,8 @@ path_process=$(<"./process_sexy_alcohol.txt")
 path_dock="$path_process/dock"
 
 path_gwas_source_container="${path_dock}/gwas/${cohorts_models}" # selection
-path_gwas_target_container="${path_dock}/gwas_process/cohorts_models/${cohorts_models}" # selection
-path_heritability_container="${path_dock}/heritability/cohorts_models/${cohorts_models}" # selection
+path_gwas_target_container="${path_dock}/gwas_process/${cohorts_models}" # selection
+path_heritability_container="${path_dock}/heritability/${cohorts_models}" # selection
 
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-08-26"
 path_batch_instances="${path_gwas_target_container}/post_process_batch_instances.txt"
