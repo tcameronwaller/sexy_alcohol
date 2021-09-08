@@ -73,24 +73,51 @@ done
 ################################################################################
 # Append custom comparisons that do not follow the same pattern.
 
-# Females to Males.
-pairs+=("female_vitamin_d_log;male_vitamin_d_log")
-pairs+=("female_albumin;male_albumin")
-pairs+=("female_steroid_globulin_log;male_steroid_globulin_log")
-pairs+=("female_oestradiol_log;male_oestradiol_log")
-pairs+=("female_testosterone_log;male_testosterone_log")
-# Premenopause Females to Postmenopause Females.
-pairs+=("female_premenopause_vitamin_d_log;female_postmenopause_vitamin_d_log")
-pairs+=("female_premenopause_albumin;female_postmenopause_albumin")
-pairs+=("female_premenopause_steroid_globulin_log;female_postmenopause_steroid_globulin_log")
-pairs+=("female_premenopause_oestradiol_log;female_postmenopause_oestradiol_log")
-pairs+=("female_premenopause_testosterone_log;female_postmenopause_testosterone_log")
-# Younger Males to Older Males.
-pairs+=("male_age_low_vitamin_d_log;male_age_high_vitamin_d_log")
-pairs+=("male_age_low_albumin;male_age_high_albumin")
-pairs+=("male_age_low_steroid_globulin_log;male_age_high_steroid_globulin_log")
-pairs+=("male_age_low_oestradiol_log;male_age_high_oestradiol_log")
-pairs+=("male_age_low_testosterone_log;male_age_high_testosterone_log")
+##########
+# cohorts_models_linear_measurement
+if false; then
+  # Females to Males.
+  pairs+=("female_vitamin_d_log;male_vitamin_d_log")
+  pairs+=("female_albumin;male_albumin")
+  pairs+=("female_steroid_globulin_log;male_steroid_globulin_log")
+  pairs+=("female_oestradiol_log;male_oestradiol_log")
+  pairs+=("female_testosterone_log;male_testosterone_log")
+  # Premenopause Females to Postmenopause Females.
+  pairs+=("female_premenopause_vitamin_d_log;female_postmenopause_vitamin_d_log")
+  pairs+=("female_premenopause_albumin;female_postmenopause_albumin")
+  pairs+=("female_premenopause_steroid_globulin_log;female_postmenopause_steroid_globulin_log")
+  pairs+=("female_premenopause_oestradiol_log;female_postmenopause_oestradiol_log")
+  pairs+=("female_premenopause_testosterone_log;female_postmenopause_testosterone_log")
+  # Younger Males to Older Males.
+  pairs+=("male_age_low_vitamin_d_log;male_age_high_vitamin_d_log")
+  pairs+=("male_age_low_albumin;male_age_high_albumin")
+  pairs+=("male_age_low_steroid_globulin_log;male_age_high_steroid_globulin_log")
+  pairs+=("male_age_low_oestradiol_log;male_age_high_oestradiol_log")
+  pairs+=("male_age_low_testosterone_log;male_age_high_testosterone_log")
+fi
+
+##########
+# cohorts_models_linear_imputation
+if true; then
+  # Females to Males.
+  pairs+=("female_vitamin_d_imputation_log;male_vitamin_d_imputation_log")
+  pairs+=("female_albumin_imputation;male_albumin_imputation")
+  pairs+=("female_steroid_globulin_imputation_log;male_steroid_globulin_imputation_log")
+  pairs+=("female_oestradiol_imputation;male_oestradiol_imputation")
+  pairs+=("female_testosterone_imputation;male_testosterone_imputation")
+  # Premenopause Females to Postmenopause Females.
+  pairs+=("female_premenopause_vitamin_d_imputation_log;female_postmenopause_vitamin_d_imputation_log")
+  pairs+=("female_premenopause_albumin_imputation;female_postmenopause_albumin_imputation")
+  pairs+=("female_premenopause_steroid_globulin_imputation_log;female_postmenopause_steroid_globulin_imputation_log")
+  pairs+=("female_premenopause_oestradiol_imputation;female_postmenopause_oestradiol_imputation")
+  pairs+=("female_premenopause_testosterone_imputation;female_postmenopause_testosterone_imputation")
+  # Younger Males to Older Males.
+  pairs+=("male_age_low_vitamin_d_imputation_log;male_age_high_vitamin_d_imputation_log")
+  pairs+=("male_age_low_albumin_imputation;male_age_high_albumin_imputation")
+  pairs+=("male_age_low_steroid_globulin_imputation_log;male_age_high_steroid_globulin_imputation_log")
+  pairs+=("male_age_low_oestradiol_imputation;male_age_high_oestradiol_imputation")
+  pairs+=("male_age_low_testosterone_imputation;male_age_high_testosterone_imputation")
+fi
 
 for pair in "${pairs[@]}"; do
   IFS=";" read -r -a array <<< "${pair}"
