@@ -53,11 +53,14 @@
 ################################################################################
 # Organize argument variables.
 
-path_batch_instances=${1} # text list of information for each instance in batch
-batch_instances_count=${2} # count of instances in batch
-path_gwas_source_container=${3} # full path to parent directories of GWAS summary statistics for each study
-path_gwas_target_container=${4} # full path to parent directories of GWAS summary statistics for each study
-path_scripts_record=${5} # full path to directory of scripts for a specific analysis report date
+pattern_gwas_report_file=${1} # string glob pattern by which to recognize PLINK2 GWAS report files
+response=${2} # whether GWAS response is beta coefficient ("coefficient"), odds ratio ("odds_ratio"), or z-scores ("z_score")
+path_batch_instances=${3} # text list of information for each instance in batch
+batch_instances_count=${4} # count of instances in batch
+path_gwas_source_container=${5} # full path to parent directories of GWAS summary statistics for each study
+path_gwas_target_container=${6} # full path to parent directories of GWAS summary statistics for each study
+path_heritability_container=${7} # full path to parent directory for heritability reports
+path_scripts_record=${8} # full path to directory of scripts for a specific analysis report date
 
 ###########################################################################
 # Organize variables.
@@ -73,5 +76,8 @@ study=${batch_instances[$batch_index]}
 # Concatenate GWAS across chromosomes.
 /usr/bin/bash "${path_scripts_record}/10_drive_gwas_concatenation_format_munge_heritability.sh" \
 $study \
+$pattern_gwas_report_file \
+$response \
 $path_gwas_source_container \
-$path_gwas_target_container
+$path_gwas_target_container \
+$path_heritability_container

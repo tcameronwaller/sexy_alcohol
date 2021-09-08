@@ -37,7 +37,7 @@ rm $path_batch_instances
 
 ##########
 # Iterate on directories for GWAS studies on cohorts, models, and phenotypes.
-pattern_gwas_chromosome_file="report.*.glm.linear" # do not expand with full path yet
+pattern_gwas_report_file="report.*.glm.linear" # do not expand with full path yet
 cd $path_gwas_container
 for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
   if [ -d "$path_directory" ]; then
@@ -57,7 +57,7 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
 
       # Determine whether directory contains valid GWAS summary statistics
       # for current chromosomes.
-      matches_chromosome=$(find "${path_gwas_container}/${study}/${name_chromosome}" -name "$pattern_gwas_chromosome_file")
+      matches_chromosome=$(find "${path_gwas_container}/${study}/${name_chromosome}" -name "$pattern_gwas_report_file")
       match_chromosome_file=${matches_chromosome[0]}
       if [[ -n $matches_chromosome && -f $match_chromosome_file ]]; then
         #echo "----------"

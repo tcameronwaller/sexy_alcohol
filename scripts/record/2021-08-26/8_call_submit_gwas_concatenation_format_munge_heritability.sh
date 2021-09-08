@@ -9,23 +9,30 @@
 ###########################################################################
 
 ################################################################################
+# General parameters.
+
+cohorts_models="cohorts_models_linear_measurement"          # 72 GWAS started at _____ on 7 September 2021
+#cohorts_models="cohorts_models_linear_measurement_unadjust" # 72 GWAS started at ____ on 7 September 2021
+#cohorts_models="cohorts_models_linear_imputation"           # 72 GWAS started at ____ on 7 September 2021
+#cohorts_models="cohorts_models_linear_imputation_unadjust"   # 72 GWAS started at ____ on 7 September 2021
+#cohorts_models="cohorts_models_linear_order"
+#cohorts_models="cohorts_models_linear_order_unadjust"
+#cohorts_models="cohorts_models_logistic_detection"
+#cohorts_models="cohorts_models_logistic_detection_unadjust"
+
+pattern_gwas_report_file="report.*.glm.linear" # do not expand with full path yet
+response="coefficient"
+
+################################################################################
 # Organize paths.
 # Read private, local file paths.
 cd ~/paths
 path_process=$(<"./process_sexy_alcohol.txt")
 path_dock="$path_process/dock"
 
-#cohorts_models="cohorts_models_linear_measurement" # 72 GWAS started at 17:47 on 7 September 2021
-#cohorts_models="cohorts_models_linear_measurement_unadjust" # 72 GWAS started at 17:55 on 7 September 2021
-#cohorts_models="cohorts_models_linear_imputation" # 72 GWAS started at 17:59 on 7 September 2021
-cohorts_models="cohorts_models_linear_imputation_unadjust" #
-#cohorts_models="cohorts_models_linear_order"
-#cohorts_models="cohorts_models_linear_order_unadjust"
-#cohorts_models="cohorts_models_logistic_detection"
-#cohorts_models="cohorts_models_logistic_detection_unadjust"
-
 path_gwas_source_container="${path_dock}/gwas/${cohorts_models}" # selection
 path_gwas_target_container="${path_dock}/gwas_process/${cohorts_models}" # selection
+path_heritability_container="${path_dock}/heritability/${cohorts_models}" # selection
 
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-08-26"
 path_batch_instances="${path_gwas_target_container}/post_process_batch_instances.txt"
@@ -50,7 +57,6 @@ mkdir -p $path_gwas_target_container
 rm $path_batch_instances
 
 # Iterate on directories for GWAS on cohorts and hormones.
-pattern_gwas_chromosome_file="report.*.glm.linear" # do not expand with full path yet
 pattern_gwas_concatenation_file="gwas_concatenation.txt.gz"
 cd $path_gwas_source_container
 for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
@@ -63,7 +69,7 @@ for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
     # across chromosomes.
     # Check for chromosome 22, assuming that all chromosomes completed
     # sequentially.
-    matches_chromosome=$(find "${path_gwas_source_container}/${study}/chromosome_22" -name "$pattern_gwas_chromosome_file")
+    matches_chromosome=$(find "${path_gwas_source_container}/${study}/chromosome_22" -name "$pattern_gwas_report_file")
     match_chromosome_file=${matches_chromosome[0]}
     if [[ -n $matches_chromosome && -f $match_chromosome_file ]]; then
       echo "----------"
@@ -103,9 +109,12 @@ if true; then
   qsub -t 1-${batch_instances_count}:1 -o \
   "${path_gwas_target_container}/post_process_out.txt" -e "${path_gwas_target_container}/post_process_error.txt" \
   "${path_scripts_record}/9_run_batch_jobs_gwas_concatenation_format_munge_heritability.sh" \
+  $pattern_gwas_report_file \
+  $response \
   $path_batch_instances \
   $batch_instances_count \
   $path_gwas_source_container \
   $path_gwas_target_container \
+  $path_heritability_container \
   $path_scripts_record
 fi
