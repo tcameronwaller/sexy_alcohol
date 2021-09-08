@@ -13,8 +13,8 @@
 
 #cohorts_models="cohorts_models_linear_measurement"          # 72 GWAS started at 19:21 on 7 September 2021
 #cohorts_models="cohorts_models_linear_measurement_unadjust" # 72 GWAS started at 19:22 on 7 September 2021
-cohorts_models="cohorts_models_linear_imputation"           # 72 GWAS started at ____ on 7 September 2021
-#cohorts_models="cohorts_models_linear_imputation_unadjust"  # 72 GWAS started at ____ on 7 September 2021
+#cohorts_models="cohorts_models_linear_imputation"           # 72 GWAS started at 19:37 on 7 September 2021
+cohorts_models="cohorts_models_linear_imputation_unadjust"  # 72 GWAS started at ____ on 7 September 2021
 #cohorts_models="cohorts_models_linear_order"
 #cohorts_models="cohorts_models_linear_order_unadjust"
 #cohorts_models="cohorts_models_logistic_detection"
