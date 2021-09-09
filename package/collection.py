@@ -250,25 +250,28 @@ def read_collect_organize_stratification_design(
         )
         records.append(record)
         pass
-    # Organize heritability table.
+    # Organize table.
     table = utility.convert_records_to_dataframe(
         records=records
-    )
-    table.sort_values(
-        by=["study"],
-        axis="index",
-        ascending=True,
-        inplace=True,
     )
     table.reset_index(
         level=None,
         inplace=True,
         drop=True,
     )
-    table["study"].astype("string")
-    table.set_index(
+    columns = [
+        "design",
         "study",
-        drop=True,
+        "count_samples",
+    ]
+    table = table.loc[
+        :, table.columns.isin(columns)
+    ]
+    table = table[[*columns]]
+    table.sort_values(
+        by=["design", "study",],
+        axis="index",
+        ascending=True,
         inplace=True,
     )
     # Return information.
@@ -571,26 +574,32 @@ def read_collect_organize_heritability_design(
         )
         records.append(record)
         pass
-
-    # Organize heritability table.
+    # Organize table.
     table = utility.convert_records_to_dataframe(
         records=records
-    )
-    table.sort_values(
-        by=["study"],
-        axis="index",
-        ascending=True,
-        inplace=True,
     )
     table.reset_index(
         level=None,
         inplace=True,
         drop=True,
     )
-    table["study"].astype("string")
-    table.set_index(
+    columns = [
+        "design",
         "study",
-        drop=True,
+        "variants", "summary",
+        "heritability", "standard_error", "confidence_95_range",
+        "confidence_95_low", "confidence_95_high",
+        "ratio",
+        "ratio_standard_error",
+    ]
+    table = table.loc[
+        :, table.columns.isin(columns)
+    ]
+    table = table[[*columns]]
+    table.sort_values(
+        by=["design", "study",],
+        axis="index",
+        ascending=True,
         inplace=True,
     )
     # Return information.
@@ -884,25 +893,33 @@ def read_collect_organize_correlation_design_pairs(
             records.append(record)
             pass
 
-    # Organize correlation table.
+    # Organize table.
     table = utility.convert_records_to_dataframe(
         records=records
-    )
-    table.sort_values(
-        by=["study_primary"],
-        axis="index",
-        ascending=True,
-        inplace=True,
     )
     table.reset_index(
         level=None,
         inplace=True,
         drop=True,
     )
-    table["study_primary"].astype("string")
-    table.set_index(
+    columns = [
+        "design",
         "study_primary",
-        drop=True,
+        "study_secondary",
+        "variants", "summary",
+        "correlation", "standard_error", "confidence_95_range",
+        "probability",
+        "confidence_95_low", "confidence_95_high",
+        "correlation_absolute",
+    ]
+    table = table.loc[
+        :, table.columns.isin(columns)
+    ]
+    table = table[[*columns]]
+    table.sort_values(
+        by=["design", "study_primary", "study_secondary"],
+        axis="index",
+        ascending=True,
         inplace=True,
     )
     # Return information.
