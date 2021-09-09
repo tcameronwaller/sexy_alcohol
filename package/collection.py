@@ -744,7 +744,8 @@ def read_extract_correlation_design_study_pair_detail(
         pass
 
     # Determine whether main report has a missing value ("nan") correlation.
-    if missing_correlation:
+    #if missing_correlation:
+    if False:
         # Initialize flag.
         summary_table = False
         # Determine whether report has a summary table.
