@@ -19,10 +19,7 @@
 #cohorts_models="cohorts_models_linear_measurement"          # z-score coefficients 72 GWAS started at 21:31 on 8 September 2021
 #cohorts_models="cohorts_models_linear_measurement_unadjust" # z-score coefficients 72 GWAS started at 21:33 on 8 September 2021
 #cohorts_models="cohorts_models_linear_imputation"           # z-score coefficients 72 GWAS started at 21:34 on 8 September 2021
-cohorts_models="cohorts_models_linear_imputation_unadjust"  # z-score coefficients 72 GWAS started at ___ on 8 September 2021
-
-
-
+#cohorts_models="cohorts_models_linear_imputation_unadjust"  # z-score coefficients 72 GWAS started at 21:36 on 8 September 2021
 
 #cohorts_models="cohorts_models_linear_order"
 #cohorts_models="cohorts_models_linear_order_unadjust"
@@ -30,8 +27,8 @@ cohorts_models="cohorts_models_linear_imputation_unadjust"  # z-score coefficien
 #cohorts_models="cohorts_models_logistic_detection_unadjust"
 
 pattern_gwas_report_file="report.*.glm.linear" # do not expand with full path yet
-response="z_score" # "coefficient" unless "response_standard_scale" is "true"
-response_standard_scale="true"
+response="z_score" # "coefficient" unless "response_standard_scale" is "yes"
+response_standard_scale="yes"
 
 ################################################################################
 # Organize paths.
@@ -41,8 +38,8 @@ path_process=$(<"./process_sexy_alcohol.txt")
 path_dock="$path_process/dock"
 
 path_gwas_source_container="${path_dock}/gwas/${cohorts_models}" # selection
-path_gwas_target_container="${path_dock}/gwas_process/${cohorts_models}_z" # selection
-path_heritability_container="${path_dock}/heritability/${cohorts_models}_z" # selection
+path_gwas_target_container="${path_dock}/gwas_process/${cohorts_models}_z" # selection ... notice appended "_z"
+path_heritability_container="${path_dock}/heritability/${cohorts_models}_z" # selection ... notice appended "_z"
 
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-08-26"
 path_batch_instances="${path_gwas_target_container}/post_process_batch_instances.txt"

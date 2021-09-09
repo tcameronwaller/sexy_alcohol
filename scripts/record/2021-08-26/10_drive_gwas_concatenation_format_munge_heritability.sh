@@ -55,9 +55,6 @@ $response_standard_scale \
 $path_promiscuity_scripts \
 $report
 
-
-# TODO: pass parameter "$response"
-
 ##############################################################################
 # LDSC Munge and Heritability.
 # Paths.
