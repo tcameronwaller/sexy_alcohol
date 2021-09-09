@@ -884,13 +884,12 @@ def read_collect_organize_correlation_design_pairs(
             records.append(record)
             pass
 
-
-    # Organize heritability table.
+    # Organize correlation table.
     table = utility.convert_records_to_dataframe(
         records=records
     )
     table.sort_values(
-        by=["study"],
+        by=["study_primary"],
         axis="index",
         ascending=True,
         inplace=True,
@@ -900,9 +899,9 @@ def read_collect_organize_correlation_design_pairs(
         inplace=True,
         drop=True,
     )
-    table["study"].astype("string")
+    table["study_primary"].astype("string")
     table.set_index(
-        "study",
+        "study_primary",
         drop=True,
         inplace=True,
     )
@@ -1605,7 +1604,7 @@ def write_product_study_table(
 
     # Specify directories and files.
     path_table = os.path.join(
-        path_parent, str(name + ".tsv")
+        path_parent, str("table_" + name + ".tsv")
     )
     # Write information to file.
     information.to_csv(
@@ -1617,7 +1616,7 @@ def write_product_study_table(
     pass
 
 
-def write_product_studies(
+def write_product_tables(
     information=None,
     path_parent=None,
 ):
@@ -1660,6 +1659,20 @@ def write_product(
     returns:
 
     """
+
+    # Cohort tables in PLINK format.
+    write_product_tables(
+        information=information["stratification"],
+        path_parent=paths["collection_stratification"],
+    )
+    write_product_tables(
+        information=information["heritability"],
+        path_parent=paths["collection_heritability"],
+    )
+    write_product_tables(
+        information=information["correlation"],
+        path_parent=paths["collection_correlation"],
+    )
 
     pass
 
