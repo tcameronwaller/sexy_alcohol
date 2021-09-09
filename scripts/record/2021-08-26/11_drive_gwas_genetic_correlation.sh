@@ -42,11 +42,11 @@ path_gwas_source_container="${path_dock}/gwas_process/${cohorts_models}"
 
 # Define array of primary studies.
 primaries=()
-primaries+=("30482948_walters_2018_eur_unrel;${path_dock}/gwas_process/30482948_walters_2018_eur_unrel/${name_gwas_munge_file}")
-#primaries+=("30482948_walters_2018_female;${path_dock}/gwas_process/30482948_walters_2018_female/${name_gwas_munge_file}") # heritability < 0
-primaries+=("30482948_walters_2018_male;${path_dock}/gwas_process/30482948_walters_2018_male/${name_gwas_munge_file}")
-primaries+=("34002096_mullins_2021_all;${path_dock}/gwas_process/34002096_mullins_2021_all/${name_gwas_munge_file}")
-primaries+=("34002096_mullins_2021_bpd1;${path_dock}/gwas_process/34002096_mullins_2021_bpd1/${name_gwas_munge_file}")
+#primaries+=("30482948_walters_2018_eur_unrel;${path_dock}/gwas_process/30482948_walters_2018_eur_unrel/${name_gwas_munge_file}")
+###primaries+=("30482948_walters_2018_female;${path_dock}/gwas_process/30482948_walters_2018_female/${name_gwas_munge_file}") # heritability < 0
+#primaries+=("30482948_walters_2018_male;${path_dock}/gwas_process/30482948_walters_2018_male/${name_gwas_munge_file}")
+#primaries+=("34002096_mullins_2021_all;${path_dock}/gwas_process/34002096_mullins_2021_all/${name_gwas_munge_file}")
+#primaries+=("34002096_mullins_2021_bpd1;${path_dock}/gwas_process/34002096_mullins_2021_bpd1/${name_gwas_munge_file}")
 primaries+=("34002096_mullins_2021_bpd2;${path_dock}/gwas_process/34002096_mullins_2021_bpd2/${name_gwas_munge_file}")
 
 # Define array of secondary studies.
