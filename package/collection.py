@@ -47,35 +47,9 @@ import promiscuity.utility as utility
 ###############################################################################
 # Functionality
 
-# TODO: heritabilities
-# TODO: 1 table for each top level "container" directory
-# TODO: columns for "container" and "study"
-
-# TODO: correlations
-# TODO: 1 table for each top level "container" directory
-# TODO: columns for "container", "primary", and "secondary"
-
 
 ##########
 # Initialization
-
-# TODO: the directory path for the cohort_model_phenotype tables has CHANGED!!!
-
-# TCW 8 September 2021
-# TODO: I need to reconstruct ".../parameters/table_cohort_model_phenotype_reference.tsv"
-# TODO: I might need a separate reference table for each "cohort_model" version ("measurements", "imputations", etc)
-
-
-
-
-# TCW 8 September 2021
-#path_cohorts_models="${path_dock}/stratification_2021-08-30/cohorts_models_linear"
-#path_cohorts_models="${path_dock}/stratification_2021-08-30/cohorts_models_logistic"
-
-# TODO: need to update paths in "dock"
-# /.../stratification_freeze_2021-07-15/cohorts_models/
-# /.../heritability_2021-07-20/cohorts_models/
-# /.../genetic_correlation_2021-07-21/[primary_study]/cohorts_models_2021-06-07/
 
 
 def initialize_directories(
@@ -143,9 +117,6 @@ def initialize_directories(
 
 ##########
 # Read stratification table sample sizes
-
-# TODO: TCW 8 September 2021
-# TODO: Introduce sort order for "study" cohort names ???
 
 
 def read_extract_stratification_design_study_sample_count(
@@ -1285,8 +1256,9 @@ def read_collect_organize_source(
 
 ##########
 # Summary
-
-# TODO: group these by "hierarchy" or "pair"
+# TODO: 9 September 2021
+# TODO: SOME of this functionality MIGHT still be useful...
+# TODO: BUT keep it VERSATILE
 
 
 def organize_cohort_model_phenotype_reference_table(
@@ -1835,15 +1807,6 @@ def drive_collection_report_pair_studies(
 ###############################################################################
 # Procedure
 
-# TODO: need to update paths in "dock"
-# /.../stratification_freeze_2021-07-15/cohorts_models/
-# /.../heritability_2021-07-20/cohorts_models/
-# /.../genetic_correlation_2021-07-21/[primary_study]/cohorts_models_2021-06-07/
-
-
-# TODO: TCW 8 September 2021
-# TODO: treat the various "cohorts_models" (eg "cohorts_models_linear_measurement")
-# TODO: as containers for the secondary phenotype studies...
 
 def execute_procedure(
     path_dock=None,
