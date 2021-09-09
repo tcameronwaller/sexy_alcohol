@@ -19,7 +19,7 @@
 #cohorts_models="cohorts_models_linear_measurement"          # z-score coefficients 72 GWAS started at 23:05 on 8 September 2021
 #cohorts_models="cohorts_models_linear_measurement_unadjust" # z-score coefficients 72 GWAS started at 23:38 on 8 September 2021
 #cohorts_models="cohorts_models_linear_imputation"           # z-score coefficients 72 GWAS started at 23:40 on 8 September 2021
-cohorts_models="cohorts_models_linear_imputation_unadjust"  # z-score coefficients 72 GWAS started at ___ on 8 September 2021
+#cohorts_models="cohorts_models_linear_imputation_unadjust"  # z-score coefficients 72 GWAS started at 23:42 on 8 September 2021
 
 #cohorts_models="cohorts_models_linear_order"
 #cohorts_models="cohorts_models_linear_order_unadjust"
