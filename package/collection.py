@@ -176,7 +176,7 @@ def read_extract_stratification_design_study_sample_count(
 
     """
 
-    # Extract metabolite's identifier.
+    # Extract study's identifier.
     study = str(
         file_name.replace(str(file_prefix), "").replace(str(file_suffix), "")
     )
@@ -255,9 +255,9 @@ def read_collect_organize_stratification_design(
         records=records
     )
     table.sort_values(
-        by=["count_samples"],
+        by=["study"],
         axis="index",
-        ascending=False,
+        ascending=True,
         inplace=True,
     )
     table.reset_index(
@@ -275,7 +275,7 @@ def read_collect_organize_stratification_design(
     return table
 
 
-def read_collect_organize_stratification_sample_counts(
+def read_collect_organize_stratification_designs_studies(
     path_parent_directory=None,
     report=None,
 ):
@@ -284,10 +284,10 @@ def read_collect_organize_stratification_sample_counts(
     table.
 
     Within "stratification" parent directory, first degree child directories
-    correspond to "design" names and second degree child directories correspond
-    to "study" names.
+    correspond to "design" names and child files within those directories
+    correspond to "study" names.
     Create separate tables for each "design" directory.
-    Create table records for each "study" directory.
+    Create separate table records for each "study" file.
 
     arguments:
         path_parent_directory (str): path to source parent directory
@@ -336,28 +336,29 @@ def read_collect_organize_stratification_sample_counts(
 ##########
 # Read heritability estimates
 
-# TODO: TCW 8 September 2021
-# TODO: follow pattern from "stratification" above
-# TODO: "design" and "study" terminology
 
-
-
-
-def read_extract_phenotype_heritability(
-    file=None,
+def read_extract_heritability_design_study_detail(
+    file_name=None,
+    file_prefix=None,
     file_suffix=None,
-    path_source_directory=None,
+    design=None,
+    study=None,
+    path_parent_directory=None,
 ):
     """
     Reads and extracts information from log of LDSC for heritability estimation
     from GWAS summary statistics.
 
     arguments:
-        file (str): name of a file
+        file_name (str): name of a file
+        file_prefix (str): file name prefix to recognize relevant files and to
+            extract identifier
         file_suffix (str): file name suffix to recognize relevant files and to
             extract identifier
-        path_source_directory (str): path to source parent directory for files
-            with heritability estimations for phenotype
+        design (str): name of design for set of studies
+        study (str): name of study
+        path_parent_directory (str): path to source parent directory
+            for stratification tables
 
     raises:
 
@@ -366,20 +367,17 @@ def read_extract_phenotype_heritability(
 
     """
 
-    # Extract metabolite's identifier.
-    identifier = str(
-        file.replace(str(file_suffix), "")
-    )
     # Define path to file.
     path_file = os.path.join(
-        path_source_directory, file
+        path_parent_directory, file_name
     )
-    # Initialize variables.
+    # Initialize variables for extraction.
     variants = float("nan")
     heritability = float("nan")
     heritability_error = float("nan")
     confidence_95_low = float("nan")
     confidence_95_high = float("nan")
+    #confidence_95 = float("nan")
     ratio = float("nan")
     ratio_error = float("nan")
     # Read relevant lines from file.
@@ -437,24 +435,31 @@ def read_extract_phenotype_heritability(
     )
     # Collect information.
     record = dict()
-    record["identifier"] = identifier
-    record["heritability_variants"] = variants
-    record["heritability_summary"] = summary
+    record["design"] = design
+    record["study"] = study
+    record["variants"] = variants
+    record["summary"] = summary
     record["heritability"] = heritability
-    record["heritability_standard_error"] = heritability_error
-    record["heritability_confidence_95"] = confidence_95
-    record["heritability_ratio"] = ratio
-    record["heritability_ratio_standard_error"] = ratio_error
+    record["standard_error"] = heritability_error
+    record["confidence_95_low"] = confidence_95_low
+    record["confidence_95_high"] = confidence_95_high
+    record["confidence_95_range"] = confidence_95
+    record["ratio"] = ratio
+    record["ratio_standard_error"] = ratio_error
     # Return information.
     return record
 
 
-def read_collect_phenotypes_heritabilities_by_files(
+def read_collect_organize_heritability_by_many_files_per_directory(
     file_suffix=None,
     path_source_directory=None,
 ):
     """
     Reads, collects, and organizes heritability estimates across phenotypes.
+
+    This function is written to collect heritability information from multiple
+    files within the same directory.
+    This function needs to be updated. (TCW 9 September 2021)
 
     arguments:
         file_suffix (str): file name suffix to recognize relevant files and to
@@ -507,22 +512,34 @@ def read_collect_phenotypes_heritabilities_by_files(
     return table
 
 
-def read_collect_phenotypes_heritabilities_by_directories(
-    file=None,
+def read_collect_organize_heritability_design(
+    design=None,
+    file_name=None,
+    file_prefix=None,
+    file_suffix=None,
     path_parent_directory=None,
+    report=None,
 ):
     """
-    Reads, collects, and organizes heritability estimates across phenotypes.
+    Reads, collects, and organizes heritability estimates across studies that
+    correspond to a single design.
 
     arguments:
-        file (str): name of a file
-        path_parent_directory (str): path to source parent directory for files
-            with heritability estimations for metabolites
+        design (str): name of design for set of studies
+        file_name (str): name of a file
+        file_prefix (str): file name prefix to recognize relevant files and to
+            extract identifier
+        file_suffix (str): file name suffix to recognize relevant files and to
+            extract identifier
+        path_parent_directory (str): path to source parent directory
+            for stratification tables
+        report (bool): whether to print reports
 
     raises:
 
     returns:
-        (object): Pandas data frame of metabolites' heritability estimates
+        (object): Pandas data frame of details about heritability estimates for
+            studies within design
 
     """
 
@@ -534,47 +551,114 @@ def read_collect_phenotypes_heritabilities_by_directories(
     child_directories_relevant = list()
     for child_directory in child_directories:
         path_file = os.path.join(
-            path_parent_directory, child_directory, file,
+            path_parent_directory, child_directory, file_name,
         )
         if os.path.isfile(path_file):
             child_directories_relevant.append(child_directory)
-    # Collect and organize phenotype heritabilities.
+    # Collect and organize details for heritability estimates across studies.
     records = list()
     for child_directory in child_directories_relevant:
         path_child_directory = os.path.join(
             path_parent_directory, child_directory,
         )
-        record = read_extract_phenotype_heritability(
-            file=file,
-            file_suffix="",
-            path_source_directory=path_child_directory,
+        record = read_extract_heritability_design_study_detail(
+            file_name=file_name,
+            file_prefix=file_prefix,
+            file_suffix=file_suffix,
+            design=design,
+            study=child_directory,
+            path_parent_directory=path_child_directory,
         )
-        # Set name of cohort and hormone.
-        record["identifier"] = child_directory
         records.append(record)
         pass
+
     # Organize heritability table.
     table = utility.convert_records_to_dataframe(
         records=records
     )
     table.sort_values(
-        by=["heritability"],
+        by=["study"],
         axis="index",
-        ascending=False,
+        ascending=True,
         inplace=True,
     )
     table.reset_index(
         level=None,
-        inplace=True
+        inplace=True,
+        drop=True,
     )
-    table["identifier"].astype("string")
+    table["study"].astype("string")
     table.set_index(
-        "identifier",
+        "study",
         drop=True,
         inplace=True,
     )
     # Return information.
     return table
+
+
+def read_collect_organize_heritability_designs_studies(
+    path_parent_directory=None,
+    report=None,
+):
+    """
+    Reads, collects, and organizes the details on estimates of heritability.
+
+    Within "heritability" parent directory, first degree child directories
+    correspond to "design" names and second degree child directories correspond
+    to "study" names.
+    Create separate tables for each "design" directory.
+    Create separate table records for each "study" directory.
+
+    arguments:
+        path_parent_directory (str): path to source parent directory for
+            heritability estimate reports
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of Pandas data frames
+
+    """
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print(
+            "report: read_collect_organize_heritability_designs_studies()"
+        )
+
+    # Collect names of container directories within the parent directory.
+    child_directories = utility.extract_subdirectory_names(
+        path=path_parent_directory
+    )
+    # Iterate on design directories.
+    pail = dict()
+    for child_directory in child_directories:
+        path_child_directory = os.path.join(
+            path_parent_directory, child_directory,
+        )
+        pail[child_directory] = read_collect_organize_heritability_design(
+            design=child_directory,
+            file_name="heritability_report.log",
+            file_prefix="",
+            file_suffix="",
+            path_parent_directory=path_child_directory,
+            report=report,
+        )
+        # Report.
+        if report:
+            print(pail[child_directory])
+        pass
+    # Return information.
+    return pail
+
+
+##########
+# Read genetic correlation estimates
+
+
 
 
 def read_extract_phenotypes_genetic_correlation(
@@ -976,10 +1060,17 @@ def read_collect_organize_source(
     """
 
     # Stratification table sample counts.
-    pail_stratification = read_collect_organize_stratification_sample_counts(
+    pail_stratification = read_collect_organize_stratification_designs_studies(
         path_parent_directory=paths["stratification"],
         report=report,
     )
+    # Heritability estimates.
+    pail_heritability = read_collect_organize_heritability_designs_studies(
+        path_parent_directory=paths["heritability"],
+        report=report,
+    )
+
+
 
     # Compile and return information.
     pail = dict()
