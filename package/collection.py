@@ -393,7 +393,7 @@ def read_extract_heritability_design_study_detail(
     prefix_ratio = "Ratio: "
     for line in lines:
         if prefix_variants in line:
-            variants = float(
+            variants = int(
                 line.replace(prefix_variants, "").replace(suffix_variants, "")
             )
         elif prefix_heritability in line:
@@ -659,42 +659,41 @@ def read_collect_organize_heritability_designs_studies(
 # Read genetic correlation estimates
 
 
-
-
-def read_extract_phenotypes_genetic_correlation(
-    file=None,
+def read_extract_correlation_design_study_pair_detail(
+    file_name=None,
+    file_prefix=None,
     file_suffix=None,
-    path_source_directory=None,
+    design=None,
+    study_primary=None,
+    study_secondary=None,
+    path_parent_directory=None,
 ):
     """
-    Reads and extracts information from log of LDSC for estimation of
-    genetic correlation between a phenotype of interest and a metabolite.
-
-    phenotype 1: phenotype of interest compared accross all metabolites
-    phenotype 2: single metabolite of interest
+    Reads and extracts information from log of LDSC for genetic correlation
+    estimation from GWAS summary statistics.
 
     arguments:
-        file (str): name of a file
+        file_name (str): name of a file
+        file_prefix (str): file name prefix to recognize relevant files and to
+            extract identifier
         file_suffix (str): file name suffix to recognize relevant files and to
             extract identifier
-        path_source_directory (str): path to source parent directory for files
-            with genetic correlation estimations for metabolites
+        design (str): name of design for set of studies
+        study_primary (str): name of primary study
+        study_secondary (str): name of secondary study
+        path_parent_directory (str): path to source parent directory
+            for stratification tables
 
     raises:
 
     returns:
-        (dict): information about estimation of a metabolite's genetic
-            correlation to phenotype
-
+        (dict): information about estimation of genetic correlation for a pair
+            of studies
     """
 
-    # Extract metabolite's identifier.
-    identifier = str(
-        file.replace(str(file_suffix), "")
-    )
     # Define path to file.
     path_file = os.path.join(
-        path_source_directory, file
+        path_parent_directory, file_name
     )
     # Initialize variables.
     variants = float("nan")
@@ -791,18 +790,196 @@ def read_extract_phenotypes_genetic_correlation(
     )
     # Collect information.
     record = dict()
-    record["identifier"] = identifier
-    record["correlation_variants"] = variants
-    record["correlation_summary"] = summary
+    record["design"] = design
+    record["study_primary"] = study_primary
+    record["study_secondary"] = study_secondary
+    record["variants"] = variants
+    record["summary"] = summary
     record["correlation"] = correlation
-    record["correlation_standard_error"] = correlation_error
-    record["correlation_confidence_95"] = confidence_95
+    record["standard_error"] = correlation_error
+    record["confidence_95_low"] = confidence_95_low
+    record["confidence_95_high"] = confidence_95_high
+    record["confidence_95_range"] = confidence_95
     record["correlation_absolute"] = correlation_absolute
-    record["correlation_probability"] = probability
+    record["probability"] = probability
     # Return information.
     return record
 
 
+def read_collect_organize_correlation_design_pairs(
+    design=None,
+    file_name=None,
+    file_prefix=None,
+    file_suffix=None,
+    path_parent_directory=None,
+    report=None,
+):
+    """
+    Reads, collects, and organizes genetic correlation estimates across pairs of
+    studies that correspond to a single design.
+
+    arguments:
+        design (str): name of design for set of studies
+        file_name (str): name of a file
+        file_prefix (str): file name prefix to recognize relevant files and to
+            extract identifier
+        file_suffix (str): file name suffix to recognize relevant files and to
+            extract identifier
+        path_parent_directory (str): path to source parent directory
+            for stratification tables
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of details about heritability estimates for
+            studies within design
+
+    """
+
+    # Collect names of primary child directories within the parent directory.
+    child_primary_directories = utility.extract_subdirectory_names(
+        path=path_parent_directory
+    )
+    # Iterate on primary child directories.
+    records = list()
+    for child_primary_directory in child_primary_directories:
+        path_child_primary_directory = os.path.join(
+            path_parent_directory, child_primary_directory,
+        )
+        # Collect names of secondary child directories within the primary child
+        # directory.
+        child_secondary_directories = utility.extract_subdirectory_names(
+            path=path_child_primary_directory
+        )
+        # Filter secondary child directories to those that contain relevant
+        # files.
+        child_secondary_directories_relevant = list()
+        for child_secondary_directory in child_secondary_directories:
+            path_file = os.path.join(
+                path_parent_directory, child_primary_directory,
+                child_secondary_directory, file_name,
+            )
+            if os.path.isfile(path_file):
+                child_secondary_directories_relevant.append(
+                    child_secondary_directory
+                )
+        # Collect and organize details for genetic correlation estimates across
+        # pairs of studies.
+        for child_secondary_directory in child_secondary_directories_relevant:
+            path_child_secondary_directory = os.path.join(
+                path_parent_directory, child_primary_directory,
+                child_secondary_directory,
+            )
+            record = read_extract_correlation_design_study_pair_detail(
+                file_name=file_name,
+                file_prefix=file_prefix,
+                file_suffix=file_suffix,
+                design=design,
+                study_primary=child_primary_directory,
+                study_secondary=child_secondary_directory,
+                path_parent_directory=path_child_secondary_directory,
+            )
+            records.append(record)
+            pass
+
+
+    # Organize heritability table.
+    table = utility.convert_records_to_dataframe(
+        records=records
+    )
+    table.sort_values(
+        by=["study"],
+        axis="index",
+        ascending=True,
+        inplace=True,
+    )
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=True,
+    )
+    table["study"].astype("string")
+    table.set_index(
+        "study",
+        drop=True,
+        inplace=True,
+    )
+    # Return information.
+    return table
+
+
+def read_collect_organize_correlation_designs_study_pairs(
+    path_parent_directory=None,
+    report=None,
+):
+    """
+    Reads, collects, and organizes the details on estimates of genetic
+    correlations between pairs of primary and secondary phenotypes.
+
+    Within "genetic_correlation" parent directory, first degree child
+    directories correspond to "design" names.
+
+    Within those "design" parent directories, first degree child directories
+    correspond to "primary" study names and second degree child directories
+    correspond to "secondary" study names.
+    Create separate tables for each "design" directory.
+    Create separate table records for each "study" directory.
+
+    arguments:
+        path_parent_directory (str): path to source parent directory for
+            heritability estimate reports
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of Pandas data frames
+
+    """
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print(
+            "report: read_collect_organize_correlation_designs_study_pairs()"
+        )
+
+    # Collect names of container directories within the parent directory.
+    child_directories = utility.extract_subdirectory_names(
+        path=path_parent_directory
+    )
+    # Iterate on design directories.
+    pail = dict()
+    for child_directory in child_directories:
+        path_child_directory = os.path.join(
+            path_parent_directory, child_directory,
+        )
+        pail[child_directory] = read_collect_organize_correlation_design_pairs(
+            design=child_directory,
+            file_name="correlation_report.log",
+            file_prefix="",
+            file_suffix="",
+            path_parent_directory=path_child_directory,
+            report=report,
+        )
+        # Report.
+        if report:
+            print(pail[child_directory])
+        pass
+    # Return information.
+    return pail
+
+
+
+
+
+
+
+
+
+# TODO: TCW 9 September 2021
+# TODO: MAYBE still useful
 def read_collect_primary_secondaries_genetic_correlations_by_files(
     file_suffix=None,
     path_source_directory=None,
@@ -863,6 +1040,8 @@ def read_collect_primary_secondaries_genetic_correlations_by_files(
     return table
 
 
+# TODO: TCW 9 September 2021
+# TODO: PROBABLY obsolete
 def read_collect_primary_secondaries_genetic_correlations_by_directories(
     file=None,
     path_parent_directory=None,
@@ -935,6 +1114,8 @@ def read_collect_primary_secondaries_genetic_correlations_by_directories(
     return table
 
 
+# TODO: TCW 9 September 2021
+# TODO: obsolete...
 def read_source_hierarchy(
     primary_study=None,
     secondary_study=None,
@@ -1047,6 +1228,9 @@ def read_collect_organize_source(
     """
     Reads and organizes source information from file.
 
+    Each primary dictionary (such as "pail_stratification") has keys that
+    correspond to names of design tables with records for individual studies.
+
     arguments:
         paths (dict<str>): collection of paths to directories for procedure's
             files
@@ -1069,11 +1253,16 @@ def read_collect_organize_source(
         path_parent_directory=paths["heritability"],
         report=report,
     )
-
-
-
-    # Compile and return information.
+    # Genetic correlation estimates.
+    pail_correlation = read_collect_organize_correlation_designs_study_pairs(
+        path_parent_directory=paths["genetic_correlation"],
+        report=report,
+    )
+    # Collect information.
     pail = dict()
+    pail["stratification"] = pail_stratification
+    pail["heritability"] = pail_heritability
+    pail["correlation"] = pail_correlation
     return pail
 
 
@@ -1454,8 +1643,6 @@ def write_product_studies(
 
 
 def write_product(
-    primary_study=None,
-    secondary_study=None,
     information=None,
     paths=None,
 ):
@@ -1463,10 +1650,6 @@ def write_product(
     Writes product information to file.
 
     arguments:
-        primary_study (str): identifier of primary study, consisting of a single
-            GWAS
-        secondary_study (str): identifier of secondary study, consisting of
-            multiple GWASes
         information (object): information to write to file
         paths (dict<str>): collection of paths to directories for procedure's
             files
@@ -1477,18 +1660,6 @@ def write_product(
 
     """
 
-    # Specify directories and files.
-    path_table = os.path.join(
-        paths["genetic_correlation"],
-        str("table_" + primary_study + "_" + secondary_study + ".tsv")
-    )
-    # Write information to file.
-    information["table_summary"].to_csv(
-        path_or_buf=path_table,
-        sep="\t",
-        header=True,
-        index=True,
-    )
     pass
 
 
@@ -1675,6 +1846,12 @@ def execute_procedure(
     source = read_collect_organize_source(
         paths=paths,
         report=True,
+    )
+
+    # Write product information to file.
+    write_product(
+        paths=paths,
+        information=source
     )
 
     pass
