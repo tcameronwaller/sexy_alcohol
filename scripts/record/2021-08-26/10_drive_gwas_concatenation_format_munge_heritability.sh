@@ -14,9 +14,10 @@
 study=${1} # text name of GWAS study and also name of study's parent directory
 pattern_gwas_report_file=${2} # string glob pattern by which to recognize PLINK2 GWAS report files
 response=${3} # whether GWAS response is beta coefficient ("coefficient"), odds ratio ("odds_ratio"), or z-scores ("z_score")
-path_gwas_source_container=${4} # full path to parent directories of GWAS summary statistics for each study
-path_gwas_target_container=${5} # full path to parent directories of GWAS summary statistics for each study
-path_heritability_container=${6} # full path to parent directory for heritability reports
+response_standard_scale=${4} # whether to convert response (coefficient) to z-score standard scale
+path_gwas_source_container=${5} # full path to parent directories of GWAS summary statistics for each study
+path_gwas_target_container=${6} # full path to parent directories of GWAS summary statistics for each study
+path_heritability_container=${7} # full path to parent directory for heritability reports
 
 ################################################################################
 # Organize paths.
@@ -50,6 +51,7 @@ report="true" # "true" or "false"
 $pattern_gwas_report_file \
 $path_gwas_source_parent \
 $path_gwas_target_parent \
+$response_standard_scale \
 $path_promiscuity_scripts \
 $report
 

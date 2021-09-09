@@ -144,6 +144,9 @@ def initialize_directories(
 ##########
 # Read stratification table sample sizes
 
+# TODO: TCW 8 September 2021
+# TODO: Introduce sort order for "study" cohort names ???
+
 
 def read_extract_stratification_design_study_sample_count(
     file_name=None,
@@ -259,7 +262,8 @@ def read_collect_organize_stratification_design(
     )
     table.reset_index(
         level=None,
-        inplace=True
+        inplace=True,
+        drop=True,
     )
     table["study"].astype("string")
     table.set_index(
@@ -332,6 +336,9 @@ def read_collect_organize_stratification_sample_counts(
 ##########
 # Read heritability estimates
 
+# TODO: TCW 8 September 2021
+# TODO: follow pattern from "stratification" above
+# TODO: "design" and "study" terminology
 
 
 
