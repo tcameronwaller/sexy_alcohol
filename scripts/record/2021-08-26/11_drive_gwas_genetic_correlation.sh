@@ -16,9 +16,9 @@
 #cohorts_models="cohorts_models_linear_imputation"
 #cohorts_models="cohorts_models_linear_imputation_unadjust"
 
-#cohorts_models="cohorts_models_linear_measurement_z" # <-- next
+cohorts_models="cohorts_models_linear_measurement_z" # <-- next
 #cohorts_models="cohorts_models_linear_measurement_unadjust_z"
-cohorts_models="cohorts_models_linear_imputation_z" # 9 September 2021
+#cohorts_models="cohorts_models_linear_imputation_z" # 9 September 2021
 #cohorts_models="cohorts_models_linear_imputation_unadjust_z"
 
 #cohorts_models="cohorts_models_linear_order"
@@ -81,7 +81,7 @@ done
 
 ##########
 # cohorts_models_linear_measurement
-if false; then
+if true; then
   # Females to Males.
   pairs+=("female_vitamin_d_log;male_vitamin_d_log")
   pairs+=("female_albumin;male_albumin")
@@ -104,7 +104,7 @@ fi
 
 ##########
 # cohorts_models_linear_imputation
-if true; then
+if false; then
   # Females to Males.
   pairs+=("female_vitamin_d_imputation_log;male_vitamin_d_imputation_log")
   pairs+=("female_albumin_imputation;male_albumin_imputation")
