@@ -898,6 +898,7 @@ def read_collect_organize_correlation_design_pairs(
         "correlation", "standard_error", "confidence_95_range",
         "probability",
         "confidence_95_low", "confidence_95_high",
+        "confidence_95_not_one", "confidence_95_not_zero",
         "correlation_absolute",
     ]
     table = table.loc[
