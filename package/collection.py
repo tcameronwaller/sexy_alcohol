@@ -681,6 +681,8 @@ def read_extract_correlation_design_study_pair_detail(
     correlation_error = float("nan")
     confidence_95_low = float("nan")
     confidence_95_high = float("nan")
+    confidence_95_not_one = float("nan")
+    confidence_95_not_zero = float("nan")
     correlation_absolute = float("nan")
     probability = float("nan")
     # Read relevant lines from file.
@@ -761,6 +763,19 @@ def read_extract_correlation_design_study_pair_detail(
     ):
         confidence_95_low = (correlation - (1.96 * correlation_error))
         confidence_95_high = (correlation + (1.96 * correlation_error))
+        if (
+            (confidence_95_low < 1.0) and (confidence_95_high < 1.0)
+        ):
+            confidence_95_not_one = 1
+        else:
+            confidence_95_not_one = 0
+        if (
+            ((confidence_95_low > 0) and (confidence_95_high > 0)) or
+            ((confidence_95_low < 0) and (confidence_95_high < 0))
+        ):
+            confidence_95_not_zero = 1
+        else:
+            confidence_95_not_zero = 0
         pass
     confidence_95 = str(
         str(round(confidence_95_low, 3)) + " ... " +
@@ -781,6 +796,8 @@ def read_extract_correlation_design_study_pair_detail(
     record["confidence_95_low"] = confidence_95_low
     record["confidence_95_high"] = confidence_95_high
     record["confidence_95_range"] = confidence_95
+    record["confidence_95_not_one"] = confidence_95_not_one
+    record["confidence_95_not_zero"] = confidence_95_not_zero
     record["correlation_absolute"] = correlation_absolute
     record["probability"] = probability
     # Return information.
