@@ -36,12 +36,8 @@ import promiscuity.plot as plot
 import uk_biobank.organization as ukb_organization
 import uk_biobank.description as ukb_description
 
-
-
 ###############################################################################
 # Functionality
-
-
 
 ##########
 # Initialization
