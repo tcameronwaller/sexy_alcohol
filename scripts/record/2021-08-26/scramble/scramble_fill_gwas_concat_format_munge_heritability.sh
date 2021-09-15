@@ -14,7 +14,7 @@ cohorts_models="cohorts_models_linear_measurement"          # 72 GWAS started at
 
 pattern_gwas_report_file="report.*.glm.linear" # do not expand with full path yet
 response="coefficient" # "coefficient" or "z_score" if "response_standard_scale" is "yes"
-response_standard_scale="no" # no
+response_standard_scale="no" # "no" or "yes"
 
 study="male_age_high_testosterone_bioavailable_log"
 
