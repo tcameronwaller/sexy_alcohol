@@ -41,8 +41,8 @@ fi
 
 #python3 $path_package/interface.py main --path_dock $path_dock --assembly
 #python3 $path_package/interface.py main --path_dock $path_dock --organization
-#python3 $path_package/interface.py main --path_dock $path_dock --regression
-python3 $path_package/interface.py main --path_dock $path_dock --description
+python3 $path_package/interface.py main --path_dock $path_dock --regression # include unadjust
+#python3 $path_package/interface.py main --path_dock $path_dock --description
 #python3 $path_package/interface.py main --path_dock $path_dock --stratification
 #python3 $path_package/interface.py main --path_dock $path_dock --collection
 
