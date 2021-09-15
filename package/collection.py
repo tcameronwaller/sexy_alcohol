@@ -977,6 +977,54 @@ def read_collect_organize_correlation_designs_study_pairs(
     return pail
 
 
+##########
+# Driver
+
+
+def read_collect_organize_source(
+    paths=None,
+    report=None,
+):
+    """
+    Reads and organizes source information from file.
+
+    Each primary dictionary (such as "pail_stratification") has keys that
+    correspond to names of design tables with records for individual studies.
+
+    arguments:
+        paths (dict<str>): collection of paths to directories for procedure's
+            files
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): source information
+
+    """
+
+    # Stratification table sample counts.
+    pail_stratification = read_collect_organize_stratification_designs_studies(
+        path_parent_directory=paths["stratification"],
+        report=report,
+    )
+    # Heritability estimates.
+    pail_heritability = read_collect_organize_heritability_designs_studies(
+        path_parent_directory=paths["heritability"],
+        report=report,
+    )
+    # Genetic correlation estimates.
+    pail_correlation = read_collect_organize_correlation_designs_study_pairs(
+        path_parent_directory=paths["genetic_correlation"],
+        report=report,
+    )
+    # Collect information.
+    pail = dict()
+    pail["stratification"] = pail_stratification
+    pail["heritability"] = pail_heritability
+    pail["correlation"] = pail_correlation
+    return pail
+
 
 
 
@@ -1224,53 +1272,6 @@ def read_source_hierarchy(
 # TODO: "read_collect_organize_heritability_study_records"
 # TODO: "read_collect_organize_correlation_design_tables"
 # TODO: "read_collect_organize_correlation_study_records"
-
-
-
-def read_collect_organize_source(
-    paths=None,
-    report=None,
-):
-    """
-    Reads and organizes source information from file.
-
-    Each primary dictionary (such as "pail_stratification") has keys that
-    correspond to names of design tables with records for individual studies.
-
-    arguments:
-        paths (dict<str>): collection of paths to directories for procedure's
-            files
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): source information
-
-    """
-
-    # Stratification table sample counts.
-    pail_stratification = read_collect_organize_stratification_designs_studies(
-        path_parent_directory=paths["stratification"],
-        report=report,
-    )
-    # Heritability estimates.
-    pail_heritability = read_collect_organize_heritability_designs_studies(
-        path_parent_directory=paths["heritability"],
-        report=report,
-    )
-    # Genetic correlation estimates.
-    pail_correlation = read_collect_organize_correlation_designs_study_pairs(
-        path_parent_directory=paths["genetic_correlation"],
-        report=report,
-    )
-    # Collect information.
-    pail = dict()
-    pail["stratification"] = pail_stratification
-    pail["heritability"] = pail_heritability
-    pail["correlation"] = pail_correlation
-    return pail
-
 
 ##########
 # Summary
