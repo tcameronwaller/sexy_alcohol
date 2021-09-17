@@ -22,6 +22,7 @@ journal: Nature Neuroscience
 authors: Hang Zhou, ..., Joel Gelernter
 note:
 - Problematic Alcohol Use (PAU) ... how did they define this phenotype?
+- genetic correlation phenotypes do not include hormones
 
 
 --------------------------------------------------
@@ -292,6 +293,7 @@ PubMed:30840924
 Date: 1 April 2019
 Journal: Drug and Alcohol Dependence
 Title: "Correlations between sex-related hormones, alcohol dependence and alcohol craving"
+authors: Ada M.-C. Ho, ..., Stacey J. Winham, Victor M. Karpyak
 
 --------------------------------------------------
 PubMed:29280252
@@ -340,11 +342,4 @@ note:
 - 119 female-specific genetic variants
 - 445 male-specific genetic variants
 
---------------------------------------------------
-PubMed: 30581192
-title: "The role of sex in the genomics of human complex traits"
-authors: Ekaterina A. Khramtsova, Lea K. Davis, Barbara E. Stranger
-journal: Nature Reviews Genetics
-date: 23 December 2018
-type: review
 
