@@ -23,6 +23,13 @@ note:
 - neuroimmune differences between females and males
 - excessive alcohol consumption influences neuroimmune markers
 
+--------------------------------------------------
+PubMed: 32231337
+title: "Emerging phenotyping strategies will advance our understanding of psychiatric genetics"
+journal: Nature Neuroscience
+date: April 2020
+authors: Sandra Sanchez-Roige, Abraham A. Palmer
+type: review
 
 
 --------------------------------------------------

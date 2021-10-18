@@ -268,6 +268,8 @@ date: 8 January 2021
 journal: Biological Psychiatry
 authors: Joanna Martin, ..., Stacey J. Winham, ..., Lea K. Davis
 note:
+- Table S6
+- - The genetic correlation for Alcohol CONSUMPTION does not differ from 1 between females and males
 - Table S11
 - - sex-specific, between-phenotype genetic correlations
 - - includes genetic correlations for Alcohol Consumption (not Alcohol Dependence)
