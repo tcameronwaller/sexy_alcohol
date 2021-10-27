@@ -93,7 +93,7 @@ maf=0.0 # run on all SNPs and filter in subsequent analyses
 set +x
 
 # Initialize directories.
-rm -r $path_study_gwas
+###rm -r $path_study_gwas # be careful!
 if [ ! -d $path_study_gwas ]; then
     # Directory does not already exist.
     # Create directory.
