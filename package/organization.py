@@ -1655,6 +1655,7 @@ def execute_procedure(
     # Read source information from file.
     # Exclusion identifiers are "eid".
     source = ukb_organization.read_source(
+        source="assembly",
         path_dock=path_dock,
         report=True,
     )
