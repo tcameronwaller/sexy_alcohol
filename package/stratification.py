@@ -70,6 +70,9 @@ def initialize_directories(
     # Define paths to directories.
     paths["dock"] = path_dock
     paths["stratification"] = os.path.join(path_dock, "stratification")
+    paths["reference_population"] = os.path.join(
+        path_dock, "stratification", "reference_population"
+    )
     paths["cohorts_models_linear"] = os.path.join(
         path_dock, "stratification", "cohorts_models_linear"
     )
@@ -83,6 +86,9 @@ def initialize_directories(
     # Initialize directories.
     utility.create_directories(
         path=paths["stratification"]
+    )
+    utility.create_directories(
+        path=paths["reference_population"]
     )
     utility.create_directories(
         path=paths["cohorts_models_linear"]
@@ -221,6 +227,10 @@ def write_product(
 
     # Cohort tables in PLINK format.
     write_product_cohorts_models(
+        information=information["reference_population"],
+        path_parent=paths["reference_population"],
+    )
+    write_product_cohorts_models(
         information=information["cohorts_models_linear"],
         path_parent=paths["cohorts_models_linear"],
     )
@@ -269,6 +279,14 @@ def execute_procedure(
         report=True,
     )
 
+    # Reference population.
+    pail_reference_population = (
+        ukb_strat.execute_stratify_genotype_cohorts_plink_format_set(
+            table=source["table_phenotypes"],
+            set="reference_population",
+            path_dock=path_dock,
+            report=True,
+    ))
     # Select and organize variables across cohorts.
     # Organize phenotypes and covariates in format for analysis in PLINK.
     # else: pail_cohorts_models = dict()
@@ -288,6 +306,7 @@ def execute_procedure(
     ))
     # Collect information.
     information = dict()
+    information["reference_population"] = pail_reference_population
     information["cohorts_models_linear"] = pail_cohorts_models_linear
     information["cohorts_models_logistic"] = pail_cohorts_models_logistic
     # Write product information to file.

@@ -54,6 +54,8 @@ for chromosome in "${chromosomes[@]}"; do
 
   if true; then
     # Call PLINK2.
+    # This call to PLINK2 includes "--freq" and produces a report of allele
+    # frequencies.
     # PLINK2 command "--glm" drives genotypic association analyses, either
     # linear or logistic regressions across Simple Nucleotide Polymorphisms
     # (SNPs).

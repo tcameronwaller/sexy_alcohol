@@ -25,7 +25,7 @@ path_process=$(<"./process_sexy_alcohol.txt")
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-11-04"
 path_dock="$path_process/dock"
 
-path_cohorts_models="${path_dock}/stratification/cohorts_models_linear"
+path_cohorts_models="${path_dock}/stratification_2021-10-27/cohorts_models_linear"
 #path_cohorts_models="${path_dock}/stratification/cohorts_models_logistic"
 
 
