@@ -11,8 +11,8 @@
 ################################################################################
 # General parameters.
 
-cohorts_models="cohorts_models_linear_measurement"          # 72 GWAS; TCW started at __ on __ November 2021
-#cohorts_models="cohorts_models_linear_imputation"          # __ GWAS; TCW started at __ on __ November 2021
+#cohorts_models="cohorts_models_linear_measurement"          # 72 GWAS; TCW started at 21:09 on 1 November 2021
+cohorts_models="cohorts_models_linear_imputation"          # 72 GWAS; TCW started at __ on __ November 2021
 
 pattern_gwas_report_file="report.*.glm.linear" # do not expand with full path yet
 
