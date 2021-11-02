@@ -11,7 +11,7 @@
 ################################################################################
 # General parameters.
 
-cohorts_models="cohorts_models_linear_measurement"          # __ GWAS; TCW started at __ on __ November 2021
+cohorts_models="cohorts_models_linear_measurement"          # 72 GWAS; TCW started at __ on __ November 2021
 #cohorts_models="cohorts_models_linear_imputation"          # __ GWAS; TCW started at __ on __ November 2021
 
 pattern_gwas_report_file="report.*.glm.linear" # do not expand with full path yet
@@ -84,16 +84,17 @@ echo "first batch instance: " ${batch_instances[0]} # notice base-zero indexing
 echo "last batch instance: " ${batch_instances[$batch_instances_count - 1]}
 
 # Execute batch with grid scheduler.
-if false; then
+if true; then
   # Submit array batch to Sun Grid Engine.
   # Array batch indices must start at one (not zero).
   qsub -t 1-${batch_instances_count}:1 -o \
   "${path_gwas_target_container}/out_concatenation.txt" -e "${path_gwas_target_container}/error_concatenation.txt" \
   "${path_scripts_record}/7_run_batch_jobs_gwas_concatenation.sh" \
-  $pattern_gwas_report_file \
   $path_batch_instances \
   $batch_instances_count \
+  $pattern_gwas_report_file \
   $path_gwas_source_container \
   $path_gwas_target_container \
-  $path_scripts_record
+  $path_scripts_record \
+  $path_process
 fi

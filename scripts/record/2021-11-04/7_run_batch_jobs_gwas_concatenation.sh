@@ -25,8 +25,6 @@
 # Segmentation errors commonly indicate a memory error.
 #$ -l h_vmem=1G
 # Concurrent threads; assigns value to variable NSLOTS.
-# Important to specify 32 threads to avoid inconsistency with interactive
-# calculations.
 #$ -pe threaded 8
 # Range of indices.
 # Specify as argument when calling qsub.
@@ -44,24 +42,16 @@
 # slots ("-pe threaded 4") and 1 Gigabyte of memory ("-l h_vmem=1G"), even for
 # GWAS on > 300,000 persons.
 
-# LDSC Munge of GWAS summary statistics throws a memory error with 4 thread
-# slots ("-pe threaded 4") and 1 Gigabyte of memory ("-l h_vmem=1G").
-
-# LDSC Munge of GWAS summary statistics runs with 8 thread slots
-# ("-pe threaded 8") and 1 Gigabyte of memory ("-l h_vmem=1G").
-
 ################################################################################
 # Organize argument variables.
 
-pattern_gwas_report_file=${1} # string glob pattern by which to recognize PLINK2 GWAS report files
-response=${2} # whether GWAS response is beta coefficient ("coefficient"), odds ratio ("odds_ratio"), or z-scores ("z_score")
-response_standard_scale=${3} # whether to convert response (coefficient) to z-score standard scale
-path_batch_instances=${4} # text list of information for each instance in batch
-batch_instances_count=${5} # count of instances in batch
-path_gwas_source_container=${6} # full path to parent directories of GWAS summary statistics for each study
-path_gwas_target_container=${7} # full path to parent directories of GWAS summary statistics for each study
-path_heritability_container=${8} # full path to parent directory for heritability reports
-path_scripts_record=${9} # full path to directory of scripts for a specific analysis report date
+path_batch_instances=${1} # text list of information for each instance in batch
+batch_instances_count=${2} # count of instances in batch
+pattern_gwas_report_file=${3} # string glob pattern by which to recognize PLINK2 GWAS report files
+path_gwas_source_container=${4} # full path to parent directories of GWAS summary statistics for each study
+path_gwas_target_container=${5} # full path to parent directories of GWAS summary statistics for each study
+path_scripts_record=${6} # full path to directory of scripts for a specific analysis report date
+path_process=${7} # full path to directory for all processes relevant to current project
 
 ###########################################################################
 # Organize variables.
@@ -75,11 +65,14 @@ study=${batch_instances[$batch_index]}
 # Execute procedure.
 
 # Concatenate GWAS across chromosomes.
-/usr/bin/bash "${path_scripts_record}/10_drive_gwas_concatenation_format_munge_heritability.sh" \
+/usr/bin/bash "${path_scripts_record}/8_drive_gwas_concatenation.sh" \
 $study \
 $pattern_gwas_report_file \
-$response \
-$response_standard_scale \
 $path_gwas_source_container \
 $path_gwas_target_container \
-$path_heritability_container
+$path_scripts_record \
+$path_process
+
+
+
+#
