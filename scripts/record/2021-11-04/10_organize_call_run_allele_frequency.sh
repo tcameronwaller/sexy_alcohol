@@ -7,7 +7,7 @@
 # Shell.
 #$ -S /bin/bash
 # Name of job.
-#$ -N waller_gwas
+#$ -N waller_allele
 # Contact.
 # "b": beginning, "e": end, "a": abortion, "s": suspension, "n": never
 #$ -M tcameronwaller@gmail.com
@@ -53,9 +53,10 @@
 
 path_batch_instances=${1} # text list of information for each instance in batch
 batch_instances_count=${2} # count of instances in batch
-path_cohorts_models=${3} # full path to parent directory for tables of variables across cohorts
-path_gwas=${4} # full path to parent directory for GWAS summary statistics
-path_scripts_record=${5} # full path to parent directory for date-specific record scripts
+path_table_cohort=${3} # full path to table with identifiers of persons and genotypes in cohort for analysis
+path_scripts_record=${4} # full path to parent directory for date-specific record scripts
+path_process=${5} # full path to directory for all processes relevant to current project
+path_plink2=${6} # full path to executable installation of PLINK2
 
 ###########################################################################
 # Organize variables.
@@ -67,49 +68,26 @@ instance=${batch_instances[$batch_index]}
 
 # Separate fields from instance.
 IFS=";" read -r -a array <<< "${instance}"
-phenotype="${array[0]}"
-cohort_model="${array[1]}"
-table_cohort_model="${array[2]}"
-covariates="${array[3]}"
+chromosome="${array[0]}"
+path_genotype_chromosome="${array[1]}"
+path_sample_chromosome="${array[2]}"
+path_allele_frequency_chromosome="${array[3]}"
 
-# Organize variables.
-cohort_model_phenotype="${cohort_model}_${phenotype}"
-path_table_phenotypes_covariates="${path_cohorts_models}/${table_cohort_model}_${phenotype}.tsv"
-path_study_gwas="${path_gwas}/${cohort_model_phenotype}"
-
-# Report.
-echo "phenotype: " ${phenotype}
-echo "cohort_model: " ${cohort_model}
-echo "table: " ${path_table_phenotypes_covariates}
-echo "covariates: " ${covariates}
-
-# General parameters.
-threads=32 # 32, needs to match the "pe threaded" argument to scheduler
-maf=0.0 # run on all SNPs and filter in subsequent analyses
-
-# Echo each command to console.
-#set -x
-# Suppress echo each command to console.
-set +x
-
-# Initialize directories.
-###rm -r $path_study_gwas # be careful!
-if [ ! -d $path_study_gwas ]; then
-    # Directory does not already exist.
-    # Create directory.
-    mkdir -p $path_study_gwas
-fi
+threshold_allele_frequency=0.0 # threshold filter by minor allele frequency
+threads=32 # count of processing threads to use
 
 ###########################################################################
 # Execute procedure.
 
-path_report=$path_study_gwas
-analysis="${cohort_model_phenotype}"
-/usr/bin/bash "${path_scripts_record}/5-1_run_chromosomes_plink_linear_gwas.sh" \
-$path_table_phenotypes_covariates \
-$path_report \
-$analysis \
-$phenotype \
-$covariates \
+/usr/bin/bash "${path_scripts_record}/11_run_chromosomes_plink_allele_frequency.sh" \
+$path_table_cohort \
+$path_genotype_chromosome \
+$path_sample_chromosome \
+$path_allele_frequency_chromosome \
+$threshold_allele_frequency \
 $threads \
-$maf
+$path_plink2
+
+
+
+################################################################################

@@ -4,35 +4,30 @@
 # Each linear GWAS (30,000 - 200,000 records; 22 chromosomes) requires about
 # 5-7 hours to run on the grid.
 
-
-###########################################################################
-# Organize paths.
-# Read private, local file paths.
-echo "read private file path variables and organize paths..."
-cd ~/paths
-path_process=$(<"./process_sexy_alcohol.txt")
-path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-11-04"
-path_dock="$path_process/dock"
-
-path_reference_population="${path_dock}/stratification/reference_population"
-path_table_phenotypes_covariates="${path_reference_population}/table_white_unrelated_female_male.tsv"
-
-path_allele_frequency="${path_dock}/allele_frequency"
-
 ################################################################################
 # Organize argument variables.
 
-path_report=${2} # full path to parent directory for GWAS summary statistics
-analysis=${3} # unique name for association analysis
+path_table_cohort=${1} # full path to table with identifiers of persons and genotypes in cohort for analysis
+path_genotype_chromosome=${2} # full path to file for chromosome genotype information
+path_sample_chromosome=${3} # full path to file for chromosome sample information
+path_allele_frequency_chromosome=${4} # full path to directory for chromosome report
+threshold_allele_frequency=${5} # threshold filter by minor allele frequency
+threads=${6} # count of processing threads to use
+path_plink2=${7} # full path to executable installation of PLINK2
 
-threads=32 # count of processing threads to use
+################################################################################
+# Organize variables.
 
-
-#threshold_allele_frequency=0.0 # threshold filter by minor allele frequency
-# use this threshold in "--maf $threshold_allele_frequency" after reading in the allele frequencies
+# Initialize directories.
+###rm -r $path_allele_frequency_chromosome # be careful!
+if [ ! -d $path_allele_frequency_chromosome ]; then
+    # Directory does not already exist.
+    # Create directory.
+    mkdir -p $path_allele_frequency_chromosome
+fi
 
 ###########################################################################
-# Organize variables.
+# Calculate allele frequencies in PLINK2.
 
 cd $path_allele_frequency_chromosome
 # Call PLINK2.
@@ -44,9 +39,9 @@ cd $path_allele_frequency_chromosome
 $path_plink2 \
 --memory 90000 \
 --threads $threads \
---bgen $path_genotype ref-first \
---sample $path_sample \
---keep $path_table_phenotypes_covariates \
+--bgen $path_genotype_chromosome ref-first \
+--sample $path_sample_chromosome \
+--keep $path_table_cohort \
 --maf $threshold_allele_frequency \
 --freq \
 --out report

@@ -21,7 +21,7 @@ path_process=$(<"./process_sexy_alcohol.txt")
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-11-04"
 path_dock="$path_process/dock"
 path_reference_population="${path_dock}/stratification/reference_population"
-path_table_phenotypes_covariates="${path_reference_population}/table_white_unrelated_female_male.tsv"
+path_table_cohort="${path_reference_population}/table_white_unrelated_female_male.tsv"
 path_allele_frequency="${path_dock}/allele_frequency"
 
 # Initialize directories.
@@ -85,7 +85,7 @@ echo "count of batch instances: " $batch_instances_count
 echo "first batch instance: " ${batch_instances[0]} # notice base-zero indexing
 echo "last batch instance: " ${batch_instances[batch_instances_count - 1]}
 
-if false; then
+if true; then
   # Submit array batch to Sun Grid Engine.
   # Array batch indices must start at one (not zero).
   echo "----------------------------------------------------------------------"
@@ -96,6 +96,7 @@ if false; then
   "${path_scripts_record}/10_organize_call_run_allele_frequency.sh" \
   $path_batch_instances \
   $batch_instances_count \
+  $path_table_cohort \
   $path_scripts_record \
   $path_process \
   $path_plink2
