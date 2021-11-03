@@ -52,9 +52,14 @@ for chromosome in "${chromosomes[@]}"; do
   #cat $path_source_file | awk 'BEGIN { FS=" "; OFS=" " } NR > 1 { print $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12 }' >> $path_gwas_concatenation
   cat $path_source_file | awk 'BEGIN { FS=" "; OFS=" " } NR > 1 { print $0 }' >> $path_concatenation
 done
+
+
 # Compress file format.
-gzip -cvf $path_concatenation > $path_concatenation_compress
+# TODO: TCW 3 November 2021
+# TODO: I think that PLINK2 "--read-freq" cannot read the file after GZIP compression
+# TODO: only use GZIP compression if NOT going to use PLINK2 to read and filter the frequency file...
+#gzip -cvf $path_concatenation > $path_concatenation_compress
 
 ###########################################################################
 # Remove temporary files.
-rm $path_concatenation
+#rm $path_concatenation
