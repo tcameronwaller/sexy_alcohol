@@ -39,6 +39,6 @@ cd $path_allele_frequency
 $path_plink2 \
 --memory 90000 \
 --threads $threads \
---read_freq $path_source_report \
+--read-freq $path_source_report \
 --maf $threshold_allele_frequency \
 --out allele_frequency_0_1
