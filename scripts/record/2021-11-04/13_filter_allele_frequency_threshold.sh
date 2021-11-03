@@ -41,4 +41,5 @@ $path_plink2 \
 --threads $threads \
 --read-freq $path_source_report \
 --maf $threshold_allele_frequency \
+--freq \
 --out allele_frequency_0_1
