@@ -15,19 +15,19 @@
 # Read private, local file paths.
 echo "read private file path variables and organize paths..."
 cd ~/paths
+path_plink2=$(<"./tools_plink2.txt")
 path_process=$(<"./process_sexy_alcohol.txt")
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-11-04"
 path_dock="$path_process/dock"
 path_allele_frequency="${path_dock}/allele_frequency"
-pattern_frequency_report_file="report.afreq"
+path_source_report="${path_allele_frequency}/allele_frequency_concatenation.afreq"
+#path_target_report="${path_allele_frequency}/allele_frequency_0_1.afreq"
 
 ################################################################################
-# Paths.
-path_allele_frequency_report="${path_allele_frequency}/allele_frequency_concatenation.afreq.gz"
+# Organize variables.
 
-
-
-
+threshold_allele_frequency=0.1 # threshold filter by minor allele frequency
+threads=32 # count of processing threads to use
 
 cd $path_allele_frequency
 # Call PLINK2.
@@ -39,6 +39,6 @@ cd $path_allele_frequency
 $path_plink2 \
 --memory 90000 \
 --threads $threads \
---read_freq $path_allele_frequency_report ref-first \
+--read_freq $path_source_report \
 --maf $threshold_allele_frequency \
---out report
+--out allele_frequency_0_1
