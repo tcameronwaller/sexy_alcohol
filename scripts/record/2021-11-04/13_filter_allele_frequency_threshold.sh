@@ -22,7 +22,7 @@ path_dock="$path_process/dock"
 path_allele_frequency="${path_dock}/allele_frequency"
 
 path_source_report="${path_allele_frequency}/allele_frequency_concatenation.afreq.gz"
-path_target_report="${path_allele_frequency}/allele_frequency_filter_0_1.afreq"
+path_target_report="${path_allele_frequency}/allele_frequency_filter_0_05.afreq"
 path_target_report_compress="${path_allele_frequency}/allele_frequency_filter_0_05.afreq.gz"
 
 ################################################################################
