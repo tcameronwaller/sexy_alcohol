@@ -55,11 +55,8 @@ done
 
 
 # Compress file format.
-# TODO: TCW 3 November 2021
-# TODO: I think that PLINK2 "--read-freq" cannot read the file after GZIP compression
-# TODO: only use GZIP compression if NOT going to use PLINK2 to read and filter the frequency file...
-#gzip -cvf $path_concatenation > $path_concatenation_compress
+gzip -cvf $path_concatenation > $path_concatenation_compress
 
 ###########################################################################
 # Remove temporary files.
-#rm $path_concatenation
+rm $path_concatenation
