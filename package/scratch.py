@@ -164,7 +164,7 @@ def execute_procedure(
     # Read source information from file.
     table_kinship_pairs = ukb_strat.read_source_table_kinship_pairs(
         path_dock=path_dock,
-        report=report,
+        report=True,
     )
     print(table_kinship_pairs)
 
