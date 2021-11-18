@@ -290,20 +290,24 @@ def execute_procedure(
     # Select and organize variables across cohorts.
     # Organize phenotypes and covariates in format for analysis in PLINK.
     # else: pail_cohorts_models = dict()
-    pail_cohorts_models_linear = (
-        ukb_strat.execute_stratify_genotype_cohorts_plink_format_set(
-            table=source["table_phenotypes"],
-            set="sex_hormone_linear",
-            path_dock=path_dock,
-            report=True,
-    ))
-    pail_cohorts_models_logistic = (
-        ukb_strat.execute_stratify_genotype_cohorts_plink_format_set(
-            table=source["table_phenotypes"],
-            set="sex_hormone_logistic",
-            path_dock=path_dock,
-            report=True,
-    ))
+    if False:
+        pail_cohorts_models_linear = (
+            ukb_strat.execute_stratify_genotype_cohorts_plink_format_set(
+                table=source["table_phenotypes"],
+                set="sex_hormone_linear",
+                path_dock=path_dock,
+                report=True,
+        ))
+        pail_cohorts_models_logistic = (
+            ukb_strat.execute_stratify_genotype_cohorts_plink_format_set(
+                table=source["table_phenotypes"],
+                set="sex_hormone_logistic",
+                path_dock=path_dock,
+                report=True,
+        ))
+    else:
+        pail_cohorts_models_linear = dict()
+        pail_cohorts_models_logistic = dict()
     # Collect information.
     information = dict()
     information["reference_population"] = pail_reference_population
