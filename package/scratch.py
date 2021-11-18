@@ -168,12 +168,6 @@ def execute_procedure(
     )
     print(table_kinship_pairs)
 
-    array_kinship = copy.deepcopy(table_kinship_pairs["Kinship"].dropna().to_numpy())
-    minimum = numpy.nanmin(array_kinship)
-    maximum = numpy.nanmax(array_kinship)
-    print("minimum: " + str(minimum))
-    print("maximum: " + str(maximum))
-
 
     pass
 
