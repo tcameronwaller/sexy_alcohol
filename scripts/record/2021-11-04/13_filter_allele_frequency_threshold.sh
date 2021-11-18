@@ -15,7 +15,6 @@
 # Read private, local file paths.
 echo "read private file path variables and organize paths..."
 cd ~/paths
-path_plink2=$(<"./tools_plink2.txt")
 path_process=$(<"./process_sexy_alcohol.txt")
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-11-04"
 path_dock="$path_process/dock"

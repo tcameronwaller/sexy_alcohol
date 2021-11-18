@@ -166,11 +166,20 @@ def define_main_subparser(subparsers=None):
         )
     )
     parser_main.add_argument(
+        "-stratification", "--stratification",
+        dest="stratification",
+        action="store_true",
+        help=(
+            "Stratification of cohorts and formatting tables of phenotypes " +
+            "and covariates for genetic analyses (especially GWAS in PLINK2)."
+        )
+    )
+    parser_main.add_argument(
         "-regression", "--regression",
         dest="regression",
         action="store_true",
         help=(
-            "Regression analyses of phenotypes within of cohorts."
+            "Regression analyses of phenotypes within cohorts."
         )
     )
     parser_main.add_argument(
@@ -180,15 +189,6 @@ def define_main_subparser(subparsers=None):
         help=(
             "Description of cohorts and phenotypes with summary statistics " +
             "and plots."
-        )
-    )
-    parser_main.add_argument(
-        "-stratification", "--stratification",
-        dest="stratification",
-        action="store_true",
-        help=(
-            "Stratification of cohorts and formatting tables of phenotypes " +
-            "and covariates for genetic analyses (especially GWAS in PLINK2)."
         )
     )
     parser_main.add_argument(
@@ -299,6 +299,13 @@ def evaluate_main_parameters(arguments):
         organization.execute_procedure(
             path_dock=arguments.path_dock
         )
+    if arguments.stratification:
+        # Report status.
+        print("... executing stratification procedure ...")
+        # Execute procedure.
+        stratification.execute_procedure(
+            path_dock=arguments.path_dock
+        )
     if arguments.regression:
         # Report status.
         print("... executing regression procedure ...")
@@ -311,13 +318,6 @@ def evaluate_main_parameters(arguments):
         print("... executing description procedure ...")
         # Execute procedure.
         description.execute_procedure(
-            path_dock=arguments.path_dock
-        )
-    if arguments.stratification:
-        # Report status.
-        print("... executing stratification procedure ...")
-        # Execute procedure.
-        stratification.execute_procedure(
             path_dock=arguments.path_dock
         )
     if arguments.collection:

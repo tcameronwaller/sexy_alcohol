@@ -34,6 +34,7 @@ pandas.options.mode.chained_assignment = None # default = "warn"
 import promiscuity.utility as utility
 import promiscuity.plot as plot
 import uk_biobank.organization as ukb_organization
+import uk_biobank.stratification as ukb_strat
 
 
 
@@ -70,9 +71,6 @@ def initialize_directories(
     # Define paths to directories.
     paths["dock"] = path_dock
     paths["scratch"] = os.path.join(path_dock, "scratch")
-    paths["plots"] = os.path.join(
-        path_dock, "scratch", "plots"
-    )
 
     # Remove previous files to avoid version or batch confusion.
     if restore:
@@ -80,9 +78,6 @@ def initialize_directories(
     # Initialize directories.
     utility.create_directories(
         path=paths["scratch"]
-    )
-    utility.create_directories(
-        path=paths["plots"]
     )
     # Return information.
     return paths
@@ -134,100 +129,6 @@ def read_source(
     }
 
 
-
-
-##########
-# Write
-
-
-def write_product_plot_figure(
-    name=None,
-    figure=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        name (str): base name for file
-        figure (object): figure object to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    # Specify directories and files.
-    path_file = os.path.join(
-        path_parent, str(name + ".png")
-    )
-    # Write information to file.
-    plot.write_figure(
-        figure=figure,
-        format="png",
-        resolution=300,
-        path=path_file,
-    )
-    pass
-
-
-def write_product_plots(
-    information=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    for name in information.keys():
-        write_product_plot_figure(
-            name=name,
-            figure=information[name],
-            path_parent=path_parent,
-        )
-    pass
-
-
-def write_product(
-    information=None,
-    paths=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        paths (dict<str>): collection of paths to directories for procedure's
-            files
-
-    raises:
-
-    returns:
-
-    """
-
-
-    # Plots.
-    write_product_plots(
-        information=information["plots"],
-        path_parent=paths["plots"],
-    )
-    pass
-
-
-
-
 ###############################################################################
 # Procedure
 
@@ -260,27 +161,20 @@ def execute_procedure(
         path_dock=path_dock,
     )
     # Read source information from file.
-    # Exclusion identifiers are "eid".
-    source = read_source(
+    # Read source information from file.
+    table_kinship_pairs = ukb_strat.read_source_table_kinship_pairs(
         path_dock=path_dock,
-        report=False,
+        report=report,
     )
+    print(table_kinship_pairs)
 
-    print(source["table_phenotypes"])
+    array_kinship = copy.deepcopy(table["Kinship"].dropna().to_numpy())
+    minimum = numpy.nanmin(array)
+    maximum = numpy.nanmax(array)
+    print("minimum: " + str(minimum))
+    print("maximum: " + str(maximum))
 
-    pail_plot = ukb_organization.execute_plot_cohorts_models_phenotypes(
-        table=source["table_phenotypes"],
-        report=True,
-    )
 
-    # Collect information.
-    information = dict()
-    information["plots"] = pail_plot
-    # Write product information to file.
-    write_product(
-        paths=paths,
-        information=information
-    )
     pass
 
 
