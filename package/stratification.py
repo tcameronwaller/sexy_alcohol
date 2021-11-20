@@ -287,6 +287,29 @@ def execute_procedure(
             path_dock=path_dock,
             report=True,
     ))
+
+
+    #table_white_unrelated_female_male_priority_female
+
+    #table_white_unrelated_female_male
+
+    #####################
+    table_females_simple = pail_reference_population["table_white_unrelated_female_male"].loc[
+        (
+            (pail_reference_population["table_white_unrelated_female_male"]["sex_text"] == "female")
+        ), :
+    ]
+    print("females in the simple cohort!!!")
+    print(table_females_simple.shape[0])
+    table_females_priority = pail_reference_population["table_white_unrelated_female_male_priority_female"].loc[
+        (
+            (pail_reference_population["table_white_unrelated_female_male_priority_female"]["sex_text"] == "female")
+        ), :
+    ]
+    print("females in the female priority cohort!!!")
+    print(table_females_priority.shape[0])
+    #######################3
+
     # Select and organize variables across cohorts.
     # Organize phenotypes and covariates in format for analysis in PLINK.
     # else: pail_cohorts_models = dict()
