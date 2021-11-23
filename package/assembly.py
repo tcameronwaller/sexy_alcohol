@@ -44,8 +44,6 @@ import promiscuity.utility as utility
 import uk_biobank.assembly
 #import uk_biobank.organization
 
-
-
 ###############################################################################
 # Functionality
 
