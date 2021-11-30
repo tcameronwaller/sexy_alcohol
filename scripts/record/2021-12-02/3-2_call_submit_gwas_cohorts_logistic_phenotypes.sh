@@ -14,9 +14,6 @@
 ###########################################################################
 ###########################################################################
 
-# TODO: I need to access the "cohorts_models" tables from the "stratification" directory...
-
-
 # Organize paths.
 # Read private, local file paths.
 echo "read private file path variables and organize paths..."
@@ -25,22 +22,10 @@ path_process=$(<"./process_sexy_alcohol.txt")
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-12-02"
 path_dock="$path_process/dock"
 
-path_cohorts_models="${path_dock}/stratification_2021-11-24/cohorts_models_linear"
-#path_cohorts_models="${path_dock}/stratification/cohorts_models_logistic"
+path_cohorts_models="${path_dock}/stratification_2021-11-24/cohorts_models_logistic"
 
-#path_gwas="${path_dock}/gwas_raw/cohorts_models_linear_measurement"          # 72 GWAS; TCW started at 23:20 on 24 November 2021
-#path_gwas="${path_dock}/gwas_raw/cohorts_models_linear_measurement_unadjust" # 72 GWAS; TCW started at 23:36 on 24 November 2021
-
-#path_gwas="${path_dock}/gwas_raw/cohorts_models_linear_imputation"           # 72 GWAS; TCW started at 23:12 on 24 November 2021
-path_gwas="${path_dock}/gwas_raw/cohorts_models_linear_imputation_unadjust"  # 72 GWAS; TCW started at 00:08 on 25 November 2021
-
-#path_gwas="${path_dock}/gwas_raw/cohorts_models_logistic_detection"          # 63 GWAS; TCW started at ___ on 24 November 2021
-#path_gwas="${path_dock}/gwas_raw/cohorts_models_logistic_detection_unadjust" # 63 GWAS; TCW started at ___ on 24 November 2021
-
-# TODO: TCW 27 October 2021
-# Too complex... consider dropping?
-#path_gwas="${path_dock}/gwas/cohorts_models_linear_order"                # 40 GWAS; TCW started at ___ on ___ 2021
-#path_gwas="${path_dock}/gwas/cohorts_models_linear_order_unadjust"       # 40 GWAS; TCW started at ___ on ___ 2021
+#path_gwas="${path_dock}/gwas_raw/cohorts_models_logistic_detection"          # __ GWAS; TCW started at ___ on 30 November 2021
+path_gwas="${path_dock}/gwas_raw/cohorts_models_logistic_detection_unadjust" # __ GWAS; TCW started at ___ on 30 November 2021
 
 # Initialize directories.
 rm -r $path_gwas
@@ -87,33 +72,10 @@ cohorts_models+=("male_age_high;table_male_age_high;")
 # Define array of phenotypes.
 phenotypes=()
 
-#phenotypes+=("albumin") # cohorts_models_linear_measurement
-phenotypes+=("albumin_imputation") # cohorts_models_linear_imputation
-###phenotypes+=("albumin_order")
-###phenotypes+=("albumin_detection")
-
-#phenotypes+=("steroid_globulin_log") # cohorts_models_linear_measurement
-phenotypes+=("steroid_globulin_imputation_log") # cohorts_models_linear_imputation
-###phenotypes+=("steroid_globulin_order")
-###phenotypes+=("steroid_globulin_detection")
-
-#phenotypes+=("oestradiol_log") # cohorts_models_linear_measurement
-#phenotypes+=("oestradiol_bioavailable_log") # cohorts_models_linear_measurement
-#phenotypes+=("oestradiol_free_log") # cohorts_models_linear_measurement
-phenotypes+=("oestradiol_imputation") # cohorts_models_linear_imputation
-phenotypes+=("oestradiol_bioavailable_imputation") # cohorts_models_linear_imputation
-phenotypes+=("oestradiol_free_imputation") # cohorts_models_linear_imputation
-###phenotypes+=("oestradiol_order")
-###phenotypes+=("oestradiol_detection")
-
-#phenotypes+=("testosterone_log") # cohorts_models_linear_measurement
-#phenotypes+=("testosterone_bioavailable_log") # cohorts_models_linear_measurement
-#phenotypes+=("testosterone_free_log") # cohorts_models_linear_measurement
-phenotypes+=("testosterone_imputation") # cohorts_models_linear_imputation
-phenotypes+=("testosterone_bioavailable_imputation") # cohorts_models_linear_imputation
-phenotypes+=("testosterone_free_imputation") # cohorts_models_linear_imputation
-###phenotypes+=("testosterone_order")
-###phenotypes+=("testosterone_detection")
+phenotypes+=("albumin_detection")
+phenotypes+=("steroid_globulin_detection")
+phenotypes+=("oestradiol_detection")
+phenotypes+=("testosterone_detection")
 
 for cohort_model in "${cohorts_models[@]}"; do
   for phenotype in "${phenotypes[@]}"; do
@@ -152,10 +114,7 @@ cohorts_models+=("male_age_high;table_male_age_high;assessment_region,assessment
 # Define array of phenotypes.
 phenotypes=()
 
-#phenotypes+=("vitamin_d_log") # cohorts_models_linear_measurement
-phenotypes+=("vitamin_d_imputation_log") # cohorts_models_linear_imputation
-###phenotypes+=("vitamin_d_order")
-###phenotypes+=("vitamin_d_detection")
+phenotypes+=("vitamin_d_detection")
 
 for cohort_model in "${cohorts_models[@]}"; do
   for phenotype in "${phenotypes[@]}"; do
@@ -191,10 +150,11 @@ if true; then
   echo "----------------------------------------------------------------------"
   qsub -t 1-${batch_instances_count}:1 \
   -o "${path_gwas}/out.txt" -e "${path_gwas}/error.txt" \
-  "${path_scripts_record}/4-1_organize_call_run_chromosomes_plink_linear_gwas.sh" \
+  "${path_scripts_record}/4-2_organize_call_run_gwas_chromosomes_plink_association.sh" \
   $path_batch_instances \
   $batch_instances_count \
   $path_cohorts_models \
   $path_gwas \
-  $path_scripts_record
+  $path_scripts_record \
+  $path_process
 fi
