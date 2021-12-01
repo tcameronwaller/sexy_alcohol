@@ -13,15 +13,16 @@
 
 
 cohorts_models="cohorts_models_linear_measurement"          # 36 GWAS; TCW started at ___ on 1 December 2021
-cohorts_models="cohorts_models_linear_measurement_unadjust" # 36 GWAS; TCW started at ___ on 1 December 2021
+# wait for GWAS to complete... cohorts_models="cohorts_models_linear_measurement_unadjust" # 36 GWAS; TCW started at ___ on 1 December 2021
 
-cohorts_models="cohorts_models_linear_imputation"           # 36 GWAS; TCW started at ___ on 1 December 2021
-cohorts_models="cohorts_models_linear_imputation_unadjust"  # 36 GWAS; TCW started at ___ on 1 December 2021
+#cohorts_models="cohorts_models_linear_imputation"           # 36 GWAS; TCW started at ___ on 1 December 2021
+#cohorts_models="cohorts_models_linear_imputation_unadjust"  # 36 GWAS; TCW started at ___ on 1 December 2021
 
-cohorts_models="cohorts_models_logistic_detection"          # 40 GWAS; TCW started at ___ on 1 December 2021
-cohorts_models="cohorts_models_logistic_detection_unadjust" # 40 GWAS; TCW started at ___ on 1 December 2021
+# wait for GWAS... cohorts_models="cohorts_models_logistic_detection"          # 40 GWAS; TCW started at ___ on 1 December 2021
+# wait for GWAS... cohorts_models="cohorts_models_logistic_detection_unadjust" # 40 GWAS; TCW started at ___ on 1 December 2021
 
 pattern_gwas_report_file="report.*.glm.linear" # do not expand with full path yet
+#pattern_gwas_report_file="report.*.glm.logistic" # do not expand with full path yet
 chromosome_x="true" # whether to collect GWAS summary statistics report for Chromosome X
 
 ################################################################################

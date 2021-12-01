@@ -14,6 +14,14 @@
 ###########################################################################
 ###########################################################################
 
+# TODO: TCW 1 December 2021
+# TODO: Keep the iterative convenience of "cohorts_models" X "phenotype"
+# TODO: but dissect and organize the individual fields when assembling the batch instances...
+# TODO: for example... I need to designate column "albumin_detection_plink" within table "table_female_albumin_detection.tsv"
+# TODO: hence for the phenotype array, I need to have both "table file name suffix" and "table column" for each phenotype
+# TODO: then assemble the complete table name for the batch instance array
+
+
 # Organize paths.
 # Read private, local file paths.
 echo "read private file path variables and organize paths..."
@@ -72,10 +80,10 @@ cohorts_models+=("male_age_high;table_male_age_high;age,body_log,")
 # Define array of phenotypes.
 phenotypes=()
 
-phenotypes+=("albumin_detection")
-phenotypes+=("steroid_globulin_detection")
-phenotypes+=("oestradiol_detection")
-phenotypes+=("testosterone_detection")
+phenotypes+=("albumin_detection_plink")
+phenotypes+=("steroid_globulin_detection_plink")
+phenotypes+=("oestradiol_detection_plink")
+phenotypes+=("testosterone_detection_plink")
 
 for cohort_model in "${cohorts_models[@]}"; do
   for phenotype in "${phenotypes[@]}"; do
@@ -114,7 +122,7 @@ cohorts_models+=("male_age_high;table_male_age_high;assessment_region,assessment
 # Define array of phenotypes.
 phenotypes=()
 
-phenotypes+=("vitamin_d_detection")
+phenotypes+=("vitamin_d_detection_plink")
 
 for cohort_model in "${cohorts_models[@]}"; do
   for phenotype in "${phenotypes[@]}"; do

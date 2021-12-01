@@ -30,10 +30,11 @@ path_cohorts_models="${path_dock}/stratification_2021-11-24/cohorts_models_linea
 
 #path_gwas="${path_dock}/gwas_raw/cohorts_models_linear_measurement"          # 72 GWAS; TCW started at 23:20 on 24 November 2021
 #path_gwas="${path_dock}/gwas_raw/cohorts_models_linear_measurement_unadjust" # 72 GWAS; TCW started at 23:36 on 24 November 2021
-path_gwas="${path_dock}/gwas_raw/cohorts_models_linear_measurement_unadjust" # 72 GWAS; TCW started at ___ on 1 December 2021
+path_gwas="${path_dock}/gwas_raw/cohorts_models_linear_measurement_unadjust" # 36 GWAS; TCW started at 13:58 on 1 December 2021
 # Note (TCW 1 December 2021):
 # It was necessary to repeat the GWAS run for batch "cohorts_models_linear_measurement_unadjust" in females.
 # I deleted this batch by accident during post-processing.
+# I copied the batch "cohorts_models_linear_measurement_unadjust" in males.
 
 #path_gwas="${path_dock}/gwas_raw/cohorts_models_linear_imputation"           # 72 GWAS; TCW started at 23:12 on 24 November 2021
 #path_gwas="${path_dock}/gwas_raw/cohorts_models_linear_imputation_unadjust"  # 72 GWAS; TCW started at 00:08 on 25 November 2021
