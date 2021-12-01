@@ -24,7 +24,7 @@ path_dock="$path_process/dock"
 
 path_cohorts_models="${path_dock}/stratification_2021-11-24/cohorts_models_logistic"
 
-path_gwas="${path_dock}/gwas_raw/cohorts_models_logistic_detection"          # 40 GWAS; TCW started at ___ on 30 November 2021
+path_gwas="${path_dock}/gwas_raw/cohorts_models_logistic_detection"          # 40 GWAS; TCW started at 13:33 on 30 November 2021
 #path_gwas="${path_dock}/gwas_raw/cohorts_models_logistic_detection_unadjust" # 40 GWAS; TCW started at 13:28 on 30 November 2021
 
 # Initialize directories.
