@@ -35,7 +35,7 @@ path_dock="$path_process/dock"
 path_gwas_source_container="${path_dock}/gwas_raw/${cohorts_models}"
 path_gwas_target_container="${path_dock}/gwas_concatenation_yes_x/${cohorts_models}"
 
-path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-12-02/gwas_concatenation_yes_x"
+path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-12-02/gwas_concatenation"
 path_batch_instances="${path_gwas_target_container}/batch_instances_concatenation.txt"
 
 ###########################################################################
