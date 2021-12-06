@@ -12,17 +12,18 @@
 # General parameters.
 
 
-#cohorts_models="cohorts_models_linear_measurement"          # 36 GWAS; TCW started at 15:58 on 1 December 2021
-# wait for GWAS to complete... cohorts_models="cohorts_models_linear_measurement_unadjust" # 36 GWAS; TCW started at ___ on 1 December 2021
+cohorts_models="cohorts_models_linear_measurement"          # 36 GWAS; TCW started at ___ on 3 December 2021
+#cohorts_models="cohorts_models_linear_measurement_unadjust" # 36 GWAS; TCW started at ___ on 3 December 2021
 
-#cohorts_models="cohorts_models_linear_imputation"           # 36 GWAS; TCW started at 16:00 on 1 December 2021
-cohorts_models="cohorts_models_linear_imputation_unadjust"  # 36 GWAS; TCW started at 16:07 on 1 December 2021
+#cohorts_models="cohorts_models_linear_imputation"           # 36 GWAS; TCW started at ___ on 3 December 2021
+#cohorts_models="cohorts_models_linear_imputation_unadjust"  # 36 GWAS; TCW started at ___ on 3 December 2021
 
-# wait for GWAS... cohorts_models="cohorts_models_logistic_detection"          # 40 GWAS; TCW started at ___ on 1 December 2021
-# wait for GWAS... cohorts_models="cohorts_models_logistic_detection_unadjust" # 40 GWAS; TCW started at ___ on 1 December 2021
+###cohorts_models="cohorts_models_logistic_detection"          # 40 GWAS; TCW started at ___ on ___ December 2021
+###cohorts_models="cohorts_models_logistic_detection_unadjust" # 40 GWAS; TCW started at ___ on ___ December 2021
 
 pattern_gwas_report_file="report.*.glm.linear" # do not expand with full path yet
 #pattern_gwas_report_file="report.*.glm.logistic" # do not expand with full path yet
+
 chromosome_x="true" # whether to collect GWAS summary statistics report for Chromosome X
 
 ################################################################################
@@ -33,7 +34,7 @@ path_process=$(<"./process_sexy_alcohol.txt")
 path_dock="$path_process/dock"
 
 path_gwas_source_container="${path_dock}/gwas_raw/${cohorts_models}"
-path_gwas_target_container="${path_dock}/gwas_concatenation_yes_x/${cohorts_models}"
+path_gwas_target_container="${path_dock}/gwas_concatenation/${cohorts_models}"
 
 path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-12-02/gwas_concatenation"
 path_batch_instances="${path_gwas_target_container}/batch_instances_concatenation.txt"
