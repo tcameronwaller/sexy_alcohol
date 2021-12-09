@@ -12,11 +12,11 @@
 # General parameters.
 
 
-#cohorts_models="cohorts_models_linear_measurement"          # 36 GWAS; TCW started at 17:28 on 6 December 2021
-#cohorts_models="cohorts_models_linear_measurement_unadjust" # 36 GWAS; TCW started at 17:30 on 6 December 2021
+#cohorts_models="cohorts_models_linear_measurement"          # 72 GWAS; TCW started at 17:28 on 6 December 2021
+#cohorts_models="cohorts_models_linear_measurement_unadjust" # 72 GWAS; TCW started at 17:30 on 6 December 2021
 
-#cohorts_models="cohorts_models_linear_imputation"           # 36 GWAS; TCW started at 17:32 on 6 December 2021
-cohorts_models="cohorts_models_linear_imputation_unadjust"  # 36 GWAS; TCW started at ___ on 6 December 2021
+#cohorts_models="cohorts_models_linear_imputation"           # 72 GWAS; TCW started at 17:32 on 6 December 2021
+cohorts_models="cohorts_models_linear_imputation_unadjust"  # 72 GWAS; TCW started at 17:33 on 6 December 2021
 
 ###cohorts_models="cohorts_models_logistic_detection"          # 40 GWAS; TCW started at ___ on ___ December 2021
 ###cohorts_models="cohorts_models_logistic_detection_unadjust" # 40 GWAS; TCW started at ___ on ___ December 2021
