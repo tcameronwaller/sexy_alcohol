@@ -50,12 +50,12 @@ studies=()
 ##studies+=("30482948_walters_2018_all;${path_gwas_summaries}/30482948_walters_2018/pgc_alcdep.discovery.aug2018_release.txt.gz")
 ##studies+=("30482948_walters_2018_eur;${path_gwas_summaries}/30482948_walters_2018/pgc_alcdep.eur_discovery.aug2018_release.txt.gz")
 
-#studies+=("30482948_walters_2018_eur_unrel_meta;z_score;${path_gwas_summaries}/30482948_walters_2018/pgc_alcdep.eur_unrelated.aug2018_release.txt.gz")
-#studies+=("30482948_walters_2018_eur_unrel_genotype;odds_ratio;${path_gwas_summaries}/30482948_walters_2018/pgc_alcdep.eur_unrel_genotyped.aug2018_release.txt.gz")
-#studies+=("30482948_walters_2018_female;odds_ratio;${path_gwas_summaries}/30482948_walters_2018/sex_stratification/pgc_alcdep_eur_female_public.gz")
-#studies+=("30482948_walters_2018_male;odds_ratio;${path_gwas_summaries}/30482948_walters_2018/sex_stratification/pgc_alcdep_eur_male_public.gz")
-#studies+=("30643251_liu_2019_alcohol_all;coefficient;${path_gwas_summaries}/30643251_liu_2019/DrinksPerWeek.txt.gz")
-#studies+=("30643251_liu_2019_alcohol_no_ukb;coefficient;${path_gwas_summaries}/30643251_liu_2019/DrinksPerWeek.WithoutUKB.txt.gz")
+studies+=("30482948_walters_2018_eur_unrel_meta;z_score;${path_gwas_summaries}/30482948_walters_2018/pgc_alcdep.eur_unrelated.aug2018_release.txt.gz")
+studies+=("30482948_walters_2018_eur_unrel_genotype;odds_ratio;${path_gwas_summaries}/30482948_walters_2018/pgc_alcdep.eur_unrel_genotyped.aug2018_release.txt.gz")
+studies+=("30482948_walters_2018_female;odds_ratio;${path_gwas_summaries}/30482948_walters_2018/sex_stratification/pgc_alcdep_eur_female_public.gz")
+studies+=("30482948_walters_2018_male;odds_ratio;${path_gwas_summaries}/30482948_walters_2018/sex_stratification/pgc_alcdep_eur_male_public.gz")
+studies+=("30643251_liu_2019_alcohol_all;coefficient;${path_gwas_summaries}/30643251_liu_2019/DrinksPerWeek.txt.gz")
+studies+=("30643251_liu_2019_alcohol_no_ukb;coefficient;${path_gwas_summaries}/30643251_liu_2019/DrinksPerWeek.WithoutUKB.txt.gz")
 
 # TODO: include Sanchez-Roige 2018 at the least...
 # TODO: write an "access" script to copy and organize GWAS and their metadata files in directories for respective studies from MVP
@@ -63,10 +63,10 @@ studies+=("30336701_sanchez-roige_2018_audit;coefficient;${path_gwas_summaries}/
 ##studies+=("30336701_sanchez-roige_2018_audit-c;coefficient;${path_gwas_summaries}/30336701_sanchez-roige_2018/AUDIT_UKB_2018_AJP.txt.gz")
 ##studies+=("30336701_sanchez-roige_2018_audit-p;coefficient;${path_gwas_summaries}/30336701_sanchez-roige_2018/AUDIT_UKB_2018_AJP.txt.gz")
 
-#studies+=("30718901_howard_2019;odds_ratio;${path_gwas_summaries}/30718901_howard_2019/PGC_UKB_depression_genome-wide.txt.gz")
-#studies+=("34002096_mullins_2021_all;coefficient;${path_gwas_summaries}/34002096_mullins_2021/pgc-bip2021-all.vcf.tsv.gz")
-#studies+=("34002096_mullins_2021_bpd1;coefficient;${path_gwas_summaries}/34002096_mullins_2021/pgc-bip2021-BDI.vcf.tsv.gz")
-#studies+=("34002096_mullins_2021_bpd2;coefficient;${path_gwas_summaries}/34002096_mullins_2021/pgc-bip2021-BDII.vcf.tsv.gz")
+studies+=("30718901_howard_2019;odds_ratio;${path_gwas_summaries}/30718901_howard_2019/PGC_UKB_depression_genome-wide.txt.gz")
+studies+=("34002096_mullins_2021_all;coefficient;${path_gwas_summaries}/34002096_mullins_2021/pgc-bip2021-all.vcf.tsv.gz")
+studies+=("34002096_mullins_2021_bpd1;coefficient;${path_gwas_summaries}/34002096_mullins_2021/pgc-bip2021-BDI.vcf.tsv.gz")
+studies+=("34002096_mullins_2021_bpd2;coefficient;${path_gwas_summaries}/34002096_mullins_2021/pgc-bip2021-BDII.vcf.tsv.gz")
 
 ##studies+=("29906448_ruderfer_2018_scz_vs_ctl;${path_gwas_summaries}/29906448_ruderfer_2018/sczvscont-sumstat.gz")
 ##studies+=("29906448_ruderfer_2018_scz_bpd_vs_ctl;${path_gwas_summaries}/29906448_ruderfer_2018/BDSCZvsCONT.sumstats.gz")

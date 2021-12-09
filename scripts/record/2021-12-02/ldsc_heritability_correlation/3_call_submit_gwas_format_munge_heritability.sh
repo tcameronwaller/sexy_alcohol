@@ -12,7 +12,7 @@
 ################################################################################
 # General parameters.
 
-cohorts_models="cohorts_models_linear_measurement"          # 72 GWAS started at ___ on _ December 2021
+cohorts_models="cohorts_models_linear_measurement"          # 72 GWAS started at ___ on 9 December 2021
 #cohorts_models="cohorts_models_linear_measurement_unadjust" # 72 GWAS started at ___ on _ December 2021
 #cohorts_models="cohorts_models_linear_imputation"           # 72 GWAS started at ___ on _ December 2021
 #cohorts_models="cohorts_models_linear_imputation_unadjust"  # 72 GWAS started at ___ on _ December 2021
@@ -32,12 +32,12 @@ cd ~/paths
 path_process=$(<"./process_sexy_alcohol.txt")
 path_dock="$path_process/dock"
 
-path_gwas_concatenation_container="${path_dock}/gwas_concatenation_no_x/${cohorts_models}"
+path_gwas_concatenation_container="${path_dock}/gwas_concatenation/${cohorts_models}"
 path_gwas_format_container="${path_dock}/gwas_ldsc_format/${cohorts_models}"
 path_gwas_munge_container="${path_dock}/gwas_ldsc_munge/${cohorts_models}"
 path_heritability_container="${path_dock}/heritability/${cohorts_models}"
 
-path_scripts_record="$path_process/psychiatric_metabolism/scripts/record/2021-12-02/ldsc_heritability_correlation"
+path_scripts_record="$path_process/sexy_alcohol/scripts/record/2021-12-02/ldsc_heritability_correlation"
 path_batch_instances="${path_gwas_munge_container}/batch_instances_format_munge.txt"
 
 ###########################################################################
