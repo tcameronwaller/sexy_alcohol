@@ -11,7 +11,7 @@
 ################################################################################
 # General parameters.
 
-cohorts_models="cohorts_models_linear_measurement" # TCW started at ___ on 9 December 2021
+cohorts_models="cohorts_models_linear_measurement" # TCW started at 12:16 on 9 December 2021
 #cohorts_models="cohorts_models_linear_measurement_unadjust"
 #cohorts_models="cohorts_models_linear_imputation"
 #cohorts_models="cohorts_models_linear_imputation_unadjust"
