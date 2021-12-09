@@ -12,7 +12,7 @@
 ################################################################################
 # General parameters.
 
-cohorts_models="cohorts_models_linear_measurement"          # 72 GWAS started at ___ on 9 December 2021
+cohorts_models="cohorts_models_linear_measurement"          # 72 GWAS started at 10:41 on 9 December 2021
 #cohorts_models="cohorts_models_linear_measurement_unadjust" # 72 GWAS started at ___ on _ December 2021
 #cohorts_models="cohorts_models_linear_imputation"           # 72 GWAS started at ___ on _ December 2021
 #cohorts_models="cohorts_models_linear_imputation_unadjust"  # 72 GWAS started at ___ on _ December 2021
