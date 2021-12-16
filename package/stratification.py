@@ -151,7 +151,7 @@ def execute_procedure(
     else:
         pail_hormones_linear = dict()
         pass
-    if True:
+    if False:
         pail_hormones_logistic = (
             ukb_strat.execute_stratify_genotype_cohorts_plink_format_set(
                 table=source["table_phenotypes"],
