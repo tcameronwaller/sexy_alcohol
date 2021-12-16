@@ -90,6 +90,9 @@ if true; then
   pairs+=("female_albumin;male_albumin")
   pairs+=("female_steroid_globulin_log;male_steroid_globulin_log")
   pairs+=("female_oestradiol_log;male_oestradiol_log")
+  pairs+=("female_premenopause_oestradiol_log;male_oestradiol_log")
+  pairs+=("female_perimenopause_oestradiol_log;male_oestradiol_log")
+  pairs+=("female_postmenopause_oestradiol_log;male_oestradiol_log")
   pairs+=("female_testosterone_log;male_testosterone_log")
   # Premenopause Females to Postmenopause Females.
   pairs+=("female_premenopause_vitamin_d_log;female_postmenopause_vitamin_d_log")

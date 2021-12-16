@@ -14,8 +14,10 @@
 ###########################################################################
 ###########################################################################
 
-# TODO: I need to access the "cohorts_models" tables from the "stratification" directory...
 
+# TODO: TCW 14 December 2021
+# TODO: specify dependent variable separately from table name
+# TODO: needs to mirror however I implement for the "detection" logistic phenotypes
 
 # Organize paths.
 # Read private, local file paths.

@@ -43,64 +43,6 @@ import uk_biobank.stratification as ukb_strat
 
 
 ##########
-# Initialization
-
-
-def initialize_directories(
-    restore=None,
-    path_dock=None,
-):
-    """
-    Initialize directories for procedure's product files.
-
-    arguments:
-        restore (bool): whether to remove previous versions of data
-        path_dock (str): path to dock directory for source and product
-            directories and files
-
-    raises:
-
-    returns:
-        (dict<str>): collection of paths to directories for procedure's files
-
-    """
-
-    # Collect paths.
-    paths = dict()
-    # Define paths to directories.
-    paths["dock"] = path_dock
-    paths["stratification"] = os.path.join(path_dock, "stratification")
-    paths["reference_population"] = os.path.join(
-        path_dock, "stratification", "reference_population"
-    )
-    paths["cohorts_models_linear"] = os.path.join(
-        path_dock, "stratification", "cohorts_models_linear"
-    )
-    paths["cohorts_models_logistic"] = os.path.join(
-        path_dock, "stratification", "cohorts_models_logistic"
-    )
-
-    # Remove previous files to avoid version or batch confusion.
-    if restore:
-        utility.remove_directory(path=paths["stratification"])
-    # Initialize directories.
-    utility.create_directories(
-        path=paths["stratification"]
-    )
-    utility.create_directories(
-        path=paths["reference_population"]
-    )
-    utility.create_directories(
-        path=paths["cohorts_models_linear"]
-    )
-    utility.create_directories(
-        path=paths["cohorts_models_logistic"]
-    )
-    # Return information.
-    return paths
-
-
-##########
 # Read
 
 
@@ -170,7 +112,7 @@ def execute_procedure(
     time.sleep(5.0)
 
     # Initialize directories.
-    paths = initialize_directories(
+    paths = ukb_strat.initialize_directories(
         restore=True,
         path_dock=path_dock,
     )
@@ -196,36 +138,62 @@ def execute_procedure(
     else:
         pail_population = dict()
         pass
-    # Cohorts and models for linear genetic analyses.
+
+    # Hormones and their regulatory proteins.
     if True:
-        pail_linear = (
+        pail_hormones_linear = (
             ukb_strat.execute_stratify_genotype_cohorts_plink_format_set(
                 table=source["table_phenotypes"],
-                set="sex_hormone_linear",
+                set="hormones_linear",
                 path_dock=path_dock,
                 report=True,
         ))
     else:
-        pail_linear = dict()
+        pail_hormones_linear = dict()
         pass
-    # Cohorts and models for logistic genetic analyses.
     if True:
-        pail_logistic = (
+        pail_hormones_logistic = (
             ukb_strat.execute_stratify_genotype_cohorts_plink_format_set(
                 table=source["table_phenotypes"],
-                set="sex_hormone_logistic",
+                set="hormones_logistic",
                 path_dock=path_dock,
                 report=True,
         ))
     else:
-        pail_logistic = dict()
+        pail_hormones_logistic = dict()
+        pass
+
+    # Body mass index (BMI) in Bipolar Disorder.
+    if False:
+        pail_bipolar_linear = (
+            ukb_strat.execute_stratify_genotype_cohorts_plink_format_set(
+                table=source["table_phenotypes"],
+                set="bipolar_body_linear",
+                path_dock=path_dock,
+                report=True,
+        ))
+    else:
+        pail_bipolar_linear = dict()
+        pass
+    if False:
+        pail_bipolar_logistic = (
+            ukb_strat.execute_stratify_genotype_cohorts_plink_format_set(
+                table=source["table_phenotypes"],
+                set="bipolar_body_logistic",
+                path_dock=path_dock,
+                report=True,
+        ))
+    else:
+        pail_bipolar_logistic = dict()
         pass
 
     # Collect information.
     information = dict()
     information["reference_population"] = pail_population
-    information["cohorts_models_linear"] = pail_linear
-    information["cohorts_models_logistic"] = pail_logistic
+    information["hormones_linear"] = pail_hormones_linear
+    information["hormones_logistic"] = pail_hormones_logistic
+    information["body_bipolar_linear"] = pail_bipolar_linear
+    information["body_bipolar_logistic"] = pail_bipolar_logistic
     # Write product information to file.
     ukb_strat.write_genotype_product(
         paths=paths,
