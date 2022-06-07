@@ -16,13 +16,18 @@ import textwrap
 
 # Custom.
 
-import scratch
+#import genetic_correlation
+#import aggregation
+
+
 import assembly
+import importation
 import organization
-import description
 import stratification
+import description
 import regression
 import collection
+import scratch
 #import plot
 #import utility
 
@@ -47,12 +52,12 @@ def define_interface_parsers():
     """
 
     # Define description.
-    description_string = define_general_description()
+    description = define_general_description()
     # Define epilog.
     epilog = define_general_epilog()
     # Define arguments.
     parser = argparse.ArgumentParser(
-        description=description_string,
+        description=description,
         epilog=epilog,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
@@ -76,7 +81,7 @@ def define_general_description():
 
     """
 
-    description_string = textwrap.dedent("""\
+    description = textwrap.dedent("""\
         --------------------------------------------------
         --------------------------------------------------
         --------------------------------------------------
@@ -85,7 +90,7 @@ def define_general_description():
 
         --------------------------------------------------
     """)
-    return description_string
+    return description
 
 
 def define_general_epilog():
@@ -125,13 +130,13 @@ def define_main_subparser(subparsers=None):
     """
 
     # Define description.
-    description_string = define_main_description()
+    description = define_main_description()
     # Define epilog.
     epilog = define_main_epilog()
     # Define parser.
     parser_main = subparsers.add_parser(
         name="main",
-        description=description_string,
+        description=description,
         epilog=epilog,
         help="Help for main routine.",
         formatter_class=argparse.RawDescriptionHelpFormatter
@@ -145,24 +150,39 @@ def define_main_subparser(subparsers=None):
         )
     )
     parser_main.add_argument(
-        "-scratch", "--scratch",
-        dest="scratch",
+        "-genetic_correlation", "--genetic_correlation",
+        dest="genetic_correlation",
         action="store_true",
         help=(
-            "Scratch, temporary module for method development and testing."
+            "Genetic correlations for metabolites from multiple GWAS."
         )
     )
     parser_main.add_argument(
-        "-assembly", "--assembly", dest="assembly", action="store_true",
+        "-aggregation", "--aggregation", dest="aggregation",
+        action="store_true",
         help=(
-            "Assemble U.K. Biobank's raw accession tables."
+            "Aggregation of genetic scores for metabolites across UK Biobank."
+        )
+    )
+    parser_main.add_argument(
+        "-assembly", "--assembly", dest="assembly",
+        action="store_true",
+        help=(
+            "Assemble phenotype information from UK Biobank."
+        )
+    )
+    parser_main.add_argument(
+        "-importation", "--importation", dest="importation",
+        action="store_true",
+        help=(
+            "Assemble phenotype information from UK Biobank."
         )
     )
     parser_main.add_argument(
         "-organization", "--organization", dest="organization",
         action="store_true",
         help=(
-            "Organize definitions of variables for cohorts and phenotypes."
+            "Organize phenotype information from UK Biobank."
         )
     )
     parser_main.add_argument(
@@ -175,14 +195,6 @@ def define_main_subparser(subparsers=None):
         )
     )
     parser_main.add_argument(
-        "-regression", "--regression",
-        dest="regression",
-        action="store_true",
-        help=(
-            "Regression analyses of phenotypes within cohorts."
-        )
-    )
-    parser_main.add_argument(
         "-description", "--description",
         dest="description",
         action="store_true",
@@ -192,12 +204,27 @@ def define_main_subparser(subparsers=None):
         )
     )
     parser_main.add_argument(
+        "-regression", "--regression",
+        dest="regression",
+        action="store_true",
+        help=(
+            "Regression analyses of phenotypes within cohorts."
+        )
+    )
+    parser_main.add_argument(
         "-collection", "--collection",
         dest="collection",
         action="store_true",
         help=(
-            "Collection of reports from estimations of SNP heritability and " +
-            "genetic correlation."
+            "Collection and summary of reports from genotypic analyses."
+        )
+    )
+    parser_main.add_argument(
+        "-scratch", "--scratch",
+        dest="scratch",
+        action="store_true",
+        help=(
+            "Scratch analyses."
         )
     )
     # Define behavior.
@@ -219,7 +246,7 @@ def define_main_description():
 
     """
 
-    description_string = textwrap.dedent("""\
+    description = textwrap.dedent("""\
         --------------------------------------------------
         --------------------------------------------------
         --------------------------------------------------
@@ -230,7 +257,7 @@ def define_main_description():
 
         --------------------------------------------------
     """)
-    return description_string
+    return description
 
 
 def define_main_epilog():
@@ -278,18 +305,33 @@ def evaluate_main_parameters(arguments):
     print("--------------------------------------------------")
     print("... call to main routine ...")
     # Execute procedure.
-    if arguments.scratch:
+    if arguments.genetic_correlation:
         # Report status.
-        print("... executing scratch procedure ...")
+        print("... executing genetic_correlation procedure ...")
         # Execute procedure.
-        scratch.execute_procedure(
+        genetic_correlation.execute_procedure(
             path_dock=arguments.path_dock
         )
+    if arguments.aggregation:
+        # Report status.
+        print("... executing aggregation procedure ...")
+        # Execute procedure.
+        aggregation.execute_procedure(
+            path_dock=arguments.path_dock
+        )
+
     if arguments.assembly:
         # Report status.
         print("... executing assembly procedure ...")
         # Execute procedure.
         assembly.execute_procedure(
+            path_dock=arguments.path_dock
+        )
+    if arguments.importation:
+        # Report status.
+        print("... executing importation procedure ...")
+        # Execute procedure.
+        importation.execute_procedure(
             path_dock=arguments.path_dock
         )
     if arguments.organization:
@@ -306,18 +348,18 @@ def evaluate_main_parameters(arguments):
         stratification.execute_procedure(
             path_dock=arguments.path_dock
         )
-    if arguments.regression:
-        # Report status.
-        print("... executing regression procedure ...")
-        # Execute procedure.
-        regression.execute_procedure(
-            path_dock=arguments.path_dock
-        )
     if arguments.description:
         # Report status.
         print("... executing description procedure ...")
         # Execute procedure.
         description.execute_procedure(
+            path_dock=arguments.path_dock
+        )
+    if arguments.regression:
+        # Report status.
+        print("... executing regression procedure ...")
+        # Execute procedure.
+        regression.execute_procedure(
             path_dock=arguments.path_dock
         )
     if arguments.collection:
@@ -327,7 +369,13 @@ def evaluate_main_parameters(arguments):
         collection.execute_procedure(
             path_dock=arguments.path_dock
         )
-
+    if arguments.scratch:
+        # Report status.
+        print("... executing scratch procedure ...")
+        # Execute procedure.
+        scratch.execute_procedure(
+            path_dock=arguments.path_dock
+        )
     pass
 
 

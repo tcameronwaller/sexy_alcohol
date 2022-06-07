@@ -37,15 +37,25 @@ fi
 
 # Execute procedure(s).
 
-#python3 $path_package/interface.py main --path_dock $path_dock --assembly # TCW 23 November 2021
-#python3 $path_package/interface.py main --path_dock $path_dock --organization # TCW 15 December 2021
-python3 $path_package/interface.py main --path_dock $path_dock --stratification # TCW 24 November 2021
+python3 $path_package/interface.py main --path_dock $path_dock --assembly # TCW; 07 June 2022
+#python3 $path_package/interface.py main --path_dock $path_dock --importation # TCW; 31 March 2022
+#python3 $path_package/interface.py main --path_dock $path_dock --organization # TCW; 07 June 2022
+#python3 $path_package/interface.py main --path_dock $path_dock --stratification # TCW; 09 April 2022, 11 April 2022
 
-#python3 $path_package/interface.py main --path_dock $path_dock --description
-#python3 $path_package/interface.py main --path_dock $path_dock --regression
-#python3 $path_package/interface.py main --path_dock $path_dock --collection # TCW 9 December 2021 [check???]
+#python3 $path_package/interface.py main --path_dock $path_dock --collection # TCW; 20 April 2022
+#python3 $path_package/interface.py main --path_dock $path_dock --regression # TCW; 20 April 2022
+#python3 $path_package/interface.py main --path_dock $path_dock --description # TCW; 01 June 2022
 
 #python3 $path_package/interface.py main --path_dock $path_dock --scratch
+
+# Collect and organize heritability estimations for metabolites from GWAS
+# summary statistics of multiple studies on the human metabolome.
+#python3 $path_package/interface.py main --path_dock $path_dock --genetic_correlation
+
+# Collect and aggregate genetic scores for metabolites across the UK Biobank.
+#python3 $path_package/interface.py main --path_dock $path_dock --aggregation
+
+
 
 ################################################################################
 # Deactivate Python Virtual Environment.

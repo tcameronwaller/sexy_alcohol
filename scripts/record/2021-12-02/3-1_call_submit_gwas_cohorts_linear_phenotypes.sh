@@ -19,6 +19,10 @@
 # TODO: specify dependent variable separately from table name
 # TODO: needs to mirror however I implement for the "detection" logistic phenotypes
 
+# TODO: TCW 17 December 2021
+# TODO: create a separate script to manage the GWAS for Vitamin D.
+# TODO: - different cohorts and model covariates etc
+
 # Organize paths.
 # Read private, local file paths.
 echo "read private file path variables and organize paths..."
