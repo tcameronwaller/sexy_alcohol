@@ -89,7 +89,7 @@ for instance_set in "${instances_sets[@]}"; do
   # Iterate across GWAS studies within current set.
   path_directory_set="${path_directory_gwas_raw}/${name_set}"
   # `find "${path_directory_set}" -maxdepth 1 -mindepth 1 -type d -not -name "."`
-  paths_directories_studies=$(find "${path_directory_set}" -maxdepth 1 -mindepth 1 -type d -not -name ".")
+  paths_directories_studies=$(find ${path_directory_set} -maxdepth 1 -mindepth 1 -type d -not -name .)
   for path_directory_study in "${paths_directories_studies[@]}"; do
     # Confirm that path is a directory.
     #if [ -d "$path_directory_study" ]; then
