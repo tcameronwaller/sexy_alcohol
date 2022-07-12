@@ -88,47 +88,43 @@ for instance_set in "${instances_sets[@]}"; do
 
   # Iterate across GWAS studies within current set.
   path_directory_set="${path_directory_gwas_raw}/${name_set}"
-  # `find . -maxdepth 1 -mindepth 1 -type d -not -name .`
+  # `find "${path_directory_set}" -maxdepth 1 -mindepth 1 -type d -not -name "."`
   paths_directories_studies=$(find "${path_directory_set}" -maxdepth 1 -mindepth 1 -type d -not -name ".")
   for path_directory_study in "${paths_directories_studies[@]}"; do
+    # Confirm that path is a directory.
+    #if [ -d "$path_directory_study" ]; then
 
     echo "${path_directory_study}"
 
-    # Confirm that path is a directory.
-    if [ -d "$path_directory_study" ]; then
+    # Extract name of study.
+    name_study="$(basename $path_directory_study)"
 
-      echo "directory!"
+    echo "${name_study}"
 
-      # Extract name of study.
-      name_study="$(basename -- $path_directory_study)"
+    # Confirm that directory contains a file for GWAS summary statistics.
+    matches=$(find "${path_directory_gwas_raw}/${name_set}/${name_study}/chromosome_22" -name "$pattern_file_gwas_source")
+    path_file_gwas_source=${matches[0]}
+    if [[ -n $matches && -f $path_file_gwas_source ]]; then
 
-      echo "${name_study}"
+      # Define paths and names of product files.
+      path_file_gwas_product="${path_directory_gwas_concatenation}/${name_set}/${name_study}/gwas.txt.gz"
+      path_file_frequency_product="${path_directory_gwas_concatenation}/${name_set}/${name_study}/allele_frequency.afreq.gz"
+      prefix_file_log_product="plink_log_"
+      suffix_file_log_product=".log"
 
-      # Confirm that directory contains a file for GWAS summary statistics.
-      matches=$(find "${path_directory_gwas_raw}/${name_set}/${name_study}/chromosome_22" -name "$pattern_file_gwas_source")
-      path_file_gwas_source=${matches[0]}
-      if [[ -n $matches && -f $path_file_gwas_source ]]; then
-
-        # Define paths and names of product files.
-        path_file_gwas_product="${path_directory_gwas_concatenation}/${name_set}/${name_study}/gwas.txt.gz"
-        path_file_frequency_product="${path_directory_gwas_concatenation}/${name_set}/${name_study}/allele_frequency.afreq.gz"
-        prefix_file_log_product="plink_log_"
-        suffix_file_log_product=".log"
-
-        # Concatenate information from files across chromosomes.
-        report="true"
-        /usr/bin/bash "${path_script_concatenate}" \
-        $pattern_file_gwas_source \
-        $pattern_file_frequency_source \
-        $pattern_file_log_source \
-        $path_directory_chromosomes_source \
-        $path_file_gwas_product \
-        $path_file_frequency_product \
-        $prefix_file_log_product \
-        $suffix_file_log_product \
-        $chromosome_xy \
-        $report
-      fi
+      # Concatenate information from files across chromosomes.
+      report="true"
+      /usr/bin/bash "${path_script_concatenate}" \
+      $pattern_file_gwas_source \
+      $pattern_file_frequency_source \
+      $pattern_file_log_source \
+      $path_directory_chromosomes_source \
+      $path_file_gwas_product \
+      $path_file_frequency_product \
+      $prefix_file_log_product \
+      $suffix_file_log_product \
+      $chromosome_xy \
+      $report
     fi
   done
 done
