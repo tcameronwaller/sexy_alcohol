@@ -1,12 +1,23 @@
 #!/bin/bash
 
-###########################################################################
-###########################################################################
-###########################################################################
-# ...
-###########################################################################
-###########################################################################
-###########################################################################
+################################################################################
+################################################################################
+################################################################################
+# Note:
+# This set of scripts concatenates across chromosomes the summary statistics
+# from Genome-Wide Association Studies (GWAS) that T. Cameron Waller ran on data
+# from the UK Biobank in scripts from record collection "2022-05-04".
+# Before these scripts, T. Cameron Waller consolidated information from sets of
+# GWAS that were originally separate for convenience in execution.
+# For example, sets "albumin_linear_1" and "albumin_linear_2" consolidated to
+# set "albumin_linear".
+# Sets "oestradiol_logistic" and "oestradiol_logistic_long_rescue" consolidated
+# to set "oestradiol_logistic".
+# Sets "testosterone_logistic" and "testosterone_logistic_long_rescue"
+# consolidated to set "testosterone_logistic".
+################################################################################
+################################################################################
+################################################################################
 
 # TODO: TCW; 11 July 2022
 # TODO: ***1*** before anything else...
@@ -24,19 +35,24 @@
 ################################################################################
 # General parameters.
 
-#cohorts_models="albumin_linear_2"                      #  2 GWAS; 13 April 2022
-#cohorts_models="albumin_linear_1"                      # 18 GWAS; 13 April 2022
-#cohorts_models="steroid_globulin_linear_2"             #  2 GWAS; 13 April 2022
-#cohorts_models="steroid_globulin_linear_1"             # 18 GWAS; 13 April 2022
-#cohorts_models="oestradiol_logistic"                   # 16 GWAS; 19 April 2022; GWAS on 'adjust' models for for 'female' and 'male' cohorts incomplete as of 19 April 2022
-#cohorts_models="oestradiol_linear_1"                   # 18 GWAS; 13 April 2022
-#cohorts_models="oestradiol_linear_2"                   # 12 GWAS; 13 April 2022
-#cohorts_models="oestradiol_bioavailable_linear"        # 18 GWAS; 13 April 2022
-#cohorts_models="oestradiol_free_linear"                # 18 GWAS; 13 April 2022
-#cohorts_models="testosterone_logistic"                 # __ GWAS; incomplete
-#cohorts_models="testosterone_linear"                   # 54 GWAS; 13 April 2022
-#cohorts_models="testosterone_bioavailable_linear"      # 18 GWAS; 13 April 2022
-#cohorts_models="testosterone_free_linear"              # 18 GWAS; 13 April 2022
+# TODO: TCW; 12 July 2022
+# TODO: execution plan
+# TODO: Call each of these "sets" or "containers"
+# TODO: define these names in an array
+# TODO: iterate across "sets" before iterating along individual "studies"
+# TODO: keep track of the name of the "set" and the "study" for each GWAS
+# TODO: pass the "set" and "study" on to the next scripts
+
+#cohorts_models="oestradiol_logistic"                # 18? GWAS; __ July 2022
+#cohorts_models="oestradiol_linear"                  # 30? GWAS; __ July 2022
+#cohorts_models="oestradiol_bioavailable_linear"     # 18 GWAS; __ July 2022
+#cohorts_models="oestradiol_free_linear"             # 18 GWAS; __ July 2022
+#cohorts_models="testosterone_logistic"              # 18? GWAS; __ July 2022
+#cohorts_models="testosterone_linear"                # 54 GWAS; __ July 2022
+#cohorts_models="testosterone_bioavailable_linear"   # 18 GWAS; __ July 2022
+#cohorts_models="testosterone_free_linear"           # 18 GWAS; __ July 2022
+#cohorts_models="steroid_globulin_linear"            # 20? GWAS; __ July 2022
+#cohorts_models="albumin_linear"                     # 20? GWAS; __ July 2022
 
 chromosome_x="true" # whether to collect GWAS summary statistics report for Chromosome X and XY
 
