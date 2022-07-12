@@ -98,7 +98,7 @@ for instance_set in "${instances_sets[@]}"; do
     if [ -d "$path_directory_study" ]; then
 
       # Extract name of study.
-      name_study="$(basename $path_directory_study)"
+      name_study="$(basename -- $path_directory_study)"
 
       echo "${name_study}"
 
