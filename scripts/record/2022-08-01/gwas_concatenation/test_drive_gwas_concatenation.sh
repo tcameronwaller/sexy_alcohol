@@ -82,6 +82,7 @@ for instance_set in "${instances_sets[@]}"; do
     pattern_file_gwas_source="report.*.glm.linear" # do not yet expand pattern to full path
   elif [[ "$type_regression" == "logistic" ]]; then
     pattern_file_gwas_source="report.*.glm.logistic" # do not yet expand pattern to full path
+  fi
   pattern_file_frequency_source="report.afreq"
   pattern_file_log_source="report.log"
 
@@ -121,7 +122,6 @@ for instance_set in "${instances_sets[@]}"; do
         $suffix_file_log_product \
         $chromosome_xy \
         $report
-
       fi
     fi
   done
