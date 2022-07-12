@@ -97,6 +97,8 @@ for instance_set in "${instances_sets[@]}"; do
     # Confirm that path is a directory.
     if [ -d "$path_directory_study" ]; then
 
+      echo "directory!"
+
       # Extract name of study.
       name_study="$(basename -- $path_directory_study)"
 
