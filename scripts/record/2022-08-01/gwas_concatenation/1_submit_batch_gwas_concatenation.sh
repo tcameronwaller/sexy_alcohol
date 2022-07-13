@@ -15,6 +15,16 @@
 # to set "oestradiol_logistic".
 # Sets "testosterone_logistic" and "testosterone_logistic_long_rescue"
 # consolidated to set "testosterone_logistic".
+
+# Review and test: TCW; 13 July 2022
+# 1. The pipeline of scripts does not have any unintentional removal of the
+# source directory, "gwas_raw".
+# 2. The concatenation files for GWAS summary statistics reports and allele
+# frequency reports both include a single table header row of columns' names,
+# rows for all autosomes (chromosomes 1-22), and rows for chromosomes X and XY.
+# 3. The collection (Tar ball with Gzip compression) of PLINK2 execution log
+# files is concise and has simple directory paths to the constituent files.
+
 ################################################################################
 ################################################################################
 ################################################################################
@@ -27,8 +37,8 @@
 cd ~/paths
 path_process=$(<"./process_sexy_alcohol.txt")
 path_dock="$path_process/dock"
-path_directory_gwas_raw="${path_dock}/gwas_raw_test"
-path_directory_gwas_concatenation="${path_dock}/gwas_concatenation_test"
+path_directory_gwas_raw="${path_dock}/gwas_raw"
+path_directory_gwas_concatenation="${path_dock}/gwas_concatenation"
 path_file_batch_instances="${path_directory_gwas_concatenation}/batch_instances.txt"
 
 # Scripts.
@@ -49,14 +59,14 @@ rm $path_file_batch_instances
 instances_sets=()
 instances_sets+=("oestradiol_logistic;logistic;true")              # 18 GWAS
 instances_sets+=("oestradiol_linear;linear;true")                  # 30 GWAS
-#nstances_sets+=("oestradiol_bioavailable_linear;linear;true")     # 18 GWAS
-#instances_sets+=("oestradiol_free_linear;linear;true")             # 18 GWAS
-#instances_sets+=("testosterone_logistic;logistic;true")            # 18 GWAS
-#instances_sets+=("testosterone_linear;linear;true")                # 54 GWAS
-#instances_sets+=("testosterone_bioavailable_linear;linear;true")   # 18 GWAS
-#instances_sets+=("testosterone_free_linear;linear;true")           # 18 GWAS
-#instances_sets+=("steroid_globulin_linear;linear;true")            # 20 GWAS
-#instances_sets+=("albumin_linear;linear;true")                     # 20 GWAS
+nstances_sets+=("oestradiol_bioavailable_linear;linear;true")     # 18 GWAS
+instances_sets+=("oestradiol_free_linear;linear;true")             # 18 GWAS
+instances_sets+=("testosterone_logistic;logistic;true")            # 18 GWAS
+instances_sets+=("testosterone_linear;linear;true")                # 54 GWAS
+instances_sets+=("testosterone_bioavailable_linear;linear;true")   # 18 GWAS
+instances_sets+=("testosterone_free_linear;linear;true")           # 18 GWAS
+instances_sets+=("steroid_globulin_linear;linear;true")            # 20 GWAS
+instances_sets+=("albumin_linear;linear;true")                     # 20 GWAS
 
 ################################################################################
 # Execute procedure.
