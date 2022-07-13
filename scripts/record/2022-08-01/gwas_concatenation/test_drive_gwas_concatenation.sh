@@ -123,6 +123,7 @@ for instance_set in "${instances_sets[@]}"; do
     if [[ -n $matches && -f $path_file_gwas_source ]]; then
 
       # Define paths and names of product files.
+      path_directory_chromosomes_source="${path_directory_gwas_raw}/${name_set}/${name_study}"
       path_file_gwas_product="${path_directory_gwas_concatenation}/${name_set}/${name_study}/gwas.txt.gz"
       path_file_frequency_product="${path_directory_gwas_concatenation}/${name_set}/${name_study}/allele_frequency.afreq.gz"
       prefix_file_log_product="plink_log_"
