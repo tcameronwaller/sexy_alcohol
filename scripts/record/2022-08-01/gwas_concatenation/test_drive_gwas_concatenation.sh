@@ -94,11 +94,23 @@ for instance_set in "${instances_sets[@]}"; do
   path_directory_set="${path_directory_gwas_raw}/${name_set}"
   # `find "${path_directory_set}" -maxdepth 1 -mindepth 1 -type d -not -name "."`
   paths_directories_studies=$(find ${path_directory_set} -maxdepth 1 -mindepth 1 -type d -not -name .)
+  echo "array of paths found..."
+  count=${#paths_directories_studies[@]}
+  echo "----------"
+  echo "----------"
+  echo "----------"
+  echo "count of batch instances: " $count
+  echo "first batch instance: " ${paths_directories_studies[0]} # notice base-zero indexing
+  echo "last batch instance: " ${paths_directories_studies[$count - 1]}
+  echo "----------"
+  echo "----------"
+  echo "----------"
+
   for path_directory_study in "${paths_directories_studies[@]}"; do
     # Confirm that path is a directory.
     #if [ -d "$path_directory_study" ]; then
 
-    echo "${path_directory_study}"
+    echo "New path: " ${path_directory_study}
 
     # Extract name of study.
     name_study="$(basename -- $path_directory_study)"
