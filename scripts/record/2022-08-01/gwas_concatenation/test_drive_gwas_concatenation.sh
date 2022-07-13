@@ -23,6 +23,10 @@
 # TODO: ***1*** before anything else...
 # TODO: finish consolidation of "set" directories within "gwas_raw"
 
+# TODO: TCW; 12 July 2022
+# TODO: I think I'm encountering some sort of syntax error in navigating the directories...
+
+
 ################################################################################
 # Organize paths.
 # Read private, local file paths.
@@ -97,9 +101,9 @@ for instance_set in "${instances_sets[@]}"; do
     echo "${path_directory_study}"
 
     # Extract name of study.
-    name_study="$(basename -- "$path_directory_study")"
+    name_study="$(basename -- $path_directory_study)"
 
-    echo "${name_study}"
+    echo "Name of study: " ${name_study}
 
     # Confirm that directory contains a file for GWAS summary statistics.
     matches=$(find "${path_directory_gwas_raw}/${name_set}/${name_study}/chromosome_22" -name "$pattern_file_gwas_source")
