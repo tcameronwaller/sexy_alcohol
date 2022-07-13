@@ -34,6 +34,11 @@ path_directory_gwas_concatenation="${path_dock}/gwas_concatenation_test"
 path_promiscuity_scripts="${path_process}/promiscuity/scripts"
 path_script_concatenate="${path_promiscuity_scripts}/utility/plink/concatenate_plink_gwas_frequency_log_across_chromosomes.sh"
 
+# Initialize directories and files.
+rm -r $path_directory_gwas_concatenation # Caution: removes the parent directory of the product files
+mkdir -p $path_directory_gwas_concatenation
+
+
 ################################################################################
 # General parameters.
 
@@ -116,9 +121,6 @@ for instance_set in "${instances_sets[@]}"; do
       path_file_frequency_product="${path_directory_gwas_concatenation}/${name_set}/${name_study}/allele_frequency.afreq.gz"
       prefix_file_log_product="chromosome_"
       suffix_file_log_product=".log"
-
-      # Initialize directory.
-      rm -r $path_directory_set_study_product # Caution: removes the parent directory of the product files
 
       # Parameters.
       report="true"

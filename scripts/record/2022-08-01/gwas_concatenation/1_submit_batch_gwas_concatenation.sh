@@ -29,10 +29,17 @@ path_process=$(<"./process_sexy_alcohol.txt")
 path_dock="$path_process/dock"
 path_directory_gwas_raw="${path_dock}/gwas_raw_test"
 path_directory_gwas_concatenation="${path_dock}/gwas_concatenation_test"
+path_file_batch_instances="${path_directory_gwas_concatenation}/batch_instances.txt"
 
 # Scripts.
+path_script_run_concatenate="${path_process}/sexy_alcohol/scripts/record/2022-08-01/gwas_concatenation/2_run_batch_jobs_gwas_concatenation.sh"
 path_promiscuity_scripts="${path_process}/promiscuity/scripts"
 path_script_concatenate="${path_promiscuity_scripts}/utility/plink/concatenate_plink_gwas_frequency_log_across_chromosomes.sh"
+
+# Initialize directories and files.
+rm -r $path_directory_gwas_concatenation # Caution: removes the parent directory of the product files
+mkdir -p $path_directory_gwas_concatenation
+rm $path_file_batch_instances
 
 ################################################################################
 # General parameters.
@@ -80,27 +87,13 @@ for instance_set in "${instances_sets[@]}"; do
   path_directory_set="${path_directory_gwas_raw}/${name_set}"
   # `find "${path_directory_set}" -maxdepth 1 -mindepth 1 -type d -not -name "."`
   paths_directories_studies=($(find ${path_directory_set} -maxdepth 1 -mindepth 1 -type d -not -name .))
-  echo "array of paths found..."
-  count=${#paths_directories_studies[@]}
-  echo "----------"
-  echo "----------"
-  echo "----------"
-  echo "count of batch instances: " $count
-  echo "first batch instance: " ${paths_directories_studies[0]} # notice base-zero indexing
-  echo "last batch instance: " ${paths_directories_studies[$count - 1]}
-  echo "----------"
-  echo "----------"
-  echo "----------"
-
   for path_directory_study in ${paths_directories_studies[@]}; do
     # Confirm that path is a directory.
     #if [ -d "$path_directory_study" ]; then
-
     echo "New path: " ${path_directory_study}
 
     # Extract name of study.
     name_study="$(basename -- $path_directory_study)"
-
     echo "Name of study: " ${name_study}
 
     # Confirm that directory contains a file for GWAS summary statistics.
@@ -116,9 +109,6 @@ for instance_set in "${instances_sets[@]}"; do
       path_file_frequency_product="${path_directory_gwas_concatenation}/${name_set}/${name_study}/allele_frequency.afreq.gz"
       prefix_file_log_product="chromosome_"
       suffix_file_log_product=".log"
-
-      # Initialize directory.
-      rm -r $path_directory_set_study_product # Caution: removes the parent directory of the product files
 
       # Parameters.
       report="true"
@@ -137,12 +127,22 @@ for instance_set in "${instances_sets[@]}"; do
       instance_array+=($chromosome_xy)
       instance_array+=($report)
       instance=$(IFS=";"; echo "${instance_array[*]}") # write array to string with custom delimiter
-      echo "batch instance: " ${instance}
-      #echo $instance >> $path_batch_instances
+      #echo "batch instance: " ${instance}
+      echo $instance >> $path_file_batch_instances
     fi
   done
 done
 
+################################################################################
+# Submit batch instances to cluster scheduler.
+
+# Read batch instances.
+readarray -t batch_instances < $path_file_batch_instances
+batch_instances_count=${#batch_instances[@]}
+echo "----------"
+echo "count of batch instances: " $batch_instances_count
+echo "first batch instance: " ${batch_instances[0]} # notice base-zero indexing
+echo "last batch instance: " ${batch_instances[$batch_instances_count - 1]}
 
 
 
