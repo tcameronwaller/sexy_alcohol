@@ -7,10 +7,10 @@
 # Shell.
 #$ -S /bin/bash
 # Name of job.
-#$ -N waller_gwas
+#$ -N tcw_gwas_concatenate
 # Contact.
 # "b": beginning, "e": end, "a": abortion, "s": suspension, "n": never
-#$ -M tcameronwaller@gmail.com
+#$ -M waller.tcameron@mayo.edu
 #$ -m as
 # Standard output and error.
 # Specify as arguments when calling qsub.
@@ -23,7 +23,7 @@
 ### -p -10
 # Memory per iteration.
 # Segmentation errors commonly indicate a memory error.
-#$ -l h_vmem=1G
+#$ -l h_vmem=4G
 # Concurrent threads; assigns value to variable NSLOTS.
 #$ -pe threaded 1
 # Range of indices.
@@ -45,36 +45,46 @@
 ################################################################################
 # Organize argument variables.
 
-path_batch_instances=${1} # text list of information for each instance in batch
-batch_instances_count=${2} # count of instances in batch
-pattern_gwas_report_file=${3} # string glob pattern by which to recognize PLINK2 GWAS report files
-path_gwas_source_container=${4} # full path to parent directories of GWAS summary statistics for each study
-path_gwas_target_container=${5} # full path to parent directories of GWAS summary statistics for each study
-path_scripts_record=${6} # full path to directory of scripts for a specific analysis report date
-path_process=${7} # full path to directory for all processes relevant to current project
-chromosome_x=${8} # whether to collect GWAS summary statistics report for Chromosome X
+path_file_batch_instances=${1} # full path to file for text list of information about each job instance in batch
+batch_instances_count=${2} # count of job instances in batch
+path_script_concatenate=${3} # full path to script to concatenate information from GWAS across chromosomes
 
 ###########################################################################
 # Organize variables.
 
 # Determine batch instance.
 batch_index=$((SGE_TASK_ID-1))
-readarray -t batch_instances < $path_batch_instances
-study=${batch_instances[$batch_index]}
+readarray -t batch_instances < $path_file_batch_instances
+instance=${batch_instances[$batch_index]}
+
+# Separate fields from instance.
+IFS=";" read -r -a array <<< "${instance}"
+pattern_file_gwas_source="${array[0]}"
+pattern_file_frequency_source="${array[1]}"
+pattern_file_log_source="${array[2]}"
+path_directory_chromosomes_source="${array[3]}"
+path_file_gwas_product="${array[4]}"
+path_file_frequency_product="${array[5]}"
+name_directory_log_product="${array[6]}"
+prefix_file_log_product="${array[7]}"
+suffix_file_log_product="${array[8]}"
+chromosome_xy="${array[9]}"
+report="${array[10]}"
 
 ###########################################################################
 # Execute procedure.
 
-# Concatenate GWAS across chromosomes.
-/usr/bin/bash "${path_scripts_record}/3_drive_gwas_concatenation.sh" \
-$study \
-$pattern_gwas_report_file \
-$path_gwas_source_container \
-$path_gwas_target_container \
-$path_scripts_record \
-$path_process \
-$chromosome_x
-
-
+/usr/bin/bash "${path_script_concatenate}" \
+$pattern_file_gwas_source \
+$pattern_file_frequency_source \
+$pattern_file_log_source \
+$path_directory_chromosomes_source \
+$path_file_gwas_product \
+$path_file_frequency_product \
+$name_directory_log_product \
+$prefix_file_log_product \
+$suffix_file_log_product \
+$chromosome_xy \
+$report
 
 #

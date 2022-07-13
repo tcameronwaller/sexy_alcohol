@@ -115,7 +115,7 @@ for instance_set in "${instances_sets[@]}"; do
 
       # Define and append a new instance for a batch job.
       instance_array=()
-      instance_array+=(${pattern_file_gwas_source})
+      instance_array+=($pattern_file_gwas_source)
       instance_array+=($pattern_file_frequency_source)
       instance_array+=($pattern_file_log_source)
       instance_array+=($path_directory_chromosomes_source)
@@ -144,6 +144,16 @@ echo "count of batch instances: " $batch_instances_count
 echo "first batch instance: " ${batch_instances[0]} # notice base-zero indexing
 echo "last batch instance: " ${batch_instances[$batch_instances_count - 1]}
 
+# Submit array of batch job instances to Sun Grid Engine scheduler.
+# Array batch instance indices must start at one (not zero).
+if true; then
+  qsub -t 1-${batch_instances_count}:1 -o \
+  "${path_directory_gwas_concatenation}/batch_out.txt" -e "${path_directory_gwas_concatenation}/batch_error.txt" \
+  "${path_script_run_concatenate}" \
+  $path_file_batch_instances \
+  $batch_instances_count \
+  $path_script_concatenate
+fi
 
 
 
