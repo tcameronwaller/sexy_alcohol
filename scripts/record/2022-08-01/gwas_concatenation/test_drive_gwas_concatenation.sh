@@ -54,8 +54,8 @@ path_script_concatenate="${path_promiscuity_scripts}/utility/plink/concatenate_p
 # Organize multi-dimensional array of information about sets of studies.
 # [name of set] ; [regression type: "linear" or "logistic"] ; [whether to include chromosomes X and XY]
 instances_sets=()
-instances_sets+=("oestradiol_logistic;logistic;true")              # 18 GWAS
-#instances_sets+=("oestradiol_linear;linear;true")                  # 30 GWAS
+#instances_sets+=("oestradiol_logistic;logistic;true")              # 18 GWAS
+instances_sets+=("oestradiol_linear;linear;true")                  # 30 GWAS
 #instances_sets+=("oestradiol_bioavailable_linear;linear;true")     # 18 GWAS
 #instances_sets+=("oestradiol_free_linear;linear;true")             # 18 GWAS
 #instances_sets+=("testosterone_logistic;logistic;true")            # 18 GWAS
