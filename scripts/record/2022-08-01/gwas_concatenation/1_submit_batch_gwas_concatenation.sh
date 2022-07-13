@@ -49,7 +49,7 @@ rm $path_file_batch_instances
 instances_sets=()
 instances_sets+=("oestradiol_logistic;logistic;true")              # 18 GWAS
 instances_sets+=("oestradiol_linear;linear;true")                  # 30 GWAS
-#instances_sets+=("oestradiol_bioavailable_linear;linear;true")     # 18 GWAS
+#nstances_sets+=("oestradiol_bioavailable_linear;linear;true")     # 18 GWAS
 #instances_sets+=("oestradiol_free_linear;linear;true")             # 18 GWAS
 #instances_sets+=("testosterone_logistic;logistic;true")            # 18 GWAS
 #instances_sets+=("testosterone_linear;linear;true")                # 54 GWAS
