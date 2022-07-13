@@ -120,22 +120,28 @@ for instance_set in "${instances_sets[@]}"; do
       # Initialize directory.
       rm -r $path_directory_set_study_product # Caution: removes the parent directory of the product files
 
-      # Concatenate information from files across chromosomes.
+      # Define and append a new instance for a batch job.
       report="true"
-      /usr/bin/bash "${path_script_concatenate}" \
-      $pattern_file_gwas_source \
-      $pattern_file_frequency_source \
-      $pattern_file_log_source \
-      $path_directory_chromosomes_source \
-      $path_file_gwas_product \
-      $path_file_frequency_product \
-      $name_directory_log_product \
-      $prefix_file_log_product \
-      $suffix_file_log_product \
-      $chromosome_xy \
-      $report
+      instance="
+        ${pattern_file_gwas_source};\
+        ${pattern_file_frequency_source};\
+        ${pattern_file_log_source};\
+        ${path_directory_chromosomes_source};\
+        ${path_file_gwas_product};\
+        ${path_file_frequency_product};\
+        ${name_directory_log_product};\
+        ${prefix_file_log_product};\
+        ${suffix_file_log_product};\
+        ${chromosome_xy};\
+        ${report}"
+      echo "batch instance: " ${instance}
+      #echo $instance >> $path_batch_instances
     fi
   done
 done
+
+
+
+
 
 #
