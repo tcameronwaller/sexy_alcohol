@@ -47,7 +47,7 @@ rm $path_file_batch_instances
 # Organize multi-dimensional array of information about sets of studies.
 # [name of set] ; [regression type: "linear" or "logistic"] ; [whether to include chromosomes X and XY]
 instances_sets=()
-#instances_sets+=("oestradiol_logistic;logistic;true")              # 18 GWAS
+instances_sets+=("oestradiol_logistic;logistic;true")              # 18 GWAS
 instances_sets+=("oestradiol_linear;linear;true")                  # 30 GWAS
 #instances_sets+=("oestradiol_bioavailable_linear;linear;true")     # 18 GWAS
 #instances_sets+=("oestradiol_free_linear;linear;true")             # 18 GWAS
@@ -90,11 +90,11 @@ for instance_set in "${instances_sets[@]}"; do
   for path_directory_study in ${paths_directories_studies[@]}; do
     # Confirm that path is a directory.
     #if [ -d "$path_directory_study" ]; then
-    echo "New path: " ${path_directory_study}
+    #echo "New path: " ${path_directory_study}
 
     # Extract name of study.
     name_study="$(basename -- $path_directory_study)"
-    echo "Name of study: " ${name_study}
+    #echo "Name of study: " ${name_study}
 
     # Confirm that directory contains a file for GWAS summary statistics.
     matches=$(find "${path_directory_gwas_raw}/${name_set}/${name_study}/chromosome_22" -name "$pattern_file_gwas_source")
