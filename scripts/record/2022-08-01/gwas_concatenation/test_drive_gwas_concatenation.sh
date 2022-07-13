@@ -93,7 +93,7 @@ for instance_set in "${instances_sets[@]}"; do
   # Iterate across GWAS studies within current set.
   path_directory_set="${path_directory_gwas_raw}/${name_set}"
   # `find "${path_directory_set}" -maxdepth 1 -mindepth 1 -type d -not -name "."`
-  paths_directories_studies=$(find ${path_directory_set} -maxdepth 1 -mindepth 1 -type d -not -name .)
+  paths_directories_studies=($(find ${path_directory_set} -maxdepth 1 -mindepth 1 -type d -not -name .))
   echo "array of paths found..."
   count=${#paths_directories_studies[@]}
   echo "----------"
