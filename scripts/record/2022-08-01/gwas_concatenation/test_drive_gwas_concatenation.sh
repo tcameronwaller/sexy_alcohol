@@ -106,7 +106,7 @@ for instance_set in "${instances_sets[@]}"; do
   echo "----------"
   echo "----------"
 
-  for path_directory_study in "${paths_directories_studies[@]}"; do
+  for path_directory_study in ${paths_directories_studies[@]}; do
     # Confirm that path is a directory.
     #if [ -d "$path_directory_study" ]; then
 
