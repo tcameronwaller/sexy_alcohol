@@ -125,9 +125,10 @@ for instance_set in "${instances_sets[@]}"; do
       # Define paths and names of product files.
       path_directory_chromosomes_source="${path_directory_gwas_raw}/${name_set}/${name_study}"
       path_directory_set_study_product="${path_directory_gwas_concatenation}/${name_set}/${name_study}"
+      name_directory_log_product="plink_execution_logs"
       path_file_gwas_product="${path_directory_gwas_concatenation}/${name_set}/${name_study}/gwas.txt.gz"
       path_file_frequency_product="${path_directory_gwas_concatenation}/${name_set}/${name_study}/allele_frequency.afreq.gz"
-      prefix_file_log_product="plink_log_"
+      prefix_file_log_product="chromosome_"
       suffix_file_log_product=".log"
 
       # Initialize directory.
@@ -142,6 +143,7 @@ for instance_set in "${instances_sets[@]}"; do
       $path_directory_chromosomes_source \
       $path_file_gwas_product \
       $path_file_frequency_product \
+      $name_directory_log_product \
       $prefix_file_log_product \
       $suffix_file_log_product \
       $chromosome_xy \
