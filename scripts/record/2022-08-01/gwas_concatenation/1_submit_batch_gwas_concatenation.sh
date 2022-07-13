@@ -120,20 +120,23 @@ for instance_set in "${instances_sets[@]}"; do
       # Initialize directory.
       rm -r $path_directory_set_study_product # Caution: removes the parent directory of the product files
 
-      # Define and append a new instance for a batch job.
+      # Parameters.
       report="true"
-      instance="
-        ${pattern_file_gwas_source};\
-        ${pattern_file_frequency_source};\
-        ${pattern_file_log_source};\
-        ${path_directory_chromosomes_source};\
-        ${path_file_gwas_product};\
-        ${path_file_frequency_product};\
-        ${name_directory_log_product};\
-        ${prefix_file_log_product};\
-        ${suffix_file_log_product};\
-        ${chromosome_xy};\
-        ${report}"
+
+      # Define and append a new instance for a batch job.
+      instance_array=()
+      instance_array+=(${pattern_file_gwas_source})
+      instance_array+=($pattern_file_frequency_source)
+      instance_array+=($pattern_file_log_source)
+      instance_array+=($path_directory_chromosomes_source)
+      instance_array+=($path_file_gwas_product)
+      instance_array+=($path_file_frequency_product)
+      instance_array+=($name_directory_log_product)
+      instance_array+=($prefix_file_log_product)
+      instance_array+=($suffix_file_log_product)
+      instance_array+=($chromosome_xy)
+      instance_array+=($report)
+      instance=$(IFS=";"; echo "${instance_array[*]}") # write array to string with custom delimiter
       echo "batch instance: " ${instance}
       #echo $instance >> $path_batch_instances
     fi

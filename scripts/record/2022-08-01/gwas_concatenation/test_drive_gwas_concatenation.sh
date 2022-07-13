@@ -120,8 +120,10 @@ for instance_set in "${instances_sets[@]}"; do
       # Initialize directory.
       rm -r $path_directory_set_study_product # Caution: removes the parent directory of the product files
 
-      # Concatenate information from files across chromosomes.
+      # Parameters.
       report="true"
+
+      # Concatenate information from files across chromosomes.
       /usr/bin/bash "${path_script_concatenate}" \
       $pattern_file_gwas_source \
       $pattern_file_frequency_source \
