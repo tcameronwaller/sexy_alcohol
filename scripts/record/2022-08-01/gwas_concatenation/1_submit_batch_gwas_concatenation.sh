@@ -67,6 +67,8 @@ instances_sets+=("testosterone_bioavailable_linear;linear;true")   # 18 GWAS
 instances_sets+=("testosterone_free_linear;linear;true")           # 18 GWAS
 instances_sets+=("steroid_globulin_linear;linear;true")            # 20 GWAS
 instances_sets+=("albumin_linear;linear;true")                     # 20 GWAS
+#                                                                  ___________
+#                                                                    232 GWAS # batch submitted by TCW on 13 July 2022
 
 ################################################################################
 # Execute procedure.
