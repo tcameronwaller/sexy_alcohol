@@ -44,6 +44,10 @@
 # memory error ("Segmentation fault") with 1 thread slot ("-pe threaded 1") and
 # 2 Gigabyte of memory ("-l h_vmem=2G") (TCW; 14 July 2022).
 
+# LDSC Genetic Correlation on previously munged GWAS summary statistics runs
+# with 1 thread slot ("-pe threaded 1") and 4 Gigabytes of memory
+# ("-l h_vmem=4G") (TCW; 14 July 2022).
+
 ################################################################################
 # Organize argument variables.
 

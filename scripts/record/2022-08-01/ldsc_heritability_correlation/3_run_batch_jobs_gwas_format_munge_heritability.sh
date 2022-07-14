@@ -43,8 +43,9 @@
 # LDSC Munge of GWAS summary statistics throws a memory error with 4 thread
 # slots ("-pe threaded 4") and 1 Gigabyte of memory ("-l h_vmem=1G").
 
-# LDSC Munge of GWAS summary statistics runs with 8 thread slots
-# ("-pe threaded 8") and 1 Gigabyte of memory ("-l h_vmem=1G").
+# LDSC Munge of GWAS summary statistics runs with 1 thread slot
+# ("-pe threaded 1") and 8 Gigabytes of memory ("-l h_vmem=8G")
+# (TCW; 14 July 2022).
 
 ################################################################################
 # Organize argument variables.

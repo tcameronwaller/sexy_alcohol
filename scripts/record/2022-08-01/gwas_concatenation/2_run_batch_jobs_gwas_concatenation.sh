@@ -38,8 +38,8 @@
 ################################################################################
 # Note.
 
-# Collection and concatenation of GWAS summary statistics runs with 4 thread
-# slots ("-pe threaded 4") and 1 Gigabyte of memory ("-l h_vmem=1G"), even for
+# Collection and concatenation of GWAS summary statistics runs with 1 thread
+# slot ("-pe threaded 1") and 4 Gigabytes of memory ("-l h_vmem=4G"), even for
 # GWAS on > 300,000 persons.
 
 ################################################################################

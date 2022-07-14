@@ -19,8 +19,8 @@
 #cohorts_models="testosterone_linear"                   # 54 GWAS;
 #cohorts_models="testosterone_bioavailable_linear"      # 18 GWAS;
 #cohorts_models="testosterone_free_linear"              # 18 GWAS;
-cohorts_models="steroid_globulin_linear"               # 20 GWAS; 220 comparisons;
-#cohorts_models="albumin_linear"                        # 20 GWAS; 220 comparisons;
+#cohorts_models="steroid_globulin_linear"               # 20 GWAS; 220 comparisons;
+cohorts_models="albumin_linear"                        # 20 GWAS; 220 comparisons;
 
 
 #cohorts_models="oestradiol_logistic"                   # 234 Comparisons; 16 GWAS; 19 April 2022; GWAS on 'adjust' models for for 'female' and 'male' cohorts incomplete as of 19 April 2022
@@ -184,7 +184,7 @@ if true; then
 fi
 if true; then
   # Female stage of life for linear oestradiol.
-  pairs+=("female_premenopause_joint_1_oestradiol_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_premenopause_joint_1_oestradiol_imputation_log;female_perimenopause_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_perimenopause_joint_1_oestradiol_detection")
+  pairs+=("female_premenopause_joint_1_oestradiol_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_linear/female_premenopause_joint_1_oestradiol_imputation_log;female_perimenopause_joint_1_oestradiol_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_linear/female_perimenopause_joint_1_oestradiol_imputation_log")
   # Assemble array of batch instance details.
   comparison_container="oestradiol_linear_female_stage_life"
   for pair in "${pairs[@]}"; do
