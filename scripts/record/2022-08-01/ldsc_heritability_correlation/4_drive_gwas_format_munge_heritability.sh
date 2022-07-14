@@ -35,7 +35,6 @@ fi
 mkdir -p $path_gwas_target_parent
 # Scripts.
 path_promiscuity_scripts="${path_process}/promiscuity/scripts"
-path_scripts_gwas_process="${path_promiscuity_scripts}/gwas_process"
 path_script_drive_format_gwas="${path_promiscuity_scripts}/utility/ldsc/drive_format_gwas_ldsc.sh"
 path_script_format_gwas="${path_promiscuity_scripts}/gwas_process/format_gwas_ldsc/format_gwas_ldsc_plink_${regression_type}.sh"
 ##########
@@ -54,7 +53,7 @@ $report
 # LDSC Munge and Heritability.
 # Paths.
 path_dock="$path_process/dock"
-path_genetic_reference="${path_dock}/access/genetic_reference"
+path_genetic_reference="${path_dock}/access/genetic_reference_ldsc"
 path_gwas_source_parent="${path_gwas_format_container}/${study}"
 path_gwas_target_parent="${path_gwas_munge_container}/${study}"
 path_heritability_parent="${path_heritability_container}/${study}"

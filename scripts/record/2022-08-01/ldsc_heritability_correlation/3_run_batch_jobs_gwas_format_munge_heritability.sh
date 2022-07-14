@@ -7,7 +7,7 @@
 # Shell.
 #$ -S /bin/bash
 # Name of job.
-#$ -N waller_gwas
+#$ -N tcw_ldsc
 # Contact.
 # "b": beginning, "e": end, "a": abortion, "s": suspension, "n": never
 #$ -M waller.tcameron@mayo.edu

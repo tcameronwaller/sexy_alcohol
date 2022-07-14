@@ -8,6 +8,13 @@
 ###########################################################################
 ###########################################################################
 
+# TODO: TCW; 14 July 2022
+# TODO: Change the structure of this process.
+# TODO: Use a model more similar to the new concatenation procedure.
+# TODO: Define paths to ALL relevant down-stream scripts here in the top level driver script.
+# TODO: Enable the same submit driver to control both "1. format" and "2. munge" but just changing source directory, target directory, and process script(s)
+
+
 
 ################################################################################
 # General parameters.
@@ -25,7 +32,7 @@ cohorts_models="oestradiol_logistic"                   # 18 GWAS
 
 # Parameters.
 regression_type="logistic" # "linear" or "logistic"
-response="odds_ratio" # "coefficient", "odds_ratio", or "z_score"; for linear GWAS, use "coefficient" unless "response_standard_scale" is "true", in which case "z_score"
+response="coefficient" # "coefficient", "odds_ratio", or "z_score"; for linear GWAS, use "coefficient" unless "response_standard_scale" is "true", in which case "z_score"
 response_standard_scale="false" # whether to convert reponse (effect, coefficient) to z-score standard scale ("true" or "false")
 restore_target_study_directories="true" # whether to delete any previous directories for each study's format and munge GWAS ("true" or "false")
 
@@ -95,7 +102,7 @@ echo "first batch instance: " ${batch_instances[0]} # notice base-zero indexing
 echo "last batch instance: " ${batch_instances[$batch_instances_count - 1]}
 
 # Execute batch with grid scheduler.
-if false; then
+if true; then
   # Submit array batch to Sun Grid Engine.
   # Array batch indices must start at one (not zero).
   qsub -t 1-${batch_instances_count}:1 -o \
