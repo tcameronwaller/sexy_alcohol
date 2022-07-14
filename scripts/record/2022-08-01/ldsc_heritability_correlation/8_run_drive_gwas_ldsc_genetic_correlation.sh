@@ -40,9 +40,8 @@ rm -r $path_genetic_correlation_parent
 mkdir -p $path_genetic_correlation_parent
 # Scripts.
 path_promiscuity_scripts="${path_process}/promiscuity/scripts"
-path_scripts_gwas_process="${path_promiscuity_scripts}/gwas_process"
-path_script_drive_ldsc_gwas_genetic_correlation="${path_scripts_gwas_process}/estimate_gwas_genetic_correlation_ldsc.sh"
-/usr/bin/bash "$path_script_drive_ldsc_gwas_genetic_correlation" \
+path_script_estimate_ldsc_genetic_correlation="${path_promiscuity_scripts}/utility/ldsc/estimate_gwas_genetic_correlation_ldsc.sh"
+/usr/bin/bash "$path_script_estimate_ldsc_genetic_correlation" \
 $path_gwas_primary_munge_suffix \
 $path_gwas_secondary_munge_suffix \
 $path_genetic_correlation_parent \

@@ -13,16 +13,13 @@
 # Read private, local file paths.
 cd ~/paths
 path_gwas_summaries=$(<"./gwas_summaries_waller_metabolism.txt")
-path_process=$(<"./process_psychiatric_metabolism.txt")
+path_process=$(<"./process_sexy_alcohol.txt")
 
 path_promiscuity_scripts="${path_process}/promiscuity/scripts"
 
 path_dock="$path_process/dock"
-path_genetic_reference="${path_dock}/access/genetic_reference"
-
-#path_gwas_source="${path_dock}/gwas" # selection
+path_genetic_reference="${path_dock}/access/genetic_reference_ldsc"
 path_gwas_target="${path_dock}/gwas_ldsc_format_munge" # selection
-
 path_heritability="${path_dock}/heritability/community_studies" # store in container to parallel "cohorts_models" containers
 
 # TODO: TCW 2 December 2021
@@ -98,9 +95,9 @@ for study_details in "${studies[@]}"; do
   cp ${path_gwas_source_file} ${path_gwas_concatenation_compress}
 
   # Scripts.
-  path_script_drive_gwas_format="${path_promiscuity_scripts}/gwas_process/drive_gwas_format.sh"
+  path_script_drive_gwas_format="${path_promiscuity_scripts}/utility/ldsc/drive_format_gwas_ldsc.sh"
   path_script_gwas_format="${path_promiscuity_scripts}/gwas_process/format_gwas_ldsc/format_gwas_ldsc_${study}.sh"
-  path_script_drive_ldsc_gwas_munge_heritability="${path_promiscuity_scripts}/gwas_process/drive_ldsc_gwas_munge_heritability.sh"
+  path_script_drive_ldsc_gwas_munge_heritability="${path_promiscuity_scripts}/utility/ldsc/drive_ldsc_gwas_munge_heritability.sh"
 
   ##########
   # Format adjustment.

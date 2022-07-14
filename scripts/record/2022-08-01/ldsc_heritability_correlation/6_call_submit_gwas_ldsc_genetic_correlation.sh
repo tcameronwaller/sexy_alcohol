@@ -11,6 +11,19 @@
 ################################################################################
 # General parameters.
 
+#cohorts_models="oestradiol_logistic"                   # 18 GWAS;
+#cohorts_models="oestradiol_linear"                     # 30 GWAS;
+#cohorts_models="oestradiol_bioavailable_linear"        # 18 GWAS;
+#cohorts_models="oestradiol_free_linear"                # 18 GWAS;
+#cohorts_models="testosterone_logistic"                 # 18 GWAS;
+#cohorts_models="testosterone_linear"                   # 54 GWAS;
+#cohorts_models="testosterone_bioavailable_linear"      # 18 GWAS;
+#cohorts_models="testosterone_free_linear"              # 18 GWAS;
+#cohorts_models="steroid_globulin_linear"               # 20 GWAS;
+#cohorts_models="albumin_linear"                        # 20 GWAS; 220 comparisons;
+
+
+
 #cohorts_models="albumin_linear_2"                      #  22 Comparisons;  2 GWAS; 13 April 2022
 #cohorts_models="albumin_linear_1"                      # 198 Comparisons; 18 GWAS; 13 April 2022
 #cohorts_models="steroid_globulin_linear_2"             #  22 Comparisons;  2 GWAS; 13 April 2022
@@ -32,7 +45,7 @@ cd ~/paths
 path_process=$(<"./process_psychiatric_metabolism.txt")
 path_dock="$path_process/dock"
 
-path_genetic_reference="${path_dock}/access/genetic_reference"
+path_genetic_reference="${path_dock}/access/genetic_reference_ldsc"
 path_genetic_correlation_container="${path_dock}/genetic_correlation"
 name_gwas_munge_file="gwas_munge.sumstats.gz"
 path_primary_gwas_munge_container="${path_dock}/gwas_ldsc_format_munge"
@@ -93,7 +106,7 @@ comparisons=()
 # Comparison pairs of secondary studies for comparison to all primary studies.
 if true; then
   # Assemble array of batch instance details.
-  comparison_container="primary_versus_${cohorts_models}"
+  comparison_container="primaries_against_${cohorts_models}"
   for primary in "${primaries[@]}"; do
     for secondary in "${secondaries[@]}"; do
       comparisons+=("${comparison_container};${primary};${secondary}")
@@ -109,7 +122,7 @@ if true; then
   secondaries_special+=("34255042_schmitz_2021_female;${path_primary_gwas_munge_container}/34255042_schmitz_2021_female/${name_gwas_munge_file}")
   secondaries_special+=("34255042_schmitz_2021_male;${path_primary_gwas_munge_container}/34255042_schmitz_2021_male/${name_gwas_munge_file}")
   # Assemble array of batch instance details.
-  comparison_container="primary_versus_34255042_schmitz_2021"
+  comparison_container="primaries_against_34255042_schmitz_2021"
   for primary in "${primaries[@]}"; do
     for secondary_special in "${secondaries_special[@]}"; do
       comparisons+=("${comparison_container};${primary};${secondary_special}")
@@ -125,7 +138,7 @@ if false; then
   pairs+=("34255042_schmitz_2021_female;34255042_schmitz_2021_male")
 
   # Assemble array of batch instance details.
-  comparison_container="34255042_schmitz_2021_female_versus_male"
+  comparison_container="34255042_schmitz_2021_female_against_male"
   for pair in "${pairs[@]}"; do
     IFS=";" read -r -a array <<< "${pair}"
     study_primary="${array[0]}"
@@ -140,11 +153,11 @@ fi
 # Study pairs within different containers.
 if false; then
   # Females to Males.
-  pairs+=("34255042_schmitz_2021_female;${path_primary_gwas_munge_container}/34255042_schmitz_2021_female;male_vitamin_d;${path_dock}/gwas_ldsc_munge/oestradiol_logistic_long/female...")
-  pairs+=("34255042_schmitz_2021_male;${path_primary_gwas_munge_container}/34255042_schmitz_2021_male;male_vitamin_d_log;${path_dock}/gwas_ldsc_munge/oestradiol_logistic_long/male...")
+  pairs+=("34255042_schmitz_2021_female;${path_primary_gwas_munge_container}/34255042_schmitz_2021_female;female_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_joint_1_oestradiol_detection")
+  pairs+=("34255042_schmitz_2021_male;${path_primary_gwas_munge_container}/34255042_schmitz_2021_male;male_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/male_joint_1_oestradiol_detection")
 
   # Assemble array of batch instance details.
-  comparison_container="white_secondary_pairs_female_male"
+  comparison_container="34255042_schmitz_2021_against_oestradiol_logistic"
   for pair in "${pairs[@]}"; do
     IFS=";" read -r -a array <<< "${pair}"
     study_primary="${array[0]}"
