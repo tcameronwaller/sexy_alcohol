@@ -23,7 +23,7 @@
 ### -p -10
 # Memory per iteration.
 # Segmentation errors commonly indicate a memory error.
-#$ -l h_vmem=8G
+#$ -l h_vmem=2G
 # Concurrent threads; assigns value to variable NSLOTS.
 # Important to specify 32 threads to avoid inconsistency with interactive
 # calculations.
@@ -33,7 +33,7 @@
 # Array batch indices cannot start at zero.
 ### -t 1-100:1
 # Limit on concurrent processes.
-#$ -tc 20
+#$ -tc 200
 
 # http://gridscheduler.sourceforge.net/htmlman/htmlman1/qsub.html
 
