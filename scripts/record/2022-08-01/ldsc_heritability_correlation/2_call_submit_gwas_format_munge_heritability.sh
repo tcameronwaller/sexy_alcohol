@@ -19,11 +19,11 @@
 ################################################################################
 # General parameters.
 
-#cohorts_models="oestradiol_logistic"                   # 18 GWAS; started on 14 July 2022
-#cohorts_models="oestradiol_linear"                     # 30 GWAS
+#cohorts_models="oestradiol_logistic"                   # 18 GWAS; completed on 14 July 2022
+cohorts_models="oestradiol_linear"                     # 30 GWAS
 #cohorts_models="oestradiol_bioavailable_linear"        # 18 GWAS
 #cohorts_models="oestradiol_free_linear"                # 18 GWAS
-cohorts_models="testosterone_logistic"                 # 18 GWAS; 
+#cohorts_models="testosterone_logistic"                 # 18 GWAS; started on 14 July 2022
 #cohorts_models="testosterone_linear"                   # 54 GWAS
 #cohorts_models="testosterone_bioavailable_linear"      # 18 GWAS
 #cohorts_models="testosterone_free_linear"              # 18 GWAS
@@ -31,7 +31,7 @@ cohorts_models="testosterone_logistic"                 # 18 GWAS;
 #cohorts_models="albumin_linear"                        # 20 GWAS
 
 # Parameters.
-regression_type="logistic" # "linear" or "logistic"
+regression_type="linear" # "linear" or "logistic"
 response="coefficient" # "coefficient", "odds_ratio", or "z_score"; for linear GWAS, use "coefficient" unless "response_standard_scale" is "true", in which case "z_score"
 response_standard_scale="false" # whether to convert reponse (effect, coefficient) to z-score standard scale ("true" or "false")
 restore_target_study_directories="true" # whether to delete any previous directories for each study's format and munge GWAS ("true" or "false")
