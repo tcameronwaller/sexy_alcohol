@@ -19,11 +19,11 @@
 ################################################################################
 # General parameters.
 
-cohorts_models="oestradiol_logistic"                   # 18 GWAS
+#cohorts_models="oestradiol_logistic"                   # 18 GWAS; started on 14 July 2022
 #cohorts_models="oestradiol_linear"                     # 30 GWAS
 #cohorts_models="oestradiol_bioavailable_linear"        # 18 GWAS
 #cohorts_models="oestradiol_free_linear"                # 18 GWAS
-#cohorts_models="testosterone_logistic"                 # 18 GWAS
+cohorts_models="testosterone_logistic"                 # 18 GWAS; 
 #cohorts_models="testosterone_linear"                   # 54 GWAS
 #cohorts_models="testosterone_bioavailable_linear"      # 18 GWAS
 #cohorts_models="testosterone_free_linear"              # 18 GWAS
