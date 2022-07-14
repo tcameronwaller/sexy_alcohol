@@ -19,8 +19,8 @@
 #cohorts_models="testosterone_linear"                   # 54 GWAS;
 #cohorts_models="testosterone_bioavailable_linear"      # 18 GWAS;
 #cohorts_models="testosterone_free_linear"              # 18 GWAS;
-#cohorts_models="steroid_globulin_linear"               # 20 GWAS; 220 comparisons;
-cohorts_models="albumin_linear"                        # 20 GWAS; 220 comparisons;
+cohorts_models="steroid_globulin_linear"               # 20 GWAS; 220 comparisons;
+#cohorts_models="albumin_linear"                        # 20 GWAS; 220 comparisons; 314 comparisons with special comparisons; started on 14 July 2022
 
 
 #cohorts_models="oestradiol_logistic"                   # 234 Comparisons; 16 GWAS; 19 April 2022; GWAS on 'adjust' models for for 'female' and 'male' cohorts incomplete as of 19 April 2022
@@ -111,7 +111,7 @@ fi
 
 ##########
 # Study pairs with special secondary studies for comparison to all primary studies.
-if true; then
+if false; then
   # Collect special secondary studies.
   secondaries_special=()
   secondaries_special+=("34255042_schmitz_2021_female;${path_primary_gwas_munge_container}/34255042_schmitz_2021_female/${name_gwas_munge_file}")
@@ -128,7 +128,7 @@ fi
 
 ##########
 # Study pairs within the same container (path_primary_gwas_munge_container).
-if true; then
+if false; then
   # Signal transformation.
   pairs=()
   pairs+=("34255042_schmitz_2021_female;34255042_schmitz_2021_male")
@@ -146,7 +146,7 @@ fi
 
 ##########
 # Study pairs within different containers.
-if true; then
+if false; then
   # Schmitz to UK Biobank.
   pairs=()
   pairs+=("34255042_schmitz_2021_female;${path_primary_gwas_munge_container}/34255042_schmitz_2021_female;female_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_joint_1_oestradiol_detection")
@@ -162,7 +162,7 @@ if true; then
     comparisons+=("${comparison_container};${study_primary};${path_primary}/${name_gwas_munge_file};${study_secondary};${path_secondary}/${name_gwas_munge_file}")
   done
 fi
-if true; then
+if false; then
   # Females to Males and stage of life for logistic oestradiol detection.
   pairs=()
   pairs+=("female_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_joint_1_oestradiol_detection;male_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/male_joint_1_oestradiol_detection")
@@ -184,7 +184,7 @@ if true; then
     comparisons+=("${comparison_container};${study_primary};${path_primary}/${name_gwas_munge_file};${study_secondary};${path_secondary}/${name_gwas_munge_file}")
   done
 fi
-if true; then
+if false; then
   # Female stage of life for linear oestradiol.
   pairs=()
   pairs+=("female_premenopause_joint_1_oestradiol_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_linear/female_premenopause_joint_1_oestradiol_imputation_log;female_perimenopause_joint_1_oestradiol_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_linear/female_perimenopause_joint_1_oestradiol_imputation_log")
@@ -199,7 +199,7 @@ if true; then
     comparisons+=("${comparison_container};${study_primary};${path_primary}/${name_gwas_munge_file};${study_secondary};${path_secondary}/${name_gwas_munge_file}")
   done
 fi
-if true; then
+if false; then
   # Females to Males and stage of life for logistic oestradiol detection.
   pairs=()
   pairs+=("female_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/female_joint_1_testosterone_imputation_log;male_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/male_joint_1_testosterone_imputation_log")
@@ -221,7 +221,7 @@ if true; then
     comparisons+=("${comparison_container};${study_primary};${path_primary}/${name_gwas_munge_file};${study_secondary};${path_secondary}/${name_gwas_munge_file}")
   done
 fi
-if true; then
+if false; then
   # Females to Males and stage of life for logistic oestradiol detection.
   pairs=()
   pairs+=("female_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/female_joint_1_steroid_globulin_imputation_log;male_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/male_joint_1_steroid_globulin_imputation_log")
