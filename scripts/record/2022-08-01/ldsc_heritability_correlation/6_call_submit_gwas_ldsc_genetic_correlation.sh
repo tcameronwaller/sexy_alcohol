@@ -19,7 +19,7 @@
 #cohorts_models="testosterone_linear"                   # 54 GWAS;
 #cohorts_models="testosterone_bioavailable_linear"      # 18 GWAS;
 #cohorts_models="testosterone_free_linear"              # 18 GWAS;
-cohorts_models="steroid_globulin_linear"               # 20 GWAS; 220 comparisons;
+cohorts_models="steroid_globulin_linear"               # 20 GWAS; 260 comparisons;
 #cohorts_models="albumin_linear"                        # 20 GWAS; 220 comparisons; 314 comparisons with special comparisons; started on 14 July 2022
 
 
@@ -69,8 +69,8 @@ primaries+=("34002096_mullins_2021_bpd1;${path_primary_gwas_munge_container}/340
 primaries+=("34002096_mullins_2021_bpd2;${path_primary_gwas_munge_container}/34002096_mullins_2021_bpd2/${name_gwas_munge_file}")
 primaries+=("00000000_ripke_2022;${path_primary_gwas_munge_container}/00000000_ripke_2022/${name_gwas_munge_file}")
 
-primaries+=("34255042_schmitz_2021_female;${path_primary_gwas_munge_container}/34255042_schmitz_2021_female/${name_gwas_munge_file}")
-primaries+=("34255042_schmitz_2021_male;${path_primary_gwas_munge_container}/34255042_schmitz_2021_male/${name_gwas_munge_file}")
+#primaries+=("34255042_schmitz_2021_female;${path_primary_gwas_munge_container}/34255042_schmitz_2021_female/${name_gwas_munge_file}")
+#primaries+=("34255042_schmitz_2021_male;${path_primary_gwas_munge_container}/34255042_schmitz_2021_male/${name_gwas_munge_file}")
 
 # Define array of secondary studies.
 secondaries=()
