@@ -36,7 +36,7 @@ mkdir -p $path_gwas_target_parent
 # Scripts.
 path_promiscuity_scripts="${path_process}/promiscuity/scripts"
 path_scripts_gwas_process="${path_promiscuity_scripts}/gwas_process"
-path_script_drive_format_gwas="${path_promiscuity_scripts}/gwas_process/ldsc_genetic_heritability_correlation/drive_format_gwas_ldsc.sh"
+path_script_drive_format_gwas="${path_promiscuity_scripts}/utility/ldsc/drive_format_gwas_ldsc.sh"
 path_script_format_gwas="${path_promiscuity_scripts}/gwas_process/format_gwas_ldsc/format_gwas_ldsc_plink_${regression_type}.sh"
 ##########
 # Format adjustment.
@@ -66,8 +66,7 @@ mkdir -p $path_gwas_target_parent
 mkdir -p $path_heritability_parent
 # Scripts.
 path_promiscuity_scripts="${path_process}/promiscuity/scripts"
-path_scripts_gwas_process="${path_promiscuity_scripts}/gwas_process"
-path_script_drive_ldsc_gwas_munge_heritability="${path_scripts_gwas_process}/drive_ldsc_gwas_munge_heritability.sh"
+path_script_drive_ldsc_gwas_munge_heritability="${path_promiscuity_scripts}/utility/ldsc/drive_ldsc_gwas_munge_heritability.sh"
 # Parameters.
 report="true" # "true" or "false"
 /usr/bin/bash "${path_script_drive_ldsc_gwas_munge_heritability}" \

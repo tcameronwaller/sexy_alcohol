@@ -12,32 +12,28 @@
 ################################################################################
 # General parameters.
 
-#cohorts_models="albumin_linear_2"                      #  2 GWAS; 13 April 2022
-#cohorts_models="albumin_linear_1"                      # 18 GWAS; 13 April 2022
-#cohorts_models="steroid_globulin_linear_2"             #  2 GWAS; 13 April 2022
-#cohorts_models="steroid_globulin_linear_1"             # 18 GWAS; 13 April 2022
-cohorts_models="oestradiol_logistic"                   # 16 GWAS; 19 April 2022; GWAS on 'adjust' models for for 'female' and 'male' cohorts incomplete as of 19 April 2022
-#cohorts_models="oestradiol_linear_1"                   # 18 GWAS; 13 April 2022
-#cohorts_models="oestradiol_linear_2"                   # 12 GWAS; 13 April 2022
-#cohorts_models="oestradiol_bioavailable_linear"        # 18 GWAS; 13 April 2022
-#cohorts_models="oestradiol_free_linear"                # 18 GWAS; 13 April 2022
-#cohorts_models="testosterone_logistic"                 # __ GWAS; incomplete
-#cohorts_models="testosterone_linear"                   # 54 GWAS; 13 April 2022
-#cohorts_models="testosterone_bioavailable_linear"      # 18 GWAS; 13 April 2022
-#cohorts_models="testosterone_free_linear"              # 18 GWAS; 13 April 2022
+cohorts_models="oestradiol_logistic"                   # 18 GWAS
+#cohorts_models="oestradiol_linear"                     # 30 GWAS
+#cohorts_models="oestradiol_bioavailable_linear"        # 18 GWAS
+#cohorts_models="oestradiol_free_linear"                # 18 GWAS
+#cohorts_models="testosterone_logistic"                 # 18 GWAS
+#cohorts_models="testosterone_linear"                   # 54 GWAS
+#cohorts_models="testosterone_bioavailable_linear"      # 18 GWAS
+#cohorts_models="testosterone_free_linear"              # 18 GWAS
+#cohorts_models="steroid_globulin_linear"               # 20 GWAS
+#cohorts_models="albumin_linear"                        # 20 GWAS
 
 # Parameters.
 regression_type="logistic" # "linear" or "logistic"
-response="coefficient" # "coefficient", "odds_ratio", or "z_score"; for linear GWAS, use "coefficient" unless "response_standard_scale" is "true", in which case "z_score"
+response="odds_ratio" # "coefficient", "odds_ratio", or "z_score"; for linear GWAS, use "coefficient" unless "response_standard_scale" is "true", in which case "z_score"
 response_standard_scale="false" # whether to convert reponse (effect, coefficient) to z-score standard scale ("true" or "false")
-
 restore_target_study_directories="true" # whether to delete any previous directories for each study's format and munge GWAS ("true" or "false")
 
 ################################################################################
 # Organize paths.
 # Read private, local file paths.
 cd ~/paths
-path_process=$(<"./process_psychiatric_metabolism.txt")
+path_process=$(<"./process_sexy_alcohol.txt")
 path_dock="$path_process/dock"
 
 path_gwas_concatenation_container="${path_dock}/gwas_concatenation/${cohorts_models}"
@@ -45,8 +41,17 @@ path_gwas_format_container="${path_dock}/gwas_ldsc_format/${cohorts_models}"
 path_gwas_munge_container="${path_dock}/gwas_ldsc_munge/${cohorts_models}"
 path_heritability_container="${path_dock}/heritability/${cohorts_models}"
 
-path_scripts_record="$path_process/psychiatric_metabolism/scripts/record/2022-05-04/ldsc_heritability_correlation"
+path_scripts_record="$path_process/sexy_alcohol/scripts/record/2022-08-01/ldsc_heritability_correlation"
 path_batch_instances="${path_gwas_munge_container}/batch_instances_format_munge.txt"
+
+# Initialize directories and batch instances.
+rm -r $path_gwas_format_container
+mkdir -p $path_gwas_format_container
+rm -r $path_gwas_munge_container
+mkdir -p $path_gwas_munge_container
+rm -r $path_heritability_container
+mkdir -p $path_heritability_container
+rm $path_batch_instances
 
 ###########################################################################
 # Define explicit inclusions and exclusions.
@@ -62,17 +67,8 @@ path_batch_instances="${path_gwas_munge_container}/batch_instances_format_munge.
 ###########################################################################
 # Execute procedure.
 
-# Initialize directories and batch instances.
-rm -r $path_gwas_format_container
-mkdir -p $path_gwas_format_container
-rm -r $path_gwas_munge_container
-mkdir -p $path_gwas_munge_container
-rm -r $path_heritability_container
-mkdir -p $path_heritability_container
-rm $path_batch_instances
-
 # Iterate on directories for GWAS on cohorts and hormones.
-name_gwas_concatenation_file="gwas_concatenation.txt.gz"
+name_gwas_concatenation_file="gwas.txt.gz"
 cd $path_gwas_concatenation_container
 for path_directory in `find . -maxdepth 1 -mindepth 1 -type d -not -name .`; do
   if [ -d "$path_directory" ]; then
@@ -99,7 +95,7 @@ echo "first batch instance: " ${batch_instances[0]} # notice base-zero indexing
 echo "last batch instance: " ${batch_instances[$batch_instances_count - 1]}
 
 # Execute batch with grid scheduler.
-if true; then
+if false; then
   # Submit array batch to Sun Grid Engine.
   # Array batch indices must start at one (not zero).
   qsub -t 1-${batch_instances_count}:1 -o \
