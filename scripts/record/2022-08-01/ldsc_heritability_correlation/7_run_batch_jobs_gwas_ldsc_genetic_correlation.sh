@@ -23,7 +23,7 @@
 ### -p -10
 # Memory per iteration.
 # Segmentation errors commonly indicate a memory error.
-#$ -l h_vmem=2G
+#$ -l h_vmem=4G
 # Concurrent threads; assigns value to variable NSLOTS.
 # Important to specify 32 threads to avoid inconsistency with interactive
 # calculations.
@@ -40,12 +40,9 @@
 ################################################################################
 # Note.
 
-# LDSC Munge of GWAS summary statistics throws a memory error with 4 thread
-# slots ("-pe threaded 4") and 1 Gigabyte of memory ("-l h_vmem=1G").
-
-# LDSC Munge of GWAS summary statistics runs with 8 thread slots
-# ("-pe threaded 8") and 1 Gigabyte of memory ("-l h_vmem=1G").
-
+# LDSC Genetic Correlation on previously munged GWAS summary statistics throws a
+# memory error ("Segmentation fault") with 1 thread slot ("-pe threaded 1") and
+# 2 Gigabyte of memory ("-l h_vmem=2G") (TCW; 14 July 2022).
 
 ################################################################################
 # Organize argument variables.
