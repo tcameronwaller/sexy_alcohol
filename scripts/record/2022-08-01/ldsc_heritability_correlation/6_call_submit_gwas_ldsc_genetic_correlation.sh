@@ -130,8 +130,8 @@ fi
 # Study pairs within the same container (path_primary_gwas_munge_container).
 if true; then
   # Signal transformation.
+  pairs=()
   pairs+=("34255042_schmitz_2021_female;34255042_schmitz_2021_male")
-
   # Assemble array of batch instance details.
   comparison_container="34255042_schmitz_2021_female_against_male"
   for pair in "${pairs[@]}"; do
@@ -148,6 +148,7 @@ fi
 # Study pairs within different containers.
 if true; then
   # Schmitz to UK Biobank.
+  pairs=()
   pairs+=("34255042_schmitz_2021_female;${path_primary_gwas_munge_container}/34255042_schmitz_2021_female;female_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_joint_1_oestradiol_detection")
   pairs+=("34255042_schmitz_2021_male;${path_primary_gwas_munge_container}/34255042_schmitz_2021_male;male_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/male_joint_1_oestradiol_detection")
   # Assemble array of batch instance details.
@@ -163,6 +164,7 @@ if true; then
 fi
 if true; then
   # Females to Males and stage of life for logistic oestradiol detection.
+  pairs=()
   pairs+=("female_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_joint_1_oestradiol_detection;male_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/male_joint_1_oestradiol_detection")
   pairs+=("female_premenopause_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_premenopause_joint_1_oestradiol_detection;female_perimenopause_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_perimenopause_joint_1_oestradiol_detection")
   pairs+=("female_premenopause_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_premenopause_joint_1_oestradiol_detection;female_postmenopause_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_postmenopause_joint_1_oestradiol_detection")
@@ -184,6 +186,7 @@ if true; then
 fi
 if true; then
   # Female stage of life for linear oestradiol.
+  pairs=()
   pairs+=("female_premenopause_joint_1_oestradiol_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_linear/female_premenopause_joint_1_oestradiol_imputation_log;female_perimenopause_joint_1_oestradiol_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_linear/female_perimenopause_joint_1_oestradiol_imputation_log")
   # Assemble array of batch instance details.
   comparison_container="oestradiol_linear_female_stage_life"
@@ -198,6 +201,7 @@ if true; then
 fi
 if true; then
   # Females to Males and stage of life for logistic oestradiol detection.
+  pairs=()
   pairs+=("female_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/female_joint_1_testosterone_imputation_log;male_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/male_joint_1_testosterone_imputation_log")
   pairs+=("female_premenopause_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/female_premenopause_joint_1_testosterone_imputation_log;female_perimenopause_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/female_perimenopause_joint_1_testosterone_imputation_log")
   pairs+=("female_premenopause_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/female_premenopause_joint_1_testosterone_imputation_log;female_postmenopause_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/female_postmenopause_joint_1_testosterone_imputation_log")
@@ -219,6 +223,7 @@ if true; then
 fi
 if true; then
   # Females to Males and stage of life for logistic oestradiol detection.
+  pairs=()
   pairs+=("female_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/female_joint_1_steroid_globulin_imputation_log;male_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/male_joint_1_steroid_globulin_imputation_log")
   pairs+=("female_premenopause_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/female_premenopause_joint_1_steroid_globulin_imputation_log;female_perimenopause_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/female_perimenopause_joint_1_steroid_globulin_imputation_log")
   pairs+=("female_premenopause_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/female_premenopause_joint_1_steroid_globulin_imputation_log;female_postmenopause_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/female_postmenopause_joint_1_steroid_globulin_imputation_log")
