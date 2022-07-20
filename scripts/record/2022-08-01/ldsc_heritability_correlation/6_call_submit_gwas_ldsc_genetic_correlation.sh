@@ -29,7 +29,7 @@
 #cohorts_models="testosterone_free_linear"              # 18 GWAS; 198 comparisons; started 14 July 2022
 #cohorts_models="steroid_globulin_linear"               # 20 GWAS; 220 comparisons; started 14 July 2022
 #cohorts_models="albumin_linear"                        # 20 GWAS; 220 comparisons; 314 comparisons with special comparisons; completed on 14 July 2022
-cohorts_models="empty_for_custom_comparisons"
+#cohorts_models="empty_for_custom_comparisons"          # __ GWAS; 74 comparisons; started 20 July 2022
 
 #cohorts_models="oestradiol_logistic"                   # 234 Comparisons; 16 GWAS; 19 April 2022; GWAS on 'adjust' models for for 'female' and 'male' cohorts incomplete as of 19 April 2022
 #cohorts_models="oestradiol_linear_1"                   # 198 Comparisons; 18 GWAS; 13 April 2022
