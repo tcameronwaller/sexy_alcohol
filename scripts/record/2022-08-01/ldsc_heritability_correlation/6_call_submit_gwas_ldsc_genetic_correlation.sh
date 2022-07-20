@@ -8,6 +8,14 @@
 ###########################################################################
 ###########################################################################
 
+# TODO: TCW; 20 July 2022
+# Implement new utility scripts for LDSC
+# Keep these VERY modular
+# Pass all relevant paths to files
+# Keep Munge separate from Heritability and Correlation
+# Pass parameter for threads
+
+
 ################################################################################
 # General parameters.
 
@@ -21,7 +29,7 @@
 #cohorts_models="testosterone_free_linear"              # 18 GWAS; 198 comparisons; started 14 July 2022
 #cohorts_models="steroid_globulin_linear"               # 20 GWAS; 220 comparisons; started 14 July 2022
 #cohorts_models="albumin_linear"                        # 20 GWAS; 220 comparisons; 314 comparisons with special comparisons; completed on 14 July 2022
-
+cohorts_models="empty_for_custom_comparisons"
 
 #cohorts_models="oestradiol_logistic"                   # 234 Comparisons; 16 GWAS; 19 April 2022; GWAS on 'adjust' models for for 'female' and 'male' cohorts incomplete as of 19 April 2022
 #cohorts_models="oestradiol_linear_1"                   # 198 Comparisons; 18 GWAS; 13 April 2022
@@ -51,6 +59,7 @@ path_scripts_record="${path_process}/sexy_alcohol/scripts/record/2022-08-01/ldsc
 report="true" # "true" or "false"
 
 mkdir -p $path_genetic_correlation_container
+mkdir -p $path_secondary_gwas_munge_container
 
 ###########################################################################
 # Define main comparisons.
@@ -99,7 +108,7 @@ comparisons=()
 
 ##########
 # Comparison pairs of secondary studies for comparison to all primary studies.
-if true; then
+if false; then
   # Assemble array of batch instance details.
   comparison_container="primaries_against_${cohorts_models}"
   for primary in "${primaries[@]}"; do
@@ -128,7 +137,7 @@ fi
 
 ##########
 # Study pairs within the same container (path_primary_gwas_munge_container).
-if false; then
+if true; then
   # Signal transformation.
   pairs=()
   pairs+=("34255042_schmitz_2021_female;34255042_schmitz_2021_male")
@@ -146,7 +155,7 @@ fi
 
 ##########
 # Study pairs within different containers.
-if false; then
+if true; then
   # Schmitz to UK Biobank.
   pairs=()
   pairs+=("34255042_schmitz_2021_female;${path_primary_gwas_munge_container}/34255042_schmitz_2021_female;female_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_joint_1_oestradiol_detection")
@@ -162,10 +171,13 @@ if false; then
     comparisons+=("${comparison_container};${study_primary};${path_primary}/${name_gwas_munge_file};${study_secondary};${path_secondary}/${name_gwas_munge_file}")
   done
 fi
-if false; then
+if true; then
+  # Main template for comparisons between sexes and stages of life.
   # Females to Males and stage of life for logistic oestradiol detection.
   pairs=()
   pairs+=("female_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_joint_1_oestradiol_detection;male_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/male_joint_1_oestradiol_detection")
+  pairs+=("female_premenopause_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_premenopause_joint_1_oestradiol_detection;male_age_low_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/male_age_low_joint_1_oestradiol_detection")
+  pairs+=("female_postmenopause_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_postmenopause_joint_1_oestradiol_detection;male_age_high_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/male_age_high_joint_1_oestradiol_detection")
   pairs+=("female_premenopause_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_premenopause_joint_1_oestradiol_detection;female_perimenopause_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_perimenopause_joint_1_oestradiol_detection")
   pairs+=("female_premenopause_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_premenopause_joint_1_oestradiol_detection;female_postmenopause_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_postmenopause_joint_1_oestradiol_detection")
   pairs+=("female_perimenopause_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_perimenopause_joint_1_oestradiol_detection;female_postmenopause_joint_1_oestradiol_detection;${path_dock}/gwas_ldsc_munge/oestradiol_logistic/female_postmenopause_joint_1_oestradiol_detection")
@@ -184,7 +196,7 @@ if false; then
     comparisons+=("${comparison_container};${study_primary};${path_primary}/${name_gwas_munge_file};${study_secondary};${path_secondary}/${name_gwas_munge_file}")
   done
 fi
-if false; then
+if true; then
   # Female stage of life for linear oestradiol.
   pairs=()
   pairs+=("female_premenopause_joint_1_oestradiol_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_linear/female_premenopause_joint_1_oestradiol_imputation_log;female_perimenopause_joint_1_oestradiol_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_linear/female_perimenopause_joint_1_oestradiol_imputation_log")
@@ -199,10 +211,63 @@ if false; then
     comparisons+=("${comparison_container};${study_primary};${path_primary}/${name_gwas_munge_file};${study_secondary};${path_secondary}/${name_gwas_munge_file}")
   done
 fi
-if false; then
-  # Females to Males and stage of life for logistic oestradiol detection.
+if true; then
+  # Females to Males and stage of life for linear Bioavailable Oestradiol.
+  pairs=()
+  pairs+=("female_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/female_joint_1_oestradiol_bioavailable_imputation_log;male_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/male_joint_1_oestradiol_bioavailable_imputation_log")
+  pairs+=("female_premenopause_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/female_premenopause_joint_1_oestradiol_bioavailable_imputation_log;male_age_low_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/male_age_low_joint_1_oestradiol_bioavailable_imputation_log")
+  pairs+=("female_postmenopause_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/female_postmenopause_joint_1_oestradiol_bioavailable_imputation_log;male_age_high_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/male_age_high_joint_1_oestradiol_bioavailable_imputation_log")
+  pairs+=("female_premenopause_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/female_premenopause_joint_1_oestradiol_bioavailable_imputation_log;female_perimenopause_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/female_perimenopause_joint_1_oestradiol_bioavailable_imputation_log")
+  pairs+=("female_premenopause_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/female_premenopause_joint_1_oestradiol_bioavailable_imputation_log;female_postmenopause_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/female_postmenopause_joint_1_oestradiol_bioavailable_imputation_log")
+  pairs+=("female_perimenopause_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/female_perimenopause_joint_1_oestradiol_bioavailable_imputation_log;female_postmenopause_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/female_postmenopause_joint_1_oestradiol_bioavailable_imputation_log")
+  pairs+=("female_menstruation_regular_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/female_menstruation_regular_joint_1_oestradiol_bioavailable_imputation_log;female_postmenopause_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/female_postmenopause_joint_1_oestradiol_bioavailable_imputation_log")
+  pairs+=("male_age_low_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/male_age_low_joint_1_oestradiol_bioavailable_imputation_log;male_age_middle_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/male_age_middle_joint_1_oestradiol_bioavailable_imputation_log")
+  pairs+=("male_age_low_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/male_age_low_joint_1_oestradiol_bioavailable_imputation_log;male_age_high_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/male_age_high_joint_1_oestradiol_bioavailable_imputation_log")
+  pairs+=("male_age_middle_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/male_age_middle_joint_1_oestradiol_bioavailable_imputation_log;male_age_high_joint_1_oestradiol_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_bioavailable_linear/male_age_high_joint_1_oestradiol_bioavailable_imputation_log")
+  # Assemble array of batch instance details.
+  comparison_container="oestradiol_bioavailable_linear_sex_stage_life"
+  for pair in "${pairs[@]}"; do
+    IFS=";" read -r -a array <<< "${pair}"
+    study_primary="${array[0]}"
+    path_primary="${array[1]}"
+    study_secondary="${array[2]}"
+    path_secondary="${array[3]}"
+    comparisons+=("${comparison_container};${study_primary};${path_primary}/${name_gwas_munge_file};${study_secondary};${path_secondary}/${name_gwas_munge_file}")
+  done
+fi
+if true; then
+  # Females to Males and stage of life for linear Free Oestradiol.
+  pairs=()
+  pairs+=("female_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/female_joint_1_oestradiol_free_imputation_log;male_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/male_joint_1_oestradiol_free_imputation_log")
+  pairs+=("female_premenopause_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/female_premenopause_joint_1_oestradiol_free_imputation_log;male_age_low_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/male_age_low_joint_1_oestradiol_free_imputation_log")
+  pairs+=("female_postmenopause_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/female_postmenopause_joint_1_oestradiol_free_imputation_log;male_age_high_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/male_age_high_joint_1_oestradiol_free_imputation_log")
+  pairs+=("female_premenopause_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/female_premenopause_joint_1_oestradiol_free_imputation_log;female_perimenopause_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/female_perimenopause_joint_1_oestradiol_free_imputation_log")
+  pairs+=("female_premenopause_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/female_premenopause_joint_1_oestradiol_free_imputation_log;female_postmenopause_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/female_postmenopause_joint_1_oestradiol_free_imputation_log")
+  pairs+=("female_perimenopause_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/female_perimenopause_joint_1_oestradiol_free_imputation_log;female_postmenopause_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/female_postmenopause_joint_1_oestradiol_free_imputation_log")
+  pairs+=("female_menstruation_regular_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/female_menstruation_regular_joint_1_oestradiol_free_imputation_log;female_postmenopause_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/female_postmenopause_joint_1_oestradiol_free_imputation_log")
+  pairs+=("male_age_low_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/male_age_low_joint_1_oestradiol_free_imputation_log;male_age_middle_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/male_age_middle_joint_1_oestradiol_free_imputation_log")
+  pairs+=("male_age_low_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/male_age_low_joint_1_oestradiol_free_imputation_log;male_age_high_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/male_age_high_joint_1_oestradiol_free_imputation_log")
+  pairs+=("male_age_middle_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/male_age_middle_joint_1_oestradiol_free_imputation_log;male_age_high_joint_1_oestradiol_free_imputation_log;${path_dock}/gwas_ldsc_munge/oestradiol_free_linear/male_age_high_joint_1_oestradiol_free_imputation_log")
+  # Assemble array of batch instance details.
+  comparison_container="oestradiol_free_linear_sex_stage_life"
+  for pair in "${pairs[@]}"; do
+    IFS=";" read -r -a array <<< "${pair}"
+    study_primary="${array[0]}"
+    path_primary="${array[1]}"
+    study_secondary="${array[2]}"
+    path_secondary="${array[3]}"
+    comparisons+=("${comparison_container};${study_primary};${path_primary}/${name_gwas_munge_file};${study_secondary};${path_secondary}/${name_gwas_munge_file}")
+  done
+fi
+if true; then
+  # Changes from main template.
+  # "oestradiol_detection" --> "testosterone_imputation_log"
+  # "oestradiol_logistic" --> testosterone_linear"
+  # Females to Males and stage of life for linear Testosterone.
   pairs=()
   pairs+=("female_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/female_joint_1_testosterone_imputation_log;male_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/male_joint_1_testosterone_imputation_log")
+  pairs+=("female_premenopause_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/female_premenopause_joint_1_testosterone_imputation_log;male_age_low_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/male_age_low_joint_1_testosterone_imputation_log")
+  pairs+=("female_postmenopause_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/female_postmenopause_joint_1_testosterone_imputation_log;male_age_high_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/male_age_high_joint_1_testosterone_imputation_log")
   pairs+=("female_premenopause_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/female_premenopause_joint_1_testosterone_imputation_log;female_perimenopause_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/female_perimenopause_joint_1_testosterone_imputation_log")
   pairs+=("female_premenopause_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/female_premenopause_joint_1_testosterone_imputation_log;female_postmenopause_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/female_postmenopause_joint_1_testosterone_imputation_log")
   pairs+=("female_perimenopause_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/female_perimenopause_joint_1_testosterone_imputation_log;female_postmenopause_joint_1_testosterone_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_linear/female_postmenopause_joint_1_testosterone_imputation_log")
@@ -221,10 +286,60 @@ if false; then
     comparisons+=("${comparison_container};${study_primary};${path_primary}/${name_gwas_munge_file};${study_secondary};${path_secondary}/${name_gwas_munge_file}")
   done
 fi
-if false; then
-  # Females to Males and stage of life for logistic oestradiol detection.
+if true; then
+  # Females to Males and stage of life for linear Bioavailable Testosterone.
+  pairs=()
+  pairs+=("female_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/female_joint_1_testosterone_bioavailable_imputation_log;male_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/male_joint_1_testosterone_bioavailable_imputation_log")
+  pairs+=("female_premenopause_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/female_premenopause_joint_1_testosterone_bioavailable_imputation_log;male_age_low_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/male_age_low_joint_1_testosterone_bioavailable_imputation_log")
+  pairs+=("female_postmenopause_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/female_postmenopause_joint_1_testosterone_bioavailable_imputation_log;male_age_high_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/male_age_high_joint_1_testosterone_bioavailable_imputation_log")
+  pairs+=("female_premenopause_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/female_premenopause_joint_1_testosterone_bioavailable_imputation_log;female_perimenopause_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/female_perimenopause_joint_1_testosterone_bioavailable_imputation_log")
+  pairs+=("female_premenopause_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/female_premenopause_joint_1_testosterone_bioavailable_imputation_log;female_postmenopause_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/female_postmenopause_joint_1_testosterone_bioavailable_imputation_log")
+  pairs+=("female_perimenopause_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/female_perimenopause_joint_1_testosterone_bioavailable_imputation_log;female_postmenopause_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/female_postmenopause_joint_1_testosterone_bioavailable_imputation_log")
+  pairs+=("female_menstruation_regular_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/female_menstruation_regular_joint_1_testosterone_bioavailable_imputation_log;female_postmenopause_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/female_postmenopause_joint_1_testosterone_bioavailable_imputation_log")
+  pairs+=("male_age_low_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/male_age_low_joint_1_testosterone_bioavailable_imputation_log;male_age_middle_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/male_age_middle_joint_1_testosterone_bioavailable_imputation_log")
+  pairs+=("male_age_low_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/male_age_low_joint_1_testosterone_bioavailable_imputation_log;male_age_high_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/male_age_high_joint_1_testosterone_bioavailable_imputation_log")
+  pairs+=("male_age_middle_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/male_age_middle_joint_1_testosterone_bioavailable_imputation_log;male_age_high_joint_1_testosterone_bioavailable_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_bioavailable_linear/male_age_high_joint_1_testosterone_bioavailable_imputation_log")
+  # Assemble array of batch instance details.
+  comparison_container="testosterone_bioavailable_linear_sex_stage_life"
+  for pair in "${pairs[@]}"; do
+    IFS=";" read -r -a array <<< "${pair}"
+    study_primary="${array[0]}"
+    path_primary="${array[1]}"
+    study_secondary="${array[2]}"
+    path_secondary="${array[3]}"
+    comparisons+=("${comparison_container};${study_primary};${path_primary}/${name_gwas_munge_file};${study_secondary};${path_secondary}/${name_gwas_munge_file}")
+  done
+fi
+if true; then
+  # Females to Males and stage of life for linear Free Testosterone.
+  pairs=()
+  pairs+=("female_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/female_joint_1_testosterone_free_imputation_log;male_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/male_joint_1_testosterone_free_imputation_log")
+  pairs+=("female_premenopause_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/female_premenopause_joint_1_testosterone_free_imputation_log;male_age_low_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/male_age_low_joint_1_testosterone_free_imputation_log")
+  pairs+=("female_postmenopause_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/female_postmenopause_joint_1_testosterone_free_imputation_log;male_age_high_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/male_age_high_joint_1_testosterone_free_imputation_log")
+  pairs+=("female_premenopause_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/female_premenopause_joint_1_testosterone_free_imputation_log;female_perimenopause_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/female_perimenopause_joint_1_testosterone_free_imputation_log")
+  pairs+=("female_premenopause_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/female_premenopause_joint_1_testosterone_free_imputation_log;female_postmenopause_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/female_postmenopause_joint_1_testosterone_free_imputation_log")
+  pairs+=("female_perimenopause_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/female_perimenopause_joint_1_testosterone_free_imputation_log;female_postmenopause_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/female_postmenopause_joint_1_testosterone_free_imputation_log")
+  pairs+=("female_menstruation_regular_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/female_menstruation_regular_joint_1_testosterone_free_imputation_log;female_postmenopause_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/female_postmenopause_joint_1_testosterone_free_imputation_log")
+  pairs+=("male_age_low_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/male_age_low_joint_1_testosterone_free_imputation_log;male_age_middle_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/male_age_middle_joint_1_testosterone_free_imputation_log")
+  pairs+=("male_age_low_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/male_age_low_joint_1_testosterone_free_imputation_log;male_age_high_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/male_age_high_joint_1_testosterone_free_imputation_log")
+  pairs+=("male_age_middle_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/male_age_middle_joint_1_testosterone_free_imputation_log;male_age_high_joint_1_testosterone_free_imputation_log;${path_dock}/gwas_ldsc_munge/testosterone_free_linear/male_age_high_joint_1_testosterone_free_imputation_log")
+  # Assemble array of batch instance details.
+  comparison_container="testosterone_free_linear_sex_stage_life"
+  for pair in "${pairs[@]}"; do
+    IFS=";" read -r -a array <<< "${pair}"
+    study_primary="${array[0]}"
+    path_primary="${array[1]}"
+    study_secondary="${array[2]}"
+    path_secondary="${array[3]}"
+    comparisons+=("${comparison_container};${study_primary};${path_primary}/${name_gwas_munge_file};${study_secondary};${path_secondary}/${name_gwas_munge_file}")
+  done
+fi
+if true; then
+  # Females to Males and stage of life for linear Steroid Globulin (SHBG).
   pairs=()
   pairs+=("female_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/female_joint_1_steroid_globulin_imputation_log;male_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/male_joint_1_steroid_globulin_imputation_log")
+  pairs+=("female_premenopause_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/female_premenopause_joint_1_steroid_globulin_imputation_log;male_age_low_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/male_age_low_joint_1_steroid_globulin_imputation_log")
+  pairs+=("female_postmenopause_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/female_postmenopause_joint_1_steroid_globulin_imputation_log;male_age_high_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/male_age_high_joint_1_steroid_globulin_imputation_log")
   pairs+=("female_premenopause_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/female_premenopause_joint_1_steroid_globulin_imputation_log;female_perimenopause_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/female_perimenopause_joint_1_steroid_globulin_imputation_log")
   pairs+=("female_premenopause_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/female_premenopause_joint_1_steroid_globulin_imputation_log;female_postmenopause_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/female_postmenopause_joint_1_steroid_globulin_imputation_log")
   pairs+=("female_perimenopause_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/female_perimenopause_joint_1_steroid_globulin_imputation_log;female_postmenopause_joint_1_steroid_globulin_imputation_log;${path_dock}/gwas_ldsc_munge/steroid_globulin_linear/female_postmenopause_joint_1_steroid_globulin_imputation_log")
