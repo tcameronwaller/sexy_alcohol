@@ -8,6 +8,10 @@
 ###############################################################################
 # Installation and importation
 
+# Import modules from specific path without having to install a general package
+# I would have to figure out how to pass a path variable...
+# https://stackoverflow.com/questions/67631/how-to-import-a-module-given-the-full-path
+
 # Standard.
 import argparse
 import textwrap
@@ -16,26 +20,18 @@ import textwrap
 
 # Custom.
 
-#import genetic_correlation
-#import aggregation
-
-
-import assembly
-import importation
-import organization
-import stratification
-import description
-import regression
-import collection
 import scratch
-#import plot
-#import utility
+import uk_biobank.interface
+import stragglers.interface
 
 #dir()
 #importlib.reload()
 
 ###############################################################################
 # Functionality
+
+
+# Parser and management of subparsers.
 
 
 def define_interface_parsers():
@@ -52,23 +48,28 @@ def define_interface_parsers():
     """
 
     # Define description.
-    description = define_general_description()
+    description = define_description_general()
     # Define epilog.
-    epilog = define_general_epilog()
+    epilog = define_epilog_general()
     # Define arguments.
     parser = argparse.ArgumentParser(
         description=description,
         epilog=epilog,
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    subparsers = parser.add_subparsers(title="procedures")
-    parser_main = define_main_subparser(subparsers=subparsers)
-    # TODO: add other subparsers here...
+    subparsers = parser.add_subparsers(title="routines")
+    parser_main = define_subparser_main(subparsers=subparsers)
+    parser_uk_biobank = uk_biobank.interface.define_subparser_main(
+        subparsers=subparsers
+    )
+    parser_stragglers = stragglers.interface.define_subparser_main(
+        subparsers=subparsers
+    )
     # Parse arguments.
     return parser.parse_args()
 
 
-def define_general_description():
+def define_description_general():
     """
     Defines description for terminal interface.
 
@@ -86,14 +87,14 @@ def define_general_description():
         --------------------------------------------------
         --------------------------------------------------
 
-        Access data from UK Biobank and do other stuff.
+        Manage routines and procedures for Psychiatric Metabolism project.
 
         --------------------------------------------------
     """)
     return description
 
 
-def define_general_epilog():
+def define_epilog_general():
     """
     Defines epilog for terminal interface.
 
@@ -115,9 +116,12 @@ def define_general_epilog():
     return epilog
 
 
-def define_main_subparser(subparsers=None):
+# Package's main subparser.
+
+
+def define_subparser_main(subparsers=None):
     """
-    Defines subparser for procedures that adapt a model of human metabolism.
+    Defines subparser and parameters.
 
     arguments:
         subparsers (object): reference to subparsers' container
@@ -125,16 +129,16 @@ def define_main_subparser(subparsers=None):
     raises:
 
     returns:
-        (object): reference to parser
+        (object): reference to subparser
 
     """
 
     # Define description.
-    description = define_main_description()
+    description = define_description_main()
     # Define epilog.
-    epilog = define_main_epilog()
+    epilog = define_epilog_main()
     # Define parser.
-    parser_main = subparsers.add_parser(
+    parser = subparsers.add_parser(
         name="main",
         description=description,
         epilog=epilog,
@@ -142,84 +146,14 @@ def define_main_subparser(subparsers=None):
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     # Define arguments.
-    parser_main.add_argument(
+    parser.add_argument(
         "-path_dock", "--path_dock", dest="path_dock", type=str, required=True,
         help=(
             "Path to dock directory for source and product " +
             "directories and files."
         )
     )
-    parser_main.add_argument(
-        "-genetic_correlation", "--genetic_correlation",
-        dest="genetic_correlation",
-        action="store_true",
-        help=(
-            "Genetic correlations for metabolites from multiple GWAS."
-        )
-    )
-    parser_main.add_argument(
-        "-aggregation", "--aggregation", dest="aggregation",
-        action="store_true",
-        help=(
-            "Aggregation of genetic scores for metabolites across UK Biobank."
-        )
-    )
-    parser_main.add_argument(
-        "-assembly", "--assembly", dest="assembly",
-        action="store_true",
-        help=(
-            "Assemble phenotype information from UK Biobank."
-        )
-    )
-    parser_main.add_argument(
-        "-importation", "--importation", dest="importation",
-        action="store_true",
-        help=(
-            "Assemble phenotype information from UK Biobank."
-        )
-    )
-    parser_main.add_argument(
-        "-organization", "--organization", dest="organization",
-        action="store_true",
-        help=(
-            "Organize phenotype information from UK Biobank."
-        )
-    )
-    parser_main.add_argument(
-        "-stratification", "--stratification",
-        dest="stratification",
-        action="store_true",
-        help=(
-            "Stratification of cohorts and formatting tables of phenotypes " +
-            "and covariates for genetic analyses (especially GWAS in PLINK2)."
-        )
-    )
-    parser_main.add_argument(
-        "-description", "--description",
-        dest="description",
-        action="store_true",
-        help=(
-            "Description of cohorts and phenotypes with summary statistics " +
-            "and plots."
-        )
-    )
-    parser_main.add_argument(
-        "-regression", "--regression",
-        dest="regression",
-        action="store_true",
-        help=(
-            "Regression analyses of phenotypes within cohorts."
-        )
-    )
-    parser_main.add_argument(
-        "-collection", "--collection",
-        dest="collection",
-        action="store_true",
-        help=(
-            "Collection and summary of reports from genotypic analyses."
-        )
-    )
-    parser_main.add_argument(
+    parser.add_argument(
         "-scratch", "--scratch",
         dest="scratch",
         action="store_true",
@@ -228,12 +162,12 @@ def define_main_subparser(subparsers=None):
         )
     )
     # Define behavior.
-    parser_main.set_defaults(func=evaluate_main_parameters)
+    parser.set_defaults(func=evaluate_parameters_main)
     # Return parser.
-    return parser_main
+    return parser
 
 
-def define_main_description():
+def define_description_main():
     """
     Defines description for terminal interface.
 
@@ -260,7 +194,7 @@ def define_main_description():
     return description
 
 
-def define_main_epilog():
+def define_epilog_main():
     """
     Defines epilog for terminal interface.
 
@@ -289,7 +223,7 @@ def define_main_epilog():
     return epilog
 
 
-def evaluate_main_parameters(arguments):
+def evaluate_parameters_main(arguments):
     """
     Evaluates parameters for model procedure.
 
@@ -305,73 +239,9 @@ def evaluate_main_parameters(arguments):
     print("--------------------------------------------------")
     print("... call to main routine ...")
     # Execute procedure.
-    if arguments.genetic_correlation:
-        # Report status.
-        print("... executing genetic_correlation procedure ...")
-        # Execute procedure.
-        genetic_correlation.execute_procedure(
-            path_dock=arguments.path_dock
-        )
-    if arguments.aggregation:
-        # Report status.
-        print("... executing aggregation procedure ...")
-        # Execute procedure.
-        aggregation.execute_procedure(
-            path_dock=arguments.path_dock
-        )
-
-    if arguments.assembly:
-        # Report status.
-        print("... executing assembly procedure ...")
-        # Execute procedure.
-        assembly.execute_procedure(
-            path_dock=arguments.path_dock
-        )
-    if arguments.importation:
-        # Report status.
-        print("... executing importation procedure ...")
-        # Execute procedure.
-        importation.execute_procedure(
-            path_dock=arguments.path_dock
-        )
-    if arguments.organization:
-        # Report status.
-        print("... executing organization procedure ...")
-        # Execute procedure.
-        organization.execute_procedure(
-            path_dock=arguments.path_dock
-        )
-    if arguments.stratification:
-        # Report status.
-        print("... executing stratification procedure ...")
-        # Execute procedure.
-        stratification.execute_procedure(
-            path_dock=arguments.path_dock
-        )
-    if arguments.description:
-        # Report status.
-        print("... executing description procedure ...")
-        # Execute procedure.
-        description.execute_procedure(
-            path_dock=arguments.path_dock
-        )
-    if arguments.regression:
-        # Report status.
-        print("... executing regression procedure ...")
-        # Execute procedure.
-        regression.execute_procedure(
-            path_dock=arguments.path_dock
-        )
-    if arguments.collection:
-        # Report status.
-        print("... executing collection procedure ...")
-        # Execute procedure.
-        collection.execute_procedure(
-            path_dock=arguments.path_dock
-        )
     if arguments.scratch:
         # Report status.
-        print("... executing scratch procedure ...")
+        print("... executing 'scratch' procedure ...")
         # Execute procedure.
         scratch.execute_procedure(
             path_dock=arguments.path_dock
@@ -395,11 +265,9 @@ def execute_procedure():
 
     """
 
-    # TODO: I want 2 separate procedures: 1. definition, 2. analysis
-
     # Parse arguments from terminal.
     arguments = define_interface_parsers()
-    # Call the appropriate function.
+    # Call the appropriate functions.
     arguments.func(arguments)
 
 
