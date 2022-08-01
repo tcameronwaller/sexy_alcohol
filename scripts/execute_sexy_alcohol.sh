@@ -3,12 +3,6 @@
 #chmod u+x script.sh
 #chmod -R 777
 
-# TODO: TCW; 25 July 2022
-# TODO: "psychiatric_metabolism" and "sexy_alcohol" will become the main driver packages with the "interface.py".
-# TODO: These main driver packages will have subpackages: "uk_biobank", "local_studies"
-# TODO: Change name of the "main" parser to "uk_biobank", then call uk_biobank procedures directly from "interface.py"
-# TODO:
-
 
 ################################################################################
 # Activate Python Virtual Environment.
@@ -54,14 +48,14 @@ fi
 #python3 $path_package/interface.py uk_biobank --path_dock $path_dock --stratification # TCW; 09 April 2022, 11 April 2022
 #python3 $path_package/interface.py uk_biobank --path_dock $path_dock --description # TCW; 01 June 2022
 #python3 $path_package/interface.py uk_biobank --path_dock $path_dock --regression # TCW; 20 April 2022
-#python3 $path_package/interface.py uk_biobank --path_dock $path_dock --collection # TCW; 20 April 2022
+python3 $path_package/interface.py uk_biobank --path_dock $path_dock --collection # TCW; 01 August 2022
 
 # Routine: stragglers
 #python3 $path_package/interface.py stragglers --path_dock $path_dock --mbpdb_assembly # TCW; 15 June 2022
 #python3 $path_package/interface.py stragglers --path_dock $path_dock --mbpdb_organization # TCW; 20 June 2022
 #python3 $path_package/interface.py stragglers --path_dock $path_dock --mbpdb_regression # TCW; 20 June 2022
 #python3 $path_package/interface.py stragglers --path_dock $path_dock --mcita_assembly # TCW; 28 July 2022
-python3 $path_package/interface.py stragglers --path_dock $path_dock --mcita_organization # TCW; 28 July 2022
+#python3 $path_package/interface.py stragglers --path_dock $path_dock --mcita_organization # TCW; 28 July 2022
 
 ################################################################################
 # Deactivate Python Virtual Environment.
