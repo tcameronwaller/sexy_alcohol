@@ -42,8 +42,8 @@ fi
 #python3 $path_package/interface.py main --path_dock $path_dock --scratch
 
 # Routine: uk_biobank
-python3 $path_package/interface.py uk_biobank --path_dock $path_dock --assembly # TCW; 08 August 2022
-#python3 $path_package/interface.py uk_biobank --path_dock $path_dock --importation # TCW; ___ 2022
+#python3 $path_package/interface.py uk_biobank --path_dock $path_dock --assembly # TCW; 08 August 2022
+python3 $path_package/interface.py uk_biobank --path_dock $path_dock --importation # TCW; 08 August 2022
 #python3 $path_package/interface.py uk_biobank --path_dock $path_dock --organization # TCW; ___ 2022
 #python3 $path_package/interface.py uk_biobank --path_dock $path_dock --stratification # TCW; 09 April 2022, 11 April 2022
 #python3 $path_package/interface.py uk_biobank --path_dock $path_dock --description # TCW; 02 August 2022
