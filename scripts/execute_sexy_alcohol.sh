@@ -47,14 +47,14 @@ fi
 #python3 $path_package/interface.py uk_biobank --path_dock $path_dock --organization # TCW; 08 August 2022
 #python3 $path_package/interface.py uk_biobank --path_dock $path_dock --stratification # TCW; ___ 2022
 #python3 $path_package/interface.py uk_biobank --path_dock $path_dock --description # TCW; ___ 2022
-python3 $path_package/interface.py uk_biobank --path_dock $path_dock --regression # TCW; 09 August 2022
+#python3 $path_package/interface.py uk_biobank --path_dock $path_dock --regression # TCW; 09 August 2022
 #python3 $path_package/interface.py uk_biobank --path_dock $path_dock --collection # TCW; ___ 2022
 
 # Routine: stragglers
 #python3 $path_package/interface.py stragglers --path_dock $path_dock --mbpdb_assembly # TCW; 15 June 2022
 #python3 $path_package/interface.py stragglers --path_dock $path_dock --mbpdb_organization # TCW; 20 June 2022
 #python3 $path_package/interface.py stragglers --path_dock $path_dock --mbpdb_regression # TCW; 20 June 2022
-#python3 $path_package/interface.py stragglers --path_dock $path_dock --mcita_assembly # TCW; 28 July 2022
+python3 $path_package/interface.py stragglers --path_dock $path_dock --mcita_assembly # TCW; __ August 2022
 #python3 $path_package/interface.py stragglers --path_dock $path_dock --mcita_organization # TCW; 28 July 2022
 
 ################################################################################
