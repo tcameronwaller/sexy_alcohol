@@ -54,8 +54,8 @@ fi
 #python3 $path_package/interface.py stragglers --path_dock $path_dock --mbpdb_assembly # TCW; 15 June 2022
 #python3 $path_package/interface.py stragglers --path_dock $path_dock --mbpdb_organization # TCW; 20 June 2022
 #python3 $path_package/interface.py stragglers --path_dock $path_dock --mbpdb_regression # TCW; 20 June 2022
-python3 $path_package/interface.py stragglers --path_dock $path_dock --mcita_assembly # TCW; 23 August 2022
-#python3 $path_package/interface.py stragglers --path_dock $path_dock --mcita_organization # TCW; 23 August 2022
+python3 $path_package/interface.py stragglers --path_dock $path_dock --mcita_assembly # TCW; 24 August 2022
+#python3 $path_package/interface.py stragglers --path_dock $path_dock --mcita_organization # TCW; 24 August 2022
 
 ################################################################################
 # Deactivate Python Virtual Environment.
