@@ -44,10 +44,10 @@ fi
 # Routine: uk_biobank
 #python3 $path_package/interface.py uk_biobank --path_dock $path_dock --assembly # TCW; 08 August 2022
 #python3 $path_package/interface.py uk_biobank --path_dock $path_dock --importation # TCW; 08 August 2022
-python3 $path_package/interface.py uk_biobank --path_dock $path_dock --organization # TCW; 23 February 2023
+#python3 $path_package/interface.py uk_biobank --path_dock $path_dock --organization # TCW; 23 February 2023
 #python3 $path_package/interface.py uk_biobank --path_dock $path_dock --stratification # TCW; ___ 2022 <-- no longer executable
 #python3 $path_package/interface.py uk_biobank --path_dock $path_dock --genotype # TCW; 13 October 2022
-#python3 $path_package/interface.py uk_biobank --path_dock $path_dock --description # TCW; 20 September 2022
+python3 $path_package/interface.py uk_biobank --path_dock $path_dock --description # TCW; 23 February 2023
 #python3 $path_package/interface.py uk_biobank --path_dock $path_dock --plot # TCW; 24 October 2022
 #python3 $path_package/interface.py uk_biobank --path_dock $path_dock --regression # TCW; 24 October 2022
 #python3 $path_package/interface.py uk_biobank --path_dock $path_dock --collection # TCW; 24 October 2022
