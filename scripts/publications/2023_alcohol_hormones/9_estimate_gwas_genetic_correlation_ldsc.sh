@@ -24,11 +24,14 @@ cd ~/paths
 path_directory_process_sa=$(<"./process_sexy_alcohol.txt")
 path_directory_process_pm=$(<"./process_psychiatric_metabolism.txt")
 
-path_directory_dock="${path_directory_process}/dock"
+path_directory_dock_sa="${path_directory_process_sa}/dock"
+path_directory_dock_pm="${path_directory_process_pm}/dock"
 
-path_directory_source="${path_directory_dock}/hormone_genetics/gwas_munge_ldsc"
-path_directory_product="${path_directory_dock}/hormone_genetics/gwas_correlation_ldsc"
-path_directory_reference="${path_directory_dock}/hormone_genetics/reference_ldsc"
+path_directory_source_sa="${path_directory_dock_sa}/alcohol_genetics_tcw_2023-03-02/gwas_munge_ldsc"
+path_directory_source_pm="${path_directory_dock_pm}/hormone_genetics_tcw_2023-02-24/gwas_munge_ldsc"
+
+path_directory_product="${path_directory_dock}/alcohol_genetics_tcw_2023-03-02/gwas_correlation_ldsc"
+path_directory_reference="${path_directory_dock}/alcohol_genetics_tcw_2023-03-02/reference_ldsc"
 path_directory_disequilibrium="${path_directory_reference}/disequilibrium/eur_w_ld_chr"
 
 # Scripts.
@@ -57,53 +60,19 @@ report="true"
 comparisons=()
 
 comparisons+=(
-  "${path_directory_product}/hypothyroidism_against_hyperthyroidism;\
-  ${path_directory_source}/30367059_teumer_2018_hypothyroidism.sumstats.gz;\
-  ${path_directory_source}/30367059_teumer_2018_hyperthyroidism.sumstats.gz"
-)
-comparisons+=(
-  "${path_directory_product}/hypothyroidism_against_tsh;\
-  ${path_directory_source}/30367059_teumer_2018_hypothyroidism.sumstats.gz;\
-  ${path_directory_source}/30367059_teumer_2018_tsh_all.sumstats.gz"
-)
-comparisons+=(
-  "${path_directory_product}/hypothyroidism_against_ft4;\
-  ${path_directory_source}/30367059_teumer_2018_hypothyroidism.sumstats.gz;\
-  ${path_directory_source}/30367059_teumer_2018_ft4_all.sumstats.gz"
-)
-comparisons+=(
-  "${path_directory_product}/hyperthyroidism_against_tsh;\
-  ${path_directory_source}/30367059_teumer_2018_hyperthyroidism.sumstats.gz;\
-  ${path_directory_source}/30367059_teumer_2018_tsh_all.sumstats.gz"
-)
-comparisons+=(
-  "${path_directory_product}/hyperthyroidism_against_ft4;\
-  ${path_directory_source}/30367059_teumer_2018_hyperthyroidism.sumstats.gz;\
-  ${path_directory_source}/30367059_teumer_2018_ft4_all.sumstats.gz"
+  "${path_directory_product}/alcohol_consumption_quantity_against_blankblankblank;\
+  ${path_directory_source_sa}/30643251_liu_2019_alcohol_no_ukb.sumstats.gz;\
+  ${path_directory_source_pm}/blankblankblank.sumstats.gz"
 )
 
 comparisons+=(
-  "${path_directory_product}/tsh_against_ft4;\
-  ${path_directory_source}/30367059_teumer_2018_tsh_all.sumstats.gz;\
-  ${path_directory_source}/30367059_teumer_2018_ft4_all.sumstats.gz"
+  "${path_directory_product}/alcohol_dependence_against_blankblankblank;\
+  ${path_directory_source_sa}/30482948_walters_2018_eur_unrel_genotype.sumstats.gz;\
+  ${path_directory_source_pm}/blankblankblank.sumstats.gz"
 )
 
-comparisons+=(
-  "${path_directory_product}/tsh_female_against_tsh_male;\
-  ${path_directory_source}/30367059_teumer_2018_tsh_female.sumstats.gz;\
-  ${path_directory_source}/30367059_teumer_2018_tsh_male.sumstats.gz"
-)
-comparisons+=(
-  "${path_directory_product}/ft4_female_against_ft4_male;\
-  ${path_directory_source}/30367059_teumer_2018_ft4_female.sumstats.gz;\
-  ${path_directory_source}/30367059_teumer_2018_ft4_male.sumstats.gz"
-)
 
-comparisons+=(
-  "${path_directory_product}/teumer_tsh_against_zhou_tsh;\
-  ${path_directory_source}/30367059_teumer_2018_tsh_all.sumstats.gz;\
-  ${path_directory_source}/32769997_zhou_2020_tsh.sumstats.gz"
-)
+
 
 ###########################################################################
 # Execute procedure.
