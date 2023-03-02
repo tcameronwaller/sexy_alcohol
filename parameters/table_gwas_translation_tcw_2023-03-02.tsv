@@ -1,0 +1,11 @@
+inclusion	directory	name	phenotype	sex	file	suffix	bgzip	gzip	type	fill_observations	observations	fill_case_control	cases	controls	prevalence_sample	prevalence_population	script	note
+0	36477530_saunders_2022	36477530_saunders_2022_alcohol_eur	alcohol_consumption_quantity	all	GSCAN_DrnkWk_2022_GWAS_SUMMARY_STATS_EUR.txt.gz	.txt.gz	0	0	linear	0	NA	0	NA	NA	NA	NA	translate_gwas_36477530_saunders_2022.sh	.
+0	36477530_saunders_2022	36477530_saunders_2022_alcohol_amr	alcohol_consumption_quantity	all	GSCAN_DrnkWk_2022_GWAS_SUMMARY_STATS_AMR.txt.gz	.txt.gz	0	0	linear	0	NA	0	NA	NA	NA	NA	translate_gwas_36477530_saunders_2022.sh	.
+1	30643251_liu_2019	30643251_liu_2019_alcohol_all	alcohol_consumption_quantity	all	DrinksPerWeek.txt.gz	.txt.gz	0	0	linear	0	537349	0	NA	NA	NA	NA	translate_gwas_30643251_liu_2019.sh	.
+1	30643251_liu_2019	30643251_liu_2019_alcohol_no_ukb	alcohol_consumption_quantity	all	DrinksPerWeek.WithoutUKB.txt.gz	.txt.gz	0	0	linear	0	226223	0	NA	NA	NA	NA	translate_gwas_30643251_liu_2019.sh	.
+0	30482948_walters_2018	30482948_walters_2018_all	alcohol_dependence	all	pgc_alcdep.discovery.aug2018_release.txt.gz	.txt.gz	0	0	logistic	0	52848	1	14904	37944	0.100	0.100	translate_gwas_30482948_walters_2018_z.sh	.
+0	30482948_walters_2018	30482948_walters_2018_eur_all	alcohol_dependence	all	pgc_alcdep.eur_discovery.aug2018_release.txt.gz	.txt.gz	0	0	logistic	0	46568	1	11569	34999	0.100	0.100	translate_gwas_30482948_walters_2018_z.sh	.
+0	30482948_walters_2018	30482948_walters_2018_eur_unrel_meta	alcohol_dependence	all	pgc_alcdep.eur_unrelated.aug2018_release.txt.gz	.txt.gz	0	0	logistic	0	38686	1	10206	28480	0.100	0.100	translate_gwas_30482948_walters_2018_z.sh	.
+1	30482948_walters_2018	30482948_walters_2018_eur_unrel_genotype	alcohol_dependence	all	pgc_alcdep.eur_unrel_genotyped.aug2018_release.txt.gz	.txt.gz	0	0	logistic	0	28757	1	8485	20272	0.100	0.100	translate_gwas_30482948_walters_2018_odds.sh	.
+1	30482948_walters_2018_sex	30482948_walters_2018_female	alcohol_dependence	female	pgc_alcdep_eur_female_public.gz	.gz	0	0	logistic	0	8537	1	2504	6033	0.100	0.100	translate_gwas_30482948_walters_2018_odds.sh	.
+1	30482948_walters_2018_sex	30482948_walters_2018_male	alcohol_dependence	male	pgc_alcdep_eur_male_public.gz	.gz	0	0	logistic	0	15344	1	5932	9412	0.100	0.100	translate_gwas_30482948_walters_2018_odds.sh	.
