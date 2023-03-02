@@ -30,8 +30,8 @@ path_directory_dock_pm="${path_directory_process_pm}/dock"
 path_directory_source_sa="${path_directory_dock_sa}/alcohol_genetics_tcw_2023-03-02/gwas_munge_ldsc"
 path_directory_source_pm="${path_directory_dock_pm}/hormone_genetics_tcw_2023-02-24/gwas_munge_ldsc"
 
-path_directory_product="${path_directory_dock}/alcohol_genetics_tcw_2023-03-02/gwas_correlation_ldsc"
-path_directory_reference="${path_directory_dock}/alcohol_genetics_tcw_2023-03-02/reference_ldsc"
+path_directory_product="${path_directory_dock_sa}/alcohol_genetics_tcw_2023-03-02/gwas_correlation_ldsc"
+path_directory_reference="${path_directory_dock_sa}/alcohol_genetics_tcw_2023-03-02/reference_ldsc"
 path_directory_disequilibrium="${path_directory_reference}/disequilibrium/eur_w_ld_chr"
 
 # Scripts.
