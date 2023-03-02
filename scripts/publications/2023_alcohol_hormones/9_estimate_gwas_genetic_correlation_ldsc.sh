@@ -59,18 +59,71 @@ report="true"
 
 comparisons=()
 
+# Alcohol consumption quantity
+
 comparisons+=(
-  "${path_directory_product}/alcohol_consumption_quantity_against_blankblankblank;\
+  "${path_directory_product}/alcohol_consumption_quantity_against_testosterone_female;\
   ${path_directory_source_sa}/30643251_liu_2019_alcohol_no_ukb.sumstats.gz;\
-  ${path_directory_source_pm}/blankblankblank.sumstats.gz"
+  ${path_directory_source_pm}/32042192_ruth_2020_testosterone_female.sumstats.gz"
 )
+comparisons+=(
+  "${path_directory_product}/alcohol_consumption_quantity_against_testosterone_male;\
+  ${path_directory_source_sa}/30643251_liu_2019_alcohol_no_ukb.sumstats.gz;\
+  ${path_directory_source_pm}/32042192_ruth_2020_testosterone_male.sumstats.gz"
+)
+comparisons+=(
+  "${path_directory_product}/alcohol_consumption_quantity_against_estradiol_female;\
+  ${path_directory_source_sa}/30643251_liu_2019_alcohol_no_ukb.sumstats.gz;\
+  ${path_directory_source_pm}/34255042_schmitz_2021_estradiol_female.sumstats.gz"
+)
+comparisons+=(
+  "${path_directory_product}/alcohol_consumption_quantity_against_estradiol_male;\
+  ${path_directory_source_sa}/30643251_liu_2019_alcohol_no_ukb.sumstats.gz;\
+  ${path_directory_source_pm}/34255042_schmitz_2021_estradiol_male.sumstats.gz"
+)
+comparisons+=(
+  "${path_directory_product}/alcohol_consumption_quantity_against_shbg_female;\
+  ${path_directory_source_sa}/30643251_liu_2019_alcohol_no_ukb.sumstats.gz;\
+  ${path_directory_source_pm}/32042192_ruth_2020_shbg_bmi_female.sumstats.gz"
+)
+comparisons+=(
+  "${path_directory_product}/alcohol_consumption_quantity_against_shbg_male;\
+  ${path_directory_source_sa}/30643251_liu_2019_alcohol_no_ukb.sumstats.gz;\
+  ${path_directory_source_pm}/32042192_ruth_2020_shbg_bmi_male.sumstats.gz"
+)
+
+# Alcohol dependence
 
 comparisons+=(
-  "${path_directory_product}/alcohol_dependence_against_blankblankblank;\
+  "${path_directory_product}/alcohol_dependence_against_testosterone_female;\
   ${path_directory_source_sa}/30482948_walters_2018_eur_unrel_genotype.sumstats.gz;\
-  ${path_directory_source_pm}/blankblankblank.sumstats.gz"
+  ${path_directory_source_pm}/32042192_ruth_2020_testosterone_female.sumstats.gz"
 )
-
+comparisons+=(
+  "${path_directory_product}/alcohol_dependence_against_testosterone_male;\
+  ${path_directory_source_sa}/30482948_walters_2018_eur_unrel_genotype.sumstats.gz;\
+  ${path_directory_source_pm}/32042192_ruth_2020_testosterone_male.sumstats.gz"
+)
+comparisons+=(
+  "${path_directory_product}/alcohol_dependence_against_estradiol_female;\
+  ${path_directory_source_sa}/30482948_walters_2018_eur_unrel_genotype.sumstats.gz;\
+  ${path_directory_source_pm}/34255042_schmitz_2021_estradiol_female.sumstats.gz"
+)
+comparisons+=(
+  "${path_directory_product}/alcohol_dependence_against_estradiol_male;\
+  ${path_directory_source_sa}/30482948_walters_2018_eur_unrel_genotype.sumstats.gz;\
+  ${path_directory_source_pm}/34255042_schmitz_2021_estradiol_male.sumstats.gz"
+)
+comparisons+=(
+  "${path_directory_product}/alcohol_dependence_against_shbg_female;\
+  ${path_directory_source_sa}/30482948_walters_2018_eur_unrel_genotype.sumstats.gz;\
+  ${path_directory_source_pm}/32042192_ruth_2020_shbg_bmi_female.sumstats.gz"
+)
+comparisons+=(
+  "${path_directory_product}/alcohol_dependence_against_shbg_male;\
+  ${path_directory_source_sa}/30482948_walters_2018_eur_unrel_genotype.sumstats.gz;\
+  ${path_directory_source_pm}/32042192_ruth_2020_shbg_bmi_male.sumstats.gz"
+)
 
 
 
