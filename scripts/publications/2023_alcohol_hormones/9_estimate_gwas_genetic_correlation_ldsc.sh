@@ -9,13 +9,21 @@
 ###########################################################################
 ###########################################################################
 
+# TODO: TCW; 2 March 2023
+# TODO: Currently will need information from "sexy alcohol" and from "psychiatric metabolism"
+# TODO: maybe better to consolidate these in the future?
+
+
 ################################################################################
 # Organize paths.
 
 # Directories.
 cd ~/paths
-path_directory_process=$(<"./process_psychiatric_metabolism.txt")
+path_directory_process_sa=$(<"./process_sexy_alcohol.txt")
+path_directory_process_pm=$(<"./process_psychiatric_metabolism.txt")
+
 path_directory_dock="${path_directory_process}/dock"
+
 path_directory_source="${path_directory_dock}/hormone_genetics/gwas_munge_ldsc"
 path_directory_product="${path_directory_dock}/hormone_genetics/gwas_correlation_ldsc"
 path_directory_reference="${path_directory_dock}/hormone_genetics/reference_ldsc"

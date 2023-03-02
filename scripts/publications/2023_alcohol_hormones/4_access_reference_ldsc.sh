@@ -5,12 +5,12 @@
 
 # Read private, local file paths.
 cd ~/paths
-path_process=$(<"./process_psychiatric_metabolism.txt")
+path_directory_process=$(<"./process_sexy_alcohol.txt")
 
-path_dock="${path_process}/dock"
-path_directory_reference="${path_dock}/hormone_genetics_tcw_2023-02-17/reference_ldsc"
+path_directory_dock="${path_directory_process}/dock"
+path_directory_reference="${path_directory_dock}/alcohol_genetics_tcw_2023-03-02/reference_ldsc"
 
-path_promiscuity_scripts="${path_process}/promiscuity/scripts"
+path_promiscuity_scripts="${path_directory_process}/promiscuity/scripts"
 path_script_access="${path_promiscuity_scripts}/ldsc/access_ldsc_genetic_references.sh"
 
 ###########################################################################

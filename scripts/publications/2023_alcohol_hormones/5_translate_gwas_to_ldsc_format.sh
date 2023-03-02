@@ -23,13 +23,10 @@
 
 # Directories.
 cd ~/paths
-path_directory_process=$(<"./process_psychiatric_metabolism.txt")
+path_directory_process=$(<"./process_sexy_alcohol.txt")
 path_directory_dock="${path_directory_process}/dock"
-#path_directory_source="${path_directory_dock}/hormone_genetics/gwas_format_standard"
-#path_directory_source="${path_directory_dock}/test_compare_gwas2vcf_in_ldsc"
-#path_directory_source="${path_directory_dock}/hormone_genetics/gwas_from_team_collection"
-path_directory_source="${path_directory_dock}/hormone_genetics_tcw_2023-02-17/gwas_process_standard_copy"
-path_directory_product="${path_directory_dock}/hormone_genetics_tcw_2023-02-17/gwas_format_ldsc"
+path_directory_source="${path_directory_dock}/alcohol_genetics_tcw_2023-03-02/gwas_format_standard"
+path_directory_product="${path_directory_dock}/alcohol_genetics_tcw_2023-03-02/gwas_format_ldsc"
 
 # Files.
 
